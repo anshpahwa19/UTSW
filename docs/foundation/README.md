@@ -13,7 +13,7 @@ The shared product foundation for UT Southwestern Medical Center's **MyCare 2.0*
 | 3 | [Experience Architecture](03-experience-architecture.md) | Entity model, navigation hypotheses (H1–H3), signed-in vs. signed-out, handoffs, and UX foundation principles (UX-1 to UX-10) |
 | 4 | [User Journey Maps](04-user-journey-maps.md) | Journeys A–E with decision points, states and missing steps |
 | 5 | [Assumptions and Risks Register](05-assumptions-risks-register.md) | Assumptions (A-), risks (R-), dependencies and unknowns (U-), and source conflicts (K-) |
-| 6 | [Client Discovery Questions](06-client-discovery-questions.md) | 40 questions (Q-01 to Q-40), split into Essential and Later |
+| 6 | [Client Discovery Questions](06-client-discovery-questions.md) | 41 questions (Q-01 to Q-41), split into Essential and Later |
 | 7 | [Recommended Next Steps](07-recommended-next-steps.md) | Immediate actions, the six-phase approach and decision gates |
 | – | [Deck evidence log](sources/deck-evidence-log.md) | Slide-by-slide record of source S1 |
 | – | [Brand and editorial standards](sources/brand-and-editorial-standards.md) | Notes on sources S3–S7 as they apply to MyCare |
@@ -47,6 +47,7 @@ The Inventory also uses **R** for elements seen only in inspiration references o
 | S5 | UT Southwestern Logos – Brand Standards | Reviewed |
 | S6 | UT Southwestern Style Guide (updated June 8, 2026) | Reviewed |
 | S7 | UTSW Brand Color Palette | Reviewed (swatches did not render; labels legible) |
+| S8 | Current "UTSW MyCare" logo – image provided by the client team (1386×384 PNG, Oct. 13, 2026) | Reviewed; colors measured (approximate – compressed screenshot) |
 
 Source files are not stored in this repository. They were provided in the working session.
 
@@ -110,3 +111,4 @@ Source files are not stored in this repository. They were provided in the workin
 | Version | Date | Change |
 |---|---|---|
 | 0.1 | Oct. 13, 2026 | Initial foundation from S1 and S3–S7. S2a and S2b not accessible. |
+| 0.2 | Oct. 13, 2026 | Added S8 (current UTSW MyCare logo) and its measured color deviations; added R-18 and Q-41; logo modernization concepts started at the client team's request, ahead of gate G5 (see brand notes section 6). |

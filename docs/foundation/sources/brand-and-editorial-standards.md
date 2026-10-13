@@ -9,6 +9,7 @@
 | S5 | *UT Southwestern Logos – Brand Standards* (intranet page export, 6 pages) | Confirmed standard |
 | S6 | *UT Southwestern Style Guide*, updated June 8, 2026 (Office of Institutional Advancement; 20 pages) | Confirmed standard |
 | S7 | *UTSW Brand Color Palette* (one-page palette sheet; color swatches did not render in the PDF – only labels and specifications are legible) | Confirmed standard (partially legible) |
+| S8 | Current "UTSW MyCare" logo (1386×384 PNG provided by the client team, Oct. 13, 2026) | Observed |
 
 Brand questions go to logo@utsouthwestern.edu (S3, S5). Style questions go to styleguide@utsouthwestern.edu (S6).
 
@@ -93,3 +94,19 @@ Brand questions go to logo@utsouthwestern.edu (S3, S5). Style questions go to st
 | Concept copy reads "Book an OPD with Dr. Rachel" | S1-18 | Courtesy title uses the last name (S6). "OPD" is jargon. |
 | Biography text is missing a space ("cancers.Dr. Woldu") | S1-8 | Content quality |
 | The concept app badge recreates "UTSW MyCare" in type | S1-17, S1-18 | Logo must not be recreated with fonts (S4, S5) – the approval status of an app lockup is **Unknown** |
+
+## 6. Current "UTSW MyCare" lockup (S8) and the modernization exploration
+
+| Observation | Evidence |
+|---|---|
+| The lockup is "UTSW" in heavy blue custom letterforms (the U and T join, as in the UT Southwestern logotype) followed by "MyCare" in a light-weight humanist sans in gray, on a shared baseline. | Observed (S8) |
+| The "UTSW" letterforms appear to come from the custom UT Southwestern logotype, so S4 and S5 apply: they must not be redrawn or recreated with fonts. | Assumption (visual match to S5) |
+| The blue measures about RGB 39, 88, 150 (`#275896`) vs. official UT Southwestern Blue RGB 0, 66, 120 (`#004278`). | Observed (S8; approximate – compressed screenshot) |
+| The gray measures about `#5F5F5F` (~63% black) vs. the brand's 80% black. | Observed (S8; approximate) |
+| The supplied file is a soft, upscaled raster. No vector master was provided. | Observed (S8); vector availability Unknown (Q-41) |
+| No symbol or app-icon system accompanies the lockup. | Observed (S1-17, S8) |
+
+**Modernization exploration (started Oct. 13, 2026, at the client team's request).** This work is concept exploration for CMPA review, ahead of decision gate G5 (brand assets).
+- The "UTSW" art in the concepts is a placeholder taken from S8. It is never redrawn, and must be replaced with CMPA master vector art.
+- The product name stays "MyCare".
+- Approval status: **Unknown** (Q-32, Q-41; risk R-18).

@@ -58,6 +58,7 @@ Likelihood and impact are **provisional, qualitative** ratings (High / Medium / 
 | R-15 | **Leaving the app.** External links (food ordering, web resources, MyChart) fragment the experience and may create privacy issues | Medium | Medium | S1-21, S1-22 | Define handoff patterns and return paths; vendor review (U-19) | Product owner; Privacy Office |
 | R-16 | **Location permission denied.** Distance and near-me features degrade | High | Medium | F-06 depends on permission | Keep a zip or city fallback (it exists today, S1-1); design the denied state | Design team |
 | R-17 | **Emergency misuse.** Patients with urgent needs try to use provider search instead of emergency or urgent care | Low–Medium | High | No urgent or emergency guidance in S1 | Ask whether safety messaging or urgent-care entry is needed (Q-18) | Clinical leadership; Legal |
+| R-18 | **Logo work without brand approval.** Modernized MyCare logo concepts could be adopted or circulated before CMPA approves them, or could alter protected UT Southwestern letterforms | Medium | High | Logo modernization requested ahead of gate G5; no vector master or approval record for the current lockup (S8) | Present as concepts only; keep "UTSW" art as an untouched placeholder; route through CMPA (logo@utsouthwestern.edu) before any use (Q-32, Q-41) | Product owner; CMPA |
 
 ## Part C – Dependencies and unknowns
 
