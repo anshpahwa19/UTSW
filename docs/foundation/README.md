@@ -111,4 +111,4 @@ Source files are not stored in this repository. They were provided in the workin
 | Version | Date | Change |
 |---|---|---|
 | 0.1 | Oct. 13, 2026 | Initial foundation from S1 and S3–S7. S2a and S2b not accessible. |
-| 0.2 | Oct. 13, 2026 | Added S8 (current UTSW MyCare logo) and its measured color deviations; added R-18 and Q-41; logo modernization concepts started at the client team's request, ahead of gate G5 (see brand notes section 6). |
+| 0.2 | Oct. 13, 2026 | Added S8 (current UTSW MyCare logo) and its measured color deviations; added R-18 and Q-41; logo modernization concepts started at the client team's request, ahead of gate G5 (see brand notes section 6). Concepts A and B saved in `design/logo-concepts/`. |
