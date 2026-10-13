@@ -1,0 +1,1090 @@
+<title>UTSW MyCare Home</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..800&display=swap">
+<style>
+/* Layout: phone prototype on the left, prototype controls + CMS layout + token spec on the right; stacks to one column on narrow screens. */
+:root{
+  /* Page chrome (theme-aware) */
+  --page-bg:#EEF2F6; --page-fg:#1F2A33; --page-muted:#55626D; --page-card:#FFFFFF; --page-border:#D5DDE5;
+  --page-accent:#004278; --page-accent-fg:#FFFFFF; --page-chip:#EBF0F5; --page-device:#14202B;
+
+  /* App color tokens – UT Southwestern palette. The app UI is light-only, as specified by the brand deck. */
+  --c-blue:#004278; --c-blue-press:#00315A; --c-on-blue:#FFFFFF; --c-on-blue-2:#D6E4F0;
+  --c-text:#333333; --c-text-2:#5B6770; --c-bg:#F7F8FA; --c-surface:#FFFFFF; --c-tint:#EBF0F5;
+  --c-border:#D5DDE5; --c-border-strong:#7A8690; --c-skel:#E3E9EF;
+  --c-cyan:#00A9E0; --c-red:#B0003A; --c-red-bg:#FBEFF2; --c-magenta:#E0004D;
+  --c-orange:#E87722; --c-orange-bg:#FDF1E9; --c-green:#43B02A; --c-purple:#8246AF;
+  --c-pastel:#D1DDE6; --c-sand:#D5CB9F; --c-muted-blue:#7BAFD4; --c-focus:#004278; --c-scrim:rgba(0,30,56,.48);
+
+  /* Type scale – even sizes only */
+  --fs-12:12px; --lh-12:16px;  --fs-14:14px; --lh-14:20px;  --fs-16:16px; --lh-16:24px;  --fs-18:18px; --lh-18:24px;
+  --fs-20:20px; --lh-20:28px;  --fs-24:24px; --lh-24:32px;  --fs-28:28px; --lh-28:36px;  --fs-32:32px; --lh-32:40px;
+
+  /* Spacing – 4-pt scale */
+  --sp-4:4px; --sp-8:8px; --sp-12:12px; --sp-16:16px; --sp-24:24px; --sp-32:32px; --sp-40:40px; --sp-48:48px;
+
+  /* Radii */
+  --r-8:8px; --r-12:12px; --r-16:16px; --r-24:24px; --r-full:999px;
+
+  /* Motion */
+  --dur-fast:150ms; --dur-base:200ms; --dur-slow:300ms;
+  --ease-out:cubic-bezier(0.2,0,0,1); --ease-std:cubic-bezier(0.4,0,0.2,1);
+
+  --font:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --fw:390px; --status-h:48px; --tabbar-h:84px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){ --page-bg:#0D1620; --page-fg:#E6EDF3; --page-muted:#A3B1BD; --page-card:#16222E; --page-border:#2A3A49; --page-accent:#7BAFD4; --page-accent-fg:#0D1620; --page-chip:#1F2E3C; --page-device:#000000; color-scheme:dark }
+}
+:root[data-theme="dark"]{ --page-bg:#0D1620; --page-fg:#E6EDF3; --page-muted:#A3B1BD; --page-card:#16222E; --page-border:#2A3A49; --page-accent:#7BAFD4; --page-accent-fg:#0D1620; --page-chip:#1F2E3C; --page-device:#000000; color-scheme:dark }
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--page-bg); color:var(--page-fg); font-family:var(--font); font-size:var(--fs-16); line-height:var(--lh-16); font-optical-sizing:auto; -webkit-font-smoothing:antialiased}
+.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+button{font:inherit;color:inherit}
+h1,h2,h3,p,ol,ul{margin:0}
+ul,ol{padding:0}
+
+/* ---------- Page chrome ---------- */
+.page{max-width:1240px;margin:0 auto;padding-inline:var(--sp-16);padding-block:var(--sp-24) var(--sp-48);display:flex;flex-direction:column;gap:var(--sp-24)}
+.page-head{display:flex;gap:var(--sp-16);align-items:center}
+.page-head .appicon{width:48px;height:48px;border-radius:var(--r-12);overflow:hidden;flex:none}
+.page-head .appicon svg{width:100%;height:100%;display:block}
+.page-head h1{font-size:var(--fs-24);line-height:var(--lh-24);font-weight:700;text-wrap:balance}
+.page-head p{color:var(--page-muted);font-size:var(--fs-14);line-height:var(--lh-14)}
+.layout{display:grid;grid-template-columns:auto minmax(0,1fr);gap:var(--sp-32);align-items:start}
+.stage{position:sticky;top:var(--sp-16);display:flex;flex-direction:column;align-items:center;gap:var(--sp-12)}
+.stage-note{font-size:var(--fs-14);line-height:var(--lh-14);color:var(--page-muted);text-align:center;max-width:390px}
+.side{display:flex;flex-direction:column;gap:var(--sp-24);min-width:0}
+.panel{background:var(--page-card);border:1px solid var(--page-border);border-radius:var(--r-16);padding:var(--sp-24);display:flex;flex-direction:column;gap:var(--sp-16);min-width:0}
+.panel h2{font-size:var(--fs-20);line-height:var(--lh-20);font-weight:700}
+.panel h3{font-size:var(--fs-16);line-height:var(--lh-16);font-weight:700}
+.panel p{color:var(--page-muted);font-size:var(--fs-14);line-height:var(--lh-14)}
+.ctrl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:var(--sp-16)}
+.ctrl{display:flex;flex-direction:column;gap:var(--sp-8);min-width:0;border:0;margin:0;padding:0}
+.ctrl legend,.ctrl>.lbl{font-size:var(--fs-12);line-height:var(--lh-12);font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--page-muted);padding:0;margin-bottom:var(--sp-8)}
+.seg{display:flex;background:var(--page-chip);border-radius:var(--r-12);padding:var(--sp-4);gap:var(--sp-4)}
+.seg button{flex:1;min-height:44px;border:0;background:transparent;border-radius:var(--r-8);font-size:var(--fs-14);line-height:var(--lh-14);font-weight:600;cursor:pointer;color:var(--page-fg);padding-inline:var(--sp-8);transition:background var(--dur-fast) var(--ease-std)}
+.seg button[aria-pressed="true"]{background:var(--page-accent);color:var(--page-accent-fg)}
+.page-btn{min-height:44px;border:1px solid var(--page-border);background:var(--page-card);border-radius:var(--r-12);font-size:var(--fs-14);font-weight:600;padding-inline:var(--sp-16);cursor:pointer;color:var(--page-fg)}
+.page-btn:hover{border-color:var(--page-accent)}
+:where(.page) :focus-visible{outline:3px solid var(--page-accent);outline-offset:2px}
+
+.cms-list{list-style:none;display:flex;flex-direction:column;gap:var(--sp-8)}
+.cms-row{display:flex;align-items:center;gap:var(--sp-12);padding:var(--sp-8) var(--sp-12);border:1px solid var(--page-border);border-radius:var(--r-12);min-height:56px}
+.cms-row.off{opacity:.62}
+.cms-row .nm{flex:1;min-width:0;display:flex;flex-direction:column;gap:var(--sp-4)}
+.cms-row .nm b{font-size:var(--fs-14);line-height:var(--lh-14);font-weight:600}
+.cms-row .nm span{font-size:var(--fs-12);line-height:var(--lh-12);color:var(--page-muted)}
+.cms-row .pos{font-size:var(--fs-12);font-variant-numeric:tabular-nums;color:var(--page-muted);width:24px;text-align:center;flex:none}
+.cms-row .mv{display:flex;gap:var(--sp-4)}
+.cms-row .mv button{width:44px;height:44px;border-radius:var(--r-8);border:1px solid var(--page-border);background:transparent;cursor:pointer;display:grid;place-items:center;color:var(--page-fg)}
+.cms-row .mv button:disabled{opacity:.35;cursor:default}
+.cms-row .mv svg{width:20px;height:20px}
+.switch{position:relative;width:52px;height:32px;flex:none}
+.switch input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer;width:100%;height:100%}
+.switch span{position:absolute;inset:0;border-radius:var(--r-full);background:var(--page-border);transition:background var(--dur-fast)}
+.switch span::after{content:"";position:absolute;top:4px;left:4px;width:24px;height:24px;border-radius:50%;background:#FFFFFF;box-shadow:0 1px 2px rgba(0,0,0,.3);transition:transform var(--dur-base) var(--ease-out)}
+.switch input:checked+span{background:var(--page-accent)}
+.switch input:checked+span::after{transform:translateX(20px)}
+.switch input:disabled{cursor:not-allowed}
+.switch input:focus-visible+span{outline:3px solid var(--page-accent);outline-offset:2px}
+
+.spec-table-wrap{overflow-x:auto}
+.spec{width:100%;border-collapse:collapse;font-size:var(--fs-14);line-height:var(--lh-14)}
+.spec th,.spec td{text-align:left;padding:var(--sp-8) var(--sp-12);border-bottom:1px solid var(--page-border);vertical-align:top}
+.spec th{font-size:var(--fs-12);letter-spacing:.06em;text-transform:uppercase;color:var(--page-muted);font-weight:600}
+.spec td code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:var(--fs-12)}
+.spec .num{font-variant-numeric:tabular-nums;white-space:nowrap}
+.sw{display:inline-block;width:24px;height:24px;border-radius:var(--r-8);border:1px solid var(--page-border);vertical-align:middle}
+.bar{display:inline-block;height:12px;background:var(--page-accent);border-radius:var(--r-full);vertical-align:middle}
+
+/* ---------- Device ---------- */
+.device{background:var(--page-device);padding:var(--sp-12);border-radius:56px;box-shadow:0 24px 48px rgba(0,20,40,.22);max-width:100%}
+.screen{position:relative;width:var(--fw);max-width:100%;height:844px;border-radius:44px;overflow:hidden;background:var(--c-bg);color:var(--c-text);
+  font-family:var(--font);font-size:var(--fs-16);line-height:var(--lh-16);display:flex;flex-direction:column;transition:width var(--dur-slow) var(--ease-std);isolation:isolate}
+.screen.large{ --fs-12:14px; --lh-12:20px; --fs-14:18px; --lh-14:24px; --fs-16:20px; --lh-16:28px; --fs-18:24px; --lh-18:32px; --fs-20:24px; --lh-20:32px; --fs-24:28px; --lh-24:36px; --fs-28:32px; --lh-28:40px }
+.screen :focus{outline:none}
+.screen :focus-visible{outline:3px solid var(--c-focus);outline-offset:2px;border-radius:var(--r-8)}
+.screen .on-blue :focus-visible,.screen .on-blue:focus-visible{outline-color:var(--c-on-blue)}
+.screen .alert :focus-visible{outline-color:var(--c-focus)}
+.screen .alert .alert-toggle:focus-visible{outline-color:var(--c-on-blue)}
+.screen .field input:focus-visible{outline:none}
+.ic{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.ic.sm{width:20px;height:20px}
+
+.statusbar{height:var(--status-h);background:var(--c-blue);color:var(--c-on-blue);display:flex;align-items:center;justify-content:space-between;padding-inline:var(--sp-32);font-size:var(--fs-14);font-weight:600;flex:none;font-variant-numeric:tabular-nums}
+.statusbar .sys{display:flex;gap:var(--sp-4);align-items:center}
+.statusbar .sys svg{width:20px;height:12px;fill:currentColor}
+.appbar{background:var(--c-blue);color:var(--c-on-blue);display:flex;align-items:center;justify-content:space-between;gap:var(--sp-8);padding-inline:var(--sp-8) var(--sp-16);height:64px;flex:none;position:relative;z-index:3}
+.logo{display:block;width:224px;flex:none;line-height:0}
+.logo svg{width:224px;height:auto;display:block}
+.appbar .acts{display:flex;gap:var(--sp-8)}
+.icon-btn{width:44px;height:44px;border-radius:var(--r-full);border:0;background:transparent;display:grid;place-items:center;cursor:pointer;position:relative;color:inherit;transition:background var(--dur-fast) var(--ease-std),transform var(--dur-fast) var(--ease-std)}
+.icon-btn:active{transform:scale(.94)}
+.appbar .icon-btn:hover{background:rgba(255,255,255,.12)}
+.badge{position:absolute;top:var(--sp-4);right:0;min-width:16px;height:16px;padding-inline:var(--sp-4);border-radius:var(--r-full);background:var(--c-magenta);color:#FFFFFF;font-size:var(--fs-12);line-height:16px;font-weight:700;border:2px solid var(--c-blue);display:grid;place-items:center;box-sizing:content-box}
+.avatar{width:36px;height:36px;border-radius:50%;background:var(--c-on-blue);color:var(--c-blue);font-size:var(--fs-14);font-weight:700;display:grid;place-items:center}
+
+.views{flex:1;position:relative;min-height:0}
+.view{position:absolute;inset:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none}
+.view::-webkit-scrollbar{display:none}
+.view.enter{animation:viewIn var(--dur-base) var(--ease-out) both}
+@keyframes viewIn{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:none}}
+.home-inner{display:flex;flex-direction:column;gap:var(--sp-24);padding-bottom:var(--sp-48);transition:transform var(--dur-base) var(--ease-out)}
+
+/* Pull to refresh */
+.ptr{position:absolute;top:0;left:50%;width:40px;height:40px;margin-left:-20px;border-radius:50%;background:var(--c-surface);box-shadow:0 2px 8px rgba(0,30,60,.18);display:grid;place-items:center;color:var(--c-blue);transform:translateY(-48px);z-index:2;pointer-events:none}
+.ptr.spin svg{animation:spin 800ms linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Hero */
+.hero{background:var(--c-blue);color:var(--c-on-blue);padding:var(--sp-8) var(--sp-16) var(--sp-24);display:flex;flex-direction:column;gap:var(--sp-16);border-radius:0 0 var(--r-24) var(--r-24)}
+.hero h1{font-size:var(--fs-28);line-height:var(--lh-28);font-weight:700;letter-spacing:-.01em;text-wrap:balance}
+.hero .sub{color:var(--c-on-blue-2);font-size:var(--fs-16)}
+.search-entry{display:flex;align-items:center;gap:var(--sp-12);min-height:56px;padding-inline:var(--sp-16);border-radius:var(--r-full);border:0;background:var(--c-surface);color:var(--c-text-2);cursor:pointer;text-align:left;box-shadow:0 2px 8px rgba(0,20,40,.2);transition:transform var(--dur-fast) var(--ease-std)}
+.search-entry .ic{color:var(--c-blue)}
+.search-entry:active{transform:scale(.98)}
+.hero .search-entry:focus-visible{outline-color:var(--c-on-blue);outline-offset:3px;border-radius:var(--r-full)}
+
+/* Alerts */
+.alerts{display:flex;flex-direction:column;gap:var(--sp-8);padding:var(--sp-12) var(--sp-16) 0;background:var(--c-blue)}
+.alerts+.hero{padding-top:var(--sp-16)}
+.top{display:flex;flex-direction:column}
+.alert{background:var(--c-red-bg);border-radius:var(--r-16);position:relative;color:var(--c-text);box-shadow:inset 4px 0 0 var(--c-magenta)}
+.alert.advisory{background:var(--c-orange-bg);box-shadow:inset 4px 0 0 var(--c-orange)}
+.alert.stacked::after{content:"";position:absolute;left:var(--sp-12);right:var(--sp-12);bottom:calc(var(--sp-8) * -1);height:var(--sp-8);background:var(--c-orange-bg);border-radius:0 0 var(--r-12) var(--r-12);opacity:.9}
+.alert h2{font-size:inherit;line-height:inherit;font-weight:inherit}
+.alert-toggle{display:flex;width:100%;gap:var(--sp-12);align-items:flex-start;text-align:left;background:transparent;border:0;padding:var(--sp-12) var(--sp-12) var(--sp-12) var(--sp-16);cursor:pointer;min-height:56px;border-radius:var(--r-16)}
+.alert-ico{width:32px;height:32px;border-radius:50%;background:var(--c-magenta);color:#FFFFFF;display:grid;place-items:center;flex:none}
+.advisory .alert-ico{background:var(--c-orange);color:var(--c-text)}
+.alert-ico .ic{width:20px;height:20px}
+.alert-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:var(--sp-4)}
+.alert-meta{font-size:var(--fs-12);line-height:var(--lh-12);color:var(--c-text-2)}
+.alert-meta b{color:var(--c-red);font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.advisory .alert-meta b{color:var(--c-text)}
+.alert-title{font-size:var(--fs-16);line-height:var(--lh-16);font-weight:600}
+.chev{transition:transform var(--dur-base) var(--ease-std);color:var(--c-text-2);margin-top:var(--sp-4)}
+.open>h2 .chev,.open .alert-toggle .chev{transform:rotate(180deg)}
+.collapse{display:grid;grid-template-rows:0fr;transition:grid-template-rows var(--dur-base) var(--ease-std)}
+.collapse>div{overflow:hidden;visibility:hidden;transition:visibility 0s linear var(--dur-base)}
+.open>.collapse{grid-template-rows:1fr}
+.open>.collapse>div{visibility:visible;transition-delay:0s}
+.alert-body{padding:0 var(--sp-16) var(--sp-16);display:flex;flex-direction:column;gap:var(--sp-12)}
+.alert-body p{font-size:var(--fs-14);line-height:var(--lh-14)}
+.alert-actions{display:flex;flex-wrap:wrap;gap:var(--sp-8)}
+.more-alerts{align-self:flex-start;min-height:44px;border:0;background:transparent;color:var(--c-on-blue);font-size:var(--fs-14);font-weight:600;display:flex;gap:var(--sp-4);align-items:center;cursor:pointer;padding-inline:var(--sp-4);border-radius:var(--r-8)}
+.more-alerts .ic{transition:transform var(--dur-base) var(--ease-std)}
+.more-alerts[aria-expanded="true"] .ic{transform:rotate(180deg)}
+.alert-stack{display:grid;grid-template-rows:0fr;transition:grid-template-rows var(--dur-base) var(--ease-std)}
+.alert-stack>div{overflow:hidden;visibility:hidden;transition:visibility 0s linear var(--dur-base);display:flex;flex-direction:column;gap:var(--sp-8)}
+.alert-stack.show{grid-template-rows:1fr}
+.alert-stack.show>div{visibility:visible;transition-delay:0s}
+
+/* Buttons */
+.btn{min-height:48px;padding-inline:var(--sp-16);border-radius:var(--r-12);border:0;font-size:var(--fs-16);line-height:var(--lh-16);font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:var(--sp-8);cursor:pointer;text-decoration:none;transition:background var(--dur-fast) var(--ease-std),transform var(--dur-fast) var(--ease-std),box-shadow var(--dur-fast)}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:var(--c-blue);color:var(--c-on-blue)}
+.btn-primary:hover{background:var(--c-blue-press)}
+.btn-secondary{background:var(--c-surface);color:var(--c-blue);box-shadow:inset 0 0 0 2px var(--c-blue)}
+.btn-ghost{background:transparent;color:var(--c-blue);padding-inline:var(--sp-8)}
+.btn-ghost:hover{background:var(--c-tint)}
+.btn-sm{min-height:44px;font-size:var(--fs-14);line-height:var(--lh-14);padding-inline:var(--sp-12)}
+.btn-block{width:100%}
+.btn .spinner{width:20px;height:20px;border-radius:50%;border:2px solid currentColor;border-right-color:transparent;animation:spin 700ms linear infinite}
+
+/* Modules */
+.mod{padding-inline:var(--sp-16);display:flex;flex-direction:column;gap:var(--sp-12);animation:rise var(--dur-slow) var(--ease-out) both;animation-delay:calc(var(--i,0) * 50ms)}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.mod-head{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-8);min-height:44px}
+.mod-head h2{font-size:var(--fs-18);line-height:var(--lh-18);font-weight:700;color:var(--c-blue);text-wrap:balance}
+.mod-head .grp{display:flex;align-items:center;gap:var(--sp-8);flex-wrap:wrap;min-width:0}
+.source{display:inline-flex;align-items:center;gap:var(--sp-4);font-size:var(--fs-12);line-height:var(--lh-12);font-weight:600;color:var(--c-text-2);background:var(--c-tint);border-radius:var(--r-full);padding:var(--sp-4) var(--sp-8)}
+.source .ic{width:16px;height:16px}
+.card{background:var(--c-surface);border-radius:var(--r-16);box-shadow:0 1px 2px rgba(0,30,60,.06),0 0 0 1px var(--c-border)}
+.press{transition:transform var(--dur-fast) var(--ease-std),background var(--dur-fast) var(--ease-std)}
+.press:active{transform:scale(.97)}
+
+/* Welcome (guest) */
+.welcome{padding:var(--sp-24) var(--sp-16);display:flex;flex-direction:column;gap:var(--sp-16);background:var(--c-surface);position:relative;overflow:hidden}
+.welcome h2{font-size:var(--fs-20);line-height:var(--lh-20);font-weight:700;color:var(--c-blue);max-width:85%;text-wrap:balance}
+.welcome p{color:var(--c-text);max-width:90%}
+.welcome .dot{position:absolute;right:calc(var(--sp-24) * -1);top:calc(var(--sp-24) * -1);width:96px;height:96px;border-radius:50%;background:var(--c-cyan);opacity:.18}
+.welcome ul{list-style:none;display:flex;flex-direction:column;gap:var(--sp-8);font-size:var(--fs-14);line-height:var(--lh-14);color:var(--c-text-2)}
+.welcome li{display:flex;gap:var(--sp-8);align-items:center}
+.welcome li .ic{color:var(--c-green);width:20px;height:20px}
+
+/* Appointments */
+.h-scroll{display:flex;gap:var(--sp-12);overflow-x:auto;scroll-snap-type:x mandatory;margin-inline:calc(var(--sp-16) * -1);padding-inline:var(--sp-16);scroll-padding-inline:var(--sp-16);scrollbar-width:none;padding-block:var(--sp-4)}
+.h-scroll::-webkit-scrollbar{display:none}
+.appt{flex:0 0 calc(100% - var(--sp-24));scroll-snap-align:start;padding:var(--sp-16);display:flex;flex-direction:column;gap:var(--sp-16);min-width:0}
+.appt-top{display:flex;gap:var(--sp-12);align-items:flex-start}
+.date{width:64px;flex:none;border-radius:var(--r-12);background:var(--c-tint);color:var(--c-blue);display:flex;flex-direction:column;align-items:center;padding-block:var(--sp-8);font-variant-numeric:tabular-nums}
+.date .m,.date .w{font-size:var(--fs-12);line-height:var(--lh-12);font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.date .w{color:var(--c-text-2);font-weight:600}
+.date .d{font-size:var(--fs-24);line-height:var(--lh-24);font-weight:800}
+.appt-info{display:flex;flex-direction:column;gap:var(--sp-4);min-width:0;flex:1}
+.appt-info h3{font-size:var(--fs-18);line-height:var(--lh-18);font-weight:700}
+.appt-info .when{font-weight:600}
+.appt-info .who,.appt-info .where{font-size:var(--fs-14);line-height:var(--lh-14);color:var(--c-text-2)}
+.appt-info .where{display:flex;gap:var(--sp-4);align-items:flex-start}
+.appt-info .where{align-items:center}
+.appt-info .where .ic{width:16px;height:16px}
+.notice{display:flex;gap:var(--sp-8);align-items:flex-start;background:var(--c-tint);border-radius:var(--r-12);padding:var(--sp-8) var(--sp-12);font-size:var(--fs-14);line-height:var(--lh-14)}
+.notice .ic{width:20px;height:20px;color:var(--c-blue)}
+.quick-acts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--sp-8)}
+.qa{min-height:72px;border:0;border-radius:var(--r-12);background:var(--c-tint);color:var(--c-blue);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--sp-4);padding:var(--sp-8) var(--sp-4);font-size:var(--fs-14);line-height:var(--lh-14);font-weight:600;cursor:pointer;text-align:center}
+.qa span{color:var(--c-text)}
+.qa:hover{background:var(--c-pastel)}
+.qa.done{background:var(--c-blue);color:var(--c-on-blue)}
+.qa.done span{color:var(--c-on-blue)}
+.qa .ic{transition:transform var(--dur-base) var(--ease-out)}
+.qa.done .ic{animation:pop var(--dur-slow) var(--ease-out)}
+@keyframes pop{0%{transform:scale(.6)}60%{transform:scale(1.15)}100%{transform:scale(1)}}
+.appt-foot{font-size:var(--fs-14);line-height:var(--lh-14);color:var(--c-text-2);display:flex;align-items:center;justify-content:space-between;gap:var(--sp-8)}
+.appt-foot .btn-ghost{min-height:44px;font-size:var(--fs-14)}
+.dots{display:flex;gap:var(--sp-8);justify-content:center;align-items:center;min-height:16px}
+.dots i{width:8px;height:8px;border-radius:var(--r-full);background:var(--c-border-strong);opacity:.5;transition:width var(--dur-base) var(--ease-out),background var(--dur-base),opacity var(--dur-base)}
+.dots i.on{width:24px;background:var(--c-blue);opacity:1}
+.skel{background:var(--c-skel);border-radius:var(--r-8);position:relative;overflow:hidden}
+.skel::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.7),transparent);transform:translateX(-100%);animation:shimmer 1s var(--ease-std) infinite}
+@keyframes shimmer{to{transform:translateX(100%)}}
+
+/* Quick tiles */
+.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--sp-12)}
+.tile{min-height:104px;border:0;background:var(--c-surface);border-radius:var(--r-16);box-shadow:0 0 0 1px var(--c-border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--sp-8);padding:var(--sp-12) var(--sp-8);cursor:pointer;text-align:center;font-size:var(--fs-14);line-height:var(--lh-14);font-weight:600;position:relative}
+.tile:hover{box-shadow:0 0 0 2px var(--c-blue)}
+.tile .ti{width:48px;height:48px;border-radius:50%;background:var(--c-tint);color:var(--c-blue);display:grid;place-items:center;position:relative}
+.tile .badge{border-color:var(--c-surface);top:calc(var(--sp-4) * -1);right:calc(var(--sp-4) * -1)}
+
+/* Campaign */
+.campaign{background:var(--c-blue);color:var(--c-on-blue);border-radius:var(--r-16);padding:var(--sp-24) var(--sp-16);display:flex;flex-direction:column;gap:var(--sp-12);position:relative;overflow:hidden}
+.campaign .eyebrow{color:var(--c-on-blue-2)}
+.campaign h2{font-size:var(--fs-24);line-height:var(--lh-24);font-weight:700;max-width:75%;text-wrap:balance}
+.campaign p{color:var(--c-on-blue-2);max-width:80%}
+.campaign .btn{align-self:flex-start;background:var(--c-surface);color:var(--c-blue)}
+.campaign .btn:focus-visible{outline-color:var(--c-on-blue)}
+.campaign .shape1{position:absolute;right:calc(var(--sp-32) * -1);top:calc(var(--sp-24) * -1);width:144px;height:144px;border-radius:50%;border:24px solid var(--c-cyan);opacity:.9}
+.campaign .shape2{position:absolute;right:var(--sp-24);top:88px;width:24px;height:24px;border-radius:50%;background:var(--c-green)}
+.campaign.summer{background:var(--c-orange-bg);color:var(--c-text)}
+.eyebrow{font-size:var(--fs-12);line-height:var(--lh-12);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--c-text-2)}
+
+/* Carousel */
+.carousel{display:flex;flex-direction:column;gap:var(--sp-12)}
+.slide{flex:0 0 calc(100% - var(--sp-48));scroll-snap-align:start;display:flex;min-width:0}
+.slide-btn{width:100%;overflow:hidden;display:flex;flex-direction:column;border:0;padding:0;text-align:left;cursor:pointer;background:var(--c-surface)}
+.art{height:144px;position:relative;overflow:hidden}
+.art i{position:absolute;display:block}
+.art-a{background:var(--c-blue)} .art-a i:nth-child(1){width:120px;height:120px;border-radius:50%;background:var(--c-cyan);right:24px;top:12px}.art-a i:nth-child(2){width:72px;height:72px;border-radius:50%;border:12px solid var(--c-on-blue);left:32px;bottom:-24px}.art-a i:nth-child(3){width:16px;height:16px;border-radius:50%;background:var(--c-on-blue);right:40px;top:40px}
+.art-b{background:var(--c-pastel)} .art-b i:nth-child(1){width:160px;height:80px;border-radius:80px 80px 0 0;background:var(--c-orange);left:24px;bottom:0}.art-b i:nth-child(2){width:48px;height:96px;border-radius:var(--r-12);background:var(--c-blue);right:48px;top:24px}.art-b i:nth-child(3){width:24px;height:24px;border-radius:50%;background:var(--c-cyan);right:120px;top:32px}
+.art-c{background:var(--c-sand)} .art-c i:nth-child(1){width:96px;height:96px;border-radius:50%;background:var(--c-green);left:40px;top:24px}.art-c i:nth-child(2){width:120px;height:48px;border-radius:var(--r-full);background:var(--c-purple);right:16px;bottom:24px}.art-c i:nth-child(3){width:32px;height:32px;border-radius:50%;background:var(--c-surface);left:112px;top:16px}
+.slide-txt{padding:var(--sp-16);display:flex;flex-direction:column;gap:var(--sp-4)}
+.slide-txt .st{font-size:var(--fs-18);line-height:var(--lh-18);font-weight:700;text-wrap:balance}
+.slide-txt .meta{font-size:var(--fs-14);line-height:var(--lh-14);color:var(--c-text-2)}
+.car-ctrl{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-8)}
+.car-ctrl .grp{display:flex;gap:var(--sp-8)}
+.car-ctrl .icon-btn{background:var(--c-surface);box-shadow:0 0 0 1px var(--c-border-strong);color:var(--c-blue)}
+.car-ctrl .icon-btn:hover{background:var(--c-tint)}
+
+/* Services & announcements */
+.list{display:flex;flex-direction:column;overflow:hidden}
+.row{display:flex;align-items:center;gap:var(--sp-12);padding:var(--sp-12) var(--sp-16);min-height:64px;border:0;background:transparent;text-align:left;width:100%;cursor:pointer;border-radius:0}
+.row+.row{box-shadow:0 -1px 0 var(--c-border)}
+.row:hover{background:var(--c-tint)}
+.row .ri{width:40px;height:40px;border-radius:var(--r-12);background:var(--c-tint);color:var(--c-blue);display:grid;place-items:center;flex:none}
+.row .rt{flex:1;min-width:0;display:flex;flex-direction:column;gap:var(--sp-4)}
+.row .rt b{font-weight:600;font-size:var(--fs-16);line-height:var(--lh-16)}
+.row .rt span{font-size:var(--fs-14);line-height:var(--lh-14);color:var(--c-text-2)}
+.row>.ic{color:var(--c-text-2)}
+.ann-date{width:56px;flex:none;font-size:var(--fs-12);line-height:var(--lh-12);font-weight:700;color:var(--c-blue);letter-spacing:.04em;align-self:flex-start;padding-top:var(--sp-4)}
+.new-pill{font-size:var(--fs-12);line-height:var(--lh-12);font-weight:700;color:var(--c-on-blue);background:var(--c-blue);border-radius:var(--r-full);padding:var(--sp-4) var(--sp-8);align-self:flex-start}
+
+/* Tab bar */
+.tabbar{flex:none;background:var(--c-surface);box-shadow:0 -1px 0 var(--c-border);display:grid;grid-template-columns:repeat(5,minmax(0,1fr));padding:var(--sp-4) var(--sp-4) var(--sp-24);position:relative;z-index:3}
+.tab{min-height:56px;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--sp-4);font-size:var(--fs-12);line-height:var(--lh-12);font-weight:600;color:var(--c-text-2);cursor:pointer;padding:var(--sp-4) 0;border-radius:var(--r-12)}
+.tab .pill{width:56px;height:32px;border-radius:var(--r-full);display:grid;place-items:center;transition:background var(--dur-base) var(--ease-out),transform var(--dur-base) var(--ease-out)}
+.tab[aria-current="page"]{color:var(--c-blue)}
+.tab[aria-current="page"] .pill{background:var(--c-tint);animation:pill var(--dur-slow) var(--ease-out)}
+@keyframes pill{from{transform:scaleX(.6)}to{transform:none}}
+.homebar{position:absolute;bottom:var(--sp-8);left:50%;width:136px;height:4px;margin-left:-68px;border-radius:var(--r-full);background:var(--c-text);opacity:.85;z-index:4;pointer-events:none}
+
+/* Toast */
+.toast{position:absolute;left:var(--sp-16);right:var(--sp-16);bottom:calc(var(--tabbar-h) + var(--sp-16));background:var(--c-text);color:#FFFFFF;border-radius:var(--r-12);padding:var(--sp-12) var(--sp-16);font-size:var(--fs-14);line-height:var(--lh-14);display:flex;gap:var(--sp-8);align-items:center;z-index:9;transform:translateY(16px);opacity:0;transition:opacity var(--dur-base) var(--ease-std),transform var(--dur-base) var(--ease-out);pointer-events:none}
+.toast.show{opacity:1;transform:none}
+.toast .ic{width:20px;height:20px;color:var(--c-muted-blue)}
+
+/* Sheet */
+.layer{position:absolute;inset:0;z-index:10}
+.scrim{position:absolute;inset:0;background:var(--c-scrim);opacity:0;transition:opacity var(--dur-slow) var(--ease-std)}
+.sheet{position:absolute;left:0;right:0;bottom:0;max-height:88%;background:var(--c-surface);border-radius:var(--r-24) var(--r-24) 0 0;display:flex;flex-direction:column;transform:translateY(100%);transition:transform var(--dur-slow) var(--ease-out);box-shadow:0 -8px 24px rgba(0,20,40,.2)}
+.layer.open .scrim{opacity:1}
+.layer.open .sheet{transform:none}
+.grab{width:40px;height:4px;border-radius:var(--r-full);background:var(--c-border-strong);margin:var(--sp-8) auto 0;flex:none}
+.sheet-head{display:flex;align-items:flex-start;justify-content:space-between;gap:var(--sp-12);padding:var(--sp-12) var(--sp-16) var(--sp-8) var(--sp-24);flex:none}
+.sheet-head h2{font-size:var(--fs-20);line-height:var(--lh-20);font-weight:700;color:var(--c-blue);padding-top:var(--sp-8);text-wrap:balance}
+.sheet-head .icon-btn{background:var(--c-tint);color:var(--c-text)}
+.sheet-body{overflow-y:auto;padding:var(--sp-8) var(--sp-24) var(--sp-40);display:flex;flex-direction:column;gap:var(--sp-16)}
+.sheet-body p{font-size:var(--fs-16)}
+.kv{display:flex;flex-direction:column;gap:var(--sp-12)}
+.kv div{display:flex;gap:var(--sp-12);align-items:flex-start}
+.kv .ic{color:var(--c-blue);width:20px;height:20px}
+.kv span{font-size:var(--fs-14);line-height:var(--lh-14);color:var(--c-text-2);display:block}
+.steps{list-style:none;counter-reset:s;display:flex;flex-direction:column;gap:var(--sp-12)}
+.steps li{counter-increment:s;display:flex;gap:var(--sp-12);align-items:flex-start}
+.steps li::before{content:counter(s);width:32px;height:32px;flex:none;border-radius:50%;background:var(--c-blue);color:var(--c-on-blue);font-weight:700;font-size:var(--fs-14);display:grid;place-items:center}
+.map{height:160px;border-radius:var(--r-16);background:var(--c-tint);position:relative;overflow:hidden;background-image:linear-gradient(var(--c-pastel) 2px,transparent 2px),linear-gradient(90deg,var(--c-pastel) 2px,transparent 2px);background-size:40px 40px}
+.map .road{position:absolute;left:-8px;right:-8px;top:88px;height:16px;background:var(--c-surface);transform:rotate(-8deg)}
+.map .pin{position:absolute;left:50%;top:40px;margin-left:-16px;width:32px;height:32px;color:var(--c-magenta)}
+.map .pin svg{width:32px;height:32px;fill:var(--c-surface);stroke:var(--c-magenta)}
+.sev{display:inline-flex;align-items:center;gap:var(--sp-8);align-self:flex-start;font-size:var(--fs-12);line-height:var(--lh-12);font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--c-red);background:var(--c-red-bg);padding:var(--sp-8) var(--sp-12);border-radius:var(--r-full)}
+.sev.advisory{color:var(--c-text);background:var(--c-orange-bg)}
+.sev .ic{width:16px;height:16px}
+.sheet-body h3{font-size:var(--fs-16);line-height:var(--lh-16);font-weight:700;color:var(--c-text)}
+.sheet-body ul.bul{padding-left:var(--sp-24);display:flex;flex-direction:column;gap:var(--sp-8)}
+.stack{display:flex;flex-direction:column;gap:var(--sp-8)}
+.fine{font-size:var(--fs-14);line-height:var(--lh-14);color:var(--c-text-2)}
+
+/* Search overlay */
+.search-layer{position:absolute;inset:0;z-index:8;background:var(--c-bg);display:flex;flex-direction:column;opacity:0;transform:translateY(24px);transition:opacity var(--dur-base) var(--ease-std),transform var(--dur-slow) var(--ease-out)}
+.search-layer.open{opacity:1;transform:none}
+.search-top{background:var(--c-blue);padding:var(--sp-8) var(--sp-16) var(--sp-16) var(--sp-8);display:flex;gap:var(--sp-8);align-items:center;color:var(--c-on-blue);padding-top:calc(var(--status-h) + var(--sp-8))}
+.field{flex:1;display:flex;align-items:center;gap:var(--sp-8);background:var(--c-surface);border-radius:var(--r-full);padding-inline:var(--sp-16) var(--sp-4);min-height:48px;color:var(--c-text);min-width:0}
+.field .ic{color:var(--c-blue)}
+.field input{flex:1;min-width:0;border:0;background:transparent;font:inherit;font-size:var(--fs-16);color:var(--c-text);min-height:44px}
+.field input::placeholder{color:var(--c-text-2)}
+.field input::-webkit-search-cancel-button{display:none}
+.field:focus-within{box-shadow:0 0 0 3px var(--c-cyan)}
+.field .icon-btn{width:40px;height:40px;color:var(--c-text-2)}
+.search-body{flex:1;overflow-y:auto;padding:var(--sp-16);display:flex;flex-direction:column;gap:var(--sp-24)}
+.search-body h2{font-size:var(--fs-14);line-height:var(--lh-14);font-weight:700;color:var(--c-text-2);letter-spacing:.06em;text-transform:uppercase}
+.chips{display:flex;flex-wrap:wrap;gap:var(--sp-8)}
+.chip{min-height:44px;padding-inline:var(--sp-16);border-radius:var(--r-full);border:1px solid var(--c-border-strong);background:var(--c-surface);color:var(--c-text);font-size:var(--fs-14);font-weight:600;display:inline-flex;align-items:center;gap:var(--sp-8);cursor:pointer}
+.chip .ic{width:16px;height:16px;color:var(--c-blue)}
+.chip:hover{background:var(--c-tint)}
+.res-group{display:flex;flex-direction:column;gap:var(--sp-8)}
+mark{background:var(--c-pastel);color:inherit;border-radius:2px}
+
+/* Other tabs */
+.page-view{padding:var(--sp-24) var(--sp-16) var(--sp-48);display:flex;flex-direction:column;gap:var(--sp-16)}
+.page-view h1{font-size:var(--fs-32);line-height:var(--lh-32);font-weight:800;color:var(--c-blue);letter-spacing:-.01em}
+.empty{padding:var(--sp-24) var(--sp-16);display:flex;flex-direction:column;gap:var(--sp-12);align-items:flex-start}
+.empty .ri{width:48px;height:48px;border-radius:50%;background:var(--c-tint);color:var(--c-blue);display:grid;place-items:center}
+
+/* Reduced motion: OS setting or prototype toggle */
+.screen.rm *,.screen.rm *::before,.screen.rm *::after{animation-duration:1ms!important;animation-iteration-count:1!important;transition-duration:1ms!important;scroll-behavior:auto!important}
+.screen.rm .skel::after{display:none}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:1ms!important;animation-iteration-count:1!important;transition-duration:1ms!important;scroll-behavior:auto!important}
+  .skel::after{display:none}
+}
+
+@media (max-width: 960px){
+  .layout{grid-template-columns:minmax(0,1fr)}
+  .stage{position:static}
+}
+@media (max-width: 460px){
+  .device{padding:0;background:transparent;box-shadow:none;border-radius:0;width:100%}
+  .screen{border-radius:var(--r-24);width:100%}
+}
+</style>
+
+<div class="page">
+  <header class="page-head">
+    <span class="appicon" role="img" aria-label="UTSW MyCare app icon"><!--APP_ICON--></span>
+    <div>
+      <h1>UTSW MyCare home screen</h1>
+      <p>Interactive prototype · iOS frame 390 × 844 pt, also checked at 360 pt · Sample data only</p>
+    </div>
+  </header>
+
+  <div class="layout">
+    <div class="stage">
+      <div class="device">
+        <div class="screen" id="screen">
+          <div class="statusbar" aria-hidden="true">
+            <span>9:41</span>
+            <span class="sys">
+              <svg viewBox="0 0 20 12"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5" width="3" height="7" rx="1"/><rect x="10" y="2" width="3" height="10" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+              <svg viewBox="0 0 26 12"><rect x="0.5" y="0.5" width="21" height="11" rx="3" fill="none" stroke="currentColor"/><rect x="2" y="2" width="15" height="8" rx="2"/><rect x="23" y="4" width="2" height="4" rx="1"/></svg>
+            </span>
+          </div>
+          <header class="appbar on-blue" id="appbar">
+            <span class="logo" role="img" aria-label="UTSW MyCare"><!--LOGO_REVERSED--></span>
+            <div class="acts" id="appbar-acts"></div>
+          </header>
+          <div class="views" id="views">
+            <main class="view" id="view-home" aria-label="Home">
+              <div class="ptr" id="ptr" aria-hidden="true"></div>
+              <div class="home-inner" id="home"></div>
+            </main>
+            <section class="view" id="view-other" hidden></section>
+          </div>
+          <nav class="tabbar" id="tabbar" aria-label="Main"></nav>
+          <div class="homebar" aria-hidden="true"></div>
+          <div class="toast" id="toast" role="status" aria-live="polite"></div>
+          <div class="sr-only" id="sr-assert" aria-live="assertive" aria-atomic="true"></div>
+          <div class="sr-only" id="sr-polite" aria-live="polite" aria-atomic="true"></div>
+          <div class="search-layer" id="search" role="dialog" aria-modal="true" aria-label="Search" hidden>
+            <div class="search-top on-blue">
+              <button class="icon-btn" data-action="close-search" aria-label="Close search"></button>
+              <div class="field">
+                <span class="si"></span>
+                <label class="sr-only" for="q">Search UT&nbsp;Southwestern</label>
+                <input id="q" type="search" placeholder="Doctors, locations, and more" autocomplete="off" enterkeyhint="search">
+                <button class="icon-btn" id="q-clear" data-action="clear-search" aria-label="Clear search" hidden></button>
+              </div>
+            </div>
+            <div class="search-body" id="search-body"></div>
+          </div>
+          <div class="layer" id="layer" hidden>
+            <div class="scrim" data-action="close-sheet"></div>
+            <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+              <div class="grab" aria-hidden="true"></div>
+              <div class="sheet-head">
+                <h2 id="sheet-title" tabindex="-1"></h2>
+                <button class="icon-btn" data-action="close-sheet" aria-label="Close"></button>
+              </div>
+              <div class="sheet-body" id="sheet-body"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="stage-note">Tap or click anything. Drag the home feed down to refresh. Keyboard and screen readers are supported.</p>
+    </div>
+
+    <div class="side">
+      <section class="panel" aria-labelledby="ctl-h">
+        <h2 id="ctl-h">Prototype controls</h2>
+        <div class="ctrl-grid">
+          <fieldset class="ctrl"><legend>Audience</legend>
+            <div class="seg" data-ctl="aud"><button data-v="guest">Guest</button><button data-v="auth">Signed in</button></div></fieldset>
+          <fieldset class="ctrl"><legend>Emergency alerts</legend>
+            <div class="seg" data-ctl="alerts"><button data-v="0">None</button><button data-v="1">One</button><button data-v="2">Two</button></div></fieldset>
+          <fieldset class="ctrl"><legend>Screen width</legend>
+            <div class="seg" data-ctl="fw"><button data-v="390">390 pt</button><button data-v="360">360 pt</button></div></fieldset>
+          <fieldset class="ctrl"><legend>Text size</legend>
+            <div class="seg" data-ctl="ts"><button data-v="1">Default</button><button data-v="2">Large</button></div></fieldset>
+          <fieldset class="ctrl"><legend>Motion</legend>
+            <div class="seg" data-ctl="rm"><button data-v="0">Full</button><button data-v="1">Reduced</button></div></fieldset>
+          <div class="ctrl"><span class="lbl">Refresh</span>
+            <button class="page-btn" id="sim-refresh">Simulate pull to refresh</button></div>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="cms-h">
+        <h2 id="cms-h">Module layout <span id="cms-aud"></span></h2>
+        <p>This is the order and visibility UTSW administrators set in the CMS. Changes show on the phone right away, with no app release. Expired items hide themselves.</p>
+        <ol class="cms-list" id="cms"></ol>
+      </section>
+
+      <section class="panel" aria-labelledby="spec-h" id="spec">
+        <h2 id="spec-h">Token spec</h2>
+        <p>Every size, gap, and color on the phone comes from these tokens. Font sizes are even numbers only; spacing uses one 4-pt scale.</p>
+
+        <h3>Type scale · Inter (Inter Display optical size at 20.0 and up)</h3>
+        <div class="spec-table-wrap"><table class="spec">
+          <thead><tr><th>Token</th><th>Size / line</th><th>Weight</th><th>Used for</th></tr></thead>
+          <tbody>
+            <tr><td><code>type-32</code></td><td class="num">32.0 / 40.0</td><td>800</td><td>Tab screen titles (Find care)</td></tr>
+            <tr><td><code>type-28</code></td><td class="num">28.0 / 36.0</td><td>700</td><td>Home greeting</td></tr>
+            <tr><td><code>type-24</code></td><td class="num">24.0 / 32.0</td><td>700–800</td><td>Campaign headline, date tile day</td></tr>
+            <tr><td><code>type-20</code></td><td class="num">20.0 / 28.0</td><td>700</td><td>Sheet titles, sign-in card title</td></tr>
+            <tr><td><code>type-18</code></td><td class="num">18.0 / 24.0</td><td>700</td><td>Section headings, card titles</td></tr>
+            <tr><td><code>type-16</code></td><td class="num">16.0 / 24.0</td><td>400–600</td><td>Body, buttons, list titles, alert titles (minimum body size)</td></tr>
+            <tr><td><code>type-14</code></td><td class="num">14.0 / 20.0</td><td>400–600</td><td>Secondary lines, tile labels, chips</td></tr>
+            <tr><td><code>type-12</code></td><td class="num">12.0 / 16.0</td><td>600–700</td><td>Eyebrows, tab labels, badges, source label (uppercase gets 0.06em tracking)</td></tr>
+          </tbody></table></div>
+        <p>Large text maps each token one or two steps up the same scale (12.0 → 14.0, 14.0 → 18.0, 16.0 → 20.0, 18.0 → 24.0, 20.0 → 24.0, 24.0 → 28.0, 28.0 → 32.0), so no odd sizes appear and nothing clips.</p>
+
+        <h3>Spacing · 4-pt base</h3>
+        <div class="spec-table-wrap"><table class="spec">
+          <thead><tr><th>Token</th><th>Value</th><th></th><th>Used for</th></tr></thead>
+          <tbody>
+            <tr><td><code>space-4</code></td><td class="num">4.0</td><td><span class="bar" style="width:4px"></span></td><td>Icon-to-label, title-to-meta</td></tr>
+            <tr><td><code>space-8</code></td><td class="num">8.0</td><td><span class="bar" style="width:8px"></span></td><td>Between buttons and chips (minimum target spacing)</td></tr>
+            <tr><td><code>space-12</code></td><td class="num">12.0</td><td><span class="bar" style="width:12px"></span></td><td>Grid gaps, inside cards, heading-to-content</td></tr>
+            <tr><td><code>space-16</code></td><td class="num">16.0</td><td><span class="bar" style="width:16px"></span></td><td>Screen gutter, card padding</td></tr>
+            <tr><td><code>space-24</code></td><td class="num">24.0</td><td><span class="bar" style="width:24px"></span></td><td>Between modules, sheet side padding</td></tr>
+            <tr><td><code>space-32</code></td><td class="num">32.0</td><td><span class="bar" style="width:32px"></span></td><td>Status bar inset, page sections</td></tr>
+            <tr><td><code>space-40</code></td><td class="num">40.0</td><td><span class="bar" style="width:40px"></span></td><td>Sheet bottom padding</td></tr>
+            <tr><td><code>space-48</code></td><td class="num">48.0</td><td><span class="bar" style="width:48px"></span></td><td>End of scroll, carousel peek</td></tr>
+          </tbody></table></div>
+
+        <h3>Color</h3>
+        <div class="spec-table-wrap"><table class="spec">
+          <thead><tr><th></th><th>Token</th><th>Hex</th><th>Role · contrast</th></tr></thead>
+          <tbody>
+            <tr><td><span class="sw" style="background:#004278"></span></td><td><code>blue</code></td><td class="num">#004278</td><td>UT&nbsp;Southwestern Blue (PMS 2945): app bar, headings, primary buttons, focus ring · 10.2:1 on white</td></tr>
+            <tr><td><span class="sw" style="background:#333333"></span></td><td><code>text</code></td><td class="num">#333333</td><td>UT&nbsp;Southwestern Gray: body text · 12.6:1 on white</td></tr>
+            <tr><td><span class="sw" style="background:#5B6770"></span></td><td><code>text-2</code></td><td class="num">#5B6770</td><td>Secondary text · 5.5:1 on #F7F8FA, 5.1:1 on #EBF0F5</td></tr>
+            <tr><td><span class="sw" style="background:#D6E4F0"></span></td><td><code>on-blue-2</code></td><td class="num">#D6E4F0</td><td>Secondary text on blue · 7.9:1</td></tr>
+            <tr><td><span class="sw" style="background:#00A9E0"></span></td><td><code>cyan</code></td><td class="num">#00A9E0</td><td>PMS 2995: shapes and search focus glow only, never text</td></tr>
+            <tr><td><span class="sw" style="background:#B0003A"></span></td><td><code>red</code></td><td class="num">#B0003A</td><td>Emergency label text · 6.4:1 on #FBEFF2</td></tr>
+            <tr><td><span class="sw" style="background:#E0004D"></span></td><td><code>magenta</code></td><td class="num">#E0004D</td><td>PMS 1925: emergency icon disc and stripe, badges (white glyph 4.9:1)</td></tr>
+            <tr><td><span class="sw" style="background:#E87722"></span></td><td><code>orange</code></td><td class="num">#E87722</td><td>PMS 158: advisory icon disc and stripe (gray glyph 4.3:1)</td></tr>
+            <tr><td><span class="sw" style="background:#43B02A"></span></td><td><code>green</code> · <code>purple</code></td><td class="num">#43B02A · #8246AF</td><td>Brights for illustration only</td></tr>
+            <tr><td><span class="sw" style="background:#F7F8FA"></span></td><td><code>bg</code> · <code>surface</code></td><td class="num">#F7F8FA · #FFFFFF</td><td>Screen background, cards</td></tr>
+            <tr><td><span class="sw" style="background:#EBF0F5"></span></td><td><code>tint</code></td><td class="num">#EBF0F5</td><td>Icon wells, action buttons, source label</td></tr>
+            <tr><td><span class="sw" style="background:#D5DDE5"></span></td><td><code>border</code> · <code>border-strong</code></td><td class="num">#D5DDE5 · #7A8690</td><td>Card outlines; control outlines (3.7:1, meets non-text 3:1)</td></tr>
+          </tbody></table></div>
+
+        <h3>Radii</h3>
+        <div class="spec-table-wrap"><table class="spec">
+          <thead><tr><th>Token</th><th>Value</th><th>Used for</th></tr></thead>
+          <tbody>
+            <tr><td><code>radius-8</code></td><td class="num">8.0</td><td>Focus ring, skeleton bars</td></tr>
+            <tr><td><code>radius-12</code></td><td class="num">12.0</td><td>Buttons, action wells, date tile, notices</td></tr>
+            <tr><td><code>radius-16</code></td><td class="num">16.0</td><td>Cards, alert banner, tiles</td></tr>
+            <tr><td><code>radius-24</code></td><td class="num">24.0</td><td>Bottom sheets, hero base</td></tr>
+            <tr><td><code>radius-full</code></td><td class="num">999</td><td>Search field, chips, pills, avatar</td></tr>
+          </tbody></table></div>
+
+        <h3>Motion</h3>
+        <div class="spec-table-wrap"><table class="spec">
+          <thead><tr><th>Token</th><th>Value</th><th>Used for</th></tr></thead>
+          <tbody>
+            <tr><td><code>duration-fast</code></td><td class="num">150 ms</td><td>Press scale (0.97–0.98), hover tints</td></tr>
+            <tr><td><code>duration-base</code></td><td class="num">200 ms</td><td>Alert expand, tab switch, toast, carousel dots</td></tr>
+            <tr><td><code>duration-slow</code></td><td class="num">300 ms</td><td>Bottom sheets, module entrance (50 ms stagger), search overlay</td></tr>
+            <tr><td><code>ease-out</code></td><td class="num">cubic-bezier(0.2, 0, 0, 1)</td><td>Things entering the screen</td></tr>
+            <tr><td><code>ease-standard</code></td><td class="num">cubic-bezier(0.4, 0, 0.2, 1)</td><td>State changes in place</td></tr>
+            <tr><td><code>carousel-dwell</code></td><td class="num">6 s</td><td>Auto-advance; pauses on touch, hover, or focus; pause button; off with reduced motion</td></tr>
+          </tbody></table></div>
+        <p>Reduced motion (OS setting or the toggle above) turns off entrance, slide, shimmer, and auto-advance; state changes become instant. Nothing flashes.</p>
+
+        <h3>Accessibility notes</h3>
+        <ul class="spec-notes" style="padding-left:var(--sp-24);display:flex;flex-direction:column;gap:var(--sp-8);font-size:var(--fs-14);line-height:var(--lh-14)">
+          <li>Touch targets are at least 44 × 44 (buttons 48 tall, tabs 56), with at least 8.0 between them.</li>
+          <li>Alert severity uses an icon, a word, and color. New alerts are read out through an assertive live region.</li>
+          <li>Sheets and search trap focus, close with Escape, and return focus to the control that opened them.</li>
+          <li>Every icon button has a name; decorative art and the status bar are hidden from screen readers.</li>
+          <li>The carousel is a labeled region with slide labels (“1 of 3”), previous, next, and pause controls.</li>
+        </ul>
+      </section>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+const I={
+ search:'<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
+ bell:'<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
+ user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+ alert:'<path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
+ info:'<circle cx="12" cy="12" r="9"/><path d="M12 16v-4"/><path d="M12 8h.01"/>',
+ chevD:'<path d="m6 9 6 6 6-6"/>', chevU:'<path d="m18 15-6-6-6 6"/>', chevR:'<path d="m9 18 6-6-6-6"/>', chevL:'<path d="m15 18-6-6 6-6"/>',
+ x:'<path d="M18 6 6 18M6 6l12 12"/>',
+ pin:'<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>',
+ nav:'<path d="m3 11 19-9-9 19-2-8-8-2z"/>',
+ sign:'<path d="M12 3v18"/><path d="M5 5h11l3 3-3 3H5z"/><path d="M19 13H8l-3 3 3 3h11z"/>',
+ car:'<path d="M19 17h2v-4l-2-6H5L3 13v4h2"/><circle cx="7.5" cy="17" r="2"/><circle cx="16.5" cy="17" r="2"/><path d="M9.5 17h5M3 13h18"/>',
+ calPlus:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M12 14v4M10 16h4"/>',
+ cal:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
+ ext:'<path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>',
+ home:'<path d="M3 10 12 3l9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1Z"/>',
+ steth:'<path d="M5 3v6a5 5 0 0 0 10 0V3"/><path d="M10 14v1a5 5 0 0 0 10 0v-3"/><circle cx="20" cy="10" r="2"/>',
+ msg:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
+ menu:'<path d="M4 6h16M4 12h16M4 18h16"/>',
+ flask:'<path d="M9 3h6M10 3v6L4.5 19a1.5 1.5 0 0 0 1.3 2h12.4a1.5 1.5 0 0 0 1.3-2L14 9V3"/><path d="M7 15h10"/>',
+ pill:'<path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/>',
+ cardpay:'<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/>',
+ clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+ play:'<path d="M7 4v16l13-8z"/>', pause:'<path d="M8 5v14M16 5v14"/>',
+ video:'<rect x="2" y="6" width="14" height="12" rx="2"/><path d="m16 10 6-4v12l-6-4"/>',
+ plus:'<rect x="3" y="3" width="18" height="18" rx="4"/><path d="M12 8v8M8 12h8"/>',
+ phone:'<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2Z"/>',
+ mega:'<path d="M3 11v3a1 1 0 0 0 1 1h3l6 4V6L7 10H4a1 1 0 0 0-1 1Z"/><path d="M17 9a4 4 0 0 1 0 6"/>',
+ heart:'<path d="M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.8 0-3 .5-4.5 2-1.5-1.5-2.7-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4 3 5.5l7 7Z"/>',
+ refresh:'<path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/>',
+ check:'<path d="M20 6 9 17l-5-5"/>',
+ back:'<path d="M19 12H5M12 19l-7-7 7-7"/>',
+ trend:'<path d="m22 7-8.5 8.5-5-5L2 17"/><path d="M16 7h6v6"/>',
+ lock:'<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+ link:'<path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/>',
+ doc:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/>',
+ building:'<rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4M8 6h2M14 6h2M8 10h2M14 10h2M8 14h2M14 14h2"/>'
+};
+const ic=(n,c="")=>`<svg class="ic ${c}" viewBox="0 0 24 24" aria-hidden="true" focusable="false">${I[n]}</svg>`;
+
+/* ---------- Sample content (fictional) ---------- */
+const ALERTS=[
+ {id:"a1",level:"emergency",label:"Emergency",posted:"Posted 7:15 a.m.",
+  title:"Severe weather: Clinics close at 3 p.m. today",
+  summary:"All outpatient clinics close at 3 p.m. Tuesday, Oct. 13, because of forecast storms and hail. Emergency departments stay open.",
+  expires:"Ends Wednesday, Oct. 14, at 7 a.m.", where:"All outpatient clinics (sample alert)",
+  body:["If your visit is after 3 p.m. today, your care team will contact you to reschedule. You don’t need to call.","Video visits will go ahead as planned.","If you have a medical emergency, call 911 or go to the nearest emergency department."],
+  phone:"214-555-0100", dismissible:false},
+ {id:"a2",level:"advisory",label:"Advisory",posted:"Posted Oct. 12",
+  title:"Garage C entrance closed Oct. 14–16",
+  summary:"Use the north entrance on Sample Parkway while crews repair the ramp. Valet parking is free during the closure.",
+  expires:"Ends Friday, Oct. 16, at 6 p.m.", where:"Lakeview campus, Garage C (sample alert)",
+  body:["The north entrance stays open 24 hours a day.","Allow 10 extra minutes to park and walk to your appointment."],
+  phone:"214-555-0120", dismissible:true}
+];
+const APPTS=[
+ {id:"p1",type:"Annual checkup",when:"Tomorrow, 9:30 a.m.",sr:"Wednesday, Oct. 14, at 9:30 a.m.",m:"Oct",d:"14",w:"Wed",
+  who:"Jordan Avery, M.D. · Internal Medicine",short:"Dr. Avery",loc:"Lakeview Primary Care",addr:"4100 Sample Parkway, Suite 200, Dallas",
+  notice:"Arrive by 9:15 a.m. to check in.",mode:"in",actions:["directions","wayfinding","rideshare","calendar","mychart"]},
+ {id:"p2",type:"Follow-up video visit",when:"Wednesday, Oct. 21, 2 p.m.",sr:"Wednesday, Oct. 21, at 2 p.m.",m:"Oct",d:"21",w:"Wed",
+  who:"Priya Shah, M.D. · Cardiology",short:"Dr. Shah",loc:"Video visit",addr:"",
+  notice:"You can join from MyChart starting at 1:45 p.m.",mode:"video",actions:["calendar","mychart"]}
+];
+const TILES={
+ guest:[["find","Find a doctor","steth"],["locations","Locations","pin"],["urgent","Urgent care","plus"],["bill","Pay a bill","cardpay"],["virtual","Virtual visits","video"],["contact","Contact us","phone"]],
+ auth:[["find","Find a doctor","steth"],["messages","Messages","msg",1],["results","Test results","flask"],["meds","Medications","pill"],["bill","Pay a bill","cardpay"],["book","Schedule a visit","calPlus"]]
+};
+const SLIDES=[
+ {eb:"Health tips",t:"Five ways to get ready for flu season",m:"4 min read",a:"a"},
+ {eb:"Patient guide",t:"What to expect at your first visit",m:"3 min read",a:"b"},
+ {eb:"Wellness",t:"Simple meals for a busy week",m:"5 min read",a:"c"}
+];
+const SERVICES=[
+ ["video","Virtual visits","See a provider by video from home"],
+ ["plus","Urgent care","Walk in or save your spot online"],
+ ["heart","Heart and vascular care","Screenings, treatment, and rehab"],
+ ["pill","Pharmacy refills","Refill and pick up prescriptions"]
+];
+const ANN=[
+ {d:"Oct. 9",t:"Saturday hours at Lakeview Primary Care",s:"Open 8 a.m. to noon starting Oct. 17.",isNew:true},
+ {d:"Oct. 2",t:"Updated visitor guidelines",s:"Two visitors per patient on inpatient units."},
+ {d:"Sept. 28",t:"Pay bills faster in the app",s:"Save a payment method for next time."}
+];
+const SEARCH=[
+ {t:"Jordan Avery, M.D.",s:"Internal Medicine · Lakeview Primary Care",k:"provider",kw:"primary care internal medicine doctor checkup"},
+ {t:"Priya Shah, M.D.",s:"Cardiology · Northgate Heart Clinic",k:"provider",kw:"heart cardiology cardiologist"},
+ {t:"Morgan Lee, M.D.",s:"Pediatrics · Lakeview Primary Care",k:"provider",kw:"children kids pediatrician primary care"},
+ {t:"Sam Okafor, M.D.",s:"Orthopaedics · Riverside Sports Medicine",k:"provider",kw:"knee pain bone joint sports"},
+ {t:"Lakeview Primary Care",s:"4100 Sample Parkway, Suite 200, Dallas",k:"location",kw:"clinic primary care"},
+ {t:"Northgate Urgent Care",s:"Open today 8 a.m. – 8 p.m.",k:"location",kw:"urgent care walk in"},
+ {t:"Riverside Pharmacy",s:"Open today 9 a.m. – 6 p.m.",k:"location",kw:"pharmacy hours prescription refill"},
+ {t:"Five ways to get ready for flu season",s:"Health tips · 4 min read",k:"content",kw:"flu shot vaccine"},
+ {t:"What to expect at your first visit",s:"Patient guide · 3 min read",k:"content",kw:"new patient"},
+ {t:"Pay a bill",s:"Billing and payments",k:"resource",kw:"billing payment cost"},
+ {t:"Billing questions",s:"Call 214-555-0110",k:"resource",kw:"billing insurance pay"},
+ {t:"Request medical records",s:"Forms and requests",k:"resource",kw:"records form"},
+ {t:"Get a flu shot",s:"Schedule at a clinic or pharmacy",k:"resource",kw:"flu shot vaccine"}
+];
+const TOP=["Primary care","Urgent care","Cardiology","Pharmacy hours","Pay a bill","Flu shot"];
+const KIND={provider:["Providers","user"],location:["Locations","pin"],content:["Health content","doc"],resource:["Resources","link"]};
+
+/* ---------- CMS configuration (stands in for admin-managed layout) ---------- */
+const MODS={
+ welcome:{name:"Sign-in card",meta:"Guest only"},
+ appointments:{name:"Upcoming appointments",meta:"Signed in only · Source: Epic/MyChart"},
+ tiles:{name:"Quick access tiles",meta:"Six tiles per audience"},
+ campaign:{name:"Campaign banner · Flu shots",meta:"Live Oct. 1 – Nov. 30"},
+ featured:{name:"Featured content",meta:"Carousel · three stories"},
+ services:{name:"Highlighted services",meta:"Four services"},
+ announcements:{name:"Announcements",meta:"Newest first"},
+ summer:{name:"Campaign banner · Summer safety",meta:"Ended Sept. 30 – hidden automatically",expired:true}
+};
+const DEFAULT_LAYOUT={
+ guest:["welcome","tiles","campaign","featured","services","announcements","summer"],
+ auth:["appointments","tiles","announcements","featured","campaign","services","summer"]
+};
+const S={aud:"auth",alerts:2,fw:390,ts:1,rm:false,tab:"home",
+  layout:{guest:DEFAULT_LAYOUT.guest.map(id=>({id,on:!MODS[id].expired})),auth:DEFAULT_LAYOUT.auth.map(id=>({id,on:!MODS[id].expired}))},
+  dismissed:new Set(),added:new Set(),refreshing:false,updated:"9:41 a.m.",paused:false};
+const osRM=window.matchMedia("(prefers-reduced-motion: reduce)");
+S.rm=osRM.matches;
+const rm=()=>S.rm||osRM.matches;
+
+const screen=$("#screen"),home=$("#home"),viewHome=$("#view-home"),viewOther=$("#view-other");
+
+/* ---------- Renderers ---------- */
+function activeAlerts(){return ALERTS.slice(0,S.alerts).filter(a=>!S.dismissed.has(a.id))}
+
+function alertCard(a,stacked){
+  const id="al-"+a.id;
+  return `<article class="alert ${a.level}${stacked?" stacked":""}" data-alert="${a.id}">
+    <h2><button class="alert-toggle" aria-expanded="false" aria-controls="${id}" data-action="toggle-alert">
+      <span class="alert-ico">${ic("alert")}</span>
+      <span class="alert-txt"><span class="alert-meta"><b>${a.label}</b> · ${a.posted}</span><span class="alert-title">${esc(a.title)}</span></span>
+      ${ic("chevD","chev")}
+    </button></h2>
+    <div class="collapse" id="${id}"><div><div class="alert-body">
+      <p>${esc(a.summary)}</p>
+      <div class="alert-actions">
+        <button class="btn btn-primary btn-sm" data-action="alert-details" data-id="${a.id}">Read full alert</button>
+        ${a.dismissible?`<button class="btn btn-ghost btn-sm" data-action="dismiss-alert" data-id="${a.id}">Dismiss</button>`:""}
+      </div>
+    </div></div></div>
+  </article>`;
+}
+function renderAlerts(){
+  const list=activeAlerts();
+  if(!list.length) return "";
+  const [first,...rest]=list;
+  return `<section class="alerts on-blue" aria-label="Active alerts">
+    ${alertCard(first,rest.length>0)}
+    ${rest.length?`<div class="alert-stack" id="alert-stack"><div>${rest.map(a=>alertCard(a,false)).join("")}</div></div>
+    <button class="more-alerts" aria-expanded="false" aria-controls="alert-stack" data-action="more-alerts"><span>${rest.length===1?"1 more alert":rest.length+" more alerts"}</span>${ic("chevD","sm")}</button>`:""}
+  </section>`;
+}
+function renderHero(){
+  const signed=S.aud==="auth";
+  return `<section class="hero on-blue" aria-label="Greeting and search">
+    <div>
+      <h1>${signed?"Good morning, Alex":"Welcome to UTSW MyCare"}</h1>
+      <p class="sub">${signed?"Tuesday, Oct. 13":"Care from UT&nbsp;Southwestern Medical Center, all in one app"}</p>
+    </div>
+    <button class="search-entry" data-action="open-search" aria-haspopup="dialog">${ic("search")}<span>Search doctors and locations</span></button>
+  </section>`;
+}
+const M={};
+M.welcome=()=>`<div class="card welcome"><span class="dot" aria-hidden="true"></span>
+  <h2 id="h-welcome">Manage your care in one place</h2>
+  <p>Sign in with your MyChart account to see appointments, messages, and test results.</p>
+  <ul><li>${ic("check")}Check in before you arrive</li><li>${ic("check")}Get directions to your visit</li><li>${ic("check")}Message your care team</li></ul>
+  <div class="stack">
+    <button class="btn btn-primary btn-block" data-action="sign-in">${ic("lock","sm")}<span>Sign in with MyChart</span></button>
+    <button class="btn btn-secondary btn-block" data-action="toast" data-msg="Opens MyChart sign-up">Create an account</button>
+  </div></div>`;
+M.appointments=()=>{
+  const cards=S.refreshing?[0,1].map(()=>`<div class="card appt" aria-hidden="true">
+      <div class="appt-top"><div class="skel" style="width:64px;height:88px;border-radius:var(--r-12)"></div>
+      <div class="appt-info"><div class="skel" style="height:20px;width:70%"></div><div class="skel" style="height:16px;width:50%"></div><div class="skel" style="height:16px;width:85%"></div></div></div>
+      <div class="skel" style="height:48px;border-radius:var(--r-12)"></div><div class="skel" style="height:72px;border-radius:var(--r-12)"></div></div>`).join("")
+   :APPTS.map((a,i)=>{
+    const has=x=>a.actions.includes(x);
+    const sec=[];
+    if(has("wayfinding")) sec.push(`<button class="qa press" data-action="sheet" data-sheet="wayfinding" data-id="${a.id}">${ic("sign")}<span>Indoor map</span></button>`);
+    if(has("rideshare")) sec.push(`<button class="qa press" data-action="sheet" data-sheet="rideshare" data-id="${a.id}">${ic("car")}<span>Get a ride</span></button>`);
+    if(has("calendar")){const done=S.added.has(a.id);sec.push(`<button class="qa press${done?" done":""}" data-action="calendar" data-id="${a.id}" aria-pressed="${done}">${ic(done?"check":"calPlus")}<span>${done?"Added":"Add to calendar"}</span></button>`)}
+    return `<article class="card appt" role="group" aria-roledescription="appointment" aria-label="${i+1} of ${APPTS.length}: ${esc(a.type)}, ${esc(a.sr)}">
+      <div class="appt-top">
+        <div class="date" aria-hidden="true"><span class="m">${a.m}</span><span class="d">${a.d}</span><span class="w">${a.w}</span></div>
+        <div class="appt-info">
+          <h3>${esc(a.type)}</h3>
+          <span class="when"><span class="sr-only">${esc(a.sr)}</span><span aria-hidden="true">${esc(a.when)}</span></span>
+          <span class="who">${esc(a.who)}</span>
+          <span class="where">${ic(a.mode==="video"?"video":"pin")}<span>${esc(a.loc)}${a.addr?", Suite 200":""}</span></span>
+        </div>
+      </div>
+      <div class="notice">${ic(a.mode==="video"?"clock":"info")}<span>${esc(a.notice)}</span></div>
+      ${has("directions")?`<button class="btn btn-primary btn-block press" data-action="sheet" data-sheet="directions" data-id="${a.id}">${ic("nav","sm")}<span>Get directions</span></button>`:""}
+      ${sec.length?`<div class="quick-acts" style="grid-template-columns:repeat(${sec.length},minmax(0,1fr))">${sec.join("")}</div>`:""}
+      ${has("mychart")?`<button class="btn btn-ghost" style="align-self:flex-start" data-action="toast" data-msg="Opening this appointment in MyChart">${ic("ext","sm")}<span>Open in MyChart</span></button>`:""}
+    </article>`}).join("");
+  return `<div class="mod-head"><div class="grp"><h2 id="h-appointments">Upcoming appointments</h2><span class="source">${ic("link")}From MyChart</span></div>
+      <button class="btn btn-ghost btn-sm" style="white-space:nowrap" data-action="tab" data-tab="appts">See all</button></div>
+    <div class="h-scroll" id="appt-scroll" aria-busy="${S.refreshing}">${cards}</div>
+    <div class="dots" id="appt-dots" aria-hidden="true">${APPTS.map((_,i)=>`<i class="${i?"":"on"}"></i>`).join("")}</div>
+    <div class="appt-foot"><span>Times and details come from MyChart. Updated ${S.updated}</span>
+      <button class="btn btn-ghost" data-action="refresh" aria-label="Refresh appointments">${ic("refresh","sm")}</button></div>`;
+};
+M.tiles=()=>`<div class="mod-head"><h2 id="h-tiles">Quick access</h2></div>
+  <div class="tiles">${TILES[S.aud].map(([k,l,i,b])=>`<button class="tile press" data-action="tile" data-k="${k}" data-l="${l}"${b?` aria-label="${l}, ${b} unread"`:""}>
+    <span class="ti">${ic(i)}${b?`<span class="badge" aria-hidden="true">${b}</span>`:""}</span><span>${l}</span></button>`).join("")}</div>`;
+M.campaign=()=>`<div class="campaign"><span class="shape1" aria-hidden="true"></span><span class="shape2" aria-hidden="true"></span>
+  <span class="eyebrow">Seasonal care</span>
+  <h2 id="h-campaign">Flu shots are here</h2>
+  <p>Get yours at any primary care clinic or pharmacy. Most insurance covers it.</p>
+  <button class="btn press" data-action="toast" data-msg="Opens flu shot scheduling">Schedule a flu shot</button></div>`;
+M.summer=()=>`<div class="campaign summer"><h2 id="h-summer">Stay safe in the heat</h2></div>`;
+M.featured=()=>`<div class="mod-head"><h2 id="h-featured">Featured</h2></div>
+  <div class="carousel" role="region" aria-roledescription="carousel" aria-labelledby="h-featured">
+    <div class="h-scroll" id="car-scroll">${SLIDES.map((s,i)=>`<div class="slide" role="group" aria-roledescription="slide" aria-label="${i+1} of ${SLIDES.length}"><button class="card slide-btn press" data-action="toast" data-msg="Opens: ${esc(s.t)}">
+      <span class="art art-${s.a}" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="slide-txt"><span class="eyebrow">${s.eb}</span><span class="st">${esc(s.t)}</span><span class="meta">${s.m}</span></span></button></div>`).join("")}</div>
+    <div class="car-ctrl">
+      <button class="icon-btn" data-action="car-pause" id="car-pause" aria-label="${S.paused||rm()?"Play slideshow":"Pause slideshow"}">${ic(S.paused||rm()?"play":"pause","sm")}</button>
+      <div class="dots" id="car-dots" aria-hidden="true">${SLIDES.map((_,i)=>`<i class="${i?"":"on"}"></i>`).join("")}</div>
+      <div class="grp"><button class="icon-btn" data-action="car-prev" aria-label="Previous slide">${ic("chevL","sm")}</button><button class="icon-btn" data-action="car-next" aria-label="Next slide">${ic("chevR","sm")}</button></div>
+    </div>
+  </div>`;
+M.services=()=>`<div class="mod-head"><h2 id="h-services">Services for you</h2></div>
+  <div class="card list">${SERVICES.map(([i,t,d])=>`<button class="row" data-action="toast" data-msg="Opens ${t}"><span class="ri">${ic(i)}</span><span class="rt"><b>${t}</b><span>${d}</span></span>${ic("chevR","sm")}</button>`).join("")}</div>`;
+M.announcements=()=>`<div class="mod-head"><h2 id="h-announcements">Announcements</h2></div>
+  <div class="card list">${ANN.map(a=>`<button class="row" data-action="toast" data-msg="Opens: ${esc(a.t)}"><span class="ann-date">${a.d}</span><span class="rt"><b>${esc(a.t)}</b><span>${esc(a.s)}</span></span>${a.isNew?`<span class="new-pill">New</span>`:ic("chevR","sm")}</button>`).join("")}</div>`;
+
+function visibleModules(){
+  return S.layout[S.aud].filter(m=>m.on && !MODS[m.id].expired);
+}
+function renderHome(){
+  const mods=visibleModules().map((m,i)=>`<section class="mod" data-mod="${m.id}" style="--i:${i+1}" aria-labelledby="h-${m.id}">${M[m.id]()}</section>`).join("");
+  home.innerHTML=`<div class="top">${renderAlerts()}${renderHero()}</div>`+mods;
+  initCarousel(); initApptDots();
+}
+function renderAppbar(){
+  const a=$("#appbar-acts");
+  a.innerHTML=S.aud==="auth"
+   ?`<button class="icon-btn" data-action="sheet" data-sheet="notifications" aria-label="Notifications, 2 new">${ic("bell")}<span class="badge" aria-hidden="true">2</span></button>
+     <button class="icon-btn" data-action="sheet" data-sheet="account" aria-label="Account: Alex Rivera"><span class="avatar" aria-hidden="true">AR</span></button>`
+   :`<button class="icon-btn" data-action="sign-in" aria-label="Sign in">${ic("user")}</button>`;
+}
+const TABS=[["home","Home","home"],["find","Find care","steth"],["appts","Visits","cal"],["messages","Messages","msg"],["menu","Menu","menu"]];
+function renderTabbar(){
+  $("#tabbar").innerHTML=TABS.map(([k,l,i])=>`<button class="tab" data-action="tab" data-tab="${k}"${S.tab===k?' aria-current="page"':""}><span class="pill">${ic(i)}</span><span>${l}</span></button>`).join("");
+}
+function renderOther(){
+  const t=S.tab, signed=S.aud==="auth";
+  let h="";
+  if(t==="find"){
+    h=`<h1>Find care</h1>
+     <button class="search-entry" style="box-shadow:0 0 0 1px var(--c-border-strong)" data-action="open-search" aria-haspopup="dialog">${ic("search")}<span>Try “knee pain doctor near me”</span></button>
+     <div class="chips">${["Primary care","Pediatrics","Cardiology","Orthopaedics","Dermatology"].map(c=>`<button class="chip" data-action="search-term" data-q="${c}">${c}</button>`).join("")}</div>
+     <div class="card list">${SEARCH.filter(r=>r.k==="provider").map(r=>`<button class="row" data-action="toast" data-msg="Opens profile: ${esc(r.t)}"><span class="ri">${ic("user")}</span><span class="rt"><b>${esc(r.t)}</b><span>${esc(r.s)}</span></span>${ic("chevR","sm")}</button>`).join("")}</div>
+     <p class="fine">Provider Search is the next module in the requirements. Sample providers are fictional.</p>`;
+  }else if(t==="appts"&&signed){
+    h=`<h1>Appointments</h1><span class="source" style="align-self:flex-start">${ic("link")}From MyChart</span>
+     <div class="card list">${APPTS.map(a=>`<button class="row" data-action="toast" data-msg="Opening this appointment in MyChart"><span class="ri">${ic(a.mode==="video"?"video":"cal")}</span><span class="rt"><b>${esc(a.type)}</b><span>${esc(a.sr)} · ${esc(a.short)}</span></span>${ic("chevR","sm")}</button>`).join("")}</div>`;
+  }else if((t==="appts"||t==="messages")&&!signed){
+    const l=t==="appts"?"appointments":"messages";
+    h=`<h1>${t==="appts"?"Appointments":"Messages"}</h1><div class="card empty"><span class="ri">${ic("lock")}</span><h2 style="font-size:var(--fs-18);line-height:var(--lh-18);color:var(--c-blue)">Sign in to see your ${l}</h2><p>Your ${l} come from your MyChart account.</p><button class="btn btn-primary" data-action="sign-in">Sign in with MyChart</button></div>`;
+  }else{
+    const n=t==="messages"?"Messages":"Menu";
+    h=`<h1>${n}</h1><div class="card empty"><span class="ri">${ic(t==="messages"?"msg":"menu")}</span><p>This screen is outside the home screen scope of this prototype.</p><button class="btn btn-secondary" data-action="tab" data-tab="home">Back to home</button></div>`;
+  }
+  viewOther.innerHTML=`<div class="page-view">${h}</div>`;
+}
+function renderCMS(){
+  $("#cms-aud").textContent=S.aud==="auth"?"· Signed in":"· Guest";
+  const L=S.layout[S.aud];
+  const pinned=`<li class="cms-row"><span class="pos" aria-hidden="true">–</span><span class="nm"><b>Emergency alerts</b><span>Pinned to top while active · Emergency before advisory, then newest</span></span></li>
+   <li class="cms-row"><span class="pos" aria-hidden="true">–</span><span class="nm"><b>Greeting and search</b><span>Pinned below alerts</span></span></li>`;
+  $("#cms").innerHTML=pinned+L.map((m,i)=>{const d=MODS[m.id];return `<li class="cms-row${m.on&&!d.expired?"":" off"}">
+    <span class="pos">${i+1}</span>
+    <span class="nm"><b>${d.name}</b><span>${d.meta}</span></span>
+    <span class="mv"><button data-cms="up" data-id="${m.id}" aria-label="Move ${d.name} up" ${i===0?"disabled":""}>${ic("chevU")}</button><button data-cms="down" data-id="${m.id}" aria-label="Move ${d.name} down" ${i===L.length-1?"disabled":""}>${ic("chevD")}</button></span>
+    <label class="switch"><input type="checkbox" id="vis-${S.aud}-${m.id}" data-cms="vis" data-id="${m.id}" ${m.on&&!d.expired?"checked":""} ${d.expired?"disabled":""} aria-label="Show ${d.name}"><span></span></label>
+  </li>`}).join("");
+}
+function syncControls(){
+  const v={aud:S.aud,alerts:String(S.alerts),fw:String(S.fw),ts:String(S.ts),rm:S.rm?"1":"0"};
+  $$(".seg").forEach(g=>$$("button",g).forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.v===v[g.dataset.ctl]))));
+  screen.style.setProperty("--fw",S.fw+"px");
+  screen.classList.toggle("large",S.ts===2);
+  screen.classList.toggle("rm",S.rm);
+}
+function renderAll(){renderAppbar();renderTabbar();renderHome();renderCMS();syncControls();if(S.tab!=="home")renderOther()}
+
+/* ---------- Carousel + dots ---------- */
+let carTimer=null;
+function slideIndex(sc){const first=sc.firstElementChild;if(!first)return 0;const w=first.getBoundingClientRect().width+12;return Math.round(sc.scrollLeft/w)}
+function setDots(dots,i){$$("i",dots).forEach((d,k)=>d.classList.toggle("on",k===i))}
+function goSlide(sc,i){const kids=sc.children;const n=kids.length;i=(i+n)%n;sc.scrollTo({left:kids[i].offsetLeft-sc.firstElementChild.offsetLeft,behavior:rm()?"auto":"smooth"})}
+function initCarousel(){
+  clearInterval(carTimer);
+  const sc=$("#car-scroll"); if(!sc) return;
+  const dots=$("#car-dots");
+  sc.addEventListener("scroll",()=>setDots(dots,slideIndex(sc)),{passive:true});
+  const car=sc.closest(".carousel");
+  let hold=false;
+  car.addEventListener("pointerenter",()=>hold=true);car.addEventListener("pointerleave",()=>hold=false);
+  car.addEventListener("focusin",()=>hold=true);car.addEventListener("focusout",()=>hold=false);
+  sc.addEventListener("touchstart",()=>{S.paused=true;updatePause()},{passive:true});
+  carTimer=setInterval(()=>{if(S.paused||rm()||hold||S.tab!=="home"||!$("#layer").hidden)return;goSlide(sc,slideIndex(sc)+1)},6000);
+}
+function updatePause(){const b=$("#car-pause");if(!b)return;const p=S.paused||rm();b.setAttribute("aria-label",p?"Play slideshow":"Pause slideshow");b.innerHTML=ic(p?"play":"pause","sm")}
+function initApptDots(){const sc=$("#appt-scroll");if(!sc)return;const dots=$("#appt-dots");sc.addEventListener("scroll",()=>setDots(dots,slideIndex(sc)),{passive:true})}
+
+/* ---------- Toast + live regions ---------- */
+let toastT;
+function toast(msg){const t=$("#toast");t.innerHTML=ic("check")+`<span>${esc(msg)}</span>`;t.classList.add("show");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("show"),2600)}
+function sayAssert(msg){const r=$("#sr-assert");r.textContent="";setTimeout(()=>r.textContent=msg,50)}
+function sayPolite(msg){const r=$("#sr-polite");r.textContent="";setTimeout(()=>r.textContent=msg,50)}
+function announceAlerts(){const l=activeAlerts();if(l.length)sayAssert(`${l[0].label} alert: ${l[0].title}.${l.length>1?` ${l.length-1} more active alert.`:""}`)}
+
+/* ---------- Modal plumbing (sheet + search) ---------- */
+let lastFocus=null;
+const bgParts=()=>[$("#appbar"),$("#views"),$("#tabbar")];
+function setInert(on){bgParts().forEach(el=>on?el.setAttribute("inert",""):el.removeAttribute("inert"))}
+function trap(e,root){
+  if(e.key!=="Tab")return;
+  const f=$$('button:not([disabled]),input,[href],[tabindex]:not([tabindex="-1"])',root).filter(el=>el.offsetParent!==null);
+  if(!f.length)return;const a=f[0],z=f[f.length-1];
+  if(e.shiftKey&&document.activeElement===a){e.preventDefault();z.focus()}else if(!e.shiftKey&&document.activeElement===z){e.preventDefault();a.focus()}
+}
+function openSheet(title,body){
+  lastFocus=document.activeElement;
+  const L=$("#layer");$("#sheet-title").textContent=title;$("#sheet-body").innerHTML=body;
+  L.hidden=false;setInert(true);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>L.classList.add("open")));
+  setTimeout(()=>$("#sheet-title").focus(),rm()?0:60);
+}
+function closeSheet(){
+  const L=$("#layer");if(L.hidden)return;L.classList.remove("open");
+  setTimeout(()=>{L.hidden=true;setInert(false);if(lastFocus&&document.contains(lastFocus))lastFocus.focus()},rm()?0:300);
+}
+const SHEETS={
+ directions(a){return [`Directions to ${a.loc}`,`<div class="map" aria-hidden="true"><span class="road"></span><span class="pin">${'<svg viewBox="0 0 24 24" stroke-width="2">'+I.pin+'</svg>'}</span></div>
+   <div class="kv"><div>${ic("pin")}<p>${esc(a.addr)}<span>Free patient parking in Garage C, level 2</span></p></div><div>${ic("clock")}<p>${esc(a.when)}<span>${esc(a.notice)}</span></p></div></div>
+   <div class="stack"><button class="btn btn-primary btn-block" data-action="toast-close" data-msg="Opening your maps app">${ic("nav","sm")}<span>Open in maps</span></button>
+   <button class="btn btn-secondary btn-block" data-action="copy" data-text="${esc(a.addr)}">Copy address</button></div>`]},
+ wayfinding(a){return ["Indoor map",`<p>Step-by-step directions from parking to ${esc(a.loc)}.</p>
+   <ol class="steps"><li><span>Park in Garage C, level 2. Take the sky bridge to the main building.</span></li><li><span>Take the east elevators to floor 2.</span></li><li><span>Turn left. Suite 200 is the third door on your right.</span></li></ol>
+   <button class="btn btn-primary btn-block" data-action="toast-close" data-msg="Starting indoor wayfinding">${ic("sign","sm")}<span>Start indoor wayfinding</span></button>
+   <p class="fine">Indoor directions use the building map, not your location.</p>`]},
+ rideshare(a){return ["Get a ride",`<div class="kv"><div>${ic("nav")}<p>Pickup<span>Your current location</span></p></div><div>${ic("pin")}<p>Drop-off<span>${esc(a.addr)}</span></p></div><div>${ic("clock")}<p>Arrive by 9:15 a.m.<span>Leave about 30 minutes early</span></p></div></div>
+   <button class="btn btn-primary btn-block" data-action="toast-close" data-msg="Opening your rideshare app">${ic("car","sm")}<span>Open rideshare app</span></button>
+   <p class="fine">We share only the clinic address with the app you choose. Need help getting here? Call patient transport at 214-555-0142.</p>`]},
+ notifications(){return ["Notifications",`<div class="card list">
+   <button class="row" data-action="toast-close" data-msg="Opens Test results"><span class="ri">${ic("flask")}</span><span class="rt"><b>New test result</b><span>Lipid panel is ready to view · 8:02 a.m.</span></span>${ic("chevR","sm")}</button>
+   <button class="row" data-action="toast-close" data-msg="Opens Messages"><span class="ri">${ic("msg")}</span><span class="rt"><b>Message from Dr. Avery’s office</b><span>See you tomorrow at 9:30 a.m. · Yesterday</span></span>${ic("chevR","sm")}</button></div>`]},
+ account(){return ["Alex Rivera",`<p class="fine">Sample patient · Signed in with MyChart</p>
+   <div class="card list"><button class="row" data-action="toast-close" data-msg="Opens profile"><span class="ri">${ic("user")}</span><span class="rt"><b>Profile and settings</b></span>${ic("chevR","sm")}</button>
+   <button class="row" data-action="toast-close" data-msg="Opens notification settings"><span class="ri">${ic("bell")}</span><span class="rt"><b>Notification settings</b></span>${ic("chevR","sm")}</button></div>
+   <button class="btn btn-secondary btn-block" data-action="sign-out">Sign out</button>`]}
+};
+function alertSheet(a){
+  return [a.title,`<span class="sev ${a.level}">${ic("alert")}${a.label}</span>
+   <div class="kv"><div>${ic("clock")}<p>${a.posted}<span>${a.expires}</span></p></div><div>${ic("building")}<p>Affects<span>${esc(a.where)}</span></p></div></div>
+   <p>${esc(a.summary)}</p>
+   <h3>What to do</h3><ul class="bul">${a.body.map(b=>`<li>${esc(b)}</li>`).join("")}</ul>
+   <div class="notice">${ic("phone")}<span>Questions? Call ${a.phone}. For a medical emergency, call 911.</span></div>
+   <p class="fine">When more than one alert is active, emergency alerts show first, then advisories by newest. This alert is shown until it ends or UTSW removes it.</p>
+   ${a.dismissible?`<button class="btn btn-secondary btn-block" data-action="dismiss-alert" data-id="${a.id}">Dismiss alert</button>`:""}`];
+}
+
+/* ---------- Search ---------- */
+function openSearch(){
+  lastFocus=document.activeElement;
+  const s=$("#search");s.hidden=false;setInert(true);
+  renderSearch("");
+  requestAnimationFrame(()=>requestAnimationFrame(()=>s.classList.add("open")));
+  setTimeout(()=>$("#q").focus(),rm()?0:60);
+}
+function closeSearch(){
+  const s=$("#search");if(s.hidden)return;s.classList.remove("open");
+  setTimeout(()=>{s.hidden=true;$("#q").value="";$("#q-clear").hidden=true;setInert(false);if(lastFocus&&document.contains(lastFocus))lastFocus.focus()},rm()?0:300);
+}
+function hl(text,q){if(!q)return esc(text);let out=esc(text);q.split(/\s+/).filter(Boolean).forEach(w=>{const r=new RegExp("("+w.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+")","ig");out=out.replace(r,"<mark>$1</mark>")});return out}
+function renderSearch(q){
+  const b=$("#search-body");q=q.trim();
+  $("#q-clear").hidden=!q;
+  if(!q){
+    b.innerHTML=`<section class="res-group" aria-labelledby="top-h"><h2 id="top-h">Top searches</h2><div class="chips">${TOP.map(t=>`<button class="chip" data-action="search-term" data-q="${t}">${ic("trend")}${t}</button>`).join("")}</div></section>
+     <section class="res-group" aria-labelledby="by-h"><h2 id="by-h">Search for</h2><div class="card list">${Object.entries(KIND).map(([k,[l,i]])=>`<div class="row" style="cursor:default"><span class="ri">${ic(i)}</span><span class="rt"><b>${l}</b><span>${{provider:"Doctors and care teams by name or specialty",location:"Clinics, hospitals, labs, and pharmacies",content:"Articles and patient guides",resource:"Billing, records, and forms"}[k]}</span></span></div>`).join("")}</div></section>`;
+    return;
+  }
+  const words=q.toLowerCase().split(/\s+/);
+  const hits=SEARCH.filter(r=>{const hay=(r.t+" "+r.s+" "+r.kw).toLowerCase();return words.every(w=>hay.includes(w))});
+  const groups=Object.keys(KIND).map(k=>[k,hits.filter(h=>h.k===k)]).filter(([,l])=>l.length);
+  b.innerHTML=(groups.length?groups.map(([k,l])=>`<section class="res-group" aria-labelledby="g-${k}"><h2 id="g-${k}">${KIND[k][0]}</h2><div class="card list">${l.map(r=>`<button class="row" data-action="search-pick" data-msg="${esc(r.t)}"><span class="ri">${ic(KIND[k][1])}</span><span class="rt"><b>${hl(r.t,q)}</b><span>${esc(r.s)}</span></span>${ic("chevR","sm")}</button>`).join("")}</div></section>`).join("")
+    :`<div class="card empty"><span class="ri">${ic("search")}</span><p>No matches for “${esc(q)}”. Try a specialty, such as cardiology, or a clinic name.</p></div>`)
+    +`<button class="btn btn-secondary btn-block" data-action="search-all" data-q="${esc(q)}">${ic("steth","sm")}<span>Search Find care for “${esc(q)}”</span></button>`;
+  sayPolite(hits.length?`${hits.length} result${hits.length>1?"s":""}`:"No results");
+}
+$("#q").addEventListener("input",e=>renderSearch(e.target.value));
+$("#q").addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.value.trim()){closeSearch();switchTab("find");toast(`Searching Find care for “${e.target.value.trim()}”`)}});
+
+/* ---------- Tabs ---------- */
+function switchTab(t){
+  if(t===S.tab)return;
+  S.tab=t;renderTabbar();
+  if(t==="home"){viewOther.hidden=true;viewHome.hidden=false;viewHome.classList.remove("enter");void viewHome.offsetWidth;viewHome.classList.add("enter")}
+  else{renderOther();viewHome.hidden=true;viewOther.hidden=false;viewOther.scrollTop=0;viewOther.classList.remove("enter");void viewOther.offsetWidth;viewOther.classList.add("enter")}
+  sayPolite(TABS.find(x=>x[0]===t)[1]);
+}
+
+/* ---------- Refresh (pull-to-refresh) ---------- */
+function doRefresh(){
+  if(S.refreshing)return;
+  S.refreshing=true;const ptr=$("#ptr");ptr.innerHTML=ic("refresh","sm");ptr.classList.add("spin");ptr.style.transition="transform 200ms";ptr.style.transform="translateY(16px)";
+  home.style.transform="translateY(56px)";
+  if(S.aud==="auth"){const sec=$('[data-mod="appointments"]');if(sec)sec.innerHTML=M.appointments()}
+  sayPolite("Refreshing");
+  setTimeout(()=>{
+    S.refreshing=false;S.updated="9:42 a.m.";
+    ptr.classList.remove("spin");ptr.style.transform="translateY(-48px)";home.style.transform="";
+    const sec=$('[data-mod="appointments"]');if(sec){sec.innerHTML=M.appointments();initApptDots()}
+    toast("Home is up to date");
+  },1100);
+}
+(function ptrInit(){
+  const v=viewHome,ptr=$("#ptr");let y0=null,dy=0;
+  const start=y=>{if(v.scrollTop<=0&&!S.refreshing){y0=y;dy=0;ptr.style.transition="none";home.style.transition="none";ptr.innerHTML=ic("refresh","sm")}};
+  const move=(y,e)=>{if(y0===null)return;dy=Math.max(0,y-y0);if(dy>0&&e&&e.cancelable)e.preventDefault();const d=Math.min(dy*.5,72);ptr.style.transform=`translateY(${d-48}px) rotate(${d*4}deg)`;home.style.transform=`translateY(${d}px)`};
+  const end=()=>{if(y0===null)return;y0=null;ptr.style.transition="";home.style.transition="";if(dy*.5>=56){doRefresh()}else{ptr.style.transform="translateY(-48px)";home.style.transform=""}};
+  v.addEventListener("touchstart",e=>start(e.touches[0].clientY),{passive:true});
+  v.addEventListener("touchmove",e=>move(e.touches[0].clientY,e),{passive:false});
+  v.addEventListener("touchend",end);
+  v.addEventListener("mousedown",e=>{if(e.button===0&&!e.target.closest("button,input"))start(e.clientY)});
+  window.addEventListener("mousemove",e=>{if(y0!==null)move(e.clientY)});
+  window.addEventListener("mouseup",end);
+})();
+
+/* ---------- Events ---------- */
+function signIn(btn){
+  if(btn&&btn.classList.contains("btn")){btn.disabled=true;btn.innerHTML=`<span class="spinner" aria-hidden="true"></span><span>Signing in</span>`;}
+  setTimeout(()=>{S.aud="auth";S.tab="home";viewOther.hidden=true;viewHome.hidden=false;renderAll();viewHome.scrollTop=0;toast("Signed in as Alex Rivera (sample patient)");$("#appbar-acts button")?.focus()},btn&&btn.classList.contains("btn")?900:300);
+}
+screen.addEventListener("click",e=>{
+  const el=e.target.closest("[data-action]");if(!el)return;
+  const act=el.dataset.action,id=el.dataset.id;
+  switch(act){
+   case "toggle-alert":{const art=el.closest(".alert");const open=!art.classList.contains("open");art.classList.toggle("open",open);el.setAttribute("aria-expanded",String(open));break}
+   case "more-alerts":{const st=$("#alert-stack");const open=el.getAttribute("aria-expanded")!=="true";st.classList.toggle("show",open);el.setAttribute("aria-expanded",String(open));el.firstElementChild.textContent=open?"Hide other alerts":"1 more alert";home.querySelector(".alerts>.alert").classList.toggle("stacked",!open);break}
+   case "alert-details":{const a=ALERTS.find(x=>x.id===id);openSheet(...alertSheet(a));break}
+   case "dismiss-alert":{S.dismissed.add(id);if(!$("#layer").hidden)closeSheet();renderHome();renderCMS();toast("Alert dismissed");break}
+   case "open-search":openSearch();break;
+   case "close-search":closeSearch();break;
+   case "clear-search":$("#q").value="";renderSearch("");$("#q").focus();break;
+   case "search-term":{if($("#search").hidden)openSearch();setTimeout(()=>{$("#q").value=el.dataset.q;renderSearch(el.dataset.q);$("#q").focus()},$("#search").hidden?80:0);break}
+   case "search-pick":closeSearch();toast("Opens: "+el.dataset.msg);break;
+   case "search-all":closeSearch();switchTab("find");toast(`Searching Find care for “${el.dataset.q}”`);break;
+   case "sheet":{const a=APPTS.find(x=>x.id===id);openSheet(...SHEETS[el.dataset.sheet](a));break}
+   case "close-sheet":closeSheet();break;
+   case "toast":toast(el.dataset.msg);break;
+   case "toast-close":closeSheet();toast(el.dataset.msg);break;
+   case "copy":{const txt=el.dataset.text;const done=()=>toast("Address copied");try{navigator.clipboard.writeText(txt).then(done,done)}catch(_){done()}break}
+   case "calendar":{const on=!S.added.has(id);on?S.added.add(id):S.added.delete(id);const done=on;el.classList.toggle("done",done);el.setAttribute("aria-pressed",String(done));el.innerHTML=ic(done?"check":"calPlus")+`<span>${done?"Added":"Add to calendar"}</span>`;toast(done?"Added to your calendar":"Removed from your calendar");break}
+   case "refresh":doRefresh();break;
+   case "tile":{const k=el.dataset.k;if(k==="find")switchTab("find");else if(k==="messages")switchTab("messages");else toast("Opens "+el.dataset.l);break}
+   case "tab":switchTab(el.dataset.tab);break;
+   case "sign-in":signIn(el);break;
+   case "sign-out":closeSheet();setTimeout(()=>{S.aud="guest";S.tab="home";viewOther.hidden=true;viewHome.hidden=false;renderAll();toast("Signed out")},rm()?0:320);break;
+   case "car-pause":if(rm()){toast("Auto-advance is off while reduced motion is on")}else{S.paused=!S.paused;updatePause();sayPolite(S.paused?"Slideshow paused":"Slideshow playing")}break;
+   case "car-prev":{const sc=$("#car-scroll");goSlide(sc,slideIndex(sc)-1);break}
+   case "car-next":{const sc=$("#car-scroll");goSlide(sc,slideIndex(sc)+1);break}
+  }
+});
+screen.addEventListener("keydown",e=>{
+  if(e.key==="Escape"){if(!$("#layer").hidden){closeSheet();e.stopPropagation()}else if(!$("#search").hidden){closeSearch()}}
+  if(!$("#layer").hidden)trap(e,$("#layer .sheet"));else if(!$("#search").hidden)trap(e,$("#search"));
+});
+
+/* ---------- Page controls ---------- */
+$$(".seg").forEach(g=>g.addEventListener("click",e=>{
+  const b=e.target.closest("button");if(!b)return;const k=g.dataset.ctl,v=b.dataset.v;
+  if(k==="aud"){if(S.aud===v)return;S.aud=v;S.tab="home";viewOther.hidden=true;viewHome.hidden=false;closeSheet();renderAll();viewHome.scrollTop=0}
+  else if(k==="alerts"){S.alerts=+v;S.dismissed.clear();renderHome();viewHome.scrollTop=0;announceAlerts()}
+  else if(k==="fw"){S.fw=+v;syncControls()}
+  else if(k==="ts"){S.ts=+v;syncControls()}
+  else if(k==="rm"){S.rm=v==="1";syncControls();updatePause()}
+  syncControls();
+}));
+$("#sim-refresh").addEventListener("click",()=>{if(S.tab!=="home")switchTab("home");viewHome.scrollTop=0;doRefresh()});
+$("#cms").addEventListener("click",e=>{
+  const b=e.target.closest("button[data-cms]");if(!b)return;
+  const L=S.layout[S.aud],i=L.findIndex(m=>m.id===b.dataset.id),j=b.dataset.cms==="up"?i-1:i+1;
+  if(j<0||j>=L.length)return;[L[i],L[j]]=[L[j],L[i]];
+  renderCMS();renderHome();
+  const again=$(`#cms button[data-cms="${b.dataset.cms}"][data-id="${b.dataset.id}"]`);
+  (again&&!again.disabled?again:$(`#cms button[data-id="${b.dataset.id}"]:not([disabled])`))?.focus();
+});
+$("#cms").addEventListener("change",e=>{
+  const c=e.target.closest("input[data-cms]");if(!c)return;
+  const m=S.layout[S.aud].find(x=>x.id===c.dataset.id);m.on=c.checked;
+  c.closest(".cms-row").classList.toggle("off",!c.checked);renderHome();
+});
+osRM.addEventListener?.("change",()=>{S.rm=osRM.matches;syncControls();updatePause()});
+
+/* ---------- Boot ---------- */
+$('[data-action="close-search"]').innerHTML=ic("back");
+$("#search .si").outerHTML=ic("search");
+$("#q-clear").innerHTML=ic("x","sm");
+$('#layer .sheet-head [data-action="close-sheet"]').innerHTML=ic("x");
+renderAll();
+setTimeout(announceAlerts,800);
+})();
+</script>
