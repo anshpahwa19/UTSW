@@ -176,6 +176,8 @@ ul,ol{padding:0}
 .btn-tonal[aria-pressed="true"] .hrt .ic{color:var(--c-magenta)}
 .btn-sm{min-height:44px;font-size:var(--fs-14);line-height:var(--lh-14);padding-inline:var(--sp-12)}
 .btn-block{width:100%}
+.btn-inline{align-self:flex-start;margin-inline-start:calc(var(--sp-8) * -1)}
+.btn-inline.btn-sm{margin-inline-start:calc(var(--sp-12) * -1)}
 .btn .spinner,.spinner{width:20px;height:20px;border-radius:50%;border:2px solid currentColor;border-right-color:transparent;animation:spin 700ms linear infinite;flex:none}
 @keyframes spin{to{transform:rotate(360deg)}}
 .card{background:var(--c-surface);border-radius:var(--r-16);box-shadow:0 1px 2px rgba(0,30,60,.06),0 0 0 1px var(--c-border)}
@@ -184,19 +186,22 @@ ul,ol{padding:0}
 .eyebrow{font-size:var(--fs-12);line-height:var(--lh-12);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--c-text-2)}
 .sec-h{font-size:var(--fs-18);line-height:var(--lh-18);font-weight:700;color:var(--c-blue);text-wrap:balance}
 .lbl-h{font-size:var(--fs-14);line-height:var(--lh-14);font-weight:700;color:var(--c-text-2);letter-spacing:.06em;text-transform:uppercase}
-.mod-head{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-8);min-height:44px}
+.mod-head{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-8)}
+.mod-head .btn,.grp-h .btn{margin-block:calc(var(--sp-12) * -1);margin-inline-end:calc(var(--sp-12) * -1)}
 .fine{font-size:var(--fs-14);line-height:var(--lh-14);color:var(--c-text-2)}
 .lead{display:flex;align-items:center;flex:none;height:var(--lh-14)}
 .lead-16{height:var(--lh-16)}
 .notice{display:flex;gap:var(--sp-8);align-items:flex-start;background:var(--c-tint);border-radius:var(--r-12);padding:var(--sp-12);font-size:var(--fs-14);line-height:var(--lh-14)}
 .notice>.lead .ic{color:var(--c-blue)}
-.notice .nb{display:flex;flex-direction:column;gap:var(--sp-8);min-width:0;flex:1}
+.notice .nb{display:flex;flex-direction:column;gap:var(--sp-4);min-width:0;flex:1}
+.notice .nb>.row-btns{margin-top:var(--sp-8)}
 .notice .nb b{font-weight:600}
 .notice.warn{background:var(--c-orange-bg)}
 .notice.warn>.lead .ic{color:var(--c-text)}
 .pad{padding-inline:var(--sp-16)}
 .stack{display:flex;flex-direction:column;gap:var(--sp-8)}
-.row-btns{display:flex;flex-wrap:wrap;gap:var(--sp-8)}
+.row-btns{display:flex;flex-wrap:wrap;gap:var(--sp-12)}
+.btn-stack{display:flex;flex-direction:column;gap:var(--sp-12)}
 mark{background:var(--c-pastel);color:inherit;border-radius:2px}
 
 .chips{display:flex;flex-wrap:wrap;gap:var(--sp-8)}
@@ -257,7 +262,9 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
 .err-msg .ic{color:var(--c-red)}
 
 /* Empty / error states */
-.state{padding:var(--sp-24) var(--sp-16);display:flex;flex-direction:column;gap:var(--sp-12);align-items:flex-start}
+.state{padding:var(--sp-24) var(--sp-16);display:flex;flex-direction:column;gap:var(--sp-16);align-items:flex-start}
+.state>h2+p{margin-top:calc(var(--sp-12) * -1)}
+.state>.eyebrow+.chips{margin-top:calc(var(--sp-8) * -1)}
 .state h2{font-size:var(--fs-18);line-height:var(--lh-18);font-weight:700;color:var(--c-blue);text-wrap:balance}
 .state .well-48 .ic{width:24px;height:24px}
 
@@ -274,7 +281,7 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
 .search-entry:active{transform:scale(.98)}
 .hero .search-entry:focus-visible{outline-color:var(--c-on-blue);outline-offset:3px;border-radius:var(--r-full)}
 
-.alerts{display:flex;flex-direction:column;gap:var(--sp-8);padding:var(--sp-12) var(--sp-16) 0;background:var(--c-blue)}
+.alerts{display:flex;flex-direction:column;gap:var(--sp-12);padding:var(--sp-12) var(--sp-16) 0;background:var(--c-blue)}
 .alerts+.hero{padding-top:var(--sp-16)}
 .alert{background:var(--c-red-bg);border-radius:var(--r-16);position:relative;color:var(--c-text);box-shadow:inset 4px 0 0 var(--c-magenta)}
 .alert.advisory{background:var(--c-orange-bg);box-shadow:inset 4px 0 0 var(--c-orange)}
@@ -300,7 +307,7 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
 .more-alerts .ic{transition:transform var(--dur-base) var(--ease-std)}
 .more-alerts[aria-expanded="true"] .ic{transform:rotate(180deg)}
 .alert-stack{display:grid;grid-template-rows:0fr;transition:grid-template-rows var(--dur-base) var(--ease-std)}
-.alert-stack>div{overflow:hidden;visibility:hidden;transition:visibility 0s linear var(--dur-base);display:flex;flex-direction:column;gap:var(--sp-8)}
+.alert-stack>div{overflow:hidden;visibility:hidden;transition:visibility 0s linear var(--dur-base);display:flex;flex-direction:column;gap:var(--sp-12)}
 .alert-stack.show{grid-template-rows:1fr}
 .alert-stack.show>div{visibility:visible;transition-delay:0s}
 
@@ -316,8 +323,9 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
 .fd-top h2{font-size:var(--fs-18);line-height:var(--lh-18);font-weight:700;color:var(--c-blue)}
 .fd-top p{font-size:var(--fs-14);line-height:var(--lh-14);color:var(--c-text-2)}
 
-.campaign{background:var(--c-blue);color:var(--c-on-blue);border-radius:var(--r-16);padding:var(--sp-24) var(--sp-16);display:flex;flex-direction:column;gap:var(--sp-12);position:relative;overflow:hidden}
+.campaign{background:var(--c-blue);color:var(--c-on-blue);border-radius:var(--r-16);padding:var(--sp-24) var(--sp-16);display:flex;flex-direction:column;gap:var(--sp-16);position:relative;overflow:hidden}
 .campaign .eyebrow{color:var(--c-on-blue-2)}
+.campaign>.eyebrow+h2,.campaign>h2+p{margin-top:calc(var(--sp-12) * -1)}
 .campaign h2{font-size:var(--fs-24);line-height:var(--lh-24);font-weight:700;max-width:75%;text-wrap:balance}
 .campaign p{color:var(--c-on-blue-2);max-width:80%}
 .campaign .btn{align-self:flex-start}
@@ -339,7 +347,7 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
 .slide-txt .st{font-size:var(--fs-18);line-height:var(--lh-18);font-weight:700;text-wrap:balance}
 .slide-txt .meta{font-size:var(--fs-14);line-height:var(--lh-14);color:var(--c-text-2)}
 .car-ctrl{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-8)}
-.car-ctrl .grp{display:flex;gap:var(--sp-8)}
+.car-ctrl .car-nav{display:flex;gap:var(--sp-12)}
 .car-ctrl .icon-btn{background:var(--c-surface);box-shadow:0 0 0 1px var(--c-border-strong);color:var(--c-blue)}
 .car-ctrl .icon-btn:hover{background:var(--c-tint)}
 .dots{display:flex;gap:var(--sp-8);justify-content:center;align-items:center;min-height:16px}
@@ -356,9 +364,11 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
 
 .mini{flex:0 0 144px;scroll-snap-align:start;padding:var(--sp-16) var(--sp-12);display:flex;flex-direction:column;align-items:center;gap:var(--sp-8);text-align:center;border:0;cursor:pointer;color:var(--c-text);min-width:0}
 .mini b{font-size:var(--fs-14);line-height:var(--lh-14);font-weight:600}
+.mini b+span{margin-top:calc(var(--sp-4) * -1)}
 .mini span{font-size:var(--fs-12);line-height:var(--lh-12);color:var(--c-text-2)}
 
-.mychart{padding:var(--sp-16);display:flex;flex-direction:column;gap:var(--sp-12);background:var(--c-tint);border-radius:var(--r-16)}
+.mychart{padding:var(--sp-16);display:flex;flex-direction:column;gap:var(--sp-16);background:var(--c-tint);border-radius:var(--r-16)}
+.mychart>h2+p{margin-top:calc(var(--sp-12) * -1)}
 .mychart h2{font-size:var(--fs-18);line-height:var(--lh-18);font-weight:700;color:var(--c-blue)}
 .mychart p{font-size:var(--fs-14);line-height:var(--lh-14)}
 .ann-date{width:56px;flex:none;font-size:var(--fs-12);line-height:var(--lh-12);font-weight:700;color:var(--c-blue);letter-spacing:.04em;align-self:flex-start;padding-top:var(--sp-4)}
@@ -373,8 +383,8 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
 .loc-btn .lt span{color:var(--c-on-blue-2);font-weight:500}
 .loc-btn:hover{background:var(--c-on-blue-fill)}
 .fc-body{padding:var(--sp-16);display:flex;flex-direction:column;gap:var(--sp-24)}
-.grp{display:flex;flex-direction:column;gap:var(--sp-8)}
-.grp-h{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-8);min-height:44px}
+.grp{display:flex;flex-direction:column;gap:var(--sp-12)}
+.grp-h{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-8)}
 .sug-type{font-size:var(--fs-12);line-height:var(--lh-12);font-weight:600;color:var(--c-text-2);background:var(--c-tint);border-radius:var(--r-full);padding:var(--sp-4) var(--sp-8);flex:none}
 
 /* Results */
@@ -433,10 +443,13 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
 .p-id p{color:var(--c-on-blue-2);font-size:var(--fs-16)}
 .p-hero .tags .tag{background:var(--c-on-blue-fill);color:var(--c-on-blue);box-shadow:none}
 .p-hero .tags .tag .ic{color:var(--c-on-blue)}
-.p-acts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--sp-8)}
+.p-acts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--sp-12)}
 .p-acts .btn-white{grid-column:1 / -1;box-shadow:0 1px 2px rgba(0,20,40,.24)}
 .p-sec{padding-inline:var(--sp-16);display:flex;flex-direction:column;gap:var(--sp-12)}
 .p-sec h3{font-size:var(--fs-18);line-height:var(--lh-18);font-weight:700;color:var(--c-blue)}
+.p-sec>h3+.fine{margin-top:calc(var(--sp-8) * -1)}
+.p-sub{display:flex;flex-direction:column;gap:var(--sp-8)}
+.p-sub+.p-sub{margin-top:var(--sp-4)}
 .p-sec h4{font-size:var(--fs-14);line-height:var(--lh-14);font-weight:700;color:var(--c-text-2);margin:0}
 .bio{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
 .bio.open{display:block}
@@ -552,7 +565,7 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
 .search-top{background:var(--c-blue);padding:var(--sp-8) var(--sp-16) var(--sp-16) var(--sp-8);display:flex;gap:var(--sp-8);align-items:center;color:var(--c-on-blue)}
 .search-top .field:focus-within{box-shadow:0 0 0 3px var(--c-cyan)}
 .search-body{flex:1;overflow-y:auto;padding:var(--sp-16);display:flex;flex-direction:column;gap:var(--sp-24)}
-.res-group{display:flex;flex-direction:column;gap:var(--sp-8)}
+.res-group{display:flex;flex-direction:column;gap:var(--sp-12)}
 
 /* ---------- Motion layer ----------
    One curve for anything that travels (iOS-style deceleration, no overshoot); scroll-linked effects are computed from scroll position each frame. */
@@ -754,7 +767,7 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
         <p>Same tokens, icon family, and logo files as the home screen prototype (<code>design/TOKENS.md</code>, <code>design/icons</code>, <code>mycare-logo/</code>). New in this flow:</p>
         <ul class="notes">
           <li><b>Type</b>: 12.0, 14.0, 16.0, 18.0, 20.0, 24.0, 28.0 only. Provider name 16.0/700 Blue on cards, 24.0/700 on the profile. Large text remaps up the same scale.</li>
-          <li><b>Spacing</b>: 4.0 icon–label · 8.0 between controls · 12.0 inside cards and between results · 16.0 gutter and card padding · 24.0 between sections · 32.0 sheet footer inset · 48.0 end of scroll.</li>
+          <li><b>Spacing</b>, one value per relationship: <b>4.0</b> a title and its supporting line, an icon and its label · <b>8.0</b> chips, tags, and pills among themselves; a small label and the group it labels · <b>12.0</b> buttons in a group, cards in a list, a section heading and its content · <b>16.0</b> screen gutter, card padding, groups inside a card, hero, or sheet · <b>24.0</b> between sections, sheet sides, hero bottom · <b>32.0–48.0</b> sheet footer inset and end of scroll. Header links keep a 44 pt target without adding height, and inline text buttons line their label up with the content edge.</li>
           <li><b>Filters</b>: multi-select toggle chips show a check mark and fill when on. Within a group any match counts (OR); across groups all must match (AND). “Clear all” resets the draft; nothing applies until “Show results”. The button carries the live count.</li>
           <li><b>Plain-language search</b>: phrases map to specialties, conditions, languages, gender, and availability (for example “spanish speaking pediatrician”, “heart doctor”, “afib”). Misspellings within one or two letters are corrected and the correction is shown. Mapped filters appear as removable chips.</li>
           <li><b>Location</b>: “Use my location” asks the OS once. If permission is denied or the location can’t be found, the app says so, offers ZIP code or city entry, and keeps searching without distance.</li>
@@ -1163,7 +1176,7 @@ M.finddoc=()=>`<div class="card fd">
    <button class="btn btn-primary btn-block press" data-action="near-me">${ic("near_me",20)}<span>Doctors near me</span></button>
    <div class="stack"><span class="eyebrow">Popular specialties</span>
    <div class="chips">${["Primary care","Cardiology","Pediatrics","Orthopaedics","Dermatology","OB-GYN"].map(c=>`<button class="chip" data-action="run" data-q="${c}">${c}</button>`).join("")}</div></div>
-   <button class="btn btn-ghost" style="align-self:flex-start" data-action="tab" data-tab="find"><span>Browse all specialties</span>${ic("chevron_right",20)}</button></div>`;
+   <button class="btn btn-ghost btn-inline" data-action="tab" data-tab="find"><span>Browse all specialties</span>${ic("chevron_right",20)}</button></div>`;
 M.saved=()=>{const ps=S.saved.map(id=>PBY[id]).filter(Boolean);
   return `<div class="mod-head"><h2 class="sec-h" id="h-saved">Your saved providers</h2><button class="btn btn-ghost btn-sm" data-action="tab" data-tab="saved">See all</button></div>
   <div class="h-scroll">${ps.map(p=>`<button class="card mini press" data-action="profile" data-id="${p.id}">${avatar(p,56)}<b>${esc(name(p))}</b><span>${esc(p.spec)}</span></button>`).join("")}</div>
@@ -1176,7 +1189,7 @@ M.featured=()=>`<div class="mod-head"><h2 class="sec-h" id="h-featured">MedBlog<
     <div class="car-ctrl">
       <button class="icon-btn" data-action="car-pause" id="car-pause" aria-label="${S.playing?"Pause slideshow":"Play slideshow"}">${icf(S.playing?"pause":"play_arrow")}</button>
       <div class="dots${S.playing&&!rm()?" playing":""}" id="car-dots" aria-hidden="true">${SLIDES.map((_,i)=>`<i class="${i?"":"on"}"></i>`).join("")}</div>
-      <div class="grp" style="flex-direction:row"><button class="icon-btn" data-action="car-prev" aria-label="Previous slide">${ic("chevron_left")}</button><button class="icon-btn" data-action="car-next" aria-label="Next slide">${ic("chevron_right")}</button></div>
+      <div class="car-nav"><button class="icon-btn" data-action="car-prev" aria-label="Previous slide">${ic("chevron_left")}</button><button class="icon-btn" data-action="car-next" aria-label="Next slide">${ic("chevron_right")}</button></div>
     </div></div>`;
 M.campaign=()=>`<div class="campaign"><span class="shape1" aria-hidden="true"></span><span class="shape2" aria-hidden="true"></span>
   <span class="eyebrow">Seasonal care</span><h2 id="h-campaign">Flu shots are here</h2>
@@ -1311,7 +1324,7 @@ function renderResultsBody0(){
     const near=PROV.filter(p=>matches(p,pq)).length;
     b.innerHTML=`${locBanner()}<div class="card state">${well("search_off",48)}<h2>No doctors match${S.q?` “${esc(S.q)}”`:""}${n?" with these filters":""}</h2>
      <p>${n&&near?`${near} doctor${near>1?"s":""} match your search without filters.`:"Try a specialty, a condition, or a doctor’s last name. Check the spelling, or use fewer words."}</p>
-     <div class="stack" style="width:100%">
+     <div class="btn-stack" style="width:100%">
        ${n?`<button class="btn btn-primary btn-block" data-action="clear-filters">Clear all filters</button>`:""}
        ${S.filters.dist!=="any"?`<button class="btn btn-secondary btn-block" data-action="widen">Search up to 50 mi away</button>`:""}
        ${S.q?`<button class="btn btn-secondary btn-block" data-action="run" data-q="">See all ${PROV.length} doctors</button>`:""}
@@ -1340,11 +1353,11 @@ function viewProfile(id){
      </div>
    </section>
    ${!p.accepting?`<div class="pad"><div class="notice"><span class="lead">${ic("info",20)}</span><span class="nb"><span>${drName(p)} isn’t accepting new patients right now. Current patients can still schedule.</span><span class="row-btns"><button class="btn btn-secondary btn-sm" data-action="run-accepting" data-q="${esc(p.spec)}">See ${esc(p.spec)} doctors accepting new patients</button></span></span></div></div>`:""}
-   ${p.bio?`<section class="p-sec" aria-labelledby="ps-about"><h3 id="ps-about">About ${drName(p)}</h3><p class="fine" style="color:var(--c-text-2)">${esc(p.title)}</p>
-     <p class="bio" id="bio">${esc(p.bio)}</p><button class="btn btn-ghost btn-sm" style="align-self:flex-start" data-action="bio" aria-expanded="false" aria-controls="bio"><span>Read more</span>${ic("expand_more",20,"chev")}</button></section>`:""}
+   ${p.bio?`<section class="p-sec" aria-labelledby="ps-about"><h3 id="ps-about">About ${drName(p)}</h3><p class="fine">${esc(p.title)}</p>
+     <p class="bio" id="bio">${esc(p.bio)}</p><button class="btn btn-ghost btn-sm btn-inline" data-action="bio" aria-expanded="false" aria-controls="bio"><span>Read more</span>${ic("expand_more",20,"chev")}</button></section>`:""}
    <section class="p-sec" aria-labelledby="ps-spec"><h3 id="ps-spec">Specialties and conditions</h3>
-     <h4>Specialties</h4><div class="chips">${p.specs.map(s=>`<span class="chip static">${esc(s)}</span>`).join("")}</div>
-     <h4>Conditions treated</h4><div class="chips">${p.conds.map(c=>`<button class="chip" data-action="run" data-q="${esc(c)}" aria-label="${esc(c)}: find other doctors">${esc(c)}</button>`).join("")}</div></section>
+     <div class="p-sub"><h4>Specialties</h4><div class="chips">${p.specs.map(s=>`<span class="chip static">${esc(s)}</span>`).join("")}</div></div>
+     <div class="p-sub"><h4>Conditions treated</h4><div class="chips">${p.conds.map(c=>`<button class="chip" data-action="run" data-q="${esc(c)}" aria-label="${esc(c)}: find other doctors">${esc(c)}</button>`).join("")}</div></div></section>
    <section class="p-sec" aria-labelledby="ps-lang"><h3 id="ps-lang">Languages</h3><div class="kv"><div><span class="lead lead-16">${ic("translate",20)}</span><p>${esc(p.langs.join(", "))}</p></div></div></section>
    <section class="p-sec" aria-labelledby="ps-loc"><h3 id="ps-loc">Locations and contact</h3>
      ${locs.map(l=>`<div class="card loc-card"><div class="kv"><div><span class="lead lead-16">${ic("location_on",20)}</span><p><b>${esc(l.n)}</b><span>${esc(l.a)}${locDist(l)!=null?` · ${fmtMi(locDist(l))}`:""}</span></p></div>
@@ -1531,7 +1544,7 @@ function filtersBody(){
      <div class="sw-row"><span class="rt" id="sw-acc-l"><b>Accepting new patients</b></span><label class="switch"><input type="checkbox" id="f-acc" data-f="accepting" aria-labelledby="sw-acc-l" ${d.accepting?"checked":""}><span></span></label></div>
      <div class="sw-row"><span class="rt" id="sw-on-l"><b>Online scheduling</b><span>Book through MyChart</span></span><label class="switch"><input type="checkbox" id="f-on" data-f="online" aria-labelledby="sw-on-l" ${d.online?"checked":""}><span></span></label></div></fieldset>
    <fieldset class="fsec"><legend>Distance ${S.loc?"":`<span class="hint">Set a location to use</span>`}</legend>${segRadio("dist",[["5","5 mi"],["10","10 mi"],["25","25 mi"],["50","50 mi"],["any","Any"]],d.dist,!S.loc)}
-     ${S.loc?"":`<button type="button" class="btn btn-ghost btn-sm" style="align-self:flex-start" data-action="loc-sheet">${ic("location_on",20)}<span>Set location</span></button>`}</fieldset>
+     ${S.loc?"":`<button type="button" class="btn btn-ghost btn-sm btn-inline" data-action="loc-sheet">${ic("location_on",20)}<span>Set location</span></button>`}</fieldset>
    <fieldset class="fsec"><legend>Specialty <span class="hint">Choose any</span></legend><div class="chips">${SPECS.map(s=>tchip("specs",s,d.specs.has(s))).join("")}</div></fieldset>
    <fieldset class="fsec"><legend>Condition or clinical interest <span class="hint">Choose any</span></legend><div class="chips">${TOP_CONDS.map(c=>tchip("conds",c,d.conds.has(c))).join("")}</div></fieldset>
    <fieldset class="fsec"><legend>Language <span class="hint">Choose any</span></legend><div class="chips">${LANGS.filter(l=>PROV.some(p=>p.langs.includes(l))).map(l=>tchip("langs",l,d.langs.has(l))).join("")}</div></fieldset>
@@ -1565,7 +1578,7 @@ function locSheetBody(err){
      <div class="field boxed${err?" invalid":""}">${ic("location_on",20)}<input id="zip" type="text" inputmode="text" autocomplete="postal-code" placeholder="For example, 75201 or Plano" ${err?`aria-invalid="true" aria-describedby="zip-err"`:""}><button type="submit" class="btn btn-primary btn-sm" style="margin-right:var(--sp-4)">Search</button></div>
      ${err?`<span class="err-msg" id="zip-err">${icf("error",16)}<span>${esc(err)}</span></span>`:""}
      <div class="card list" id="city-sug">${CITIES.slice(0,6).map(c=>cityRow(c)).join("")}</div></form>
-   ${S.loc?`<button class="btn btn-ghost" style="align-self:flex-start" data-action="clear-loc">Search any location</button>`:""}
+   ${S.loc?`<button class="btn btn-ghost btn-inline" data-action="clear-loc">Search any location</button>`:""}
    <p class="fine">Your location is used only to sort and filter doctors by distance. It isn’t saved.</p>`;
 }
 const cityRow=c=>`<button type="button" class="row" data-action="pick-city" data-c="${c[0]}"><span class="rt"><b>${c[0]}, TX</b></span>${ic("chevron_right",20)}</button>`;
@@ -1625,8 +1638,8 @@ function openRequest(id){
   const p=PBY[id],l=nearestLoc(p);
   openSheet("request","Request an appointment",`<div class="kv"><div>${avatar(p,40)}<p><b>${esc(name(p))}</b><span>${esc(p.spec)}</span></p></div></div>
    ${!p.accepting?`<div class="notice warn"><span class="lead">${ic("info",20)}</span><span>${drName(p)} isn’t accepting new patients. If you’re already a patient, you can still schedule.</span></div>`:""}
-   ${p.online?`<button class="btn btn-primary btn-block" data-action="toast-close" data-kind="out" data-msg="Opens MyChart scheduling. Sign-in is part of MyChart, not this prototype."><span>Schedule online in MyChart</span>${ic("open_in_new",20)}</button>`:""}
-   <button class="btn ${p.online?"btn-secondary":"btn-primary"} btn-block" data-action="toast-close" data-kind="out" data-msg="Opens the appointment request form on the UTSW website"><span>Send a request online</span>${ic("open_in_new",20)}</button>
+   <div class="btn-stack">${p.online?`<button class="btn btn-primary btn-block" data-action="toast-close" data-kind="out" data-msg="Opens MyChart scheduling. Sign-in is part of MyChart, not this prototype."><span>Schedule online in MyChart</span>${ic("open_in_new",20)}</button>`:""}
+   <button class="btn ${p.online?"btn-secondary":"btn-primary"} btn-block" data-action="toast-close" data-kind="out" data-msg="Opens the appointment request form on the UTSW website"><span>Send a request online</span>${ic("open_in_new",20)}</button></div>
    <div class="card loc-card"><div class="kv"><div><span class="lead lead-16">${ic("call",20)}</span><p>Call to schedule<span style="color:var(--c-text);font-size:var(--fs-18);line-height:var(--lh-18);font-weight:700;user-select:all">${l.ph}</span><span>${esc(l.n)} · Monday – Friday, 8 a.m. – 5 p.m.</span></p></div></div>
      <div class="row-btns"><button class="btn btn-secondary btn-sm" data-action="toast" data-kind="out" data-msg="Opens the phone app: ${l.ph}">${ic("call",20)}<span>Call</span></button><button class="btn btn-ghost btn-sm" data-action="copy" data-text="${l.ph}" data-msg="Phone number copied">${ic("content_copy",20)}<span>Copy number</span></button></div></div>
    <p class="fine">For a medical emergency, call 911. Appointment requests don’t share any health information from this app.</p>`);

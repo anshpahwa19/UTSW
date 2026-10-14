@@ -378,7 +378,7 @@ M.finddoc=()=>`<div class="card fd">
    <button class="btn btn-primary btn-block press" data-action="near-me">${ic("near_me",20)}<span>Doctors near me</span></button>
    <div class="stack"><span class="eyebrow">Popular specialties</span>
    <div class="chips">${["Primary care","Cardiology","Pediatrics","Orthopaedics","Dermatology","OB-GYN"].map(c=>`<button class="chip" data-action="run" data-q="${c}">${c}</button>`).join("")}</div></div>
-   <button class="btn btn-ghost" style="align-self:flex-start" data-action="tab" data-tab="find"><span>Browse all specialties</span>${ic("chevron_right",20)}</button></div>`;
+   <button class="btn btn-ghost btn-inline" data-action="tab" data-tab="find"><span>Browse all specialties</span>${ic("chevron_right",20)}</button></div>`;
 M.saved=()=>{const ps=S.saved.map(id=>PBY[id]).filter(Boolean);
   return `<div class="mod-head"><h2 class="sec-h" id="h-saved">Your saved providers</h2><button class="btn btn-ghost btn-sm" data-action="tab" data-tab="saved">See all</button></div>
   <div class="h-scroll">${ps.map(p=>`<button class="card mini press" data-action="profile" data-id="${p.id}">${avatar(p,56)}<b>${esc(name(p))}</b><span>${esc(p.spec)}</span></button>`).join("")}</div>
@@ -391,7 +391,7 @@ M.featured=()=>`<div class="mod-head"><h2 class="sec-h" id="h-featured">MedBlog<
     <div class="car-ctrl">
       <button class="icon-btn" data-action="car-pause" id="car-pause" aria-label="${S.playing?"Pause slideshow":"Play slideshow"}">${icf(S.playing?"pause":"play_arrow")}</button>
       <div class="dots${S.playing&&!rm()?" playing":""}" id="car-dots" aria-hidden="true">${SLIDES.map((_,i)=>`<i class="${i?"":"on"}"></i>`).join("")}</div>
-      <div class="grp" style="flex-direction:row"><button class="icon-btn" data-action="car-prev" aria-label="Previous slide">${ic("chevron_left")}</button><button class="icon-btn" data-action="car-next" aria-label="Next slide">${ic("chevron_right")}</button></div>
+      <div class="car-nav"><button class="icon-btn" data-action="car-prev" aria-label="Previous slide">${ic("chevron_left")}</button><button class="icon-btn" data-action="car-next" aria-label="Next slide">${ic("chevron_right")}</button></div>
     </div></div>`;
 M.campaign=()=>`<div class="campaign"><span class="shape1" aria-hidden="true"></span><span class="shape2" aria-hidden="true"></span>
   <span class="eyebrow">Seasonal care</span><h2 id="h-campaign">Flu shots are here</h2>
@@ -526,7 +526,7 @@ function renderResultsBody0(){
     const near=PROV.filter(p=>matches(p,pq)).length;
     b.innerHTML=`${locBanner()}<div class="card state">${well("search_off",48)}<h2>No doctors match${S.q?` “${esc(S.q)}”`:""}${n?" with these filters":""}</h2>
      <p>${n&&near?`${near} doctor${near>1?"s":""} match your search without filters.`:"Try a specialty, a condition, or a doctor’s last name. Check the spelling, or use fewer words."}</p>
-     <div class="stack" style="width:100%">
+     <div class="btn-stack" style="width:100%">
        ${n?`<button class="btn btn-primary btn-block" data-action="clear-filters">Clear all filters</button>`:""}
        ${S.filters.dist!=="any"?`<button class="btn btn-secondary btn-block" data-action="widen">Search up to 50 mi away</button>`:""}
        ${S.q?`<button class="btn btn-secondary btn-block" data-action="run" data-q="">See all ${PROV.length} doctors</button>`:""}
@@ -555,11 +555,11 @@ function viewProfile(id){
      </div>
    </section>
    ${!p.accepting?`<div class="pad"><div class="notice"><span class="lead">${ic("info",20)}</span><span class="nb"><span>${drName(p)} isn’t accepting new patients right now. Current patients can still schedule.</span><span class="row-btns"><button class="btn btn-secondary btn-sm" data-action="run-accepting" data-q="${esc(p.spec)}">See ${esc(p.spec)} doctors accepting new patients</button></span></span></div></div>`:""}
-   ${p.bio?`<section class="p-sec" aria-labelledby="ps-about"><h3 id="ps-about">About ${drName(p)}</h3><p class="fine" style="color:var(--c-text-2)">${esc(p.title)}</p>
-     <p class="bio" id="bio">${esc(p.bio)}</p><button class="btn btn-ghost btn-sm" style="align-self:flex-start" data-action="bio" aria-expanded="false" aria-controls="bio"><span>Read more</span>${ic("expand_more",20,"chev")}</button></section>`:""}
+   ${p.bio?`<section class="p-sec" aria-labelledby="ps-about"><h3 id="ps-about">About ${drName(p)}</h3><p class="fine">${esc(p.title)}</p>
+     <p class="bio" id="bio">${esc(p.bio)}</p><button class="btn btn-ghost btn-sm btn-inline" data-action="bio" aria-expanded="false" aria-controls="bio"><span>Read more</span>${ic("expand_more",20,"chev")}</button></section>`:""}
    <section class="p-sec" aria-labelledby="ps-spec"><h3 id="ps-spec">Specialties and conditions</h3>
-     <h4>Specialties</h4><div class="chips">${p.specs.map(s=>`<span class="chip static">${esc(s)}</span>`).join("")}</div>
-     <h4>Conditions treated</h4><div class="chips">${p.conds.map(c=>`<button class="chip" data-action="run" data-q="${esc(c)}" aria-label="${esc(c)}: find other doctors">${esc(c)}</button>`).join("")}</div></section>
+     <div class="p-sub"><h4>Specialties</h4><div class="chips">${p.specs.map(s=>`<span class="chip static">${esc(s)}</span>`).join("")}</div></div>
+     <div class="p-sub"><h4>Conditions treated</h4><div class="chips">${p.conds.map(c=>`<button class="chip" data-action="run" data-q="${esc(c)}" aria-label="${esc(c)}: find other doctors">${esc(c)}</button>`).join("")}</div></div></section>
    <section class="p-sec" aria-labelledby="ps-lang"><h3 id="ps-lang">Languages</h3><div class="kv"><div><span class="lead lead-16">${ic("translate",20)}</span><p>${esc(p.langs.join(", "))}</p></div></div></section>
    <section class="p-sec" aria-labelledby="ps-loc"><h3 id="ps-loc">Locations and contact</h3>
      ${locs.map(l=>`<div class="card loc-card"><div class="kv"><div><span class="lead lead-16">${ic("location_on",20)}</span><p><b>${esc(l.n)}</b><span>${esc(l.a)}${locDist(l)!=null?` · ${fmtMi(locDist(l))}`:""}</span></p></div>
@@ -746,7 +746,7 @@ function filtersBody(){
      <div class="sw-row"><span class="rt" id="sw-acc-l"><b>Accepting new patients</b></span><label class="switch"><input type="checkbox" id="f-acc" data-f="accepting" aria-labelledby="sw-acc-l" ${d.accepting?"checked":""}><span></span></label></div>
      <div class="sw-row"><span class="rt" id="sw-on-l"><b>Online scheduling</b><span>Book through MyChart</span></span><label class="switch"><input type="checkbox" id="f-on" data-f="online" aria-labelledby="sw-on-l" ${d.online?"checked":""}><span></span></label></div></fieldset>
    <fieldset class="fsec"><legend>Distance ${S.loc?"":`<span class="hint">Set a location to use</span>`}</legend>${segRadio("dist",[["5","5 mi"],["10","10 mi"],["25","25 mi"],["50","50 mi"],["any","Any"]],d.dist,!S.loc)}
-     ${S.loc?"":`<button type="button" class="btn btn-ghost btn-sm" style="align-self:flex-start" data-action="loc-sheet">${ic("location_on",20)}<span>Set location</span></button>`}</fieldset>
+     ${S.loc?"":`<button type="button" class="btn btn-ghost btn-sm btn-inline" data-action="loc-sheet">${ic("location_on",20)}<span>Set location</span></button>`}</fieldset>
    <fieldset class="fsec"><legend>Specialty <span class="hint">Choose any</span></legend><div class="chips">${SPECS.map(s=>tchip("specs",s,d.specs.has(s))).join("")}</div></fieldset>
    <fieldset class="fsec"><legend>Condition or clinical interest <span class="hint">Choose any</span></legend><div class="chips">${TOP_CONDS.map(c=>tchip("conds",c,d.conds.has(c))).join("")}</div></fieldset>
    <fieldset class="fsec"><legend>Language <span class="hint">Choose any</span></legend><div class="chips">${LANGS.filter(l=>PROV.some(p=>p.langs.includes(l))).map(l=>tchip("langs",l,d.langs.has(l))).join("")}</div></fieldset>
@@ -780,7 +780,7 @@ function locSheetBody(err){
      <div class="field boxed${err?" invalid":""}">${ic("location_on",20)}<input id="zip" type="text" inputmode="text" autocomplete="postal-code" placeholder="For example, 75201 or Plano" ${err?`aria-invalid="true" aria-describedby="zip-err"`:""}><button type="submit" class="btn btn-primary btn-sm" style="margin-right:var(--sp-4)">Search</button></div>
      ${err?`<span class="err-msg" id="zip-err">${icf("error",16)}<span>${esc(err)}</span></span>`:""}
      <div class="card list" id="city-sug">${CITIES.slice(0,6).map(c=>cityRow(c)).join("")}</div></form>
-   ${S.loc?`<button class="btn btn-ghost" style="align-self:flex-start" data-action="clear-loc">Search any location</button>`:""}
+   ${S.loc?`<button class="btn btn-ghost btn-inline" data-action="clear-loc">Search any location</button>`:""}
    <p class="fine">Your location is used only to sort and filter doctors by distance. It isn’t saved.</p>`;
 }
 const cityRow=c=>`<button type="button" class="row" data-action="pick-city" data-c="${c[0]}"><span class="rt"><b>${c[0]}, TX</b></span>${ic("chevron_right",20)}</button>`;
@@ -840,8 +840,8 @@ function openRequest(id){
   const p=PBY[id],l=nearestLoc(p);
   openSheet("request","Request an appointment",`<div class="kv"><div>${avatar(p,40)}<p><b>${esc(name(p))}</b><span>${esc(p.spec)}</span></p></div></div>
    ${!p.accepting?`<div class="notice warn"><span class="lead">${ic("info",20)}</span><span>${drName(p)} isn’t accepting new patients. If you’re already a patient, you can still schedule.</span></div>`:""}
-   ${p.online?`<button class="btn btn-primary btn-block" data-action="toast-close" data-kind="out" data-msg="Opens MyChart scheduling. Sign-in is part of MyChart, not this prototype."><span>Schedule online in MyChart</span>${ic("open_in_new",20)}</button>`:""}
-   <button class="btn ${p.online?"btn-secondary":"btn-primary"} btn-block" data-action="toast-close" data-kind="out" data-msg="Opens the appointment request form on the UTSW website"><span>Send a request online</span>${ic("open_in_new",20)}</button>
+   <div class="btn-stack">${p.online?`<button class="btn btn-primary btn-block" data-action="toast-close" data-kind="out" data-msg="Opens MyChart scheduling. Sign-in is part of MyChart, not this prototype."><span>Schedule online in MyChart</span>${ic("open_in_new",20)}</button>`:""}
+   <button class="btn ${p.online?"btn-secondary":"btn-primary"} btn-block" data-action="toast-close" data-kind="out" data-msg="Opens the appointment request form on the UTSW website"><span>Send a request online</span>${ic("open_in_new",20)}</button></div>
    <div class="card loc-card"><div class="kv"><div><span class="lead lead-16">${ic("call",20)}</span><p>Call to schedule<span style="color:var(--c-text);font-size:var(--fs-18);line-height:var(--lh-18);font-weight:700;user-select:all">${l.ph}</span><span>${esc(l.n)} · Monday – Friday, 8 a.m. – 5 p.m.</span></p></div></div>
      <div class="row-btns"><button class="btn btn-secondary btn-sm" data-action="toast" data-kind="out" data-msg="Opens the phone app: ${l.ph}">${ic("call",20)}<span>Call</span></button><button class="btn btn-ghost btn-sm" data-action="copy" data-text="${l.ph}" data-msg="Phone number copied">${ic("content_copy",20)}<span>Copy number</span></button></div></div>
    <p class="fine">For a medical emergency, call 911. Appointment requests don’t share any health information from this app.</p>`);
