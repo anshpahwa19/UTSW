@@ -413,6 +413,13 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
 .pcard.leaving{animation:leave var(--dur-slow) var(--ease-std) forwards}
 @keyframes leave{to{opacity:0;transform:translateX(24px)}}
 
+.thumb{width:80px;height:80px;border-radius:var(--r-12);overflow:hidden;flex:none;position:relative;align-self:flex-start}
+.thumb .art{position:absolute;left:0;top:0;width:192px;height:144px;transform:scale(.56);transform-origin:top left}
+.blog-row{align-items:flex-start;padding-block:var(--sp-16)}
+.blog-row .rt b{color:var(--c-blue)}
+.blog-lead{overflow:hidden;display:flex;flex-direction:column;border:0;padding:0;text-align:left;cursor:pointer;color:var(--c-text);width:100%}
+.res-head .tchip{flex:none;white-space:nowrap}
+
 /* Profile */
 .p-hero{background:var(--c-blue);color:var(--c-on-blue);padding:var(--sp-8) var(--sp-16) var(--sp-24);display:flex;flex-direction:column;gap:var(--sp-16);border-radius:0 0 var(--r-24) var(--r-24)}
 .p-id{display:flex;gap:var(--sp-16);align-items:center}

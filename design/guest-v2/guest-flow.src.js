@@ -135,10 +135,25 @@ const inits=p=>p.first[0]+p.last[0];
 const avClass=p=>"a"+(p.id.length%4);
 const avatar=(p,s)=>`<span class="avatar av-${s} ${avClass(p)}" aria-hidden="true">${inits(p)}</span>`;
 
-const SLIDES=[
- {eb:"MedBlog",t:"Knee pain when you run: when to see a doctor",m:"4 min read",a:"a"},
- {eb:"MedBlog",t:"Five ways to get ready for flu season",m:"3 min read",a:"b"},
- {eb:"MedBlog",t:"What to expect at your first visit",m:"5 min read",a:"c"}
+/* MedBlog stories (fictional titles; dates newest first) */
+const BLOG=[
+ {t:"Starting a new medicine? Five questions to ask your pharmacist",cat:"Medicines",d:"Oct. 7",m:"4 min read",a:"b"},
+ {t:"Knee pain when you run: when to see a doctor",cat:"Bones and joints",d:"Oct. 5",m:"5 min read",a:"a"},
+ {t:"Inflammation and your heart: what the research says",cat:"Heart health",d:"Oct. 1",m:"6 min read",a:"c"},
+ {t:"Five ways to get ready for flu season",cat:"Prevention",d:"Sept. 28",m:"3 min read",a:"b"},
+ {t:"Skin checks at home: what to look for and when to call",cat:"Cancer",d:"Sept. 23",m:"4 min read",a:"a"},
+ {t:"What to expect at your first prenatal visit",cat:"Pregnancy",d:"Sept. 22",m:"5 min read",a:"c"},
+ {t:"Simple heart-healthy meals for a busy week",cat:"Heart health",d:"Sept. 18",m:"4 min read",a:"a"},
+ {t:"Back to school: when kids need a sports physical",cat:"Prevention",d:"Sept. 10",m:"3 min read",a:"b"},
+ {t:"Arthritis or overuse? How to tell the difference",cat:"Bones and joints",d:"Sept. 4",m:"5 min read",a:"c"},
+ {t:"Sun safety doesn’t end with summer",cat:"Cancer",d:"Aug. 28",m:"3 min read",a:"a"}
+];
+const BLOG_CATS=["All",...new Set(BLOG.map(b=>b.cat))];
+const SLIDES=BLOG.slice(0,3).map(b=>({eb:"MedBlog · "+b.cat,t:b.t,m:`${b.d} · ${b.m}`,a:b.a}));
+const INBOX=[
+ {id:"m1",t:"Garage C entrance closed Oct. 14–16",s:"Use the north entrance on Sample Parkway. Valet parking is free.",d:"Oct. 12",g:"local_parking"},
+ {id:"m2",t:"Flu shots are here",s:"Get yours at any primary care clinic. Most insurance covers it.",d:"Oct. 1",g:"medical_services"},
+ {id:"m3",t:"Saturday hours at Lakeview Primary Care",s:"Open 8 a.m. to noon starting Oct. 17.",d:"Sept. 30",g:"schedule",read:true}
 ];
 const RESOURCES=[
  ["map","Getting around our campuses","Indoor maps and parking, step by step"],
@@ -247,7 +262,7 @@ const S={
   q:"",pq:null,filters:blankFilters(),sort:"relevance",loading:false,
   saved:store.get("saved",[]),recent:store.get("recent",[]),
   layout:["tiles","finddoc","saved","featured","campaign","resources","mychart","announcements","summer"].map(id=>({id,on:!MODS[id].expired})),
-  dismissed:new Set(),draft:null,fcText:""
+  dismissed:new Set(),draft:null,fcText:"",blogCat:"All",blogMore:false,inboxRead:new Set(INBOX.filter(m=>m.read).map(m=>m.id))
 };
 const rm=()=>S.rm||osRM.matches;
 const screen=$("#screen"),view=$("#view");
@@ -316,7 +331,7 @@ function focusTitle(){setTimeout(()=>{const h=$("#appbar .ttl")||$("#view h1");i
 
 /* ---------- App bar + tab bar ---------- */
 const TABS=[["home","Home","home"],["find","Find care","stethoscope"],["locations","Locations","location_on"],["saved","Saved","favorite"],["menu","Menu","menu"]];
-const TITLES={find:"Find a doctor",results:"Doctors",profile:"Doctor profile",saved:"Saved providers",locations:"Locations",menu:"Menu"};
+const TITLES={find:"Find a doctor",results:"Doctors",profile:"Doctor profile",saved:"Saved providers",locations:"Locations",menu:"Menu",medblog:"MedBlog",inbox:"Inbox"};
 function renderAppbar(){
   const t=top(),depth=S.stacks[S.tab].length;
   const back=depth>1?`<button class="icon-btn" data-action="back" aria-label="Back">${ico("arrow_back")}</button>`:"";
@@ -366,7 +381,7 @@ M.saved=()=>{const ps=S.saved.map(id=>PBY[id]).filter(Boolean);
   return `<div class="mod-head"><h2 class="sec-h" id="h-saved">Your saved providers</h2><button class="btn btn-ghost btn-sm" data-action="tab" data-tab="saved">See all</button></div>
   <div class="h-scroll">${ps.map(p=>`<button class="card mini press" data-action="profile" data-id="${p.id}">${avatar(p,56)}<b>${esc(name(p))}</b><span>${esc(p.spec)}</span></button>`).join("")}</div>
   <p class="fine">Saved on this device only.</p>`};
-M.featured=()=>`<div class="mod-head"><h2 class="sec-h" id="h-featured">MedBlog</h2></div>
+M.featured=()=>`<div class="mod-head"><h2 class="sec-h" id="h-featured">MedBlog</h2><button class="btn btn-ghost btn-sm" data-action="push" data-v="medblog" aria-label="See all MedBlog stories">See all</button></div>
   <div class="carousel" role="region" aria-roledescription="carousel" aria-labelledby="h-featured">
     <div class="h-scroll" id="car-scroll">${SLIDES.map((s,i)=>`<div class="slide" role="group" aria-roledescription="slide" aria-label="${i+1} of ${SLIDES.length}"><button class="card slide-btn press" data-action="toast" data-kind="go" data-msg="Opens: ${esc(s.t)}">
       <span class="art art-${s.a}" aria-hidden="true"><i></i><i></i><i></i></span>
@@ -569,9 +584,50 @@ function viewLocations(){
   return `<div class="res-body"><div class="notice"><span class="lead">${ic("info",20)}</span><span>Find a location and indoor maps are outside this prototype. Sample locations are listed for context.</span></div>
    <div class="card list">${ls.map(l=>`<button class="row" data-action="toast" data-kind="go" data-msg="Opens ${esc(l.n)}">${well("location_on")}<span class="rt"><b>${esc(l.n)}</b><span>${esc(l.a)}${locDist(l)!=null?` · ${fmtMi(locDist(l))}`:""}</span></span>${ic("chevron_right",20)}</button>`).join("")}</div></div>`;
 }
+const OUT=ic("open_in_new",20),CHEV=ic("chevron_right",20);
+const mrow=(g,t,sub,act,extra="")=>`<button class="row" ${act}>${well(g)}<span class="rt"><b>${t}</b>${sub?`<span>${sub}</span>`:""}</span>${extra}</button>`;
+function unread(){return INBOX.filter(m=>!S.inboxRead.has(m.id)).length}
 function viewMenu(){
-  return `<div class="res-body"><div class="card list">${[["lock","Sign in with MyChart","mychart"],["receipt_long","Pay a bill"],["call","Contact us"],["settings","Settings"],["article","Privacy and terms"]].map(([g,t,a])=>`<button class="row" data-action="${a||"toast"}" data-kind="go" data-msg="Opens ${t}">${well(g==="settings"?"folder_open":g)}<span class="rt"><b>${t}</b></span>${ic("chevron_right",20)}</button>`).join("")}</div>
-   <p class="fine">Menu destinations are outside this prototype.</p></div>`;
+  const n=unread();
+  return `<div class="res-body" style="gap:var(--sp-24)">
+   <div class="mychart"><h2>Have a MyChart account?</h2><p>Sign in to see your visits, messages, and test results.</p>
+     <button class="btn btn-primary" style="align-self:flex-start" data-action="mychart">${ic("lock",20)}<span>Sign in with MyChart</span></button></div>
+   <section class="grp" aria-labelledby="mn-1"><h2 class="lbl-h" id="mn-1">Updates</h2><div class="card list">
+     ${mrow("inbox","Inbox",n?`${n} new message${n>1?"s":""} from UTSW MyCare`:"No new messages",`data-action="push" data-v="inbox"${n?` aria-label="Inbox, ${n} new"`:""}`,(n?`<span class="new-pill" aria-hidden="true">${n} new</span>`:"")+CHEV)}
+     ${mrow("newspaper","MedBlog","Health news and tips from our experts",`data-action="push" data-v="medblog"`,CHEV)}</div></section>
+   <section class="grp" aria-labelledby="mn-2"><h2 class="lbl-h" id="mn-2">Patients and visitors</h2><div class="card list">
+     ${mrow("folder_open","Patient resources","Billing, records, forms, and support",`data-action="toast" data-kind="go" data-msg="Opens Patient resources"`,CHEV)}
+     ${mrow("menu_book","Patient resource guide","Your guide to care at UT&nbsp;Southwestern",`data-action="toast" data-kind="out" data-msg="Opens the patient resource guide on the UTSW website"`,OUT)}
+     ${mrow("airport_shuttle","Shuttle","Routes and times between campuses",`data-action="toast" data-kind="go" data-msg="Opens shuttle routes and times"`,CHEV)}
+     ${mrow("coronavirus","COVID-19 resources","Testing, vaccines, and visitor guidelines",`data-action="toast" data-kind="out" data-msg="Opens COVID-19 resources on the UTSW website"`,OUT)}</div></section>
+   <section class="grp" aria-labelledby="mn-3"><h2 class="lbl-h" id="mn-3">About UT&nbsp;Southwestern</h2><div class="card list">
+     ${mrow("workspace_premium","Why UT&nbsp;Southwestern","Our care, research, and rankings",`data-action="toast" data-kind="go" data-msg="Opens Why UT Southwestern"`,CHEV)}
+     ${mrow("medical_information","Resources for physicians","Referrals and clinical tools",`data-action="toast" data-kind="out" data-msg="Opens physician resources on the UTSW website"`,OUT)}
+     ${mrow("language","Visit the full website","utsouthwestern.edu",`data-action="toast" data-kind="out" data-msg="Opens the UT Southwestern website"`,OUT)}</div></section>
+   <section class="grp" aria-labelledby="mn-4"><h2 class="lbl-h" id="mn-4">Follow us</h2>
+     <div class="chips">${["Facebook","Instagram","LinkedIn","X"].map(x=>`<button class="chip" data-action="toast" data-kind="out" data-msg="Opens UT Southwestern on ${x}" aria-label="${x}, opens in the ${x} app">${x}${ic("open_in_new",16)}</button>`).join("")}</div></section>
+   <section class="grp" aria-labelledby="mn-5"><h2 class="sr-only" id="mn-5">Legal and settings</h2><div class="card list">
+     ${mrow("privacy_tip","Privacy policy","",`data-action="toast" data-kind="out" data-msg="Opens the privacy policy"`,OUT)}
+     ${mrow("description","Terms of use","",`data-action="toast" data-kind="out" data-msg="Opens the terms of use"`,OUT)}
+     ${mrow("accessibility_new","Accessibility","",`data-action="toast" data-kind="out" data-msg="Opens the accessibility statement"`,OUT)}</div></section>
+   <p class="fine">UTSW MyCare version 2.0 (prototype) · Sample menu destinations</p></div>`;
+}
+function viewInbox(){
+  return `<div class="res-body"><div class="res-sum"><h2>${unread()?`${unread()} new`:"All caught up"}</h2><p>Updates from UTSW MyCare. Personal messages from your care team are in MyChart.</p></div>
+   <div class="card list">${INBOX.map(m=>{const isNew=!S.inboxRead.has(m.id);return `<button class="row" data-action="inbox-open" data-id="${m.id}" style="align-items:flex-start">${well(m.g)}<span class="rt"><b>${esc(m.t)}</b><span>${esc(m.s)}</span><span>${esc(m.d)}${isNew?'<span class="sr-only">, new</span>':""}</span></span>${isNew?`<span class="new-pill" aria-hidden="true">New</span>`:CHEV}</button>`}).join("")}</div></div>`;
+}
+const thumb=a=>`<span class="thumb" aria-hidden="true"><span class="art art-${a}"><i></i><i></i><i></i></span></span>`;
+function viewMedblog(){
+  const list=BLOG.filter(b=>S.blogCat==="All"||b.cat===S.blogCat);
+  const shown=S.blogMore||S.blogCat!=="All"?list:list.slice(0,6);
+  return `<div class="res-head"><div class="toolbar" role="group" aria-label="Filter stories by topic">${BLOG_CATS.map(c=>`<button class="tchip" data-action="blog-cat" data-c="${esc(c)}" aria-pressed="${S.blogCat===c}"><span class="ck">${ic("check",20)}</span>${esc(c)}</button>`).join("")}</div></div>
+   <div class="res-body">
+    ${S.blogCat==="All"?`<button class="card blog-lead press" data-action="toast" data-kind="go" data-msg="Opens: ${esc(list[0].t)}"><span class="art art-${list[0].a}" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="slide-txt"><span class="eyebrow">Latest · ${esc(list[0].cat)}</span><span class="st">${esc(list[0].t)}</span><span class="meta">${esc(list[0].d)} · ${list[0].m}</span></span></button>`:""}
+    <h2 class="sr-only">${S.blogCat==="All"?"More stories":esc(S.blogCat)+" stories"}</h2>
+    <div class="card list">${shown.slice(S.blogCat==="All"?1:0).map((b,i)=>`<button class="row blog-row rise" style="--i:${Math.min(i,6)}" data-action="toast" data-kind="go" data-msg="Opens: ${esc(b.t)}">${thumb(b.a)}<span class="rt"><span class="eyebrow">${esc(b.cat)}</span><b>${esc(b.t)}</b><span>${esc(b.d)} · ${b.m}</span></span></button>`).join("")}</div>
+    ${shown.length<list.length?`<button class="btn btn-secondary btn-block" data-action="blog-more">Show ${list.length-shown.length} more stories</button>`:`<p class="fine">You’re up to date. New stories are added each week.</p>`}
+   </div>`;
 }
 
 /* ---------- Render ---------- */
@@ -579,7 +635,7 @@ function render(anim){
   const t=top();
   renderAppbar();
   view.setAttribute("aria-label",t.v==="home"?"Home":TITLES[t.v]);
-  view.innerHTML=t.v==="home"?viewHome():t.v==="find"?viewFind():t.v==="results"?viewResults():t.v==="profile"?viewProfile(t.id):t.v==="saved"?viewSaved():t.v==="locations"?viewLocations():viewMenu();
+  view.innerHTML=t.v==="home"?viewHome():t.v==="find"?viewFind():t.v==="results"?viewResults():t.v==="profile"?viewProfile(t.id):t.v==="saved"?viewSaved():t.v==="locations"?viewLocations():t.v==="medblog"?viewMedblog():t.v==="inbox"?viewInbox():viewMenu();
   if(t.v==="results")renderResultsBody();
   if(t.v==="home"){initCarousel();ptrInit()}
   if(anim){view.classList.remove("push","pop","fade");void view.offsetWidth;view.classList.add(anim)}
@@ -896,6 +952,10 @@ screen.addEventListener("click",e=>{
    case "widen":S.filters.dist="50";render();load();break;
    case "retry":if(S.data==="error"||S.data==="offline"){S.data="live";syncControls()}load();break;
    case "profile":push({v:"profile",id});break;
+   case "push":push({v:el.dataset.v});break;
+   case "blog-cat":S.blogCat=el.dataset.c;rerenderKeep();{const c=$(`[data-action="blog-cat"][data-c="${el.dataset.c}"]`);if(c){c.focus({preventScroll:true});c.scrollIntoView({inline:"center",block:"nearest",behavior:rm()?"auto":"smooth"})}}sayPolite(`${BLOG.filter(b=>S.blogCat==="All"||b.cat===S.blogCat).length} stories`);break;
+   case "blog-more":{const n=$$(".blog-row").length;S.blogMore=true;rerenderKeep();$$(".blog-row")[n]?.focus();break}
+   case "inbox-open":{const m=INBOX.find(x=>x.id===id);S.inboxRead.add(id);rerenderKeep();$(`[data-action="inbox-open"][data-id="${id}"]`)?.focus();toast("Opens: "+m.t,"go");break}
    case "fav":toggleFav(id,el.dataset.style==="hero"?"hero":"card");break;
    case "share":openShare(id);break;
    case "request":openRequest(id);break;
@@ -981,6 +1041,8 @@ const JUMPS=[
  ["profile","Provider profile","Full profile with research",()=>{goTab("find");S.stacks.find.push({v:"profile",id:"avery-morgan"});render("fade")}],
  ["missing","Profile, missing data","Optional sections hidden",()=>{goTab("find");S.stacks.find.push({v:"profile",id:"omar-haddad"});render("fade")}],
  ["share","Share sheet","Public link only",()=>{goTab("find");S.stacks.find.push({v:"profile",id:"avery-morgan"});render("fade");setTimeout(()=>openShare("avery-morgan"),rm()?0:350)}],
+ ["menu","Menu","Patients, about UTSW, follow us",()=>{goTab("menu");render("fade")}],
+ ["medblog","MedBlog, see all","Topic filter and story list",()=>{S.blogCat="All";S.blogMore=false;goTab("home");S.stacks.home.push({v:"medblog"});render("fade")}],
  ["saved","Saved providers","Stored on this device",()=>{if(!S.saved.length){S.saved=["avery-morgan","priya-shah"];store.set("saved",S.saved);renderTabbar()}goTab("saved");render("fade")}]
 ];
 $("#jumps").innerHTML=JUMPS.map(([k,t,s])=>`<button class="page-btn" data-jump="${k}">${t}<span>${s}</span></button>`).join("");
@@ -1000,7 +1062,9 @@ const REQ=[
  ["Results and states","Result cards, no results with alternatives, loading, service error, offline, retry","empty"],
  ["Provider profile","Credentials, bio, specialties, conditions, languages, locations, contact, research and media, related","profile"],
  ["Favorites","Save and remove with Undo, saved list, stored on the device","saved"],
- ["Share","Native share sheet with public link only","share"]
+ ["Share","Native share sheet with public link only","share"],
+ ["Menu (old app’s More options)","Inbox, MedBlog, patient resources, shuttle, COVID-19, about UTSW, physicians, full website, social, privacy","menu"],
+ ["MedBlog see all (old app)","Latest story, topic filter, dated list with read times, show more","medblog"]
 ];
 $("#req").innerHTML=`<thead><tr><th>Requirement</th><th>In the prototype</th><th><span class="sr-only">Show</span></th></tr></thead><tbody>${REQ.map(([r,d,j])=>`<tr><td><b>${r}</b></td><td>${d}</td><td><button class="page-btn" data-jump="${j}">Show</button></td></tr>`).join("")}</tbody>`;
 $("#req").addEventListener("click",e=>{const b=e.target.closest("[data-jump]");if(b)$(`#jumps [data-jump="${b.dataset.jump}"]`).click()});

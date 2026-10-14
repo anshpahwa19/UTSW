@@ -138,7 +138,9 @@
       "20"
     ],
     "schedule": [
-      "20"
+      "20",
+      "24",
+      "24f"
     ],
     "call": [
       "24",
@@ -181,7 +183,8 @@
       "24f"
     ],
     "open_in_new": [
-      "20"
+      "20",
+      "16"
     ],
     "refresh": [
       "24"
@@ -337,13 +340,51 @@
       "20"
     ],
     "workspace_premium": [
-      "16"
+      "16",
+      "24",
+      "24f"
     ],
     "do_not_disturb_on": [
       "16"
     ],
     "settings": [
       "20"
+    ],
+    "inbox": [
+      "24",
+      "24f"
+    ],
+    "newspaper": [
+      "24",
+      "24f"
+    ],
+    "airport_shuttle": [
+      "24",
+      "24f"
+    ],
+    "medical_information": [
+      "24",
+      "24f"
+    ],
+    "language": [
+      "24",
+      "24f"
+    ],
+    "coronavirus": [
+      "24",
+      "24f"
+    ],
+    "privacy_tip": [
+      "24",
+      "24f"
+    ],
+    "accessibility_new": [
+      "24",
+      "24f"
+    ],
+    "description": [
+      "24",
+      "24f"
     ]
   }
 }
