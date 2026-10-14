@@ -17,7 +17,7 @@
   --c-cyan:#00A9E0; --c-wash:#66CBEC; --c-red:#B0003A; --c-red-bg:#FBEFF2; --c-magenta:#E0004D;
   --c-orange:#E87722; --c-orange-bg:#FDF1E9; --c-green:#43B02A; --c-green-ink:#2C6E1B; --c-purple:#8246AF;
   --c-pastel:#D1DDE6; --c-sand:#D5CB9F; --c-sand-60:#E6E0C5; --c-clay-60:#E9DED3; --c-muted-blue:#7BAFD4; --c-focus:#004278; --c-scrim:rgba(0,30,56,.48);
-  --c-sys-sheet:#F2F2F7; --c-sys-text:#1C1C1E; --c-sys-sep:#C6C6C8;
+  --c-stack-bg:#08131D; --c-sys-sheet:#F2F2F7; --c-sys-text:#1C1C1E; --c-sys-sep:#C6C6C8;
 
   /* Type scale – even sizes only */
   --fs-12:12px; --lh-12:16px;  --fs-14:14px; --lh-14:20px;  --fs-16:16px; --lh-16:24px;  --fs-18:18px; --lh-18:24px;
@@ -343,6 +343,14 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
 .dots{display:flex;gap:var(--sp-8);justify-content:center;align-items:center;min-height:16px}
 .dots i{width:8px;height:8px;border-radius:var(--r-full);background:var(--c-border-strong);opacity:.5;transition:width var(--dur-base) var(--ease-out),background var(--dur-base),opacity var(--dur-base)}
 .dots i.on{width:24px;background:var(--c-blue);opacity:1}
+/* Carousel dwell: the active dot fills over the 6 s dwell; when it fills, the next slide comes in */
+.dots i{position:relative;overflow:hidden}
+.dots i::after{content:"";position:absolute;inset:0;border-radius:inherit;background:var(--c-blue);transform:scaleX(0);transform-origin:left center}
+.dots i.on::after{transform:scaleX(1)}
+.dots.playing i.on{background:var(--c-pastel)}
+.dots.playing i.on::after{animation:dwell 6s linear both}
+.carousel.hold .dots i::after{animation-play-state:paused}
+@keyframes dwell{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 
 .mini{flex:0 0 144px;scroll-snap-align:start;padding:var(--sp-16) var(--sp-12);display:flex;flex-direction:column;align-items:center;gap:var(--sp-8);text-align:center;border:0;cursor:pointer;color:var(--c-text);min-width:0}
 .mini b{font-size:var(--fs-14);line-height:var(--lh-14);font-weight:600}
@@ -574,6 +582,45 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
 .search-entry>span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .campaign .shape1,.campaign .shape2{will-change:transform}
 
+/* Sheet presentation: the screen behind steps back into a card, like iOS page sheets */
+#screen{transition:width var(--dur-slow) var(--ease-std),background-color 500ms var(--ease-std)}
+#appbar,#views,#tabbar{transition:transform 500ms cubic-bezier(0.32,0.72,0,1),border-radius 500ms cubic-bezier(0.32,0.72,0,1),box-shadow 300ms var(--ease-std)}
+#screen.stacked{background:var(--c-stack-bg)}
+#screen.stacked #appbar,#screen.stacked #views,#screen.stacked #tabbar{transform:translate3d(0,8px,0) scale(.94)}
+#screen.stacked #appbar{border-radius:var(--r-16) var(--r-16) 0 0}
+#screen.stacked #tabbar{border-radius:0 0 var(--r-16) var(--r-16)}
+
+/* Shared element: the doctor's avatar travels between the card and the profile */
+[data-flying]{visibility:hidden}
+.flyer{will-change:transform}
+
+/* Rolling numbers: a changed count slides out and the new value slides in */
+.roll{display:inline-block;position:relative;overflow:hidden;vertical-align:bottom}
+.roll>span{display:block}
+.roll>.r-old{position:absolute;left:0;top:0}
+
+/* Heart: the fill grows out from the center of the outline */
+.hrt{display:grid;place-items:center}
+.hrt>.ic{grid-area:1/1}
+.filling .hf{animation:fillIn 460ms cubic-bezier(0.32,0.72,0,1) both}
+@keyframes fillIn{from{clip-path:circle(0% at 50% 58%)}to{clip-path:circle(75% at 50% 58%)}}
+
+/* Toast with Undo: a hairline shows the time left */
+.toast .t-bar{position:absolute;left:var(--sp-16);right:var(--sp-16);bottom:var(--sp-4);height:2px;border-radius:2px;background:var(--c-muted-blue);opacity:.7;transform-origin:left center;animation:tbar 5s linear forwards}
+@keyframes tbar{to{transform:scaleX(0)}}
+
+/* Pull to refresh: a ring draws as you pull, turns solid when it will refresh, then spins */
+.ptr{transition:background-color 200ms var(--ease-std),color 200ms var(--ease-std)}
+.ptr.armed{background:var(--c-blue);color:var(--c-on-blue)}
+.ptr-ring{display:block}
+.ptr.spin .ptr-ring{animation:spin 800ms linear infinite}
+
+/* Locating: soft sonar rings around the location icon while the phone finds you */
+.locating{overflow:visible}
+.locating::before,.locating::after{content:"";position:absolute;inset:0;border-radius:inherit;border:2px solid var(--c-cyan);animation:sonar 1.6s var(--ease-out) infinite;pointer-events:none}
+.locating::after{animation-delay:.8s}
+@keyframes sonar{from{transform:scale(1);opacity:.8}to{transform:scale(1.5);opacity:0}}
+
 /* Scroll-linked items: JS writes opacity and transform from scroll position */
 .sd{will-change:transform,opacity}
 .slide{will-change:transform}
@@ -583,11 +630,11 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
 
 /* Reduced motion: OS setting or prototype toggle */
 .screen.rm *,.screen.rm *::before,.screen.rm *::after{animation-duration:1ms!important;animation-delay:0ms!important;animation-iteration-count:1!important;transition-duration:1ms!important;scroll-behavior:auto!important}
-.screen.rm .skel::after{display:none}
+.screen.rm .skel::after,.screen.rm .toast .t-bar,.screen.rm .locating::before,.screen.rm .locating::after{display:none}
 .screen.rm .hero .aurora i{animation:none}
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:1ms!important;animation-delay:0ms!important;animation-iteration-count:1!important;transition-duration:1ms!important;scroll-behavior:auto!important}
-  .skel::after{display:none}
+  .skel::after,.toast .t-bar,.locating::before,.locating::after{display:none}
   .hero .aurora i{animation:none}
 }
 .screen.rm .spinner,.screen.rm .btn .spinner{animation:none;border-right-color:currentColor;opacity:.6}
@@ -720,6 +767,11 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
           <li><b>Scroll-linked motion</b>: sections below the fold rise 64 pt, grow from 94% scale, and fade in as they travel the first third of the screen, and reverse when you scroll back. Quick-access tiles cascade by column. On first view, on-screen sections settle in with a 55 ms stagger.</li>
           <li><b>Depth</b>: the hero copy moves at 35% of scroll speed and fades, the brand light behind it at 50%, so the hero recedes rather than scrolls; the campaign shapes drift against the card. The doctor profile’s avatar shrinks and the doctor’s name moves into the app bar once the hero leaves.</li>
           <li><b>Surfaces</b>: the app bar gains a shadow and the results header turns more opaque once content scrolls under them. MedBlog slides scale and dim away from the active slide.</li>
+          <li><b>Shared element</b>: opening a doctor from a card, suggestion, or related doctor flies their avatar from the list into the profile header, growing from 56 to 72 pt and picking up the cyan ring; Back flies it home again.</li>
+          <li><b>Sheets</b>: while a sheet is open, the screen behind steps back to 94% with rounded corners over a dark ground, as on iOS.</li>
+          <li><b>Lists that change</b>: sorting or removing a filter glides each result card to its new place (FLIP), new cards fade in, and counts roll to their new value. Removing a saved doctor slides the card out and closes the gap.</li>
+          <li><b>Feedback</b>: the heart fills outward from its center; the Undo toast shows a hairline countdown; pull to refresh draws a ring that turns solid when releasing will refresh; finding your location shows soft sonar rings; “Read more” opens the bio by height.</li>
+          <li><b>Pacing</b>: the MedBlog dot fills during each 6 s dwell and advances when full; it pauses on touch, hover, or focus. The search screen’s chips and rows, Find care suggestions, and the profile header settle in with short staggers. On first open the alert banner arrives after the hero.</li>
           <li>Ambient motion is limited to the slow light behind the hero (22 s). No bounces, confetti, or blinking. Reduced motion turns all of it off and shows every section in place.</li>
         </ul>
       </section>
