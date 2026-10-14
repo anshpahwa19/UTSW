@@ -6,7 +6,7 @@
 <style>
 /* Layout: presentation board – controls | 390 × 844 phone | token spec, then the iconography system full width.
    App direction: a Blue hero holds the greeting and search (always above appointments); content rides up on a light sheet.
-   Blue family for depth, one cyan accent, one warm sand moment for campaigns; motion and gestures carry the play. */
+   Blue family for depth, one cyan accent, a Blue gradient campaign card; motion and gestures carry the play. */
 :root{
   /* Board chrome (theme-aware) */
   --bd-bg:#F2F5F8; --bd-panel:#FFFFFF; --bd-ink:#1F2A33; --bd-muted:#5B6770; --bd-line:#D5DDE5; --bd-accent:#004278; --bd-chip:#EBF0F5; --bd-bezel:#0E2236;
@@ -17,7 +17,6 @@
   --line:#D5DDE5; --line-strong:#808B96;
   --ink:#333333; --ink-2:#5B6770;
   --on-blue-2:#D6E4F0; --on-blue-3:#A9C7E0;
-  --sand:#E6E0C5; --sand-deep:#D5CB9F;
   --alert:#B0003A;
 
   --ts:1;
@@ -390,15 +389,34 @@ html:not(.ms-ready) .ms{color:transparent!important}
 .car-arrows{display:flex; gap:var(--s2)}
 
 /* ===================== Campaign (the one warm moment) ===================== */
-.camp{position:relative; overflow:hidden; margin-inline:var(--s4); border-radius:var(--r-xl); background:var(--sand); color:var(--ink); padding:var(--s6); display:grid; gap:var(--s4)}
-.camp-art{position:absolute; right:-72px; bottom:-72px; width:216px; height:216px; pointer-events:none}
-.camp > *:not(.camp-art){position:relative}
-.camp-head{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:var(--s4); align-items:start}
-.camp h2{font-size:var(--t24); line-height:1.2; font-weight:700; letter-spacing:-.01em; margin-top:var(--s1); color:var(--blue); text-wrap:balance}
-.camp-facts{list-style:none; margin:0; padding:var(--s3) var(--s4); display:grid; gap:var(--s2); background:rgba(255,255,255,.6); border-radius:var(--r-md)}
-.camp-facts li{display:flex; gap:var(--s3); align-items:flex-start; font-size:var(--t14); font-weight:600; line-height:1.4}
-.camp-facts .ms{color:var(--blue)}
-.camp .btn{justify-self:start}
+.camp{position:relative; overflow:hidden; margin-inline:var(--s4); border-radius:var(--r-xl); color:#FFFFFF; background:radial-gradient(90% 70% at 100% 0%, rgba(0,169,224,.30) 0, rgba(0,169,224,0) 70%), linear-gradient(160deg, var(--blue-80) 0%, var(--blue) 58%); box-shadow:0 12px 32px -16px rgba(0,66,120,.55); --grad:-25}
+.camp > *{position:relative}
+.camp-top{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:var(--s4); align-items:start; padding:var(--s6) var(--s6) var(--s4)}
+.camp-tag{display:inline-flex; align-items:center; gap:var(--s2); min-height:24px; padding:0 var(--s3) 0 var(--s2); border-radius:var(--r-pill); background:rgba(255,255,255,.14); font-size:var(--t12); font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:#FFFFFF}
+.camp-tag i{width:8px; height:8px; border-radius:50%; background:var(--cyan); box-shadow:0 0 0 3px rgba(0,169,224,.3)}
+.camp h2{font-size:var(--t28); line-height:1.15; font-weight:700; letter-spacing:-.015em; margin-top:var(--s3); text-wrap:balance}
+.camp-top > p{grid-column:1 / -1; margin-top:calc(-1 * var(--s2)); font-size:var(--t16); line-height:1.5; color:var(--on-blue-2)}
+.camp-art{position:relative; width:96px; height:96px; display:grid; place-items:center; margin:calc(-1 * var(--s1)) calc(-1 * var(--s2)) 0 0}
+.camp-art svg{position:absolute; inset:0; width:100%; height:100%; overflow:visible}
+.camp-art .rings{transform-origin:50% 50%; animation:campSpin 1200ms var(--spring-gentle) both}
+.camp-art .dot{background:#FFFFFF; color:var(--blue); box-shadow:0 8px 20px -6px rgba(0,20,40,.5); --grad:0; animation:iconPop 520ms var(--spring-snappy) both 120ms}
+@keyframes campSpin{from{transform:rotate(-90deg) scale(.8); opacity:0}}
+.camp-facts{list-style:none; margin:0 var(--s4); padding:0; display:grid; grid-template-columns:1fr 1fr; border-radius:var(--r-lg); background:rgba(0,30,60,.28); box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+.camp-facts li{display:grid; grid-template-columns:auto minmax(0,1fr); column-gap:var(--s2); align-content:start; padding:var(--s3)}
+.camp-facts li + li{box-shadow:inset 1px 0 0 rgba(255,255,255,.12)}
+.camp-facts .ms{grid-row:span 2; color:var(--pms542); margin-top:2px}
+.camp-facts .k{font-size:var(--t12); font-weight:600; line-height:1.4; color:var(--on-blue-3)}
+.camp-facts .v{font-size:var(--t14); font-weight:600; line-height:1.4; color:#FFFFFF}
+.camp-cta{display:flex; gap:var(--s3); padding:var(--s4) var(--s4) var(--s4) var(--s4)}
+.camp-cta .btn-light{flex:1; background:#FFFFFF; color:var(--blue); --grad:0}
+.camp-cta .btn-light .ms{transition:transform var(--d-snappy) var(--spring-snappy)}
+.camp-cta .btn-light:hover .ms,.camp-cta .btn-light:focus-visible .ms{transform:translateX(4px)}
+.camp-cal{flex:none; width:var(--hit-lg); height:var(--hit-lg); border:0; border-radius:50%; display:grid; place-items:center; background:rgba(255,255,255,.14); color:#FFFFFF; box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.5); transition:transform var(--d-snappy) var(--spring-snappy), background-color var(--d-fast) var(--ease-out)}
+.camp-cal:active{transform:scale(.92); transition-duration:80ms}
+.camp-cal[aria-pressed="true"]{background:#FFFFFF; color:var(--blue); --fill:1; --grad:0}
+.camp-cal[aria-pressed="true"] .ms{animation:iconPop 360ms var(--spring-snappy)}
+.phone.rm .camp-art .rings,.phone.rm .camp-art .dot{animation:fadeOnly var(--d-base) var(--ease-out) both}
+.phone.rm .camp-cal:active,.phone.rm .camp-cta .btn-light .ms{transform:none}
 
 /* ===================== Tab bar ===================== */
 .tabbar{position:absolute; left:var(--s3); right:var(--s3); bottom:var(--s4); z-index:25; display:grid; grid-template-columns:repeat(5,1fr); background:rgba(255,255,255,.94); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border-radius:var(--r-xl); padding:var(--s1); box-shadow:0 8px 24px rgba(16,38,60,.16), 0 0 0 1px var(--line)}
@@ -742,8 +760,8 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
       <thead><tr><th>Size</th><th>Weight</th><th>Line</th><th>Used for</th></tr></thead>
       <tbody>
         <tr><td>32.0</td><td>700</td><td>1.15</td><td>Greeting headline</td></tr>
-        <tr><td>28.0</td><td>700</td><td>1.15–1.2</td><td>Appointment time; tab page, article, and detail page titles</td></tr>
-        <tr><td>24.0</td><td>700</td><td>1.2</td><td>Campaign headline, sheet titles</td></tr>
+        <tr><td>28.0</td><td>700</td><td>1.15–1.2</td><td>Appointment time, campaign headline; tab page, article, and detail page titles</td></tr>
+        <tr><td>24.0</td><td>700</td><td>1.2</td><td>Sheet titles</td></tr>
         <tr><td>20.0</td><td>700</td><td>1.1–1.3</td><td>Section headings, date strip day numbers</td></tr>
         <tr><td>18.0</td><td>600–700</td><td>1.3</td><td>Featured titles, announcement dates</td></tr>
         <tr><td>16.0</td><td>400–600</td><td>1.5</td><td>Body (minimum), buttons, list titles, search, appointment date</td></tr>
@@ -781,7 +799,7 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
         <tr><td><span class="sw" style="background:#EBF0F5"></span>Tint</td><td>#EBF0F5 · #D1DDE6 pressed</td><td>List circles, chips, action circles, tab indicator · Blue on tint 8.93:1</td></tr>
         <tr><td><span class="sw" style="background:#F7F8FA"></span>Surfaces and lines</td><td>#F7F8FA · #FFFFFF · #D5DDE5 · #808B96</td><td>Content sheet, cards, hairlines · field outline #808B96 is 3.27:1</td></tr>
         <tr><td><span class="sw" style="background:#00A9E0"></span>PMS 2995 cyan</td><td>#00A9E0</td><td>The one accent, shapes only – brand dot, hero glow, countdown icon, unread dots (3.78:1 on Blue)</td></tr>
-        <tr><td><span class="sw" style="background:#E6E0C5"></span>PMS 4545 at 60%</td><td>#E6E0C5 · #D5CB9F</td><td>Campaign card only · Blue 7.72:1, Gray 9.53:1</td></tr>
+        <tr><td><span class="sw" style="background:linear-gradient(160deg,#336893,#004278)"></span>Campaign gradient</td><td>#336893 → #004278 · cyan glow 30%</td><td>Campaign card only · white headline and On Blue text, 4.5:1 or better at every text position; facts on a 28% navy panel</td></tr>
         <tr><td><span class="sw" style="background:#B0003A"></span>Alert</td><td>#B0003A</td><td>Emergency alerts only · white 7.22:1 · always with icon and “Alert”</td></tr>
       </tbody>
     </table></div>
@@ -976,7 +994,7 @@ const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const phone = $('#phone');
 const sysRM = matchMedia('(prefers-reduced-motion: reduce)');
-const state = { aud: 'auth', alerts: 1, rm: sysRM.matches, alertOpen: false, alertsAll: false, tab: 0, appt: 0, feat: 0, added: new Set(), checks: new Set(), unread: 2, recent: [], greetOn: true, updated: 'Updated 9:41 a.m.' };
+const state = { aud: 'auth', alerts: 1, rm: sysRM.matches, alertOpen: false, alertsAll: false, tab: 0, appt: 0, feat: 0, added: new Set(), checks: new Set(), unread: 2, recent: [], greetOn: true, fluCal: false, updated: 'Updated 9:41 a.m.' };
 const RM = () => state.rm;
 
 /* Keep times, abbreviated dates, and “UT Southwestern” from breaking across lines (style guide) */
@@ -1018,7 +1036,7 @@ const ICON_MAP = [
   ['directions', 'directions', 'Directions', 'Map preview', 'Appointments'],
   ['wayfinding', 'directions_walk', 'Wayfinding', 'Appointment action', 'Appointments'],
   ['rideshare', 'directions_car', 'Rideshare', 'Appointment action', 'Appointments'],
-  ['addCal', 'calendar_add_on', 'Add to calendar', 'Appointment action', 'Appointments'],
+  ['addCal', 'calendar_add_on', 'Add to calendar', 'Appointment action, campaign walk-in hours', 'Appointments'],
   ['added', 'event_available', 'Added to calendar', 'Confirmed state of Add to calendar', 'Appointments', 'f1'],
   ['external', 'open_in_new', 'Opens in MyChart', 'Appointment action', 'Appointments'],
   ['results', 'lab_profile', 'Test results', 'Test results tile', 'Destinations and services'],
@@ -1041,7 +1059,7 @@ const ICON_MAP = [
   ['next', 'chevron_right', 'Open or next', 'Rows, carousel', 'Controls and feedback'],
   ['prev', 'chevron_left', 'Previous', 'Carousel', 'Controls and feedback'],
   ['back', 'arrow_back', 'Back', 'Search, detail pages', 'Controls and feedback'],
-  ['go', 'arrow_forward', 'Go', 'Search field', 'Controls and feedback'],
+  ['go', 'arrow_forward', 'Go', 'Search field, campaign button', 'Controls and feedback'],
   ['close', 'close', 'Close or clear', 'Search, sheets, articles', 'Controls and feedback'],
   ['share', 'share', 'Share', 'Articles', 'Controls and feedback'],
   ['recent', 'history', 'Recent search', 'Search', 'Controls and feedback'],
@@ -1272,12 +1290,21 @@ const R = {
     </section>`;
   },
   campaign() {
+    const on = state.fluCal;
     return `<section class="camp" aria-labelledby="camp-h">
-      <svg class="camp-art" viewBox="0 0 216 216" aria-hidden="true"><circle cx="108" cy="108" r="104" fill="none" stroke="#D5CB9F" stroke-width="2"/><circle cx="108" cy="108" r="72" fill="none" stroke="#D5CB9F" stroke-width="2"/><circle cx="108" cy="108" r="40" fill="#D5CB9F" opacity=".5"/></svg>
-      <div class="camp-head"><div><p class="kick">Seasonal campaign</p><h2 id="camp-h">Flu shots are here</h2></div>${circle('vaccine', 56, 'solid')}</div>
-      <p>Protect yourself and the people around you this season. Most insurance plans cover the cost.</p>
-      <ul class="camp-facts"><li>${ico('countdown', 20)}Walk in Saturdays, 8 a.m. to noon</li><li>${ico('place', 20)}Any UT Southwestern primary care clinic</li></ul>
-      <button class="btn btn-primary" data-page="flu">Find a flu shot</button>
+      <div class="camp-top">
+        <div><p class="camp-tag"><i></i>Flu season</p><h2 id="camp-h">Flu shots are here</h2></div>
+        <div class="camp-art" aria-hidden="true"><svg viewBox="0 0 96 96"><g class="rings"><circle cx="48" cy="48" r="47" fill="#336893" opacity=".55"/><circle cx="48" cy="48" r="38" fill="none" stroke="#7BAFD4" stroke-width="1.5" stroke-dasharray="3 5" opacity=".8"/><circle cx="86" cy="22" r="5" fill="#00A9E0"/><circle cx="12" cy="74" r="3" fill="#7BAFD4"/></g></svg>${circle('vaccine', 56)}</div>
+        <p>Protect yourself and the people around you. It takes about 10 minutes, and most plans cover it.</p>
+      </div>
+      <ul class="camp-facts">
+        <li>${ico('countdown', 20)}<span class="k">Walk in</span><span class="v">Saturdays, 8 a.m. to noon</span></li>
+        <li>${ico('place', 20)}<span class="k">Where</span><span class="v">Any primary care clinic</span></li>
+      </ul>
+      <div class="camp-cta">
+        <button class="btn btn-light" data-page="flu"><span class="lbl">Find a flu shot</span>${ico('go', 20)}</button>
+        <button class="camp-cal" data-flu-cal aria-pressed="${on}" aria-label="Add Saturday walk-in hours to calendar">${ico(on ? 'added' : 'addCal', 24)}</button>
+      </div>
     </section>`;
   },
   news() {
@@ -1591,6 +1618,7 @@ page.addEventListener('click', e => { const p = e.target.closest('[data-page]');
 /* ---------- Delegated clicks inside the phone ---------- */
 phone.addEventListener('click', e => {
   if (e.target.closest('#page')) return;
+  const fc = e.target.closest('[data-flu-cal]'); if (fc) { state.fluCal = !state.fluCal; fc.setAttribute('aria-pressed', state.fluCal); fc.innerHTML = ico(state.fluCal ? 'added' : 'addCal', 24); toast(state.fluCal ? 'Saturday flu shot walk-in added to your calendar' : 'Removed from your calendar', state.fluCal); return; }
   const t = e.target.closest('[data-toast]'); if (t) { toast(t.dataset.toast); return; }
   const s = e.target.closest('[data-open-search]'); if (s) { openSearch(s.dataset.openSearch, '', s); return; }
   const q = e.target.closest('[data-q]'); if (q && !q.closest('#so')) { openSearch('All', q.dataset.q, q); return; }

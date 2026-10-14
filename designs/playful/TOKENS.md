@@ -2,15 +2,15 @@
 
 Prototype: `mycare-playful-home.html`, built from `src.html` by `build.py` (phone frame 390 × 844 pt, also checked at 360 pt). All sample data is fictional.
 
-Direction: a Blue hero (reversed logo, notification bell with an inset count, initials avatar, greeting with an “Updated” refresh chip, and search) sits at the top, and content rides up on a light sheet. Search is part of the fixed header, so it always sits above appointments. Appointments get a date strip and a rich card: a Blue header with time and countdown, a map preview with directions, a prep note or checklist, and round actions. Depth comes from the Blue family and one warm sand campaign card; energy comes from motion and gestures.
+Direction: a Blue hero (reversed logo, notification bell with an inset count, initials avatar, greeting with an “Updated” refresh chip, and search) sits at the top, and content rides up on a light sheet. Search is part of the fixed header, so it always sits above appointments. Appointments get a date strip and a rich card: a Blue header with time and countdown, a map preview with directions, a prep note or checklist, and round actions. Depth comes from the Blue family, including a gradient campaign card; energy comes from motion and gestures.
 
 ## Type scale (Inter; Inter Display optical size from 20.0 up)
 
 | Size | Weight | Line height | Used for |
 |---|---|---|---|
 | 32.0 | 700 | 1.15 | Greeting headline |
-| 28.0 | 700 | 1.15–1.2 | Appointment time; tab page, article, and detail page titles |
-| 24.0 | 700 | 1.2 | Campaign headline, sheet titles |
+| 28.0 | 700 | 1.15–1.2 | Appointment time, campaign headline; tab page, article, and detail page titles |
+| 24.0 | 700 | 1.2 | Sheet titles |
 | 20.0 | 700 | 1.1–1.3 | Section headings, date strip day numbers |
 | 18.0 | 600–700 | 1.3 | Featured titles, announcement dates |
 | 16.0 | 400–600 | 1.5 | Body (minimum), buttons, list titles, search, appointment date |
@@ -34,7 +34,7 @@ All sizes scale with the system text setting except tab labels and tab icons (us
 
 Touch targets: 44.0 minimum, 48.0 for primary buttons and actions; at least 8.0 between targets.
 
-## Color – a Blue family, one accent, one warm moment
+## Color – a Blue family and one accent
 
 | Role | Value | Pairing (contrast) |
 |---|---|---|
@@ -46,7 +46,7 @@ Touch targets: 44.0 minimum, 48.0 for primary buttons and actions; at least 8.0 
 | Tint | #EBF0F5 (pressed #D1DDE6) | List circles, chips, action circles, tab indicator; Blue on tint 8.93:1 |
 | Surfaces and lines | #F7F8FA, #FFFFFF, #D5DDE5, #808B96 | Content sheet, cards, hairlines; the search field outline #808B96 is 3.27:1 |
 | PMS 2995 cyan | #00A9E0 | The one accent, shapes only: brand dot, hero glow, countdown icon, unread dots (3.78:1 on Blue) |
-| PMS 4545 at 60% | #E6E0C5, #D5CB9F | Campaign card only – Blue badge, Blue headline, facts on a 60% white panel; Blue 7.72:1, Gray 9.53:1 |
+| Campaign gradient | #336893 → #004278, 160°, with a 30% cyan glow at top right | Campaign card only – white headline, On Blue body text, a white vaccine badge, facts on a 28% navy panel, a white button; text stays 4.5:1 or better |
 | Alert | #B0003A | Emergency alerts only; white 7.22:1; always with an icon and the word "Alert" |
 
 ## Radii
