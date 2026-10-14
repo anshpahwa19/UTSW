@@ -399,7 +399,7 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
 .empty{padding:var(--s6) var(--s4); color:var(--ink-2)}
 
 /* ===================== Article (container transform from a featured card) ===================== */
-.article{position:absolute; inset:0; z-index:45; background:var(--surface); clip-path:inset(var(--ct,0) var(--cr,0) var(--cb,0) var(--cl,0) round var(--crad,0px)); transition:clip-path var(--d-gentle) var(--spring-gentle), opacity var(--d-base) var(--ease-out)}
+.article{position:absolute; inset:0; z-index:47; background:var(--surface); clip-path:inset(var(--ct,0) var(--cr,0) var(--cb,0) var(--cl,0) round var(--crad,0px)); transition:clip-path var(--d-gentle) var(--spring-gentle), opacity var(--d-base) var(--ease-out)}
 .art-scroll{position:absolute; inset:0; overflow-y:auto; scrollbar-width:none}
 .art-scroll::-webkit-scrollbar{display:none}
 .art-inner{transform:translateY(var(--ty,0px)); transition:transform var(--d-gentle) var(--spring-gentle)}
@@ -761,6 +761,47 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
 .phone.rm .pcard-main:active,.phone.rm .near-btn:active,.phone.rm .pill-btn:active,.phone.rm .rel:active,.phone.rm .aact:active{transform:none}
 .phone.rm .track::after,.phone.rm .radio::after{transition:none}
 
+/* App bar menu button; Sign in collapses to its icon when the bar runs out of room (360 with large text) */
+.appbar .menu-btn{position:relative}
+.menu-btn .mdot{position:absolute; top:8px; right:8px; width:10px; height:10px; border-radius:50%; background:var(--cyan); box-shadow:0 0 0 2px var(--blue)}
+.phone.narrow.lg .pill-btn{padding:0; width:var(--hit); justify-content:center}
+.phone.narrow.lg .pill-btn .pl{display:none}
+.appbar .logo{min-width:187px}
+
+/* Menu drawer (the old app's More Options) */
+.dr-bd{position:absolute; inset:0; z-index:48; background:rgba(0,20,40,.4); opacity:0; transition:opacity var(--d-base) var(--ease-out)}
+.dr-bd.show{opacity:1}
+.drawer{position:absolute; top:0; bottom:0; right:0; z-index:49; width:min(88%, 344px); background:var(--bg); border-radius:var(--r-xl) 0 0 var(--r-xl); display:flex; flex-direction:column; overflow:hidden; box-shadow:var(--shadow-2); transform:translateX(100%); transition:transform var(--d-gentle) var(--spring-gentle)}
+.drawer.show{transform:none}
+.dr-hd{display:flex; align-items:center; justify-content:space-between; gap:var(--s2); padding:56.0px var(--s4) var(--s4) var(--s6); background:var(--glow), var(--blue); color:#FFFFFF; --grad:-25}
+.dr-hd h2{font-size:var(--t24); line-height:1.2; font-weight:700; letter-spacing:-.01em}
+.dr-hd p{font-size:var(--t14); color:var(--on-blue-2); margin-top:var(--s1)}
+.dr-hd :focus-visible{box-shadow:var(--focus-on-blue)}
+.dr-body{flex:1; min-height:0; overflow-y:auto; overscroll-behavior:contain; padding:var(--s2) 0 var(--s8)}
+.dr-body .group{margin:0 var(--s4)}
+.dr-body .ts-label{margin-top:var(--s6)}
+.row .ext{color:var(--ink-2)}
+.row .newc{font-size:var(--t12); font-weight:700; color:#FFFFFF; background:var(--blue); border-radius:var(--r-pill); padding:2px var(--s2); white-space:nowrap; --grad:-25}
+.social{list-style:none; margin:0; padding:0 var(--s4); display:flex; flex-wrap:wrap; gap:var(--s2)}
+.dr-foot{padding:var(--s6) var(--s6) 0; font-size:var(--t12); color:var(--ink-2)}
+.phone.rm .drawer{transform:none; opacity:0; transition:opacity var(--d-base) var(--ease-out)}
+.phone.rm .drawer.show{opacity:1}
+
+/* MedBlog list (See all) */
+.blog-chips{margin:var(--s4) calc(-1 * var(--s6)) 0; padding-inline:var(--s6)}
+.blog-count{font-size:var(--t14); color:var(--ink-2); margin-top:var(--s3)!important}
+.blog-list{list-style:none; margin:var(--s2) 0 0; padding:0}
+.blog-list li + li .blog-row{box-shadow:0 -1px 0 var(--line)}
+.blog-row{width:100%; border:0; background:none; display:grid; grid-template-columns:96px minmax(0,1fr); gap:var(--s3); align-items:start; padding:var(--s4) 0; text-align:left; color:var(--ink); border-radius:var(--r-md); transition:background-color var(--d-fast) var(--ease-out)}
+.blog-row:active{background:var(--tint)}
+.blog-th{position:relative; display:block; width:96px; height:96px; border-radius:var(--r-md); overflow:hidden}
+.blog-th svg{position:absolute; inset:0; width:100%; height:100%}
+.blog-t{display:grid; gap:var(--s1); min-width:0}
+.blog-t .bt{font-size:var(--t16); font-weight:700; line-height:1.35; color:var(--blue); text-wrap:pretty}
+.blog-t .bd{font-size:var(--t14); color:var(--ink-2)}
+.blog-more{margin-top:var(--s4)!important}
+.blog-end{font-size:var(--t14); color:var(--ink-2); text-align:center; margin-top:var(--s6)!important}
+
 /* ===================== Board: flow map and coverage ===================== */
 .wide{grid-column:1 / -1; justify-self:stretch; padding:24.0px}
 .wide > header{max-width:72ch; display:grid; gap:8.0px; margin-bottom:24.0px}
@@ -870,6 +911,8 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
         <li>Save a provider with the heart, then find it under Saved providers</li>
         <li>Open a profile and share it, or request an appointment</li>
         <li>Tap a MyChart tile such as Test results</li>
+        <li>Open the menu (top right of home) and check the Inbox</li>
+        <li>Tap MedBlog “See all,” filter by topic, and open an article</li>
       </ul>
     </div>
   </aside>
@@ -887,7 +930,8 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
               <header class="appbar" id="appbar">
                 <img class="logo" alt="UTSW MyCare" src="data:image/svg+xml;base64,__LOGO__">
                 <span class="sp"></span>
-                <button class="pill-btn" id="btn-signin" data-tab="4" aria-label="Sign in to MyChart"><span class="ms s20" aria-hidden="true">login</span>Sign in</button>
+                <button class="pill-btn" id="btn-signin" data-tab="4" aria-label="Sign in to MyChart"><span class="ms s20" aria-hidden="true">login</span><span class="pl">Sign in</span></button>
+                <button class="icon-btn ghost menu-btn" id="btn-menu" aria-label="Menu" aria-haspopup="dialog"><span class="ms" aria-hidden="true">menu</span><span class="mdot" id="menu-dot" aria-hidden="true" hidden></span></button>
               </header>
               <div id="home-inner">
                 <div class="hero" id="hero">
@@ -937,6 +981,12 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
           <div class="page-body" id="page-body"></div>
         </section>
 
+        <div class="dr-bd" id="dr-bd" hidden></div>
+        <div class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="dr-h" hidden>
+          <div class="dr-hd"><div><h2 id="dr-h" tabindex="-1">More</h2><p>UT Southwestern resources and settings</p></div><button class="icon-btn ghost" id="dr-x" aria-label="Close menu"><span class="ms" aria-hidden="true">close</span></button></div>
+          <div class="dr-body" id="dr-body"></div>
+        </div>
+
         <div class="backdrop" id="backdrop" hidden></div>
         <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-h" hidden>
           <div class="grab" aria-hidden="true"></div>
@@ -981,6 +1031,8 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
         <tr><td>State panel</td><td>White, r-lg, s6 padding · 56.0 circle · 20.0/700 Blue title · 16.0 #5B6770 body · one primary action, then alternatives</td></tr>
         <tr><td>Offline bar</td><td>#333333 pill, white 14.0/600 (12.63:1) · 44.0 Retry · sits 88.0 above the bottom, over the tab bar</td></tr>
         <tr><td>Profile header</td><td>80.0 Blue initials circle · 28.0/700 name · 16.0 specialty · CTA 48.0 primary + four 48.0 action circles</td></tr>
+        <tr><td>Menu drawer</td><td>From the right, min(88%, 344.0) wide, r-xl on the open edge · Blue header with 24.0/700 title · grouped rows · external links end in an open-in-new glyph · Follow us as labeled chips</td></tr>
+        <tr><td>MedBlog list</td><td>96.0 thumbnails, r-md · 16.0/700 Blue titles · 14.0 dates · topic chips · hairlines between rows · Show more</td></tr>
         <tr><td>Toast with action</td><td>Same Blue toast; Undo is a 44.0 white-on-Blue pill (the only toast that takes focus)</td></tr>
       </tbody>
     </table></div>
@@ -1063,7 +1115,7 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
       <article class="fstep"><h3>Act</h3><ul>
         <li><b>Request</b>: schedule online in MyChart, or call to schedule</li>
         <li><b>Share</b>: native share sheet with the public profile link only</li>
-        <li><b>Saved</b>: Find care tab, home tile, and MyChart tab</li>
+        <li><b>Saved</b>: Find care tab, home tile, and the menu</li>
       </ul><button class="go-to" data-jump="share">Show share</button></article>
     </div>
     <div class="nav-why">
@@ -1073,7 +1125,7 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
         <ol>
           <li><b>Find care</b> replaces “Providers”: it is where people go with a problem, not a name, and it can grow to services and urgent care without a rename.</li>
           <li><b>Locations</b> and <b>Wayfinding</b> stay separate: one answers “which place,” the other “how do I get there and around inside.”</li>
-          <li><b>MyChart</b> holds sign-in and doubles as the guest menu (saved providers, language, help, privacy). After sign-in it becomes the account menu, so the tab count never changes.</li>
+          <li><b>MyChart</b> is sign-in only, plus Pay as a guest. Everything else from the old hamburger menu lives in the <b>menu</b> on the home app bar, as it did before, so the tab bar stays task-focused.</li>
         </ol>
       </article>
       <article>
@@ -1100,7 +1152,12 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
         <tr><td>Guest home</td><td>MedBlog carousel with dots and pause</td><td><b>MedBlog</b> module: swipeable cards, progress bar, previous and next buttons. It never auto-advances, so nothing needs pausing.</td></tr>
         <tr><td>Guest home</td><td>Quick Links: message, test results, visits, billing</td><td><b>Quick access → In MyChart</b> tiles with a lock; each opens a sign-in prompt for that task</td></tr>
         <tr><td>Guest home</td><td>UTSW Resources: #1 in DFW, wayfinding, video visit prep</td><td><b>UTSW resources</b> rows: recognition, internal and external wayfinding (opens the tab), prepare for a video visit</td></tr>
-        <tr><td>Guest home</td><td>Hamburger menu</td><td><b>MyChart tab</b>: language, help, privacy, saved providers</td></tr>
+        <tr><td>Hamburger menu</td><td>Inbox</td><td><b>Menu → Inbox</b>: app notifications (alerts, announcements) with unread state and Mark all as read; care team messages stay in MyChart</td></tr>
+        <tr><td>Hamburger menu</td><td>Shuttle</td><td><b>Menu → Campus shuttle</b>: routes, next departures, live map</td></tr>
+        <tr><td>Hamburger menu</td><td>Why UT Southwestern, Patient Resource Guide, Patient Resources, Physician Resources, COVID-19 Resources</td><td><b>Menu → About UT Southwestern</b>; each item is CMS-configured, so admins can rename or retire one (COVID-19) without a release</td></tr>
+        <tr><td>Hamburger menu</td><td>Visit Full Site</td><td><b>Menu → Visit the full website</b>, marked as opening in the browser</td></tr>
+        <tr><td>Hamburger menu</td><td>Follow us (Facebook, LinkedIn, Twitter, Instagram), Privacy Policy</td><td><b>Menu → Follow us</b> as labeled buttons (X replaces Twitter); <b>Privacy policy</b>, language, and help under Settings and help</td></tr>
+        <tr><td>MedBlog list</td><td>Back, title, filter, thumbnail list with dates</td><td><b>MedBlog</b> page from “See all”: topic filter chips, 96.0 thumbnails, titles, dates, Show more; each opens the article</td></tr>
         <tr><td>MyChart Login</td><td>Username, password, sign in, forgot, sign up, privacy</td><td><b>MyChart tab</b> panel with the same fields, show password, forgot link, create account, pay as a guest, privacy</td></tr>
         <tr><td>Find a Provider</td><td>Name, specialty, or condition field</td><td>Search overlay, <b>Providers</b> scope, same placeholder</td></tr>
         <tr><td>Find a Provider</td><td>Near-me arrow</td><td>56.0 arrow beside the Find care field and in Locations</td></tr>
@@ -1231,7 +1288,18 @@ const ICON_MAP = [
   ['info', 'info', 'Information', 'Notices, plain-language note', 'Controls and feedback'],
   ['show', 'visibility', 'Show password', 'MyChart sign-in', 'Controls and feedback'],
   ['hide', 'visibility_off', 'Hide password', 'MyChart sign-in', 'Controls and feedback'],
-  ['done', 'check_circle', 'Done', 'Confirmations', 'Controls and feedback', 'f1']
+  ['done', 'check_circle', 'Done', 'Confirmations', 'Controls and feedback', 'f1'],
+  ['menu', 'menu', 'Menu', 'Home app bar', 'Menu'],
+  ['inbox', 'inbox', 'Inbox – app notifications', 'Menu', 'Menu'],
+  ['markRead', 'done_all', 'Mark all as read', 'Inbox', 'Menu'],
+  ['shuttle', 'directions_bus', 'Campus shuttle', 'Menu, shuttle page', 'Menu'],
+  ['why', 'verified', 'Why UT Southwestern', 'Menu', 'Menu'],
+  ['guide', 'menu_book', 'Patient resource guide', 'Menu', 'Menu'],
+  ['patientRes', 'library_books', 'Patient resources', 'Menu', 'Menu'],
+  ['physicianRes', 'badge', 'Physician resources', 'Menu', 'Menu'],
+  ['covid', 'coronavirus', 'COVID-19 resources', 'Menu – literal COVID-19 content only', 'Menu'],
+  ['website', 'public', 'Full website', 'Menu', 'Menu'],
+  ['external', 'open_in_new', 'Opens in the browser', 'External menu links', 'Menu']
 ];
 const ICONS = Object.fromEntries(ICON_MAP.map(r => [r[0], r]));
 const ico = (key, size = 24, cls = '') => {
@@ -1240,8 +1308,8 @@ const ico = (key, size = 24, cls = '') => {
   return `<span class="${c}" aria-hidden="true">${r ? r[1] : key}</span>`;
 };
 const circle = (key, size = 40, cls = '') => `<span class="dot${size === 48 ? '' : ' d' + size}${cls ? ' ' + cls : ''}" aria-hidden="true">${ico(key, size === 40 ? 20 : size === 56 ? 32 : 24)}</span>`;
-const row = ({ ic, lead, title, sub, attrs = '', trail = '' }) =>
-  `<li><button class="row" ${attrs}>${lead || circle(ic)}<span class="txt"><span class="rt">${title}</span>${sub ? `<span class="rs">${sub}</span>` : ''}</span>${trail}${ico('next', 20, 'chev')}</button></li>`;
+const row = ({ ic, lead, title, sub, attrs = '', trail = '', ext = false }) =>
+  `<li><button class="row" ${attrs}>${lead || circle(ic)}<span class="txt"><span class="rt">${title}</span>${sub ? `<span class="rs">${sub}</span>` : ''}</span>${trail}${ext ? ico('external', 20, 'ext') : ico('next', 20, 'chev')}</button></li>`;
 
 /* ---------- Device storage (guest favorites and recent searches stay on this device) ---------- */
 const KEY = 'mycare-guest-v1';
@@ -1422,19 +1490,33 @@ const ART = {
   a: { dark: true, svg: '<rect width="304" height="144" fill="#004278"/><circle cx="268" cy="8" r="120" fill="#336893"/><path d="M160 -12v72a56 56 0 0 0 112 0v-72" fill="none" stroke="#7BAFD4" stroke-width="20" stroke-linecap="round"/><circle cx="216" cy="64" r="12" fill="#00A9E0"/><circle cx="56" cy="112" r="40" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="2"/>' },
   b: { dark: false, svg: '<rect width="304" height="144" fill="#D6E4F0"/><circle cx="212" cy="72" r="52" fill="#004278"/><circle cx="236" cy="56" r="44" fill="#D6E4F0"/><g fill="#336893"><circle cx="72" cy="40" r="3"/><circle cx="104" cy="88" r="2"/><circle cx="56" cy="104" r="2"/><circle cx="132" cy="36" r="2"/></g><circle cx="168" cy="100" r="8" fill="#00A9E0"/>' },
   c: { dark: true, svg: '<rect width="304" height="144" fill="#336893"/><rect x="96" y="28" width="148" height="96" rx="16" fill="#004278"/><circle cx="170" cy="70" r="20" fill="#7BAFD4"/><path d="M136 124a34 34 0 0 1 68 0" fill="#7BAFD4"/><circle cx="226" cy="44" r="6" fill="#00A9E0"/><circle cx="40" cy="24" r="64" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="2"/>' },
-  d: { dark: false, svg: '<rect width="304" height="144" fill="#7BAFD4"/><circle cx="232" cy="64" r="64" fill="#D6E4F0"/><circle cx="232" cy="64" r="36" fill="none" stroke="#004278" stroke-width="10"/><circle cx="72" cy="120" r="48" fill="#336893" opacity=".5"/><circle cx="232" cy="64" r="8" fill="#00A9E0"/>' }
+  d: { dark: false, svg: '<rect width="304" height="144" fill="#7BAFD4"/><circle cx="232" cy="64" r="64" fill="#D6E4F0"/><circle cx="232" cy="64" r="36" fill="none" stroke="#004278" stroke-width="10"/><circle cx="72" cy="120" r="48" fill="#336893" opacity=".5"/><circle cx="232" cy="64" r="8" fill="#00A9E0"/>' },
+  e: { dark: true, svg: '<rect width="304" height="144" fill="#004278"/><path d="M-20 150L120 40L200 110L330 0V150Z" fill="#336893"/><circle cx="120" cy="40" r="22" fill="#7BAFD4"/><circle cx="200" cy="110" r="22" fill="#7BAFD4"/><circle cx="252" cy="36" r="10" fill="#00A9E0"/>' },
+  f: { dark: false, svg: '<rect width="304" height="144" fill="#EBF0F5"/><circle cx="96" cy="72" r="58" fill="#D6E4F0"/><circle cx="96" cy="72" r="58" fill="none" stroke="#004278" stroke-width="8" stroke-dasharray="10 12"/><circle cx="220" cy="48" r="30" fill="#7BAFD4"/><circle cx="96" cy="72" r="10" fill="#00A9E0"/><circle cx="252" cy="108" r="16" fill="#336893"/>' }
 };
 const artSVG = m => `<svg viewBox="0 0 304 144" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${ART[m].svg}</svg>`;
 const FEATURED = [
-  { kick: 'Medications', title: 'Taking a GLP-1? Learn how it may affect your other medications', meta: 'MedBlog · 5 min read', m: 'a',
+  { kick: 'Medications', title: 'Taking a GLP-1? Learn how it may affect your other medications', date: 'Oct. 7, 2026', read: '5 min read', m: 'a',
     body: ['Some GLP-1 medicines slow how fast your stomach empties. That can change how your body absorbs other medicines you take by mouth.', 'Keep a list of everything you take, including vitamins and supplements, and bring it to every visit.', 'Ask your pharmacist or care team before you change or stop any medicine.'] },
-  { kick: 'Patient guide', title: 'Getting ready for your first visit', meta: 'MedBlog · 4 min read', m: 'c',
-    body: ['Bring a photo ID, your insurance card, and a list of the medicines you take.', 'Plan to arrive 15 minutes early so there is time to park and check in.', 'Write down two or three questions before you go. Your care team wants to hear them.'] },
-  { kick: 'Sleep', title: 'Five ways to sleep better this fall', meta: 'MedBlog · 6 min read', m: 'b',
+  { kick: 'Bones and joints', title: 'Are you ruining your knees? The truth about sports injuries and arthritis', date: 'Oct. 5, 2026', read: '6 min read', m: 'e',
+    body: ['Staying active is good for your joints. Most knee pain from sports comes from overuse or a sudden twist, not from exercise itself.', 'Warm up, build strength around the knee, and increase your training slowly.', 'See a specialist for swelling that doesn’t go down, a knee that gives way, or pain that keeps you from your usual activities.'] },
+  { kick: 'Heart', title: 'Inflammation and the heart: A new approach to cardiovascular disease prevention', date: 'Oct. 1, 2026', read: '7 min read', m: 'd',
+    body: ['Researchers are learning more about how inflammation in the body is linked to heart disease.', 'Healthy habits that lower inflammation – regular activity, not smoking, and a balanced diet – also protect your heart.', 'Ask your care team which heart tests make sense for you. (Sample summary.)'] },
+  { kick: 'Heart', title: 'Enlicitide: What to know about the new cholesterol-lowering pill', date: 'Sept. 28, 2026', read: '5 min read', m: 'b',
+    body: ['A new kind of cholesterol medicine that comes as a pill may give some people another option for lowering LDL cholesterol.', 'It is not right for everyone. Your care team looks at your cholesterol, your heart risk, and the medicines you already take.', 'Don’t stop a cholesterol medicine without talking with your care team first. (Sample summary.)'] },
+  { kick: 'Skin', title: 'Skin cancer screening: What to look for and when to see a dermatologist', date: 'Sept. 23, 2026', read: '6 min read', m: 'f',
+    body: ['Check your skin once a month for spots that are new, changing, or look different from your other moles.', 'Use the ABCDE guide: asymmetry, uneven borders, more than one color, a diameter larger than a pencil eraser, and evolving size or shape.', 'See a dermatologist about any spot that bleeds, itches, or changes.'] },
+  { kick: 'Pregnancy', title: 'How prenatal genetic screening can identify more conditions during pregnancy', date: 'Sept. 22, 2026', read: '6 min read', m: 'c',
+    body: ['Prenatal screening uses a blood test to estimate the chance of certain genetic conditions.', 'Screening is optional. A genetic counselor can help you decide which tests fit your goals.', 'A screening result is not a diagnosis; follow-up tests can confirm it. (Sample summary.)'] },
+  { kick: 'Seasonal', title: 'Flu or COVID-19? Know the signs', date: 'Sept. 18, 2026', read: '5 min read', m: 'd',
+    body: ['Both can cause fever, cough, and tiredness, and a test is the only way to know which one you have.', 'Rest, drink fluids, and stay home while you are sick.', 'For trouble breathing or chest pain, call 911.'] },
+  { kick: 'Sleep', title: 'Five ways to sleep better this fall', date: 'Sept. 15, 2026', read: '6 min read', m: 'b',
     body: ['Keep the same bedtime and wake time, even on weekends.', 'Get outside in the morning – daylight helps set your body clock.', 'If you still have trouble sleeping for more than a few weeks, talk with a primary care provider.'] },
-  { kick: 'Seasonal', title: 'Flu or COVID-19? Know the signs', meta: 'MedBlog · 5 min read', m: 'd',
-    body: ['Both can cause fever, cough, and tiredness, and a test is the only way to know which one you have.', 'Rest, drink fluids, and stay home while you are sick.', 'For trouble breathing or chest pain, call 911.'] }
+  { kick: 'Patient guide', title: 'Getting ready for your first visit', date: 'Sept. 10, 2026', read: '4 min read', m: 'c',
+    body: ['Bring a photo ID, your insurance card, and a list of the medicines you take.', 'Plan to arrive 15 minutes early so there is time to park and check in.', 'Write down two or three questions before you go. Your care team wants to hear them.'] }
 ];
+FEATURED.forEach(f => { f.short = f.date.replace(/, \d{4}$/, ''); f.meta = `MedBlog · ${f.short} · ${f.read}`; });
+const BLOG_TOPICS = ['All', ...new Set(FEATURED.map(f => f.kick))];
 const RESOURCES = [
   { k: 'rank', t: 'Nationally recognized care', s: 'See how our specialties are ranked', ic: 'rank' },
   { k: 'wayres', t: 'Internal and external wayfinding', s: 'Find your way to and around campus', ic: 'wayfinding' },
@@ -1461,8 +1543,25 @@ const PAGES = {
   help: { kick: 'MyChart', title: 'Help and contact us', body: ['For appointments and help finding a doctor, call 214-648-3266.', 'For technical help with MyCare, use Send feedback.'], cta: 'Send feedback', done: 'Opening the feedback form' },
   privacy: { kick: 'MyChart', title: 'Privacy and terms', body: ['Read how UT Southwestern protects your information and how MyCare uses it.', 'As a guest, your saved providers and recent searches stay on this device. Location is used only when you tap near me.'], cta: 'Read the privacy notice', done: 'Opening the privacy notice' },
   lang: { kick: 'MyChart', title: 'Language', body: ['MyCare is available in English and Spanish. The app follows your phone’s language unless you choose one here.'], cta: 'Use Spanish', done: 'Switching to Spanish' },
+  why: { kick: 'About UT Southwestern', title: 'Why UT Southwestern', body: ['Care, research, and education in one academic medical center, with specialists who work together on hard cases.', 'This page is CMS content; the live app shows the approved copy.'], cta: 'Read more on the website', done: 'Opening utswmed.org in the browser' },
+  guide: { kick: 'About UT Southwestern', title: 'Patient resource guide', body: ['What to bring, how to check in, parking, visitor rules, interpreters, and billing – in one guide.'], cta: 'Open the guide', done: 'Opening the patient resource guide' },
+  presources: { kick: 'About UT Southwestern', title: 'Patient resources', body: ['Interpreter services, financial assistance, advance care planning, patient rights, and support groups.'], cta: 'See all resources', done: 'Opening patient resources' },
+  covid: { kick: 'About UT Southwestern', title: 'COVID-19 resources', body: ['Testing, vaccines, and when to seek care. Admins can retire this item from the menu in the CMS when it is no longer needed.'], cta: 'See COVID-19 resources', done: 'Opening COVID-19 resources' },
+  welcome: { kick: 'Inbox · Sept. 30', title: 'Welcome to MyCare', body: ['Find a doctor, get directions, and save providers – no account needed.', 'Sign in to MyChart any time for visits, messages, results, and bills.'] },
   guestpay: { kick: 'Billing', title: 'Pay as a guest', body: ['Pay a bill without signing in. You need the account number and amount on your statement.'], cta: 'Continue to payment', done: 'Opening guest payment' }
 };
+const SHUTTLES = [
+  { n: 'Campus loop (sample)', s: 'Clements University Hospital, Zale Lipshy Pavilion, Outpatient Building, Garage A', next: ['9:48 a.m.', '10:03 a.m.', '10:18 a.m.'], every: 'Every 15 minutes, 6 a.m. to 8 p.m. weekdays' },
+  { n: 'South campus connector (sample)', s: 'Clements University Hospital, South campus, RedBird', next: ['10:10 a.m.', '10:40 a.m.'], every: 'Every 30 minutes, 7 a.m. to 6 p.m. weekdays' }
+];
+const INBOX = [
+  { id: 'i-flu', t: 'Flu shots are here', s: 'Walk in on Saturdays, 8 a.m. to noon', when: 'Today, 8 a.m.', page: 'flu' },
+  { id: 'i-vis', t: 'New visitor hours start Nov. 1', s: 'Two visitors at a time, 8 a.m. to 8 p.m.', when: 'Oct. 6', page: 'ann2' },
+  { id: 'i-wel', t: 'Welcome to MyCare', s: 'Find a doctor and save providers – no account needed', when: 'Sept. 30', page: 'welcome' }
+];
+const inboxRead = new Set(['i-wel']);
+const inboxItems = () => [...(state.alerts ? [{ id: 'i-alert', t: ALERTS[0].title, s: 'Emergency alert · tap for details', when: 'Today, 7:45 a.m.', alert: ALERTS[0].id }] : []), ...INBOX];
+const unreadCount = () => inboxItems().filter(x => !inboxRead.has(x.id)).length;
 const INDEX = [
   ...Object.entries(LOCS).map(([k, l]) => ['Locations', l.n, `${LOC_TYPES.find(t => t[0] === l.type)[1].replace(/s$/, '')} · ${l.addr.split(', ').slice(-2).join(', ')}`, LOC_TYPES.find(t => t[0] === l.type)[2], `l:${k}`]),
   ['Locations', 'Urgent care wait times', 'Live waits at nearby clinics', 'urgent', 'urgent'],
@@ -1538,9 +1637,9 @@ const R = {
   },
   featured() {
     return `<section aria-labelledby="feat-h">
-      <div class="sec-head"><h2 id="feat-h">MedBlog</h2><button class="link" data-toast="Opening MedBlog">See all</button></div>
-      <div class="car" id="car" role="group" aria-roledescription="carousel" aria-label="MedBlog articles">${FEATURED.map((f, i) => `
-        <button class="feat" data-feat="${i}" aria-roledescription="slide" aria-label="${f.kick}: ${f.title}. ${f.meta}. ${i + 1} of ${FEATURED.length}">
+      <div class="sec-head"><h2 id="feat-h">MedBlog</h2><button class="link" data-page="blog" aria-label="See all MedBlog articles">See all</button></div>
+      <div class="car" id="car" role="group" aria-roledescription="carousel" aria-label="Latest MedBlog articles">${FEATURED.slice(0, 4).map((f, i) => `
+        <button class="feat" data-feat="${i}" aria-roledescription="slide" aria-label="${f.kick}: ${f.title}. ${f.meta}. ${i + 1} of 4">
           <span class="feat-art">${artSVG(f.m)}</span>
           <span class="feat-body"><span class="kick">${f.kick}</span><span class="feat-title">${f.title}</span><span class="feat-meta">${f.meta}</span></span>
         </button>`).join('')}
@@ -1668,7 +1767,7 @@ let artDark = false;
 function updateBar() {
   const top = layers[layers.length - 1];
   let light = state.tab === 0;
-  if (top) { if (top.el.id === 'article') light = artDark; else if (!['sheet', 'sys'].includes(top.el.id)) light = false; }
+  if (top) { if (top.el.id === 'article') light = artDark; else if (top.el.id === 'drawer') light = true; else if (!['sheet', 'sys'].includes(top.el.id)) light = false; }
   phone.classList.toggle('bar-light', light);
 }
 function refreshInert() {
@@ -1694,7 +1793,7 @@ let artFrom = null, artTimer, artIdx = 0;
 function startState(card) {
   const pr = phone.getBoundingClientRect(), cr = card.getBoundingClientRect();
   setClip(article, cr); article.style.setProperty('--crad', '16px');
-  artHero.style.setProperty('--hh', '144px'); artHero.style.setProperty('--hw', `${cr.width}px`); artHero.style.setProperty('--hx', `${cr.left - pr.left}px`);
+  artHero.style.setProperty('--hh', `${Math.min(144, cr.height)}px`); artHero.style.setProperty('--hw', `${cr.width}px`); artHero.style.setProperty('--hx', `${cr.left - pr.left}px`);
   artInner.style.setProperty('--ty', `${cr.top - pr.top}px`);
 }
 function openArticle(card, idx) {
@@ -1852,6 +1951,26 @@ function locHTML(k) {
     <div class="lacts" style="display:flex;flex-wrap:wrap;gap:var(--s2);margin-top:var(--s4)"><button class="btn btn-primary" style="margin:0;width:auto" data-toast="Opening directions to ${L.s} in Maps">${ico('directions', 20)}Directions</button>${L.indoor ? `<button class="btn btn-secondary" style="margin:0;width:auto" data-toast="Opening indoor map for ${L.s}">${ico('indoor', 20)}Indoor map</button>` : ''}</div>
     ${here.length ? `<h2 style="font-size:var(--t20);color:var(--blue);margin-top:var(--s8)">Providers here</h2><ul class="pcards" style="padding:0;margin-top:var(--s3)">${here.map(pcard).join('')}</ul>` : ''}`;
 }
+let blogTopic = 'All', blogMore = false;
+function blogHTML() {
+  const list = FEATURED.map((f, i) => [f, i]).filter(([f]) => blogTopic === 'All' || f.kick === blogTopic);
+  const shown = blogMore || blogTopic !== 'All' ? list : list.slice(0, 6);
+  return `<h1 id="page-h" tabindex="-1">MedBlog</h1><p>Health news and advice from UT Southwestern experts.</p>
+    <ul class="chips scroll blog-chips" role="group" aria-label="Filter by topic">${BLOG_TOPICS.map(t => `<li><button class="chip${blogTopic === t ? ' sel' : ''}" data-btopic="${t}" aria-pressed="${blogTopic === t}">${t}</button></li>`).join('')}</ul>
+    <p class="blog-count" aria-live="polite">${list.length} article${list.length === 1 ? '' : 's'}${blogTopic === 'All' ? '' : ` in ${blogTopic}`}</p>
+    <ul class="blog-list">${shown.map(([f, i]) => `<li><button class="blog-row" data-art="${i}" aria-label="${f.title}. ${f.kick}, ${f.date}"><span class="blog-th">${artSVG(f.m)}</span><span class="blog-t"><span class="kick">${f.kick}</span><span class="bt">${f.title}</span><span class="bd">${f.date}</span></span></button></li>`).join('')}</ul>
+    ${shown.length < list.length ? `<button class="btn btn-secondary blog-more" data-bmore>Show more articles</button>` : `<p class="blog-end">You’re all caught up. New articles appear here as they’re published.</p>`}`;
+}
+function inboxHTML() {
+  const items = inboxItems(), n = unreadCount();
+  return `<p class="kick">Menu</p><h1 id="page-h" tabindex="-1">Inbox</h1><p>Alerts and news from UT Southwestern. Messages from your care team are in MyChart.</p>
+    <ul class="group">${items.map(x => row({ ic: x.alert ? 'alert' : 'inbox', title: x.t, sub: `${x.s} · ${x.when}`, attrs: `data-inbox="${x.id}" aria-label="${inboxRead.has(x.id) ? '' : 'Unread. '}${esc(x.t)}"`, trail: inboxRead.has(x.id) ? '' : '<span class="unread" aria-hidden="true"></span>' })).join('')}</ul>
+    <button class="btn btn-tonal" data-markread ${n ? '' : 'disabled aria-disabled="true"'}>${ico('markRead', 20)}${n ? 'Mark all as read' : 'All caught up'}</button>`;
+}
+function shuttleHTML() {
+  return `<p class="kick">Menu</p><h1 id="page-h" tabindex="-1">Campus shuttle</h1><p>Free shuttles between UT Southwestern buildings. Times are live in the app (sample).</p>
+    ${SHUTTLES.map(r => `<article class="lcard" style="margin-top:var(--s4)"><h3>${r.n}</h3><p>${r.s}</p><ul class="kv" style="margin-top:var(--s2)"><li>${ico('countdown', 20)}<span><b>Next departures</b>${r.next.join(' · ')}</span></li><li>${ico('shuttle', 20)}<span><b>Schedule</b>${r.every}</span></li></ul><div class="lacts"><button class="btn btn-tonal" data-toast="Opening the live shuttle map">${ico('indoor', 20)}Live map</button></div></article>`).join('')}`;
+}
 function openPage(key, from, replay = false) {
   let html, p = PAGES[key], prof = false;
   $('#page-acts').innerHTML = '';
@@ -1859,6 +1978,9 @@ function openPage(key, from, replay = false) {
     const pv = PV[key.slice(2)]; prof = true; html = profileHTML(pv);
     $('#page-acts').innerHTML = `<button class="icon-btn" data-share="${pv.id}" aria-label="Share ${fullName(pv)}">${ico('share')}</button>`;
   } else if (key === 'saved') html = savedHTML();
+  else if (key === 'blog') html = blogHTML();
+  else if (key === 'inbox') html = inboxHTML();
+  else if (key === 'shuttle') html = shuttleHTML();
   else if (key.startsWith('l:')) html = locHTML(key.slice(2));
   else if (key.startsWith('r:')) { const r = INDEX[+key.slice(2)]; html = `<p class="kick">${r[0]}</p><h1 id="page-h" tabindex="-1">${r[1]}</h1><p>${r[2]}.</p><button class="btn btn-primary" data-toast="Opening ${r[1]}">Open</button>`; }
   else if (p) {
@@ -1898,6 +2020,39 @@ $('#page-back').onclick = pageBack;
   const end = () => { if (!on) return; on = false; page.style.transition = ''; const v = dx / Math.max(1, performance.now() - t0); if (dx > 120 || v > .5) closePage(); else page.style.transform = ''; };
   edge.addEventListener('pointerup', end); edge.addEventListener('pointercancel', end);
 })();
+
+/* ---------- Menu drawer (the old app's More Options) ---------- */
+const drawer = $('#drawer'), drBd = $('#dr-bd'); let drFrom = null, drTimer;
+function drawerHTML() {
+  const n = unreadCount(), f = favs.size;
+  return `<ul class="group" style="margin-top:var(--s2)">${row({ ic: 'inbox', title: 'Inbox', sub: 'Alerts and news', attrs: `data-dr="inbox" aria-label="Inbox${n ? `, ${n} new` : ''}"`, trail: n ? `<span class="newc" aria-hidden="true">${n} new</span>` : '' })}${row({ ic: 'favorite', title: 'Saved providers', sub: f ? `${f} on this device` : 'None yet', attrs: 'data-dr="saved"' })}${row({ ic: 'shuttle', title: 'Campus shuttle', sub: 'Routes and next departures', attrs: 'data-dr="shuttle"' })}</ul>
+    <p class="ts-label">About UT Southwestern</p>
+    <ul class="group">${row({ ic: 'why', title: 'Why UT Southwestern', attrs: 'data-dr="why"' })}${row({ ic: 'guide', title: 'Patient resource guide', attrs: 'data-dr="guide"' })}${row({ ic: 'patientRes', title: 'Patient resources', attrs: 'data-dr="presources"' })}${row({ ic: 'physicianRes', title: 'Physician resources', sub: 'For referring clinicians', attrs: 'data-ext="Physician resources"', ext: true })}${row({ ic: 'covid', title: 'COVID-19 resources', attrs: 'data-dr="covid"' })}${row({ ic: 'website', title: 'Visit the full website', sub: 'utswmed.org', attrs: 'data-ext="utswmed.org"', ext: true })}</ul>
+    <p class="ts-label">Settings and help</p>
+    <ul class="group">${row({ ic: 'language', title: 'Language', sub: 'English', attrs: 'data-dr="lang"' })}${row({ ic: 'help', title: 'Help and contact us', attrs: 'data-dr="help"' })}${row({ ic: 'privacy', title: 'Privacy policy', attrs: 'data-dr="privacy"' })}</ul>
+    <p class="ts-label">Follow us</p>
+    <ul class="social">${['Facebook', 'LinkedIn', 'X (Twitter)', 'Instagram'].map(sn => `<li><button class="chip out" data-ext="${sn}" aria-label="UT Southwestern on ${sn}, opens the app or browser">${sn}</button></li>`).join('')}</ul>
+    <p class="dr-foot">MyCare 5.0 (sample) · Menu items come from the CMS</p>`;
+}
+function openDrawer(from) {
+  drFrom = from || document.activeElement; clearTimeout(drTimer);
+  $('#dr-body').innerHTML = drawerHTML(); nbsp($('#dr-body')); $('#dr-body').scrollTop = 0;
+  drawer.hidden = false; drBd.hidden = false;
+  requestAnimationFrame(() => requestAnimationFrame(() => { drawer.classList.add('show'); drBd.classList.add('show'); }));
+  pushLayer(drawer, closeDrawer);
+  setTimeout(() => $('#dr-h').focus(), 60);
+}
+function closeDrawer(keepFocus) {
+  if (drawer.hidden) return;
+  drawer.classList.remove('show'); drBd.classList.remove('show');
+  drTimer = setTimeout(() => { drawer.hidden = true; drBd.hidden = true; }, 420);
+  popLayer(drawer);
+  if (keepFocus !== true) drFrom?.focus?.();
+}
+$('#btn-menu').onclick = e => openDrawer(e.currentTarget);
+$('#dr-x').onclick = closeDrawer;
+drBd.onclick = closeDrawer;
+function syncMenuDot() { const n = unreadCount(); $('#menu-dot').hidden = !n; $('#btn-menu').setAttribute('aria-label', n ? `Menu, ${n} new in Inbox` : 'Menu'); }
 
 /* ---------- Sheets ---------- */
 let sheetReturn = null;
@@ -2297,7 +2452,6 @@ function renderWay() {
 }
 let pwShow = false;
 function renderMc() {
-  const n = favs.size;
   $('#mc-body').innerHTML = `<div class="page-h"><h1>MyChart</h1><p>Sign in for visits, messages, results, and bills.</p></div>
     <form class="mc-panel" id="mc-form" novalidate aria-labelledby="mc-h">
       <h2 id="mc-h">Sign in to MyChart</h2>
@@ -2308,10 +2462,8 @@ function renderMc() {
       <p class="mc-or">New to MyChart?</p>
       <button type="button" class="btn btn-ghost" data-toast="Opening MyChart sign-up">Create an account</button>
     </form>
-    <section class="sec" aria-labelledby="mc-dev"><div class="sec-head"><h2 id="mc-dev">On this device</h2></div>
-      <ul class="group">${row({ ic: 'favorite', title: 'Saved providers', sub: n ? `${n} saved` : 'None yet', attrs: 'data-page="saved"' })}${row({ ic: 'bill', title: 'Pay as a guest', sub: 'Pay a bill without signing in', attrs: 'data-page="guestpay"' })}${row({ ic: 'language', title: 'Language', sub: 'English', attrs: 'data-page="lang"' })}</ul></section>
-    <section class="sec" aria-labelledby="mc-more"><div class="sec-head"><h2 id="mc-more">Help</h2></div>
-      <ul class="group">${row({ ic: 'help', title: 'Help and contact us', attrs: 'data-page="help"' })}${row({ ic: 'privacy', title: 'Privacy and terms', attrs: 'data-page="privacy"' })}</ul></section>`;
+    <section class="sec" aria-labelledby="mc-dev"><div class="sec-head"><h2 id="mc-dev">Without signing in</h2></div>
+      <ul class="group">${row({ ic: 'bill', title: 'Pay as a guest', sub: 'Pay a bill with your statement number', attrs: 'data-page="guestpay"' })}${row({ ic: 'menu', title: 'More', sub: 'Inbox, saved providers, shuttle, settings, and help', attrs: 'data-open-menu' })}</ul></section>`;
   $('#mc-eye').onclick = () => { const u = $('#mc-user').value, p = $('#mc-pass').value; pwShow = !pwShow; renderMc(); $('#mc-user').value = u; $('#mc-pass').value = p; $('#mc-eye').focus(); };
   $('#mc-form').onsubmit = e => {
     e.preventDefault(); const b = $('#mc-go');
@@ -2327,6 +2479,14 @@ phone.addEventListener('click', e => {
   const t = e.target;
   const c = sel => t.closest(sel);
   let b;
+  if ((b = c('[data-dr]'))) { const k = b.dataset.dr; closeDrawer(true); openPage(k, $('#btn-menu')); return; }
+  if ((b = c('[data-ext]'))) { toast(`Opening ${b.dataset.ext} in the browser`); return; }
+  if ((b = c('[data-open-menu]'))) { if (state.tab !== 0) setTab(0); openDrawer($('#btn-menu')); return; }
+  if ((b = c('[data-btopic]'))) { blogTopic = b.dataset.btopic; blogMore = false; openPage('blog', null, true); const tb = $(`[data-btopic="${blogTopic}"]`); if (tb) { tb.focus({ preventScroll: true }); const sc = tb.closest('.blog-chips'); sc.scrollLeft = tb.parentElement.offsetLeft - (sc.clientWidth - tb.offsetWidth) / 2; } return; }
+  if ((b = c('[data-bmore]'))) { blogMore = true; const n = $$('.blog-row', phone).length; openPage('blog', null, true); $$('.blog-row', phone)[n]?.focus(); say('More articles loaded'); return; }
+  if ((b = c('[data-art]'))) { openArticle($('.blog-th', b) || b, +b.dataset.art); return; }
+  if ((b = c('[data-inbox]'))) { const x = inboxItems().find(i => i.id === b.dataset.inbox); inboxRead.add(x.id); syncMenuDot(); if (x.alert) { openPage('inbox', null, true); openAlertSheet(x.alert, b); } else openPage(x.page, b); return; }
+  if ((b = c('[data-markread]'))) { inboxItems().forEach(x => inboxRead.add(x.id)); syncMenuDot(); openPage('inbox', null, true); $('[data-markread]').focus(); toast('All marked as read', true); return; }
   if ((b = c('[data-fav]'))) { setFav(b.dataset.fav, !favs.has(b.dataset.fav)); return; }
   if ((b = c('[data-pfav]'))) { setFav(b.dataset.pfav, !favs.has(b.dataset.pfav)); return; }
   if ((b = c('[data-pv]'))) { if (!sheet.hidden) closeSheet(true); openPage(`p:${b.dataset.pv}`, b); return; }
@@ -2401,6 +2561,7 @@ $$('[data-alerts]').forEach(b => b.onclick = () => {
   pressSeg('[data-alerts]', 'alerts', n);
   renderHome({ animate: false });
   const m = $('.mod[data-m="alerts"]'); if (m && n) m.style.animation = 'calmIn var(--d-base) var(--ease-out) both';
+  syncMenuDot();
   if (n) { const a = ALERTS[0]; const l = $('#live-alert'); l.textContent = ''; setTimeout(() => l.textContent = `Alert: ${a.title}${n > 1 ? `. ${n} active alerts.` : ''}`, 60); }
   if (state.tab !== 0) setTab(0);
   scroller.scrollTop = 0;
@@ -2412,8 +2573,8 @@ $$('[data-res]').forEach(b => b.onclick = () => { setRes(b.dataset.res); if (so.
 function setNet(v) { state.net = v; pressSeg('[data-net]', 'net', v); $('#netbar').hidden = v === 'online'; phone.classList.toggle('offline', v === 'offline'); if (!so.hidden) renderSearch(); }
 $$('[data-net]').forEach(b => b.onclick = () => setNet(b.dataset.net));
 $('#net-retry').onclick = () => { $('#net-retry').textContent = 'Checking…'; setTimeout(() => { $('#net-retry').textContent = 'Retry'; setNet('online'); toast('Back online', true); }, RM() ? 200 : 800); };
-$$('[data-w]').forEach(b => b.onclick = () => { phone.style.setProperty('--pw', b.dataset.w + 'px'); pressSeg('[data-w]', 'w', b.dataset.w); $('#cap').textContent = `${b.dataset.w} × 844 pt · fictional sample data`; setTimeout(moveInd, 420); });
-$$('[data-ts]').forEach(b => b.onclick = () => { phone.style.setProperty('--ts', b.dataset.ts); pressSeg('[data-ts]', 'ts', b.dataset.ts); setTimeout(moveInd, 50); });
+$$('[data-w]').forEach(b => b.onclick = () => { phone.style.setProperty('--pw', b.dataset.w + 'px'); phone.classList.toggle('narrow', b.dataset.w === '360'); pressSeg('[data-w]', 'w', b.dataset.w); $('#cap').textContent = `${b.dataset.w} × 844 pt · fictional sample data`; setTimeout(moveInd, 420); });
+$$('[data-ts]').forEach(b => b.onclick = () => { phone.style.setProperty('--ts', b.dataset.ts); phone.classList.toggle('lg', b.dataset.ts !== '1'); pressSeg('[data-ts]', 'ts', b.dataset.ts); setTimeout(moveInd, 50); });
 const applyRM = v => { state.rm = v; phone.classList.toggle('rm', v); pressSeg('[data-rm]', 'rm', v ? 1 : 0); };
 $$('[data-rm]').forEach(b => b.onclick = () => applyRM(b.dataset.rm === '1'));
 sysRM.addEventListener?.('change', e => applyRM(e.matches));
@@ -2452,7 +2613,7 @@ function renderIconMap() {
 
 /* ---------- Boot ---------- */
 applyRM(state.rm);
-renderHome(); renderFind(); renderLocs(); renderWay(); renderMc();
+renderHome(); renderFind(); renderLocs(); renderWay(); renderMc(); syncMenuDot();
 renderCms();
 renderIconMap();
 requestAnimationFrame(moveInd);
