@@ -42,6 +42,7 @@
   --focus:0 0 0 2px #FFFFFF, 0 0 0 5px #004278;
   --focus-on-blue:0 0 0 2px #004278, 0 0 0 4px #FFFFFF;
   --glow:radial-gradient(90% 70% at 100% 20%, rgba(0,169,224,.30) 0, rgba(0,169,224,0) 70%);
+  --hero-glow:radial-gradient(75% 55% at 100% 58%, rgba(0,169,224,.26) 0, rgba(0,169,224,0) 72%);
 
   /* Icon axes – inherited, so a container's state (selected, pressed, dark) reaches its glyph */
   --fill:0; --wght:500; --grad:0;
@@ -170,9 +171,11 @@ html:not(.ms-ready) .ms{color:transparent!important}
 .icon-btn:active{transform:scale(.92); transition-duration:80ms; --fill:1}
 .icon-btn.ghost{background:rgba(255,255,255,.14); color:#FFFFFF; box-shadow:none}
 .icon-btn.ghost:active{background:rgba(255,255,255,.24)}
-.badge{position:absolute; top:0; right:-2px; min-width:20px; height:20px; padding:0 6px; border-radius:var(--r-pill); background:#FFFFFF; color:var(--blue); font-size:12.0px; font-weight:700; line-height:20px; text-align:center; box-shadow:0 0 0 2px var(--blue)}
+.badge{position:absolute; top:4px; right:4px; min-width:18px; height:18px; padding:0 4px; border-radius:var(--r-pill); background:#FFFFFF; color:var(--blue); font-size:12.0px; font-weight:800; line-height:18px; text-align:center; box-shadow:0 0 0 2px var(--blue)}
 .avatar{width:32px; height:32px; border-radius:50%; background:var(--blue); color:#FFFFFF; font-size:12.0px; font-weight:700; display:grid; place-items:center; flex:none}
-.appbar .avatar{background:#FFFFFF; color:var(--blue)}
+.appbar .avatar{width:36px; height:36px; background:#FFFFFF; color:var(--blue); font-size:14.0px; box-shadow:0 0 0 2px rgba(255,255,255,.28)}
+#btn-acct.signed{background:transparent}
+.appbar .icon-btn.ghost{background:rgba(255,255,255,.10)}
 .btn{min-height:var(--hit-lg); padding:0 var(--s6); border:0; border-radius:var(--r-pill); font-weight:600; font-size:var(--t16); display:inline-flex; align-items:center; justify-content:center; gap:var(--s2); position:relative; overflow:hidden; transition:transform var(--d-snappy) var(--spring-snappy), background-color var(--d-fast) var(--ease-out)}
 .btn:active{transform:scale(.96); transition-duration:80ms; --fill:1}
 .btn-primary{background:var(--blue); color:#FFFFFF}
@@ -230,8 +233,8 @@ html:not(.ms-ready) .ms{color:transparent!important}
 @keyframes modOut{to{opacity:0; transform:translateY(-8px)}}
 
 /* ===================== Hero: greeting and search (always above appointments) ===================== */
-.hero{position:relative; display:grid; grid-template-columns:minmax(0,1fr); gap:var(--s6); padding:var(--s2) 0 var(--s12); color:#FFFFFF; background:var(--glow), var(--blue); overflow:hidden}
-.hero-art{position:absolute; right:-72px; top:-56px; width:280px; height:280px; pointer-events:none}
+.hero{position:relative; display:grid; grid-template-columns:minmax(0,1fr); gap:var(--s6); padding:var(--s2) 0 var(--s12); color:#FFFFFF; background:var(--hero-glow), var(--blue); overflow:hidden}
+.hero-art{position:absolute; right:-136px; top:58%; width:288px; height:288px; transform:translateY(-50%); pointer-events:none}
 .hero > .mod{position:relative}
 .content{position:relative; z-index:1; display:grid; grid-template-columns:minmax(0,1fr); gap:var(--s8); margin-top:calc(-1 * var(--s6)); padding:var(--s6) 0 calc(96px + var(--s8)); background:var(--bg); border-radius:var(--r-xl) var(--r-xl) 0 0; min-height:480px; box-shadow:0 -8px 24px rgba(0,20,40,.12)}
 
@@ -265,10 +268,13 @@ html:not(.ms-ready) .ms{color:transparent!important}
 .greet{padding:0 var(--s4)}
 .greet-top{display:flex; align-items:center; justify-content:space-between; gap:var(--s2); min-height:var(--hit)}
 .eyebrow{font-size:var(--t14); font-weight:600; color:var(--on-blue-3)}
-.greet-top .icon-btn{margin-right:calc(-1 * var(--s1))}
+.upd-chip{min-height:var(--hit); border:0; background:none; padding:0; margin-right:calc(-1 * var(--s1)); color:var(--on-blue-2); display:inline-flex; align-items:center}
+.upd-chip .pill{display:inline-flex; align-items:center; gap:var(--s1); height:32px; padding:0 var(--s3); border-radius:var(--r-pill); background:rgba(255,255,255,.10); box-shadow:inset 0 0 0 1px rgba(255,255,255,.16); font-size:var(--t12); font-weight:600; white-space:nowrap; transition:background-color var(--d-fast)}
+.upd-chip:active .pill{background:rgba(255,255,255,.2)}
+.greet-top{flex-wrap:wrap}
 .greet h1{font-size:var(--t32); line-height:1.15; font-weight:700; letter-spacing:-.02em; color:#FFFFFF; text-wrap:balance}
 .greet .sub{margin-top:var(--s2); color:var(--on-blue-2); max-width:34ch}
-.icon-btn.spin .ms{animation:spin 600ms var(--ease-in-out)}
+.spin .ms{animation:spin 600ms var(--ease-in-out)}
 @keyframes spin{to{transform:rotate(360deg)}}
 .fade-up{display:inline-block; animation:fadeUp 420ms var(--spring-snappy) both; animation-delay:var(--dl,0ms)}
 @keyframes fadeUp{from{opacity:0; transform:translateY(40%)}}
@@ -360,11 +366,13 @@ html:not(.ms-ready) .ms{color:transparent!important}
 
 /* ===================== Quick access ===================== */
 .qa{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:var(--s2); padding-inline:var(--s4)}
-.qa-tile{position:relative; min-height:108px; border:0; border-radius:var(--r-lg); background:var(--surface); box-shadow:var(--shadow-1), 0 0 0 1px var(--line); padding:var(--s3); display:flex; flex-direction:column; justify-content:space-between; align-items:flex-start; gap:var(--s3); text-align:left; color:var(--ink);
+.qa-tile{position:relative; min-height:108px; border:0; border-radius:var(--r-lg); background:var(--surface); box-shadow:var(--shadow-1), 0 0 0 1px var(--line); padding:var(--s3); display:flex; flex-direction:column; justify-content:flex-start; align-items:flex-start; gap:var(--s3); text-align:left; color:var(--ink);
   transition:transform var(--d-snappy) var(--spring-snappy), background-color var(--d-fast) var(--ease-out)}
 .qa-tile:active,.qa-tile.pressed{transform:scale(.96); transition-duration:90ms; --fill:1; background:var(--tint)}
 .qa-lbl{font-size:var(--t14); font-weight:600; line-height:1.3}
-.qa-badge{position:absolute; top:var(--s3); right:var(--s3); min-width:20px; height:20px; padding:0 6px; border-radius:var(--r-pill); background:var(--cyan); color:var(--blue); font-size:12.0px; font-weight:700; line-height:20px; text-align:center}
+.qa-txt{display:grid; gap:2px}
+.qa-meta{display:inline-flex; align-items:center; gap:var(--s1); font-size:var(--t12); font-weight:700; color:var(--blue)}
+.qa-meta i{width:8px; height:8px; border-radius:50%; background:var(--cyan); box-shadow:0 0 0 2px var(--tint)}
 
 /* ===================== Featured ===================== */
 .car{display:flex; gap:var(--s3); overflow-x:auto; scroll-snap-type:x mandatory; padding:var(--s1) var(--s4) var(--s2); scroll-padding-inline:var(--s4); scrollbar-width:none; overscroll-behavior-x:contain}
@@ -382,12 +390,15 @@ html:not(.ms-ready) .ms{color:transparent!important}
 .car-arrows{display:flex; gap:var(--s2)}
 
 /* ===================== Campaign (the one warm moment) ===================== */
-.camp{position:relative; overflow:hidden; margin-inline:var(--s4); border-radius:var(--r-xl); background:var(--sand); color:var(--ink); padding:var(--s6)}
-.camp svg{position:absolute; right:-56px; top:-48px; width:224px; height:224px; pointer-events:none}
-.camp > *:not(svg){position:relative}
-.camp h2{font-size:var(--t24); line-height:1.2; font-weight:700; letter-spacing:-.01em; margin-top:var(--s2); max-width:14ch; color:var(--blue)}
-.camp p{margin-top:var(--s2); max-width:28ch}
-.camp .btn{margin-top:var(--s4)}
+.camp{position:relative; overflow:hidden; margin-inline:var(--s4); border-radius:var(--r-xl); background:var(--sand); color:var(--ink); padding:var(--s6); display:grid; gap:var(--s4)}
+.camp-art{position:absolute; right:-72px; bottom:-72px; width:216px; height:216px; pointer-events:none}
+.camp > *:not(.camp-art){position:relative}
+.camp-head{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:var(--s4); align-items:start}
+.camp h2{font-size:var(--t24); line-height:1.2; font-weight:700; letter-spacing:-.01em; margin-top:var(--s1); color:var(--blue); text-wrap:balance}
+.camp-facts{list-style:none; margin:0; padding:var(--s3) var(--s4); display:grid; gap:var(--s2); background:rgba(255,255,255,.6); border-radius:var(--r-md)}
+.camp-facts li{display:flex; gap:var(--s3); align-items:flex-start; font-size:var(--t14); font-weight:600; line-height:1.4}
+.camp-facts .ms{color:var(--blue)}
+.camp .btn{justify-self:start}
 
 /* ===================== Tab bar ===================== */
 .tabbar{position:absolute; left:var(--s3); right:var(--s3); bottom:var(--s4); z-index:25; display:grid; grid-template-columns:repeat(5,1fr); background:rgba(255,255,255,.94); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border-radius:var(--r-xl); padding:var(--s1); box-shadow:0 8px 24px rgba(16,38,60,.16), 0 0 0 1px var(--line)}
@@ -651,7 +662,7 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
               </header>
               <div id="home-inner">
                 <div class="hero" id="hero">
-                  <svg class="hero-art" viewBox="0 0 280 280" aria-hidden="true"><circle cx="140" cy="140" r="132" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="2"/><circle cx="140" cy="140" r="96" fill="none" stroke="rgba(255,255,255,.09)" stroke-width="2"/><path d="M92 40v84a48 48 0 0 0 96 0V40" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="28" stroke-linecap="round"/><circle cx="140" cy="118" r="10" fill="#00A9E0" opacity=".9"/></svg>
+                  <svg class="hero-art" viewBox="0 0 288 288" aria-hidden="true"><circle cx="144" cy="144" r="140" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="2"/><circle cx="144" cy="144" r="100" fill="none" stroke="rgba(255,255,255,.10)" stroke-width="2"/><circle cx="144" cy="144" r="60" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="2"/></svg>
                   <div id="hero-mods" style="display:contents"></div>
                 </div>
                 <div class="content" id="modules"></div>
@@ -769,7 +780,7 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
         <tr><td><span class="sw" style="background:#5B6770"></span>Secondary text</td><td>#5B6770</td><td>Meta and chevrons · 5.46:1 on #F7F8FA, 5.06:1 on #EBF0F5</td></tr>
         <tr><td><span class="sw" style="background:#EBF0F5"></span>Tint</td><td>#EBF0F5 · #D1DDE6 pressed</td><td>List circles, chips, action circles, tab indicator · Blue on tint 8.93:1</td></tr>
         <tr><td><span class="sw" style="background:#F7F8FA"></span>Surfaces and lines</td><td>#F7F8FA · #FFFFFF · #D5DDE5 · #808B96</td><td>Content sheet, cards, hairlines · field outline #808B96 is 3.27:1</td></tr>
-        <tr><td><span class="sw" style="background:#00A9E0"></span>PMS 2995 cyan</td><td>#00A9E0</td><td>The one accent – the brand dot, hero glow, countdown icon, badges with Blue text 3.78:1 (non-text)</td></tr>
+        <tr><td><span class="sw" style="background:#00A9E0"></span>PMS 2995 cyan</td><td>#00A9E0</td><td>The one accent, shapes only – brand dot, hero glow, countdown icon, unread dots (3.78:1 on Blue)</td></tr>
         <tr><td><span class="sw" style="background:#E6E0C5"></span>PMS 4545 at 60%</td><td>#E6E0C5 · #D5CB9F</td><td>Campaign card only · Blue 7.72:1, Gray 9.53:1</td></tr>
         <tr><td><span class="sw" style="background:#B0003A"></span>Alert</td><td>#B0003A</td><td>Emergency alerts only · white 7.22:1 · always with icon and “Alert”</td></tr>
       </tbody>
@@ -782,7 +793,7 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
         <tr><td><code>icon-16</code></td><td>16.0 · opsz 20</td><td>With 12.0 text (pills, source line, map labels)</td></tr>
         <tr><td><code>icon-20</code></td><td>20.0 · opsz 20</td><td>With 14.0–16.0 text: buttons, rows, appointment details</td></tr>
         <tr><td><code>icon-24</code></td><td>24.0 · opsz 24</td><td>Standalone controls, tab bar, app bar, tiles, actions</td></tr>
-        <tr><td><code>icon-32</code></td><td>32.0 · opsz 32</td><td>Inside 56.0 circles only (sign-in prompts)</td></tr>
+        <tr><td><code>icon-32</code></td><td>32.0 · opsz 32</td><td>Inside 56.0 circles only (sign-in prompts, campaign badge)</td></tr>
         <tr><td><code>circle</code></td><td>40.0 · 48.0 · 56.0</td><td>Blue in quick access; tint in lists and actions, Blue when pressed or done</td></tr>
         <tr><td><code>wght</code></td><td>500</td><td>Every size</td></tr>
         <tr><td><code>GRAD</code></td><td>0 · −25 on Blue</td><td>White glyphs on Blue and alert red</td></tr>
@@ -871,7 +882,7 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
           <div class="ramp-row"><div class="ic-demo"><span class="plain-demo" style="font-size:12.0px;color:#5B6770"><span class="ms s16" aria-hidden="true">link</span>From MyChart</span></div><p><b>16.0</b> with 12.0 text – pills and the source line</p></div>
           <div class="ramp-row"><div class="ic-demo"><span class="plain-demo"><span class="ms s20" aria-hidden="true">location_on</span>Suite 410</span></div><p><b>20.0</b> with 14.0–16.0 text – buttons, rows, details</p></div>
           <div class="ramp-row"><div class="ic-demo"><span class="sx-tab"><span class="ms" aria-hidden="true">calendar_month</span>Visits</span></div><p><b>24.0</b> standalone – tab bar, app bar, tiles, actions</p></div>
-          <div class="ramp-row"><div class="ic-demo"><span class="dot d56"><span class="ms s32" aria-hidden="true">lock</span></span></div><p><b>32.0</b> only inside a 56.0 circle – sign-in prompts</p></div>
+          <div class="ramp-row"><div class="ic-demo"><span class="dot d56"><span class="ms s32" aria-hidden="true">lock</span></span></div><p><b>32.0</b> only inside a 56.0 circle – sign-in prompts and the campaign badge</p></div>
         </div>
         <p>Icons scale with the text-size setting, and every target stays 44.0 or larger whatever the glyph size.</p>
       </article>
@@ -999,7 +1010,7 @@ const ICON_MAP = [
   ['inPerson', 'person', 'In-person visit', 'Visit type', 'Appointments'],
   ['video', 'videocam', 'Video care', 'Video visits, Join video visit, Virtual urgent care', 'Appointments'],
   ['lab', 'labs', 'Lab visit', 'Visit type', 'Appointments'],
-  ['countdown', 'schedule', 'Time until the visit', 'Appointment countdown, travel time', 'Appointments'],
+  ['countdown', 'schedule', 'Time – countdowns and hours', 'Appointment countdown, travel time, campaign hours', 'Appointments'],
   ['place', 'location_on', 'Place and locations', 'Appointment place, Locations tile, location results', 'Appointments'],
   ['devices', 'devices', 'Join from any device', 'Video visit place', 'Appointments'],
   ['prep', 'info', 'Visit preparation', 'Lab prep note', 'Appointments'],
@@ -1016,6 +1027,7 @@ const ICON_MAP = [
   ['parking', 'local_parking', 'Parking', 'Parking results', 'Destinations and services'],
   ['events', 'groups', 'Classes and events', 'Classes and events tile', 'Destinations and services'],
   ['rx', 'pill', 'Prescriptions', 'Prescription refills', 'Destinations and services'],
+  ['vaccine', 'vaccines', 'Vaccines and shots', 'Flu shot campaign badge – literal vaccine content only', 'Destinations and services'],
   ['opinion', 'fact_check', 'Second opinions', 'Services', 'Destinations and services'],
   ['aid', 'volunteer_activism', 'Financial assistance', 'Services, assistance results', 'Destinations and services'],
   ['article', 'article', 'Articles and guides', 'Content results', 'Destinations and services'],
@@ -1196,7 +1208,7 @@ const R = {
   greeting() {
     const auth = state.aud === 'auth';
     return `<section class="greet" aria-labelledby="greet-h">
-      <div class="greet-top"><p class="eyebrow">${auth ? 'Monday, Oct. 13' : 'Welcome to UTSW MyCare'}</p><button class="icon-btn ghost" id="btn-refresh" data-refresh aria-label="Refresh home, ${state.updated.toLowerCase()}">${ico('refresh', 20)}</button></div>
+      <div class="greet-top"><p class="eyebrow">${auth ? 'Monday, Oct. 13' : 'Welcome'}</p><button class="upd-chip" id="btn-refresh" data-refresh aria-label="Refresh home, ${state.updated.toLowerCase()}"><span class="pill">${ico('refresh', 16)}<span class="upd-time">${state.updated}</span></span></button></div>
       ${auth ? `<h1 id="greet-h"><span class="fade-up">Good morning,</span> <span class="fade-up" style="--dl:80ms">${USER.first}</span></h1>
         <p class="sub">Three appointments coming up – the next one is tomorrow at 9:30 a.m.</p>`
       : `<h1 id="greet-h"><span class="fade-up">Care from UT Southwestern, in one app</span></h1>
@@ -1232,7 +1244,7 @@ const R = {
   tiles() {
     return `<section aria-labelledby="qa-h">
       <div class="sec-head"><h2 id="qa-h">Quick access</h2></div>
-      <div class="qa">${TILES[state.aud].map(t => `<button class="qa-tile" data-tile="${t.k}" ${t.badge ? `aria-label="${t.lbl}, ${t.badge} new"` : ''}>${circle(t.ic, 48, 'solid')}<span class="qa-lbl">${t.lbl}</span>${t.badge ? `<span class="qa-badge" aria-hidden="true">${t.badge}</span>` : ''}</button>`).join('')}</div>
+      <div class="qa">${TILES[state.aud].map(t => `<button class="qa-tile" data-tile="${t.k}" ${t.badge ? `aria-label="${t.lbl}, ${t.badge} new"` : ''}>${circle(t.ic, 48, 'solid')}<span class="qa-txt"><span class="qa-lbl">${t.lbl}</span>${t.badge ? `<span class="qa-meta" aria-hidden="true"><i></i>${t.badge} new</span>` : ''}</span></button>`).join('')}</div>
     </section>`;
   },
   featured() {
@@ -1261,10 +1273,10 @@ const R = {
   },
   campaign() {
     return `<section class="camp" aria-labelledby="camp-h">
-      <svg viewBox="0 0 224 224" aria-hidden="true"><circle cx="112" cy="112" r="104" fill="none" stroke="#D5CB9F" stroke-width="2"/><circle cx="112" cy="112" r="72" fill="#D5CB9F" opacity=".55"/><path d="M84 52v56a28 28 0 0 0 56 0V52" fill="none" stroke="#004278" stroke-width="14" stroke-linecap="round"/><circle cx="112" cy="104" r="9" fill="#00A9E0"/></svg>
-      <p class="kick">Seasonal campaign</p>
-      <h2 id="camp-h">Flu shots are here</h2>
-      <p>Get yours at any UT Southwestern primary care clinic. Walk in on Saturdays, 8 a.m. to noon.</p>
+      <svg class="camp-art" viewBox="0 0 216 216" aria-hidden="true"><circle cx="108" cy="108" r="104" fill="none" stroke="#D5CB9F" stroke-width="2"/><circle cx="108" cy="108" r="72" fill="none" stroke="#D5CB9F" stroke-width="2"/><circle cx="108" cy="108" r="40" fill="#D5CB9F" opacity=".5"/></svg>
+      <div class="camp-head"><div><p class="kick">Seasonal campaign</p><h2 id="camp-h">Flu shots are here</h2></div>${circle('vaccine', 56, 'solid')}</div>
+      <p>Protect yourself and the people around you this season. Most insurance plans cover the cost.</p>
+      <ul class="camp-facts"><li>${ico('countdown', 20)}Walk in Saturdays, 8 a.m. to noon</li><li>${ico('place', 20)}Any UT Southwestern primary care clinic</li></ul>
       <button class="btn btn-primary" data-page="flu">Find a flu shot</button>
     </section>`;
   },
@@ -1405,6 +1417,7 @@ function renderChrome() {
   $('#btn-bell').setAttribute('aria-label', auth && state.unread ? `Notifications, ${['no', 'one', 'two', 'three'][state.unread] || state.unread} unread` : 'Notifications');
   $('#btn-acct').setAttribute('aria-label', auth ? `Account, signed in as ${USER.full}` : 'Sign in');
   $('#btn-acct').innerHTML = auth ? `<span class="avatar" aria-hidden="true">${USER.ini}</span>` : ico('account');
+  $('#btn-acct').classList.toggle('signed', auth);
 }
 function wireHome() {
   const tog = $('.alert-tog', homeInner);

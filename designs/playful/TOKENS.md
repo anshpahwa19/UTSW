@@ -2,7 +2,7 @@
 
 Prototype: `mycare-playful-home.html`, built from `src.html` by `build.py` (phone frame 390 × 844 pt, also checked at 360 pt). All sample data is fictional.
 
-Direction: a Blue hero (reversed logo, greeting, and search) sits at the top, and content rides up on a light sheet. Search is part of the fixed header, so it always sits above appointments. Appointments get a date strip and a rich card: a Blue header with time and countdown, a map preview with directions, a prep note or checklist, and round actions. Depth comes from the Blue family and one warm sand campaign card; energy comes from motion and gestures.
+Direction: a Blue hero (reversed logo, notification bell with an inset count, initials avatar, greeting with an “Updated” refresh chip, and search) sits at the top, and content rides up on a light sheet. Search is part of the fixed header, so it always sits above appointments. Appointments get a date strip and a rich card: a Blue header with time and countdown, a map preview with directions, a prep note or checklist, and round actions. Depth comes from the Blue family and one warm sand campaign card; energy comes from motion and gestures.
 
 ## Type scale (Inter; Inter Display optical size from 20.0 up)
 
@@ -45,8 +45,8 @@ Touch targets: 44.0 minimum, 48.0 for primary buttons and actions; at least 8.0 
 | Secondary text | #5B6770 | Meta and chevrons; 5.46:1 on #F7F8FA, 5.06:1 on #EBF0F5 |
 | Tint | #EBF0F5 (pressed #D1DDE6) | List circles, chips, action circles, tab indicator; Blue on tint 8.93:1 |
 | Surfaces and lines | #F7F8FA, #FFFFFF, #D5DDE5, #808B96 | Content sheet, cards, hairlines; the search field outline #808B96 is 3.27:1 |
-| PMS 2995 cyan | #00A9E0 | The one accent: brand dot, hero glow, countdown icon, badges with Blue text (3.78:1, non-text) |
-| PMS 4545 at 60% | #E6E0C5, #D5CB9F | Campaign card only; Blue 7.72:1, Gray 9.53:1 |
+| PMS 2995 cyan | #00A9E0 | The one accent, shapes only: brand dot, hero glow, countdown icon, unread dots (3.78:1 on Blue) |
+| PMS 4545 at 60% | #E6E0C5, #D5CB9F | Campaign card only – Blue badge, Blue headline, facts on a 60% white panel; Blue 7.72:1, Gray 9.53:1 |
 | Alert | #B0003A | Emergency alerts only; white 7.22:1; always with an icon and the word "Alert" |
 
 ## Radii
@@ -61,14 +61,14 @@ Touch targets: 44.0 minimum, 48.0 for primary buttons and actions; at least 8.0 
 
 ## Iconography
 
-One family: **Material Symbols Rounded** (variable font, Apache 2.0), every glyph in UT Southwestern Blue or white on Blue. The app uses 51 glyphs, shipped as one 72 KB woff2 subset. The full system (keylines, states, treatments, color pairs, do-not-use list, and the glyph map) is in the prototype's Iconography section.
+One family: **Material Symbols Rounded** (variable font, Apache 2.0), every glyph in UT Southwestern Blue or white on Blue. The app uses 52 glyphs, shipped as one 74 KB woff2 subset. The full system (keylines, states, treatments, color pairs, do-not-use list, and the glyph map) is in the prototype's Iconography section.
 
 | Token | Value | Used for |
 |---|---|---|
 | icon-16 | 16.0, opsz 20 | With 12.0 text (pills, source line, map labels) |
 | icon-20 | 20.0, opsz 20 | With 14.0–16.0 text: buttons, rows, appointment details |
 | icon-24 | 24.0, opsz 24 | Standalone controls, tab bar, app bar, tiles, actions |
-| icon-32 | 32.0, opsz 32 | Inside 56.0 circles only (sign-in prompts) |
+| icon-32 | 32.0, opsz 32 | Inside 56.0 circles only (sign-in prompts, campaign badge) |
 | circle | 40.0, 48.0, 56.0 | Blue in quick access; tint in lists and actions, Blue when pressed or done |
 | wght | 500 | Every size |
 | GRAD | 0; −25 on Blue | White glyphs on Blue and alert red |
