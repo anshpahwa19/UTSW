@@ -226,6 +226,8 @@ h1,h2,h3,p{margin:0}
 .hello{display:flex;flex-direction:column;gap:var(--s-8)}
 .hello .k{font-size:var(--fs-12);line-height:16px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#FFFFFF}
 .hello h1{font-size:var(--fs-32);line-height:40px;font-weight:800;letter-spacing:-.03em;text-wrap:balance}
+.hello-home h1{font-size:var(--fs-28);line-height:36px}
+.mod[data-mod="search"]{gap:var(--s-12)}
 .hello p{font-size:var(--fs-16);line-height:24px;color:#FFFFFF;text-wrap:pretty}
 .screen:not(#screen-home) .hello{padding-top:var(--s-16)}
 
@@ -1432,8 +1434,7 @@ R.alerts=function(){
 
 /* ---------- Guest home modules ---------- */
 R.search=function(){
- return '<div class="hello a"><p class="k">Wednesday, Oct. 14</p><h1>How can we help you today?</h1>'+
-  '<p>Find a doctor, get directions, and learn about care at UT&nbsp;Southwestern.</p></div>'+searchHero();
+ return '<div class="hello hello-home a"><h1>How can we help?</h1></div>'+searchHero();
 };
 function searchHero(){
  return '<button class="search-hero glass spot press a" data-act="search" aria-haspopup="dialog" aria-label="Search UTSW MyCare – providers, locations, content, and resources">'+
