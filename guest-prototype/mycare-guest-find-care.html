@@ -621,7 +621,7 @@ mark{background:rgba(0,169,224,.35);color:inherit;border-radius:4px}
 .bdg{display:inline-flex;align-items:center;gap:var(--s-4);font-size:var(--fs-12);line-height:16px;font-weight:700;padding:var(--s-4) var(--s-8);border-radius:var(--r-pill);background:var(--inner-fill);box-shadow:inset 0 0 0 1px var(--inner-line);color:#FFFFFF}
 .bdg svg{width:12px;height:12px}
 .bdg.ok{background:rgba(67,176,42,.22);box-shadow:inset 0 0 0 1px rgba(67,176,42,.75)}
-.bdg.feat{background:var(--c-542);color:var(--c-navy-900);box-shadow:none}
+.bdg.bdg-feat{background:var(--c-542);color:var(--c-navy-900);box-shadow:none}
 .bdg.no{color:var(--c-text-2)}
 .pav{position:relative;flex:none;width:56px;height:56px;border-radius:50%;padding:2px;background:conic-gradient(from 200deg,var(--c-cyan),var(--c-542),var(--c-purple),var(--c-cyan))}
 .pav span{display:grid;place-items:center;width:100%;height:100%;border-radius:50%;background:var(--pav,var(--c-blue));font-size:var(--fs-16);font-weight:800;letter-spacing:.02em;color:#FFFFFF}
@@ -1557,7 +1557,7 @@ function provCard(p,j,ctx){
  var o=C.loc, n=nearest(p,o), fav=isFav(p.id);
  var where=(n.d!=null?'<b>'+n.d+' mi</b> · ':'')+esc(n.l.s+", "+n.l.c)+(p.locs.length>1?' + '+plural(p.locs.length-1,"more location","more locations"):'');
  var b=[];
- if(p.featured&&ctx!=="saved") b.push('<span class="bdg feat">'+ic("sparkle")+'Featured</span>');
+ if(p.featured&&ctx!=="saved") b.push('<span class="bdg bdg-feat">'+ic("sparkle")+'Featured</span>');
  b.push(p.accepting?'<span class="bdg ok">'+ic("check")+'Accepting new patients</span>':'<span class="bdg no">'+ic("x")+'Not accepting new patients</span>');
  if(p.online) b.push('<span class="bdg">'+ic("cal")+'Online scheduling</span>');
  var other=p.langs.filter(function(l){return l!=="English";});
@@ -1774,7 +1774,7 @@ function renderProfArea(){
  if(e.st==="loading"){ box.setAttribute("aria-busy","true"); box.innerHTML='<div class="glass p-head" aria-hidden="true"><span class="sk" style="width:96px;height:96px;border-radius:50%"></span><span class="sk sk-l" style="width:60%"></span><span class="sk sk-l" style="width:40%"></span></div>'+skeletons().split('</div></div>')[0]+'</div></div>'; return; }
  if(e.st==="offline"||e.st==="error"){ box.innerHTML=stateBlock(e.st).replace("load providers","load this profile").replace("Provider search needs","Provider profiles need"); return; }
  var n=nearest(p,C.loc), other=p.langs.filter(function(l){return l!=="English";});
- var badges='<span class="badges">'+(p.featured?'<span class="bdg feat">'+ic("sparkle")+'Featured</span>':'')+(p.accepting?'<span class="bdg ok">'+ic("check")+'Accepting new patients</span>':'<span class="bdg no">'+ic("x")+'Not accepting new patients</span>')+(p.online?'<span class="bdg">'+ic("cal")+'Online scheduling</span>':'')+'</span>';
+ var badges='<span class="badges">'+(p.featured?'<span class="bdg bdg-feat">'+ic("sparkle")+'Featured</span>':'')+(p.accepting?'<span class="bdg ok">'+ic("check")+'Accepting new patients</span>':'<span class="bdg no">'+ic("x")+'Not accepting new patients</span>')+(p.online?'<span class="bdg">'+ic("cal")+'Online scheduling</span>':'')+'</span>';
  var h=(e.st==="cached"?'<div class="offline-bar a" role="status">'+ic("wifiOff")+'<span>You’re offline. This is the copy saved on your device.</span></div>':'')+
   '<article class="glass p-head a" aria-labelledby="p-name">'+pav(p,"lg")+'<div><h2 id="p-name">'+esc(p.name)+'</h2><p class="t2">'+esc(p.sub)+(p.sub!==p.spec?' · '+esc(p.spec):'')+'</p></div>'+badges+
    '<button class="btn-primary block press" data-act="request" data-id="'+p.id+'">'+ic(p.online?"cal":"calplus")+(p.online?'Schedule an appointment':'Request an appointment')+'</button>'+
