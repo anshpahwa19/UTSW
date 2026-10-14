@@ -24,9 +24,9 @@ missing = static - set(names)
 assert not missing, f"glyphs used in the page but missing from the subset: {sorted(missing)}"
 
 # Size of the app-only subset woff2 (ICON_MAP glyphs, all four axes) as served by Google Fonts; re-measure when the map changes.
-FONT_KB = "70"
+FONT_KB = "72"
 
-logo = base64.b64encode((here.parent.parent / "mycare-logo" / "horizontal.svg").read_bytes()).decode()
+logo = base64.b64encode((here.parent.parent / "mycare-logo" / "reversed.svg").read_bytes()).decode()
 out = (
     src.replace("__ICON_NAMES__", ",".join(names))
     .replace("__LOGO__", logo)
