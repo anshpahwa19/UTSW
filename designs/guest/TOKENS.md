@@ -13,7 +13,8 @@ Guest tabs: **Home · Find care · Locations · Wayfinding · MyChart**.
 - The old app's five tabs (Home, MyChart, Providers, Locations, Wayfinding), kept so returning users find things where they expect them. Visits and Messages (signed-in tabs in the playful direction) mean nothing to a guest.
 - **Find care** replaces "Providers": people arrive with a problem, not a name, and the tab can grow to services without a rename.
 - **Locations** and **Wayfinding** stay separate: "which place" versus "how do I get there and around inside."
-- **MyChart** holds sign-in and doubles as the guest menu (saved providers, pay as a guest, language, help, privacy). After sign-in it becomes the account menu, so the tab count never changes.
+- **MyChart** is sign-in only, plus Pay as a guest and a link to More. After sign-in it becomes the account tab, so the tab count never changes.
+- **Menu (hamburger)** stays on the home app bar, as in the old app, and opens the **More** drawer: Inbox, Saved providers, Campus shuttle; About UT Southwestern (Why UT Southwestern, Patient resource guide, Patient resources, Physician resources, COVID-19 resources, Visit the full website); Settings and help (Language, Help and contact us, Privacy policy); Follow us. Menu items come from the CMS, so admins can retire one (COVID-19) without a release. A cyan dot on the menu button means unread Inbox items.
 - Tab bar inset drops from 12.0 to 8.0 per side so "Wayfinding" fits at 360.
 
 ## Flow map
@@ -24,6 +25,8 @@ Guest tabs: **Home · Find care · Locations · Wayfinding · MyChart**.
 4. **Results** – cards to profile; loading skeleton, error, offline, no results with alternatives, each with retry.
 5. **Profile** – identity and credentials, bio, specialties and conditions, languages, locations with directions and phone, education, research and media, related providers.
 6. **Act** – schedule online or call; save (device) with Undo; share the public link through the native share sheet.
+
+Also in the guest flow: **MedBlog → See all** opens the MedBlog list (topic chips, 96.0 thumbnails, titles, dates, Show more; each row opens the article), and **Menu → Inbox** lists app notifications (active alert, announcements) with unread dots and Mark all as read. Care team messages stay in MyChart.
 
 Signed-in destinations (message your doctor, test results, manage visits, manage billing) open a sign-in prompt for that task, never a dead end, with "Find a provider" for people who aren't patients yet.
 
@@ -55,6 +58,11 @@ Signed-in destinations (message your doctor, test results, manage visits, manage
 | Share sheet | Preview (initials circle, title, URL) on #F7F8FA; four 48.0 target circles; callout "Only the public link is shared" |
 | Profile header | 80.0 Blue initials circle with 28.0 white initials; 28.0/700 name; 16.0 specialty; 48.0 primary CTA; four 48.0 action circles (Call, Save, Share, Directions) |
 | Location card | r-lg, s4; 16.0/700 name; 14.0 address, distance, hours; selectable phone number; two 44.0 tonal buttons |
+| Menu drawer | From the right, min(88%, 344.0) wide, r-xl on the open edge; Blue header with 24.0/700 title and 44.0 close; grouped rows; external links end in an open-in-new glyph instead of a chevron; Follow us as labeled outline chips (no third-party logos, so the icon set stays one family) |
+| Menu button | 44.0 ghost button with `menu`; 10.0 cyan dot ringed in Blue for unread Inbox items; label "Menu, 3 new in Inbox" |
+| Sign-in pill, compact | When the app bar runs out of room (360 with large text), the pill keeps its 44.0 target and drops its label; the accessible name stays "Sign in to MyChart" |
+| MedBlog list | 96.0 thumbnails, r-md; kicker 12.0/700; 16.0/700 Blue titles; 14.0 dates (Oct. 7, 2026); topic chips that scroll the selected chip into view; hairlines between rows; Show more, then an end note |
+| Inbox row | Standard row; 8.0 Blue unread dot; name starts with "Unread." for screen readers; tonal Mark all as read |
 | Toast with action | Blue toast; Undo is a 44.0 pill, white 14.0/700 on 16% white |
 | MyChart panel | r-xl Blue with cyan glow; 24.0/700 title; fields 52.0 high, r-md white; white primary, outlined secondary |
 | App bar sign-in pill | 44.0, 14% white on Blue, 20.0 login glyph + 14.0/600 "Sign in"; the logo flexes between 200 and 232 so the pill never clips (brand minimum 187) |
@@ -72,7 +80,7 @@ No new values. In use: 32.0 welcome, 28.0 page titles and provider name, 24.0 sh
 
 ## Icons
 
-63 concepts, one glyph each, Material Symbols Rounded in a 90 KB subset. New in the guest flow: `favorite`, `tune`, `swap_vert`, `near_me`, `my_location`, `location_off`, `translate`, `person_add`, `edit_calendar`, `call`, `school`, `science`, `play_circle`, `wifi_off`, `error`, `trending_up`, `domain`, `apartment`, `door_front`, `map`, `workspace_premium`, `sms`, `mail`, `more_horiz`, `visibility`, `visibility_off`. The full map renders on the board.
+74 concepts, one glyph each, Material Symbols Rounded in a 108 KB subset. New in the guest flow: `favorite`, `tune`, `swap_vert`, `near_me`, `my_location`, `location_off`, `translate`, `person_add`, `edit_calendar`, `call`, `school`, `science`, `play_circle`, `wifi_off`, `error`, `trending_up`, `domain`, `apartment`, `door_front`, `map`, `workspace_premium`, `sms`, `mail`, `more_horiz`, `visibility`, `visibility_off`, `menu`, `inbox`, `done_all`, `directions_bus`, `verified`, `menu_book`, `library_books`, `badge`, `coronavirus`, `public`, `open_in_new`. The full map renders on the board.
 
 ## Prototype controls
 
