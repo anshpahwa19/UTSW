@@ -410,7 +410,7 @@ function visibleModules(){return S.layout.filter(m=>m.on&&!MODS[m.id].expired&&(
 function viewHome(){
   return `<div class="ptr" id="ptr" aria-hidden="true"></div><div class="v-inner"><div class="top">${renderAlerts()}
     <section class="hero on-blue" aria-labelledby="h-hero"><span class="aurora" aria-hidden="true"><i></i></span>
-      <div class="hero-copy"><h1 id="h-hero">Welcome to UTSW MyCare</h1>
+      <div class="hero-copy"><h1 class="sr-only" id="h-hero">UTSW MyCare home</h1>
       <p class="sub">Find doctors, locations, and health information from UT&nbsp;Southwestern Medical Center.</p></div>
       <button class="search-entry" id="hero-search" data-action="open-search" aria-haspopup="dialog" >${ic("search")}<span>Search doctors, conditions, and locations</span></button>
       <div class="top-s"><span class="eyebrow" id="top-h">Top searches</span><div class="chips" role="group" aria-labelledby="top-h">${GS_TOP.slice(0,4).map(t=>`<button class="chip on-blue-chip" data-action="search-term" data-q="${t}">${ic("trending_up",16)}${t}</button>`).join("")}</div></div>
@@ -1163,19 +1163,30 @@ function markScroll(root,animate,baseDelay){
     else items.push([el,0]);
   });
   items.forEach(([el,d])=>{
-    el.classList.add("sd");const top=layoutTop(el)-y;
-    if(top<vh-24){/* already on screen */
-      if(animate&&canMove())el.animate([{opacity:0,transform:"translate3d(0,32px,0)"},{opacity:1,transform:"none"}],{duration:720,delay:baseDelay+Math.min(n++,7)*55+d*300,easing:EASE_IOS,fill:"backwards"});
-    }else sdList.push({el,d});
+    el.classList.add("sd");const top=layoutTop(el)-y,intro=top<vh-24;
+    if(intro&&animate&&canMove())el.animate([{opacity:0,transform:"translate3d(0,32px,0)"},{opacity:1,transform:"none"}],{duration:720,delay:baseDelay+Math.min(n++,7)*55+d*300,easing:EASE_IOS,fill:"backwards"});
+    /* Section-level heading that rises out of a mask as the section arrives (only for sections that arrive by scrolling) */
+    const hd=intro?null:el.querySelector(":scope>.sec-h,:scope>.mod-head .sec-h,:scope>h3,:scope>.lbl-h,:scope>.grp-h .lbl-h");
+    sdList.push({el,d,intro,hd});
   });
   applyScroll();
 }
 function applyScroll(){
   const vh=view.clientHeight,y=view.scrollTop,move=canMove();
+  const sticky=$(".res-head",view)||$(".fc-head",view),edge=sticky?sticky.offsetHeight:0;
   for(const it of sdList){
-    const el=it.el;if(!move){el.style.opacity="";el.style.transform="";continue}
-    const top=layoutTop(el)-y;let p=(vh-top-it.d*vh*.3)/(vh*.34);p=p<0?0:p>1?1:p;const e=1-Math.pow(1-p,3);
-    el.style.opacity=e.toFixed(3);el.style.transform=e>=1?"":`translate3d(0,${((1-e)*64).toFixed(1)}px,0) scale(${(.94+.06*e).toFixed(4)})`;
+    const el=it.el,hd=it.hd;
+    if(!move){el.style.opacity="";el.style.transform="";if(hd){hd.style.clipPath="";hd.style.transform=""}continue}
+    const top=layoutTop(el)-y,h=el.offsetHeight;
+    /* Enter: rise, grow, and fade in over the first third of the screen (reverses on the way back) */
+    let e=1;if(!it.intro){let p=(vh-top-it.d*vh*.3)/(vh*.34);p=p<0?0:p>1?1:p;e=1-Math.pow(1-p,3)}
+    /* Exit: once the section's top passes the top edge, it recedes behind the next section */
+    let x=(edge-top)/Math.max(96,Math.min(h,vh*.6));x=x<0?0:x>1?1:x;x=x*x*(3-2*x);
+    const sc=(.94+.06*e)*(1-.05*x),ty=(1-e)*64+x*24,op=e*(1-.7*x);
+    el.style.opacity=op>=.999?"":op.toFixed(3);
+    el.style.transform=e>=1&&x<=0?"":`translate3d(0,${ty.toFixed(1)}px,0) scale(${sc.toFixed(4)})`;
+    if(hd){let e2=(e-.25)/.75;e2=e2<0?0:e2>1?1:e2;const k=(1-e2)*100;
+      hd.style.clipPath=k>.5?`inset(0 0 ${k.toFixed(1)}% 0)`:"";hd.style.transform=k>.5?`translate3d(0,${k.toFixed(1)}%,0)`:""}
   }
 }
 

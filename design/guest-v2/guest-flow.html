@@ -264,7 +264,7 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
 .top{display:flex;flex-direction:column}
 .hero{background:var(--c-blue);color:var(--c-on-blue);padding:var(--sp-8) var(--sp-16) var(--sp-24);display:flex;flex-direction:column;gap:var(--sp-16);border-radius:0 0 var(--r-24) var(--r-24)}
 .hero h1{font-size:var(--fs-28);line-height:var(--lh-28);font-weight:700;letter-spacing:-.01em;text-wrap:balance}
-.hero .sub{color:var(--c-on-blue-2);font-size:var(--fs-16)}
+.hero .sub{color:var(--c-on-blue);font-size:var(--fs-16);line-height:var(--lh-16);font-weight:500;max-width:32em}
 .hero .top-s{display:flex;flex-direction:column;gap:var(--sp-8)}
 .hero .top-s .eyebrow{color:var(--c-on-blue-2)}
 .search-entry{display:flex;align-items:center;gap:var(--sp-12);min-height:56px;padding-inline:var(--sp-16);border-radius:var(--r-full);border:0;background:var(--c-surface);color:var(--c-text-2);cursor:pointer;text-align:left;box-shadow:0 2px 8px rgba(0,20,40,.2);transition:transform var(--dur-fast) var(--ease-std);width:100%}
@@ -573,9 +573,9 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
 /* Hero: a slow brand-light field behind the copy; copy and light drift at different rates as the page scrolls */
 .hero{position:relative;overflow:hidden;isolation:isolate}
 .hero>*{position:relative;z-index:1}
-.hero .aurora{position:absolute;inset:0;z-index:0;pointer-events:none;will-change:transform}
+.hero .aurora{position:absolute;inset:0;z-index:0;pointer-events:none;will-change:transform;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 112px);mask-image:linear-gradient(to bottom,transparent 0,#000 112px)}
 .hero .aurora i{position:absolute;inset:-40%;display:block;
-  background:radial-gradient(32% 36% at 78% 18%,rgba(0,169,224,.42),transparent 70%),radial-gradient(28% 30% at 18% 86%,rgba(123,175,212,.22),transparent 72%),radial-gradient(22% 24% at 52% 54%,rgba(0,169,224,.12),transparent 70%);
+  background:radial-gradient(30% 34% at 80% 54%,rgba(0,169,224,.36),transparent 70%),radial-gradient(28% 30% at 18% 84%,rgba(123,175,212,.2),transparent 72%),radial-gradient(22% 24% at 50% 62%,rgba(0,169,224,.1),transparent 70%);
   animation:aurora 22s ease-in-out infinite alternate}
 @keyframes aurora{from{transform:translate3d(-3%,2%,0) rotate(0deg)}to{transform:translate3d(4%,-3%,0) rotate(10deg)}}
 .hero-copy{will-change:transform,opacity}
@@ -765,6 +765,7 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
           <li><b>Screen transitions</b>: a pushed screen slides in from the right edge while the previous one moves a third of the way left and dims; back reverses it with the leaving screen on top. Tab switches cross-fade with a 1.5% settle.</li>
           <li><b>Search</b>: the home search field expands into the full search screen and collapses back into it on close.</li>
           <li><b>Scroll-linked motion</b>: sections below the fold rise 64 pt, grow from 94% scale, and fade in as they travel the first third of the screen, and reverse when you scroll back. Quick-access tiles cascade by column. On first view, on-screen sections settle in with a 55 ms stagger.</li>
+          <li><b>Between sections</b>: as a section scrolls off the top (or under a sticky header), it recedes: up to 5% smaller, 70% fainter, and 24 pt behind the scroll, so the next section appears to slide over it. Each incoming section’s heading rises out of a mask just after the section itself starts to arrive.</li>
           <li><b>Depth</b>: the hero copy moves at 35% of scroll speed and fades, the brand light behind it at 50%, so the hero recedes rather than scrolls; the campaign shapes drift against the card. The doctor profile’s avatar shrinks and the doctor’s name moves into the app bar once the hero leaves.</li>
           <li><b>Surfaces</b>: the app bar gains a shadow and the results header turns more opaque once content scrolls under them. MedBlog slides scale and dim away from the active slide.</li>
           <li><b>Shared element</b>: opening a doctor from a card, suggestion, or related doctor flies their avatar from the list into the profile header, growing from 56 to 72 pt and picking up the cyan ring; Back flies it home again.</li>
@@ -1192,7 +1193,7 @@ function visibleModules(){return S.layout.filter(m=>m.on&&!MODS[m.id].expired&&(
 function viewHome(){
   return `<div class="ptr" id="ptr" aria-hidden="true"></div><div class="v-inner"><div class="top">${renderAlerts()}
     <section class="hero on-blue" aria-labelledby="h-hero"><span class="aurora" aria-hidden="true"><i></i></span>
-      <div class="hero-copy"><h1 id="h-hero">Welcome to UTSW MyCare</h1>
+      <div class="hero-copy"><h1 class="sr-only" id="h-hero">UTSW MyCare home</h1>
       <p class="sub">Find doctors, locations, and health information from UT&nbsp;Southwestern Medical Center.</p></div>
       <button class="search-entry" id="hero-search" data-action="open-search" aria-haspopup="dialog" >${ic("search")}<span>Search doctors, conditions, and locations</span></button>
       <div class="top-s"><span class="eyebrow" id="top-h">Top searches</span><div class="chips" role="group" aria-labelledby="top-h">${GS_TOP.slice(0,4).map(t=>`<button class="chip on-blue-chip" data-action="search-term" data-q="${t}">${ic("trending_up",16)}${t}</button>`).join("")}</div></div>
@@ -1945,19 +1946,30 @@ function markScroll(root,animate,baseDelay){
     else items.push([el,0]);
   });
   items.forEach(([el,d])=>{
-    el.classList.add("sd");const top=layoutTop(el)-y;
-    if(top<vh-24){/* already on screen */
-      if(animate&&canMove())el.animate([{opacity:0,transform:"translate3d(0,32px,0)"},{opacity:1,transform:"none"}],{duration:720,delay:baseDelay+Math.min(n++,7)*55+d*300,easing:EASE_IOS,fill:"backwards"});
-    }else sdList.push({el,d});
+    el.classList.add("sd");const top=layoutTop(el)-y,intro=top<vh-24;
+    if(intro&&animate&&canMove())el.animate([{opacity:0,transform:"translate3d(0,32px,0)"},{opacity:1,transform:"none"}],{duration:720,delay:baseDelay+Math.min(n++,7)*55+d*300,easing:EASE_IOS,fill:"backwards"});
+    /* Section-level heading that rises out of a mask as the section arrives (only for sections that arrive by scrolling) */
+    const hd=intro?null:el.querySelector(":scope>.sec-h,:scope>.mod-head .sec-h,:scope>h3,:scope>.lbl-h,:scope>.grp-h .lbl-h");
+    sdList.push({el,d,intro,hd});
   });
   applyScroll();
 }
 function applyScroll(){
   const vh=view.clientHeight,y=view.scrollTop,move=canMove();
+  const sticky=$(".res-head",view)||$(".fc-head",view),edge=sticky?sticky.offsetHeight:0;
   for(const it of sdList){
-    const el=it.el;if(!move){el.style.opacity="";el.style.transform="";continue}
-    const top=layoutTop(el)-y;let p=(vh-top-it.d*vh*.3)/(vh*.34);p=p<0?0:p>1?1:p;const e=1-Math.pow(1-p,3);
-    el.style.opacity=e.toFixed(3);el.style.transform=e>=1?"":`translate3d(0,${((1-e)*64).toFixed(1)}px,0) scale(${(.94+.06*e).toFixed(4)})`;
+    const el=it.el,hd=it.hd;
+    if(!move){el.style.opacity="";el.style.transform="";if(hd){hd.style.clipPath="";hd.style.transform=""}continue}
+    const top=layoutTop(el)-y,h=el.offsetHeight;
+    /* Enter: rise, grow, and fade in over the first third of the screen (reverses on the way back) */
+    let e=1;if(!it.intro){let p=(vh-top-it.d*vh*.3)/(vh*.34);p=p<0?0:p>1?1:p;e=1-Math.pow(1-p,3)}
+    /* Exit: once the section's top passes the top edge, it recedes behind the next section */
+    let x=(edge-top)/Math.max(96,Math.min(h,vh*.6));x=x<0?0:x>1?1:x;x=x*x*(3-2*x);
+    const sc=(.94+.06*e)*(1-.05*x),ty=(1-e)*64+x*24,op=e*(1-.7*x);
+    el.style.opacity=op>=.999?"":op.toFixed(3);
+    el.style.transform=e>=1&&x<=0?"":`translate3d(0,${ty.toFixed(1)}px,0) scale(${sc.toFixed(4)})`;
+    if(hd){let e2=(e-.25)/.75;e2=e2<0?0:e2>1?1:e2;const k=(1-e2)*100;
+      hd.style.clipPath=k>.5?`inset(0 0 ${k.toFixed(1)}% 0)`:"";hd.style.transform=k>.5?`translate3d(0,${k.toFixed(1)}%,0)`:""}
   }
 }
 
