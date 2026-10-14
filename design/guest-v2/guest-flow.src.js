@@ -331,7 +331,7 @@ function focusTitle(){setTimeout(()=>{const h=$("#appbar .ttl")||$("#view h1");i
 
 /* ---------- App bar + tab bar ---------- */
 const TABS=[["home","Home","home"],["find","Find care","stethoscope"],["locations","Locations","location_on"],["saved","Saved","favorite"],["menu","Menu","menu"]];
-const TITLES={find:"Find a doctor",results:"Doctors",profile:"Doctor profile",saved:"Saved providers",locations:"Locations",menu:"Menu",medblog:"MedBlog",inbox:"Inbox"};
+const TITLES={find:"Find care",results:"Doctors",profile:"Doctor profile",saved:"Saved providers",locations:"Locations",menu:"Menu",medblog:"MedBlog",inbox:"Inbox"};
 function renderAppbar(){
   const t=top(),depth=S.stacks[S.tab].length;
   const back=depth>1?`<button class="icon-btn" data-action="back" aria-label="Back">${ico("arrow_back")}</button>`:"";
@@ -370,7 +370,7 @@ function renderAlerts(){
 }
 const M={};
 M.tiles=()=>`<div class="mod-head"><h2 class="sec-h" id="h-tiles">Quick access</h2></div>
-  <div class="tiles">${[["find","Find a doctor","stethoscope"],["locations","Locations","location_on"],["wayfinding","Indoor maps","map"],["urgent","Urgent care","medical_services"],["virtual","Virtual visits","video_camera_front"],["bill","Pay a bill","receipt_long",1]]
+  <div class="tiles">${[["find","Find care","stethoscope"],["locations","Locations","location_on"],["wayfinding","Indoor maps","map"],["urgent","Urgent care","medical_services"],["virtual","Virtual visits","video_camera_front"],["bill","Pay a bill","receipt_long",1]]
    .map(([k,l,g,out])=>`<button class="tile press" data-action="tile" data-k="${k}" data-l="${l}"${out?` aria-label="${l}, opens the billing website"`:""}>${well(g,48)}<span>${l}</span>${out?`<span class="out">${ic("open_in_new",20)}</span>`:""}</button>`).join("")}</div>`;
 M.finddoc=()=>`<div class="card fd">
    <div class="fd-top">${well("stethoscope",48)}<div class="stack" style="gap:var(--sp-4)"><h2 id="h-finddoc">Find a doctor near you</h2>
