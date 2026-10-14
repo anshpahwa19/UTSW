@@ -155,12 +155,6 @@ ul,ol{padding:0}
 .views{flex:1;position:relative;min-height:0;overflow:hidden}
 .view{position:absolute;inset:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;background:var(--c-bg)}
 .view::-webkit-scrollbar{display:none}
-.view.push{animation:pushIn var(--dur-slow) var(--ease-out) both}
-.view.pop{animation:popIn var(--dur-slow) var(--ease-out) both}
-.view.fade{animation:fadeIn var(--dur-base) var(--ease-std) both}
-@keyframes pushIn{from{opacity:0;transform:translateX(32px)}to{opacity:1;transform:none}}
-@keyframes popIn{from{opacity:0;transform:translateX(-32px)}to{opacity:1;transform:none}}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
 .v-inner{display:flex;flex-direction:column;gap:var(--sp-24);padding-bottom:var(--sp-48)}
 
 /* ---------- Shared components ---------- */
@@ -183,8 +177,8 @@ ul,ol{padding:0}
 .btn .spinner,.spinner{width:20px;height:20px;border-radius:50%;border:2px solid currentColor;border-right-color:transparent;animation:spin 700ms linear infinite;flex:none}
 @keyframes spin{to{transform:rotate(360deg)}}
 .card{background:var(--c-surface);border-radius:var(--r-16);box-shadow:0 1px 2px rgba(0,30,60,.06),0 0 0 1px var(--c-border)}
-.press{transition:transform 360ms var(--ease-spring),background var(--dur-fast) var(--ease-std)}
-.press:active{transform:scale(.95);transition-duration:var(--dur-fast)}
+.press{transition:transform 320ms cubic-bezier(0.32,0.72,0,1),background var(--dur-fast) var(--ease-std)}
+.press:active{transform:scale(.97);transition-duration:120ms}
 .eyebrow{font-size:var(--fs-12);line-height:var(--lh-12);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--c-text-2)}
 .sec-h{font-size:var(--fs-18);line-height:var(--lh-18);font-weight:700;color:var(--c-blue);text-wrap:balance}
 .lbl-h{font-size:var(--fs-14);line-height:var(--lh-14);font-weight:700;color:var(--c-text-2);letter-spacing:.06em;text-transform:uppercase}
@@ -245,7 +239,7 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
 .skel{background:var(--c-skel);border-radius:var(--r-8);position:relative;overflow:hidden}
 .skel::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.7),transparent);transform:translateX(-100%);animation:shimmer 1s var(--ease-std) infinite}
 @keyframes shimmer{to{transform:translateX(100%)}}
-@keyframes pop{0%{transform:scale(.6)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
+@keyframes pop{from{transform:scale(.82)}to{transform:scale(1)}}
 .popping .ic{animation:pop var(--dur-slow) var(--ease-out)}
 
 .field{flex:1;display:flex;align-items:center;gap:var(--sp-8);background:var(--c-surface);border-radius:var(--r-full);padding-inline:var(--sp-16) var(--sp-4);min-height:48px;color:var(--c-text);min-width:0}
@@ -455,11 +449,9 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
 .tab-ic .f{opacity:0}
 .tab[aria-current="page"]{color:var(--c-blue)}
 .tab[aria-current="page"] .pill{background:transparent}
-.tab[aria-current="page"] .tab-ic{animation:hop 420ms var(--ease-spring)}
-@keyframes hop{0%{transform:translateY(0) scale(1)}40%{transform:translateY(-4px) scale(1.12)}100%{transform:none}}
 .tab{z-index:1}
 .tab-ind{position:absolute;left:0;top:0;width:56px;height:32px;border-radius:var(--r-full);background:var(--c-tint);z-index:0;pointer-events:none;opacity:0}
-.tab-ind.ready{opacity:1;transition:transform 480ms var(--ease-soft),width 300ms var(--ease-out)}
+.tab-ind.ready{opacity:1;transition:transform 460ms cubic-bezier(0.32,0.72,0,1)}
 .tab[aria-current="page"] .tab-ic .o{opacity:0}
 .tab[aria-current="page"] .tab-ic .f{opacity:1}
 @keyframes pill{from{transform:scaleX(.6)}to{transform:none}}
@@ -468,7 +460,7 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
 .homebar{position:absolute;bottom:var(--sp-8);left:50%;width:136px;height:4px;margin-left:-68px;border-radius:var(--r-full);background:var(--c-text);opacity:.85;z-index:12;pointer-events:none}
 
 /* Toast */
-.toast{position:absolute;left:var(--sp-16);right:var(--sp-16);bottom:calc(var(--tabbar-h) + var(--sp-16));background:var(--c-text);color:#FFFFFF;border-radius:var(--r-12);padding:var(--sp-8) var(--sp-8) var(--sp-8) var(--sp-16);min-height:48px;font-size:var(--fs-14);line-height:var(--lh-14);display:flex;gap:var(--sp-8);align-items:center;z-index:11;transform:translateY(24px) scale(.94);opacity:0;transition:opacity var(--dur-base) var(--ease-std),transform 420ms var(--ease-spring);pointer-events:none}
+.toast{position:absolute;left:var(--sp-16);right:var(--sp-16);bottom:calc(var(--tabbar-h) + var(--sp-16));background:var(--c-text);color:#FFFFFF;border-radius:var(--r-12);padding:var(--sp-8) var(--sp-8) var(--sp-8) var(--sp-16);min-height:48px;font-size:var(--fs-14);line-height:var(--lh-14);display:flex;gap:var(--sp-8);align-items:center;z-index:11;transform:translateY(16px);opacity:0;transition:opacity 240ms var(--ease-std),transform 420ms cubic-bezier(0.32,0.72,0,1);pointer-events:none}
 .toast .tm{flex:1;min-width:0}
 .toast.show{opacity:1;transform:none}
 .toast.show.has-act{pointer-events:auto}
@@ -478,8 +470,8 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
 
 /* Sheet */
 .layer{position:absolute;inset:0;z-index:10}
-.scrim{position:absolute;inset:0;background:var(--c-scrim);opacity:0;transition:opacity var(--dur-slow) var(--ease-std)}
-.sheet{position:absolute;left:0;right:0;bottom:0;max-height:92%;background:var(--c-surface);border-radius:var(--r-24) var(--r-24) 0 0;display:flex;flex-direction:column;transform:translateY(100%);transition:transform var(--dur-slow) var(--ease-out);box-shadow:0 -8px 24px rgba(0,20,40,.2)}
+.scrim{position:absolute;inset:0;background:var(--c-scrim);opacity:0;transition:opacity 400ms var(--ease-std)}
+.sheet{position:absolute;left:0;right:0;bottom:0;max-height:92%;background:var(--c-surface);border-radius:var(--r-24) var(--r-24) 0 0;display:flex;flex-direction:column;transform:translateY(100%);transition:transform 500ms cubic-bezier(0.32,0.72,0,1);box-shadow:0 -8px 24px rgba(0,20,40,.2)}
 .sheet.tall{height:92%}
 .layer.open .scrim{opacity:1}
 .layer.open .sheet{transform:none}
@@ -546,75 +538,57 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
 .sys-tag{position:absolute;top:var(--sp-8);left:50%;transform:translateX(-50%);font-size:var(--fs-12);line-height:var(--lh-12);font-weight:600;color:#FFFFFF;background:rgba(0,0,0,.6);border-radius:var(--r-full);padding:var(--sp-4) var(--sp-8);white-space:nowrap}
 
 /* Global search overlay */
-.search-layer{position:absolute;inset:var(--status-h) 0 0 0;z-index:8;background:var(--c-bg);display:flex;flex-direction:column;opacity:0;transform:translateY(24px);transition:opacity var(--dur-base) var(--ease-std),transform var(--dur-slow) var(--ease-out)}
-.search-layer.open{opacity:1;transform:none}
+.search-layer{position:absolute;inset:var(--status-h) 0 0 0;z-index:8;background:var(--c-bg);display:flex;flex-direction:column}
 .search-top{background:var(--c-blue);padding:var(--sp-8) var(--sp-16) var(--sp-16) var(--sp-8);display:flex;gap:var(--sp-8);align-items:center;color:var(--c-on-blue)}
 .search-top .field:focus-within{box-shadow:0 0 0 3px var(--c-cyan)}
 .search-body{flex:1;overflow-y:auto;padding:var(--sp-16);display:flex;flex-direction:column;gap:var(--sp-24)}
 .res-group{display:flex;flex-direction:column;gap:var(--sp-8)}
 
-/* ---------- Motion layer ---------- */
-/* Glass reveal: sections fade in from frosted (blur + lift) as they scroll into view, then a light glint sweeps across. */
-@media (prefers-reduced-motion: no-preference){
-  .screen:not(.rm) .reveal{opacity:0;transform:translateY(24px) scale(.97);filter:blur(12px);
-    transition:opacity var(--dur-reveal) var(--ease-out),transform 640ms var(--ease-soft),filter var(--dur-reveal) var(--ease-out);transition-delay:calc(var(--rd,0) * 70ms)}
-  .screen:not(.rm) .reveal.in{opacity:1;transform:none;filter:blur(0)}
-  .screen:not(.rm) .glint.in::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:2;
-    background:linear-gradient(105deg,transparent 38%,rgba(255,255,255,.7) 50%,transparent 62%);background-size:260% 100%;background-repeat:no-repeat;
-    animation:glint 1100ms var(--ease-std) both;animation-delay:calc(var(--rd,0) * 70ms + 180ms)}
-}
-.glint{position:relative}
-@keyframes glint{from{background-position:130% 0}to{background-position:-30% 0}}
+/* ---------- Motion layer ----------
+   One curve for anything that travels (iOS-style deceleration, no overshoot); scroll-linked effects are computed from scroll position each frame. */
+.screen{--ease-ios:cubic-bezier(0.32,0.72,0,1)}
+.ghost-wrap{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:1;will-change:transform}
+.ghost-wrap>.view{position:absolute;inset:0;overflow:hidden}
+.ghost-dim{position:absolute;inset:0;background:rgba(0,20,40,.16);opacity:0}
+.ghost-wrap.top{z-index:3;box-shadow:-16px 0 32px rgba(0,20,40,.14)}
+.view.lift{box-shadow:-16px 0 32px rgba(0,20,40,.14);z-index:2}
+.appbar{transition:box-shadow 300ms var(--ease-std)}
+.appbar.scrolled{box-shadow:0 8px 24px rgba(0,30,60,.2)}
+.appbar .ttl{position:relative;display:block}
+.appbar .ttl .t2{position:absolute;left:0;right:0;top:0;opacity:0;transform:translate3d(0,16px,0);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.appbar .ttl .t1,.appbar .ttl .t2{transition:opacity 260ms var(--ease-std),transform 360ms var(--ease-ios)}
+.appbar.swap .ttl .t1{opacity:0;transform:translate3d(0,-16px,0)}
+.appbar.swap .ttl .t2{opacity:1;transform:none}
+.res-head{transition:box-shadow 300ms var(--ease-std),background 300ms var(--ease-std)}
+.res-head.raised{background:rgba(255,255,255,.86);box-shadow:0 1px 0 var(--c-border),0 8px 24px rgba(0,30,60,.08)}
 
-.appbar{transition:box-shadow var(--dur-base) var(--ease-std)}
-.appbar.scrolled{box-shadow:0 8px 24px rgba(0,30,60,.24)}
-
-/* Hero: brand shapes with scroll parallax and a slow float; greeting words rise once */
+/* Hero: a slow brand-light field behind the copy; copy and light drift at different rates as the page scrolls */
 .hero{position:relative;overflow:hidden;isolation:isolate}
 .hero>*{position:relative;z-index:1}
-.hero .orb{position:absolute;z-index:0;border-radius:50%;pointer-events:none;will-change:transform}
-.hero .orb.o1{width:208px;height:208px;right:-72px;top:-64px;background:var(--c-cyan);opacity:.32;transform:translateY(calc(var(--sy,0) * .35px))}
-.hero .orb.o2{width:72px;height:72px;right:72px;top:96px;border:12px solid var(--c-on-blue);opacity:.14;transform:translateY(calc(var(--sy,0) * .6px))}
-.hero .orb.o3{width:16px;height:16px;right:40px;top:136px;background:var(--c-on-blue);opacity:.5;transform:translateY(calc(var(--sy,0) * .9px))}
-.hero .orb{animation:float 7s ease-in-out infinite}
-.hero .orb.o2{animation-duration:9s;animation-delay:-3s}
-.hero .orb.o3{animation-duration:5s;animation-delay:-1s}
-@keyframes float{0%,100%{translate:0 0}50%{translate:0 -8px}}
-.hero h1 .w{display:inline-block}
-.hero h1.anim .w{animation:wordUp 640ms var(--ease-soft) both;animation-delay:calc(var(--w) * 80ms + 120ms)}
-@keyframes wordUp{from{opacity:0;transform:translateY(16px) rotate(2deg);filter:blur(6px)}to{opacity:1;transform:none;filter:blur(0)}}
-.search-entry>span:not(.ripple){flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.tw-wrap{display:flex!important;align-items:center}
-#tw{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.tw-caret{width:2px;height:20px;background:var(--c-blue);margin-left:2px;border-radius:2px;animation:blink 1s steps(1) infinite;flex:none}
-@keyframes blink{50%{opacity:0}}
-.campaign .shape1{animation:bob 8s ease-in-out infinite}
-.campaign .shape2{animation:bob 5s ease-in-out infinite reverse}
-@keyframes bob{0%,100%{translate:0 0}50%{translate:-8px 8px}}
+.hero .aurora{position:absolute;inset:0;z-index:0;pointer-events:none;will-change:transform}
+.hero .aurora i{position:absolute;inset:-40%;display:block;
+  background:radial-gradient(32% 36% at 78% 18%,rgba(0,169,224,.42),transparent 70%),radial-gradient(28% 30% at 18% 86%,rgba(123,175,212,.22),transparent 72%),radial-gradient(22% 24% at 52% 54%,rgba(0,169,224,.12),transparent 70%);
+  animation:aurora 22s ease-in-out infinite alternate}
+@keyframes aurora{from{transform:translate3d(-3%,2%,0) rotate(0deg)}to{transform:translate3d(4%,-3%,0) rotate(10deg)}}
+.hero-copy{will-change:transform,opacity}
+.search-entry>span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.campaign .shape1,.campaign .shape2{will-change:transform}
 
-/* Touch ripple, burst, shake, float */
-.btn,.tile,.row,.chip:not(.static),.tchip,.tool,.pc-main,.mini,.slide-btn,.search-entry,.q-btn,.fchip,.loc-btn,.blog-lead{position:relative;overflow:hidden}
-.ripple{position:absolute;border-radius:50%;background:currentColor;opacity:.22;transform:scale(0);pointer-events:none;animation:ripple 600ms var(--ease-out) forwards}
-@keyframes ripple{to{transform:scale(1);opacity:0}}
-.spark{position:absolute;width:8px;height:8px;border-radius:50%;pointer-events:none;z-index:30}
-.field.invalid{animation:shake 420ms var(--ease-std)}
-@keyframes shake{0%,100%{transform:none}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
-.state .well{animation:float 3.6s ease-in-out infinite}
-.bump{animation:pop 360ms var(--ease-spring)}
-.slide{transition:transform 240ms var(--ease-out),opacity 240ms var(--ease-out)}
-.tchip[aria-pressed="true"] .ck .ic{animation:pop 320ms var(--ease-spring)}
-.av-72{animation:ringIn 900ms var(--ease-soft) both}
-@keyframes ringIn{from{box-shadow:0 0 0 0 var(--c-cyan);transform:scale(.8)}60%{box-shadow:0 0 0 8px var(--c-cyan)}to{box-shadow:0 0 0 4px var(--c-cyan);transform:none}}
+/* Scroll-linked items: JS writes opacity and transform from scroll position */
+.sd{will-change:transform,opacity}
+.slide{will-change:transform}
+.field.invalid{animation:shake 360ms var(--ease-std)}
+@keyframes shake{0%,100%{transform:none}25%{transform:translateX(-6px)}50%{transform:translateX(6px)}75%{transform:translateX(-3px)}}
+.bump{animation:pop 320ms var(--ease-ios)}
 
 /* Reduced motion: OS setting or prototype toggle */
 .screen.rm *,.screen.rm *::before,.screen.rm *::after{animation-duration:1ms!important;animation-delay:0ms!important;animation-iteration-count:1!important;transition-duration:1ms!important;scroll-behavior:auto!important}
-.screen.rm .skel::after,.screen.rm .ripple,.screen.rm .spark{display:none}
-.screen.rm .hero .orb{transform:none}
-.screen.rm .tw-caret{display:none}
+.screen.rm .skel::after{display:none}
+.screen.rm .hero .aurora i{animation:none}
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:1ms!important;animation-delay:0ms!important;animation-iteration-count:1!important;transition-duration:1ms!important;scroll-behavior:auto!important}
-  .skel::after,.ripple,.spark,.tw-caret{display:none}
-  .hero .orb{transform:none}
+  .skel::after{display:none}
+  .hero .aurora i{animation:none}
 }
 .screen.rm .spinner,.screen.rm .btn .spinner{animation:none;border-right-color:currentColor;opacity:.6}
 
@@ -685,7 +659,7 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
           <div class="sys-layer" id="sys" hidden></div>
         </div>
       </div>
-      <p class="stage-note">Tap or click anything. Scroll to see sections fade in. The location prompt and share sheet are simulated system UI. Saved providers are stored in this browser only.</p>
+      <p class="stage-note">Tap or click anything. Scroll slowly to see the scroll-linked motion. The location prompt and share sheet are simulated system UI. Saved providers are stored in this browser only.</p>
     </div>
 
     <div class="side">
@@ -740,10 +714,13 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
           <li><b>Share</b>: opens the native share sheet with a public profile link and the provider’s name and specialty. No personal or health information is shared.</li>
           <li><b>Profile fields</b>: name, credentials, specialty, and at least one location are required. Bio, languages, education, research, and media show only when the directory has them; a missing section is left out rather than shown empty.</li>
           <li><b>Motion</b>: screen push 300 ms (slide 32 pt + fade), sheet 300 ms, chips and toggles 150–200 ms. Reduced motion turns all of it into instant changes.</li>
-          <li><b>Glass reveal</b>: sections, cards, and rows start frosted (blur 12, 24 pt lower, 97% scale, transparent) and clear as they scroll into view: 480 ms fade, 640 ms soft spring, 70 ms stagger within a batch, then a one-time light glint across cards.</li>
-          <li><b>Glass surfaces</b>: sticky headers on Find care, results, and MedBlog are frosted (white 74% or Blue 86%, blur 16) so content shows through as it scrolls.</li>
-          <li><b>Playful details</b>: hero brand shapes drift with scroll (parallax) and float; the greeting rises word by word on first open; the search field types example queries; the tab highlight slides between tabs with a spring and the icon hops; touches leave a ripple; saving a doctor bursts small brand-colored sparks; the results count ticks up; invalid ZIP entries shake; MedBlog slides scale toward the center.</li>
-          <li><b>Springs</b>: press release and toasts use <code>cubic-bezier(0.34, 1.56, 0.64, 1)</code>; reveals and the tab highlight use a softer <code>cubic-bezier(0.22, 1.2, 0.36, 1)</code>. No motion flashes, loops near text, or blocks input; looping floats are decorative shapes only and stop with reduced motion.</li>
+          <li><b>One curve</b>: everything that travels uses <code>cubic-bezier(0.32, 0.72, 0, 1)</code>, a fast start with a long, quiet settle and no overshoot. Screens 480 ms, sheets 500 ms, search 520 ms, tab highlight 460 ms, toasts 420 ms, presses 120 ms down and 320 ms back.</li>
+          <li><b>Screen transitions</b>: a pushed screen slides in from the right edge while the previous one moves a third of the way left and dims; back reverses it with the leaving screen on top. Tab switches cross-fade with a 1.5% settle.</li>
+          <li><b>Search</b>: the home search field expands into the full search screen and collapses back into it on close.</li>
+          <li><b>Scroll-linked motion</b>: sections below the fold rise 64 pt, grow from 94% scale, and fade in as they travel the first third of the screen, and reverse when you scroll back. Quick-access tiles cascade by column. On first view, on-screen sections settle in with a 55 ms stagger.</li>
+          <li><b>Depth</b>: the hero copy moves at 35% of scroll speed and fades, the brand light behind it at 50%, so the hero recedes rather than scrolls; the campaign shapes drift against the card. The doctor profile’s avatar shrinks and the doctor’s name moves into the app bar once the hero leaves.</li>
+          <li><b>Surfaces</b>: the app bar gains a shadow and the results header turns more opaque once content scrolls under them. MedBlog slides scale and dim away from the active slide.</li>
+          <li>Ambient motion is limited to the slow light behind the hero (22 s). No bounces, confetti, or blinking. Reduced motion turns all of it off and shows every section in place.</li>
         </ul>
       </section>
     </div>

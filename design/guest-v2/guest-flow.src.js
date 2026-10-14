@@ -319,12 +319,12 @@ function announceResults(){
 }
 
 /* ---------- Navigation ---------- */
-function push(entry){const st=S.stacks[S.tab];st[st.length-1].scroll=view.scrollTop;st.push(entry);render("push");view.scrollTop=0;focusTitle()}
-function pop(){const st=S.stacks[S.tab];if(st.length<2)return;st.pop();render("pop");view.scrollTop=st[st.length-1].scroll||0;focusTitle()}
+function push(entry){const st=S.stacks[S.tab];st[st.length-1].scroll=view.scrollTop;st.push(entry);render("push",{scroll:0});focusTitle()}
+function pop(){const st=S.stacks[S.tab];if(st.length<2)return;st.pop();render("pop",{scroll:st[st.length-1].scroll||0});focusTitle()}
 function switchTab(t,reset){
-  if(t===S.tab&&!reset){if(S.stacks[t].length>1){S.stacks[t].splice(1);render("pop");view.scrollTop=0}return}
+  if(t===S.tab&&!reset){if(S.stacks[t].length>1){S.stacks[t].splice(1);render("pop",{scroll:0})}return}
   const st=S.stacks[S.tab];st[st.length-1].scroll=view.scrollTop;
-  S.tab=t;if(reset)S.stacks[t].splice(1);markTab();render("fade");view.scrollTop=top().scroll||0;
+  S.tab=t;if(reset)S.stacks[t].splice(1);markTab();render("fade",{scroll:top().scroll||0});
   sayPolite(TABS.find(x=>x[0]===t)[1]);
 }
 function focusTitle(){setTimeout(()=>{const h=$("#appbar .ttl")||$("#view h1");if(h){h.setAttribute("tabindex","-1");h.focus({preventScroll:true})}},rm()?0:50)}
@@ -337,7 +337,7 @@ function renderAppbar(){
   const back=depth>1?`<button class="icon-btn" data-action="back" aria-label="Back">${ico("arrow_back")}</button>`:"";
   if(t.v==="home"){$("#appbar").innerHTML=`<span class="logo" role="img" aria-label="UTSW MyCare"><!--LOGO_REVERSED--></span><span class="spacer"></span>
     <button class="icon-btn" data-action="mychart" aria-label="Sign in to MyChart">${ico("account_circle")}</button>`;return}
-  $("#appbar").innerHTML=`${back}<h1 class="ttl${back?" with-back":""}">${TITLES[t.v]}</h1>`;
+  $("#appbar").innerHTML=`${back}<h1 class="ttl${back?" with-back":""}"><span class="t1">${TITLES[t.v]}</span>${t.v==="profile"?`<span class="t2" aria-hidden="true">${esc(name(PBY[t.id]))}</span>`:""}</h1>`;
 }
 function renderTabbar(){
   $("#tabbar").innerHTML=TABS.map(([k,l,g])=>`<button class="tab" data-action="tab" data-tab="${k}"${k==="saved"&&S.saved.length?` aria-label="${l}, ${S.saved.length} provider${S.saved.length>1?"s":""}"`:""}><span class="pill">${ict(g)}${k==="saved"&&S.saved.length?`<span class="cnt" aria-hidden="true">${S.saved.length}</span>`:""}</span><span>${l}</span></button>`).join("")+`<span class="tab-ind" id="tab-ind" aria-hidden="true"></span>`;
@@ -409,10 +409,10 @@ M.summer=()=>"";
 function visibleModules(){return S.layout.filter(m=>m.on&&!MODS[m.id].expired&&(m.id!=="saved"||S.saved.length))}
 function viewHome(){
   return `<div class="ptr" id="ptr" aria-hidden="true"></div><div class="v-inner"><div class="top">${renderAlerts()}
-    <section class="hero on-blue" aria-labelledby="h-hero"><span class="orb o1" aria-hidden="true"></span><span class="orb o2" aria-hidden="true"></span><span class="orb o3" aria-hidden="true"></span>
-      <div><h1 id="h-hero"${S.heroDone?"":` class="anim"`}>${"Welcome to UTSW MyCare".split(" ").map((w,i)=>`<span class="w" style="--w:${i}">${w}</span>`).join(" ")}</h1>
+    <section class="hero on-blue" aria-labelledby="h-hero"><span class="aurora" aria-hidden="true"><i></i></span>
+      <div class="hero-copy"><h1 id="h-hero">Welcome to UTSW MyCare</h1>
       <p class="sub">Find doctors, locations, and health information from UT&nbsp;Southwestern Medical Center.</p></div>
-      <button class="search-entry" id="hero-search" data-action="open-search" aria-haspopup="dialog" aria-label="Search doctors, conditions, and locations">${ic("search")}<span class="tw-wrap" aria-hidden="true"><span id="tw">Search doctors, conditions, and locations</span><span class="tw-caret" hidden></span></span></button>
+      <button class="search-entry" id="hero-search" data-action="open-search" aria-haspopup="dialog" >${ic("search")}<span>Search doctors, conditions, and locations</span></button>
       <div class="top-s"><span class="eyebrow" id="top-h">Top searches</span><div class="chips" role="group" aria-labelledby="top-h">${GS_TOP.slice(0,4).map(t=>`<button class="chip on-blue-chip" data-action="search-term" data-q="${t}">${ic("trending_up",16)}${t}</button>`).join("")}</div></div>
     </section></div>
     ${visibleModules().map((m,i)=>`<section class="mod rise" style="--i:${i+1}" aria-labelledby="h-${m.id}">${M[m.id]()}</section>`).join("")}</div>`;
@@ -505,7 +505,7 @@ function pcard(p,i,opts={}){
 }
 function favBtn(p){const on=isSaved(p.id);
   return `<button class="icon-btn fav" data-action="fav" data-id="${p.id}" aria-pressed="${on}" aria-label="${on?`Remove ${esc(name(p))} from saved`:`Save ${esc(name(p))}`}">${on?icf("favorite"):ic("favorite")}</button>`}
-function renderResultsBody(){renderResultsBody0();const b=$("#res-body");if(b&&!S.loading){markReveals(b,true);tick(b)}}
+function renderResultsBody(){renderResultsBody0();const b=$("#res-body");if(b&&!S.loading){markScroll(b,true,0);tick(b)}}
 function renderResultsBody0(){
   const b=$("#res-body");if(!b)return;
   if(S.loading){b.setAttribute("aria-busy","true");b.innerHTML=`<div class="res-sum"><div class="skel" style="height:20px;width:50%"></div></div>${skeletonCards()}<span class="sr-only">Loading doctors</span>`;return}
@@ -637,16 +637,19 @@ function viewMedblog(){
 /* ---------- Render ---------- */
 function render(anim,opts={}){
   const t=top();
-  renderAppbar();
-  view.setAttribute("aria-label",t.v==="home"?"Home":TITLES[t.v]);
-  view.innerHTML=t.v==="home"?viewHome():t.v==="find"?viewFind():t.v==="results"?viewResults():t.v==="profile"?viewProfile(t.id):t.v==="saved"?viewSaved():t.v==="locations"?viewLocations():t.v==="medblog"?viewMedblog():t.v==="inbox"?viewInbox():viewMenu();
-  if(t.v==="results")renderResultsBody();
-  if(t.v==="home"){initCarousel();ptrInit();startTypewriter()}else stopTypewriter();
-  if(anim){view.classList.remove("push","pop","fade");void view.offsetWidth;view.classList.add(anim)}
-  markReveals(view,!opts.instant);onScroll();
-  if(t.v==="home"&&!S.heroDone)setTimeout(()=>{S.heroDone=true},1400);
+  screenTransition(anim,()=>{
+    renderAppbar();
+    view.setAttribute("aria-label",t.v==="home"?"Home":TITLES[t.v]);
+    view.innerHTML=t.v==="home"?viewHome():t.v==="find"?viewFind():t.v==="results"?viewResults():t.v==="profile"?viewProfile(t.id):t.v==="saved"?viewSaved():t.v==="locations"?viewLocations():t.v==="medblog"?viewMedblog():t.v==="inbox"?viewInbox():viewMenu();
+    if(t.v==="results")renderResultsBody();
+    if(t.v==="home"){initCarousel();ptrInit()}
+    if(opts.scroll!=null)view.scrollTop=opts.scroll;
+  });
+  animateAppbar(anim);
+  markScroll(view,!opts.instant,anim?(anim==="fade"?120:200):0);onScroll();
+  if(t.v==="home"&&!S.heroDone){S.heroDone=true;heroIntro()}
 }
-function rerenderKeep(animate){const y=view.scrollTop;render(null,{instant:!animate});view.scrollTop=y;onScroll()}
+function rerenderKeep(animate){const y=view.scrollTop;render(null,{instant:!animate,scroll:y});onScroll()}
 
 /* ---------- Carousel ---------- */
 let carTimer=null;
@@ -860,22 +863,36 @@ function toggleFav(id,src){
       if(b.dataset.style==="hero"){b.setAttribute("aria-pressed",String(on));b.innerHTML=(on?icf("favorite",20):ic("favorite",20))+`<span>${on?"Saved":"Save"}</span>`}
       else b.outerHTML=favBtn(p);
     });
-    $$(`[data-action="fav"][data-id="${id}"]`).forEach(b=>{if(on){b.classList.add("popping");setTimeout(()=>b.classList.remove("popping"),320);burst(b)}});
+    $$(`[data-action="fav"][data-id="${id}"]`).forEach(b=>{if(on){b.classList.add("popping");setTimeout(()=>b.classList.remove("popping"),320)}});
     if(src)$(`[data-action="fav"][data-id="${id}"]${src==="hero"?'[data-style="hero"]':':not([data-style])'}`)?.focus();
   }
   toast(on?`${drName(p)} saved on this device`:`${drName(p)} removed from saved`,"done",{label:"Undo",fn:()=>toggleFav(id)});
 }
 
 /* ---------- Global search overlay (kept from the home prototype) ---------- */
+/* The search screen grows out of the field that opened it, and shrinks back into it */
+let searchSrc=null;
+function srcInset(src,layer){const r=src.getBoundingClientRect(),L=layer.getBoundingClientRect();
+  return `inset(${Math.max(0,r.top-L.top)}px ${Math.max(0,L.right-r.right)}px ${Math.max(0,L.bottom-r.bottom)}px ${Math.max(0,r.left-L.left)}px round ${r.height/2}px)`}
 function openSearch(q){
   lastFocus=document.activeElement;const s=$("#search");s.hidden=false;setInert(true);
   $("#q").value=q||"";renderSearch(q||"");
-  requestAnimationFrame(()=>requestAnimationFrame(()=>s.classList.add("open")));
-  setTimeout(()=>$("#q").focus(),rm()?0:60);
+  const src=lastFocus&&lastFocus.closest&&lastFocus.closest(".search-entry");searchSrc=src&&src.getBoundingClientRect().height?src:null;
+  if(canMove()){
+    if(searchSrc)s.animate([{clipPath:srcInset(searchSrc,s)},{clipPath:"inset(0px 0px 0px 0px round 0px)"}],{duration:520,easing:EASE_IOS});
+    else s.animate([{opacity:0,transform:"translate3d(0,24px,0)"},{opacity:1,transform:"none"}],{duration:420,easing:EASE_IOS});
+    $("#search-body").animate([{opacity:0,transform:"translate3d(0,24px,0)"},{opacity:1,transform:"none"}],{duration:480,delay:120,easing:EASE_IOS,fill:"backwards"});
+  }
+  setTimeout(()=>$("#q").focus(),rm()?0:80);
 }
 function closeSearch(cb){
-  const s=$("#search");if(s.hidden){cb&&cb();return}s.classList.remove("open");
-  setTimeout(()=>{s.hidden=true;$("#q").value="";$("#q-clear").hidden=true;setInert(false);if(!cb&&lastFocus&&document.contains(lastFocus))lastFocus.focus();cb&&cb()},rm()?0:300);
+  const s=$("#search");if(s.hidden){cb&&cb();return}
+  const done=()=>{s.hidden=true;$("#q").value="";$("#q-clear").hidden=true;setInert(false);if(!cb&&lastFocus&&document.contains(lastFocus))lastFocus.focus();cb&&cb()};
+  if(!canMove())return done();
+  const back=!cb&&searchSrc&&document.contains(searchSrc)&&searchSrc.getBoundingClientRect().height;
+  const a=back?s.animate([{clipPath:"inset(0px 0px 0px 0px round 0px)"},{clipPath:srcInset(searchSrc,s)}],{duration:420,easing:EASE_IOS})
+             :s.animate([{opacity:1},{opacity:0}],{duration:220,easing:"ease-out"});
+  a.onfinish=done;
 }
 function renderSearch(q){
   const b=$("#search-body");q=q.trim();$("#q-clear").hidden=!q;
@@ -942,7 +959,7 @@ screen.addEventListener("click",e=>{
    case "fc-clear":S.fcText="";$("#fq").value="";$("#fq-clear").hidden=true;$("#fc-sug").innerHTML=idleHTML();$("#fq").focus();break;
    case "clear-recent":S.recent=[];store.set("recent",[]);$("#fc-sug").innerHTML=idleHTML();$("#pop-h")?.setAttribute("tabindex","-1");$("#pop-h")?.focus();sayPolite("Recent searches cleared");break;
    case "rm-recent":{S.recent=S.recent.filter(x=>x!==el.dataset.q);store.set("recent",S.recent);$("#fc-sug").innerHTML=idleHTML();(S.recent.length?$('[data-action="rm-recent"]'):$("#pop-h"))?.focus();sayPolite("Removed");break}
-   case "edit-query":{S.fcText=S.q;const st=S.stacks.find;st.splice(1);render("pop");setTimeout(()=>{const f=$("#fq");if(f){f.focus();f.setSelectionRange(f.value.length,f.value.length)}},rm()?0:60);break}
+   case "edit-query":{S.fcText=S.q;const st=S.stacks.find;st.splice(1);render("pop",{scroll:0});setTimeout(()=>{const f=$("#fq");if(f){f.focus();f.setSelectionRange(f.value.length,f.value.length)}},rm()?0:60);break}
    case "loc-sheet":openLoc();break;
    case "use-gps":useMyLocation();break;
    case "pick-city":{const c=CITIES.find(x=>x[0]===el.dataset.c);setLoc({kind:"place",label:c[0]+", TX",x:c[1],y:c[2]});break}
@@ -991,7 +1008,7 @@ function syncControls(){
   screen.style.setProperty("--fw",S.fw+"px");screen.classList.toggle("large",S.ts===2);screen.classList.toggle("rm",S.rm);
   screen.classList.toggle("offline",S.data==="offline");setTimeout(placeInd,320);$("#sb-off").innerHTML=S.data==="offline"?"No connection":"";
 }
-function setMotion(reduced){S.rm=reduced;S.playing=!rm();syncControls();updatePause();rerenderKeep()}
+function setMotion(reduced){S.rm=reduced;S.playing=!rm();syncControls();updatePause();rerenderKeep();carouselScale($("#car-scroll"))}
 $$(".seg").forEach(g=>g.addEventListener("click",e=>{
   const b=e.target.closest("button");if(!b)return;const k=g.dataset.ctl,v=b.dataset.v;
   if(k==="alerts"){S.alerts=+v;S.dismissed.clear();if(top().v==="home")rerenderKeep();const l=activeAlerts();if(l.length)sayAssert(`${l[0].label} alert: ${l[0].title}`)}
@@ -1024,7 +1041,7 @@ function reset(){
   if(!$("#sys").hidden){$("#sys").hidden=true;$("#sys").innerHTML="";$("#layer").removeAttribute("inert")}
   const L=$("#layer");L.hidden=true;L.classList.remove("open");sheetKind=null;const s=$("#search");s.hidden=true;s.classList.remove("open");setInert(false);
   S.stacks={home:[{v:"home"}],find:[{v:"find"}],locations:[{v:"locations"}],saved:[{v:"saved"}],menu:[{v:"menu"}]};
-  S.filters=blankFilters();S.sort="relevance";S.fcText="";clearTimeout(loadT);S.loading=false;
+  S.filters=blankFilters();S.sort="relevance";S.fcText="";clearTimeout(loadT);S.loading=false;view.scrollTop=0;
 }
 const goTab=t=>{S.tab=t;markTab()};
 const setResults=(q,cb)=>{goTab("find");S.q=q;S.pq=parse(q);const pq=S.pq;pq.langs.forEach(l=>S.filters.langs.add(l));if(pq.gender)S.filters.gender=pq.gender;if(pq.accepting)S.filters.accepting=true;
@@ -1079,82 +1096,116 @@ osRM.addEventListener?.("change",()=>setMotion(osRM.matches));
 
 /* ---------- Motion layer ---------- */
 const canMove=()=>!rm();
-/* Glass reveal: tag sections, observe them in the scrolling view, clear them in staggered batches */
-const REVEAL_SEL=[".mod",".p-sec",".pcard",".fc-body>.grp",".res-body>.card",".res-body>.grp",".res-body>.mychart",".res-body>.notice",".res-sum",".blog-row",".blog-lead",".loc-card",".pad>.notice",".state",".v-inner>.fine"].join(",");
-const GLINT_SEL=".card,.campaign,.mychart";
-let io=null;
-function markReveals(root,animate){
-  const els=$$(REVEAL_SEL,root).filter(el=>!el.classList.contains("reveal"));
-  els.forEach(el=>{el.classList.add("reveal");const g=el.matches(GLINT_SEL)?el:el.querySelector(":scope>.card,:scope>.campaign,:scope>.mychart");if(g)g.classList.add("glint");if(!animate||!canMove()||!io){el.classList.add("in");if(g&&g!==el)g.classList.add("in")}});
-  if(animate&&canMove()&&io)els.forEach(el=>io.observe(el));
+const EASE_IOS="cubic-bezier(0.32,0.72,0,1)";
+const views=$("#views");
+
+/* Screen transitions: snapshot the outgoing screen, build the new one, then move both */
+function screenTransition(kind,build){
+  $$(".ghost-wrap",views).forEach(g=>g.remove());view.getAnimations().forEach(a=>a.cancel());view.classList.remove("lift");
+  if(!kind||!canMove()){build();return}
+  const y=view.scrollTop,wrap=document.createElement("div"),g=view.cloneNode(true),dim=document.createElement("div");
+  wrap.className="ghost-wrap";wrap.setAttribute("aria-hidden","true");wrap.inert=true;dim.className="ghost-dim";
+  g.removeAttribute("id");g.removeAttribute("tabindex");g.removeAttribute("aria-label");$$("[id]",g).forEach(e=>e.removeAttribute("id"));
+  wrap.append(g,dim);
+  if(kind==="push")views.insertBefore(wrap,view);else{wrap.classList.add("top");views.appendChild(wrap)}
+  g.scrollTop=y;
+  build();
+  const D=480,o={duration:D,easing:EASE_IOS,fill:"forwards"};let a;
+  if(kind==="push"){
+    view.classList.add("lift");
+    view.animate([{transform:"translate3d(100%,0,0)"},{transform:"translate3d(0,0,0)"}],{duration:D,easing:EASE_IOS});
+    wrap.animate([{transform:"translate3d(0,0,0)"},{transform:"translate3d(-30%,0,0)"}],o);
+    a=dim.animate([{opacity:0},{opacity:1}],o);
+  }else if(kind==="pop"){
+    view.animate([{transform:"translate3d(-30%,0,0)",filter:"brightness(.86)"},{transform:"translate3d(0,0,0)",filter:"brightness(1)"}],{duration:D,easing:EASE_IOS});
+    a=wrap.animate([{transform:"translate3d(0,0,0)"},{transform:"translate3d(100%,0,0)"}],o);
+  }else{
+    wrap.classList.remove("top");wrap.style.zIndex="3";
+    a=wrap.animate([{opacity:1},{opacity:0}],{duration:200,easing:"ease-out",fill:"forwards"});
+    view.animate([{opacity:0,transform:"scale(.985)"},{opacity:1,transform:"scale(1)"}],{duration:420,delay:60,easing:EASE_IOS,fill:"backwards"});
+  }
+  a.onfinish=()=>{wrap.remove();view.classList.remove("lift")};
 }
-if("IntersectionObserver" in window){
-  io=new IntersectionObserver(entries=>{
-    let n=0;entries.filter(e=>e.isIntersecting).sort((a,b)=>a.boundingClientRect.top-b.boundingClientRect.top).forEach(e=>{
-      const el=e.target;el.style.setProperty("--rd",Math.min(n++,6));const g=el.classList.contains("glint")?null:el.querySelector(".glint");if(g)g.style.setProperty("--rd",el.style.getPropertyValue("--rd"));
-      el.classList.add("in");if(g)g.classList.add("in");io.unobserve(el);
-      setTimeout(()=>{el.style.removeProperty("--rd")},1400);
-    });
-  },{root:view,threshold:.08,rootMargin:"0px 0px -6% 0px"});
+function animateAppbar(kind){
+  if(!kind||!canMove())return;const t=$("#appbar .ttl"),b=$('#appbar [data-action="back"]');
+  const dx=kind==="push"?48:kind==="pop"?-32:0;
+  if(t)t.animate([{opacity:0,transform:`translate3d(${dx}px,0,0)`},{opacity:1,transform:"none"}],{duration:420,easing:EASE_IOS});
+  if(b&&kind==="push")b.animate([{opacity:0},{opacity:1}],{duration:300,easing:"ease-out"});
+}
+function heroIntro(){
+  if(!canMove())return;[".hero-copy","#hero-search",".hero .top-s"].forEach((sel,i)=>{const el=$(sel,view);if(el)el.animate([{opacity:0,transform:"translate3d(0,20px,0)"},{opacity:1,transform:"none"}],{duration:760,delay:80+i*90,easing:EASE_IOS,fill:"backwards"})});
 }
 
-/* Scroll: parallax var, app bar lift, carousel focus scale */
+/* Scroll-linked motion: items below the fold are driven by scroll position; items on screen settle in once */
+const SD_SEL=[".mod",".p-sec",".pcard",".fc-body>.grp",".res-body>.card",".res-body>.grp",".res-body>.mychart",".res-body>.notice",".res-sum",".blog-row",".blog-lead",".loc-card",".pad>.notice",".state",".v-inner>.fine"].join(",");
+let sdList=[];
+function layoutTop(el){let y=0;while(el&&el!==view){y+=el.offsetTop;el=el.offsetParent}return y}
+function markScroll(root,animate,baseDelay){
+  sdList=sdList.filter(x=>document.contains(x.el)&&view.contains(x.el));
+  const vh=view.clientHeight,y=view.scrollTop;let n=0;
+  const items=[];
+  $$(SD_SEL,root).forEach(el=>{
+    if(el.classList.contains("sd")||el.closest(".ghost-wrap"))return;
+    const tiles=el.querySelector(".tiles");
+    if(tiles){const head=el.querySelector(".mod-head");if(head)items.push([head,0]);$$(".tile",tiles).forEach((t,i)=>items.push([t,(i%3)*.08+Math.floor(i/3)*.04]));}
+    else items.push([el,0]);
+  });
+  items.forEach(([el,d])=>{
+    el.classList.add("sd");const top=layoutTop(el)-y;
+    if(top<vh-24){/* already on screen */
+      if(animate&&canMove())el.animate([{opacity:0,transform:"translate3d(0,32px,0)"},{opacity:1,transform:"none"}],{duration:720,delay:baseDelay+Math.min(n++,7)*55+d*300,easing:EASE_IOS,fill:"backwards"});
+    }else sdList.push({el,d});
+  });
+  applyScroll();
+}
+function applyScroll(){
+  const vh=view.clientHeight,y=view.scrollTop,move=canMove();
+  for(const it of sdList){
+    const el=it.el;if(!move){el.style.opacity="";el.style.transform="";continue}
+    const top=layoutTop(el)-y;let p=(vh-top-it.d*vh*.3)/(vh*.34);p=p<0?0:p>1?1:p;const e=1-Math.pow(1-p,3);
+    el.style.opacity=e.toFixed(3);el.style.transform=e>=1?"":`translate3d(0,${((1-e)*64).toFixed(1)}px,0) scale(${(.94+.06*e).toFixed(4)})`;
+  }
+}
+
+/* Per-frame scroll effects */
 let scrollRaf=0;
 function onScroll(){
   cancelAnimationFrame(scrollRaf);scrollRaf=requestAnimationFrame(()=>{
-    const y=view.scrollTop;view.style.setProperty("--sy",canMove()?Math.min(y,400):0);
+    const y=view.scrollTop,move=canMove(),t=top().v;
     $("#appbar").classList.toggle("scrolled",y>4);
+    applyScroll();
+    const rh=$(".res-head",view);if(rh)rh.classList.toggle("raised",y>4);
+    if(t==="home"){
+      const copy=$(".hero-copy",view),au=$(".hero .aurora",view),yy=Math.min(Math.max(y,0),320);
+      if(copy){copy.style.transform=move?`translate3d(0,${(yy*.35).toFixed(1)}px,0)`:"";copy.style.opacity=move?Math.max(0,1-yy/220).toFixed(3):""}
+      if(au)au.style.transform=move?`translate3d(0,${(yy*.5).toFixed(1)}px,0)`:"";
+      const vh=view.clientHeight;
+      $$(".campaign",view).forEach(c=>{const off=(layoutTop(c)-y-vh/2);const s1=$(".shape1",c),s2=$(".shape2",c);
+        if(s1)s1.style.transform=move?`translate3d(0,${(off*-.12).toFixed(1)}px,0)`:"";if(s2)s2.style.transform=move?`translate3d(0,${(off*.08).toFixed(1)}px,0)`:""});
+    }
+    if(t==="profile"){
+      const pid=$(".p-id",view),av=$(".p-id .avatar",view),yy=Math.min(Math.max(y,0),200);
+      if(pid){pid.style.transform=move?`translate3d(0,${(yy*.3).toFixed(1)}px,0)`:"";pid.style.opacity=move?Math.max(0,1-yy/160).toFixed(3):""}
+      if(av){av.style.transform=move?`scale(${(1-yy/200*.22).toFixed(4)})`:"";av.style.transformOrigin="left center"}
+      $("#appbar").classList.toggle("swap",!!pid&&y>pid.offsetTop+pid.offsetHeight-8);
+    }else $("#appbar").classList.remove("swap");
   });
 }
 view.addEventListener("scroll",onScroll,{passive:true});
 function carouselScale(sc){
-  if(!sc)return;const r=sc.getBoundingClientRect();
+  if(!sc)return;const r=sc.getBoundingClientRect(),move=canMove();
   [...sc.children].forEach(sl=>{const b=sl.getBoundingClientRect();const d=Math.min(1,Math.abs(b.left-r.left-16)/b.width);
-    sl.style.transform=canMove()?`scale(${1-d*.06})`:"";sl.style.opacity=canMove()?String(1-d*.3):""});
+    sl.style.transform=move?`scale(${(1-d*.06).toFixed(4)})`:"";sl.style.opacity=move?(1-d*.4).toFixed(3):""});
 }
 document.addEventListener("scroll",e=>{if(e.target&&e.target.id==="car-scroll")requestAnimationFrame(()=>carouselScale(e.target))},true);
 
-/* Touch ripple from the contact point */
-const RIPPLE_SEL=".btn,.tile,.row,.chip:not(.static),.tchip,.tool,.pc-main,.mini,.slide-btn,.search-entry,.q-btn,.fchip,.loc-btn,.blog-lead";
-screen.addEventListener("pointerdown",e=>{
-  if(!canMove())return;const el=e.target.closest(RIPPLE_SEL);if(!el||el.disabled)return;
-  const r=el.getBoundingClientRect(),size=Math.max(r.width,r.height)*2.2,sp=document.createElement("span");
-  sp.className="ripple";sp.style.cssText=`width:${size}px;height:${size}px;left:${e.clientX-r.left-size/2}px;top:${e.clientY-r.top-size/2}px`;
-  el.appendChild(sp);setTimeout(()=>sp.remove(),650);
-});
-
-/* Spark burst when a doctor is saved */
-const SPARK=["var(--c-magenta)","var(--c-cyan)","var(--c-orange)","var(--c-blue)","var(--c-green)"];
-function burst(el){
-  if(!canMove()||!el)return;const sr=screen.getBoundingClientRect(),r=el.getBoundingClientRect();
-  const cx=r.left-sr.left+r.width/2,cy=r.top-sr.top+r.height/2;
-  for(let i=0;i<12;i++){const sp=document.createElement("span");sp.className="spark";sp.style.background=SPARK[i%SPARK.length];
-    sp.style.left=cx-4+"px";sp.style.top=cy-4+"px";screen.appendChild(sp);
-    const a=(i/12)*Math.PI*2+Math.random()*.4,d=28+Math.random()*24;
-    sp.animate([{transform:"translate(0,0) scale(1)",opacity:1},{transform:`translate(${Math.cos(a)*d}px,${Math.sin(a)*d}px) scale(0)`,opacity:0}],{duration:620+Math.random()*200,easing:"cubic-bezier(0.2,0,0,1)"}).onfinish=()=>sp.remove();}
-}
-
-/* Results count ticks up */
+/* Results count runs up to its value */
 function tick(root){
   const el=$("[data-count]",root);if(!el||!canMove())return;const n=+el.dataset.count;if(n<2)return;
-  const t0=performance.now(),dur=520;const step=t=>{const k=Math.min(1,(t-t0)/dur);el.textContent=Math.round(n*(1-Math.pow(1-k,3)));if(k<1)requestAnimationFrame(step)};el.textContent="0";requestAnimationFrame(step);
+  const t0=performance.now(),dur=600;const step=t=>{const k=Math.min(1,(t-t0)/dur);el.textContent=Math.round(n*(1-Math.pow(1-k,4)));if(k<1)requestAnimationFrame(step)};el.textContent="0";requestAnimationFrame(step);
 }
-
-/* Typewriter: the home search field cycles example plain-language queries (visual only; its spoken name stays fixed) */
-const TW_EX=["Try “knee pain”","Try “heart doctor near me”","Try “Spanish-speaking pediatrician”","Try “Dr. Morgan”","Search doctors, conditions, and locations"];
-let twT=null,twGen=0;
-function stopTypewriter(){clearTimeout(twT);twGen++}
-function startTypewriter(){
-  stopTypewriter();const gen=twGen;const el=$("#tw"),caret=$(".tw-caret");if(!el||!canMove())return;
-  let i=0;const wait=(ms,f)=>{twT=setTimeout(()=>{if(gen===twGen&&document.contains(el))f()},ms)};
-  const type=(txt,k)=>{el.textContent=txt.slice(0,k);if(k<txt.length)wait(40,()=>type(txt,k+1));else wait(txt.startsWith("Search")?6000:1700,erase)};
-  const erase=()=>{const t=el.textContent;if(t.length){el.textContent=t.slice(0,-1);wait(18,erase)}else{const nx=TW_EX[i++%TW_EX.length];wait(260,()=>type(nx,1))}};
-  caret.hidden=false;wait(3200,erase);
-}
-
-/* Small bumps: filter result count, saved badge */
 const bump=el=>{if(!el||!canMove())return;el.classList.remove("bump");void el.offsetWidth;el.classList.add("bump")};
-window.addEventListener("resize",placeInd);
+window.addEventListener("resize",()=>{placeInd();onScroll()});
 
 /* ---------- Boot ---------- */
 $("#search-back").innerHTML=ico("arrow_back");
