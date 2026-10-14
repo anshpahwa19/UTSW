@@ -1098,15 +1098,12 @@ if("IntersectionObserver" in window){
   },{root:view,threshold:.08,rootMargin:"0px 0px -6% 0px"});
 }
 
-/* Scroll: parallax var, app bar lift, frosted compact search on home, carousel focus scale */
+/* Scroll: parallax var, app bar lift, carousel focus scale */
 let scrollRaf=0;
 function onScroll(){
   cancelAnimationFrame(scrollRaf);scrollRaf=requestAnimationFrame(()=>{
     const y=view.scrollTop;view.style.setProperty("--sy",canMove()?Math.min(y,400):0);
     $("#appbar").classList.toggle("scrolled",y>4);
-    const gb=$("#glass-bar"),hs=$("#hero-search");
-    const show=top().v==="home"&&hs&&(hs.offsetTop+hs.offsetHeight-y<0);
-    gb.classList.toggle("show",!!show);show?(gb.removeAttribute("inert"),gb.removeAttribute("aria-hidden")):(gb.setAttribute("inert",""),gb.setAttribute("aria-hidden","true"));
   });
 }
 view.addEventListener("scroll",onScroll,{passive:true});
@@ -1164,7 +1161,6 @@ $("#search-back").innerHTML=ico("arrow_back");
 $("#search-ic").outerHTML=ic("search");
 $("#q-clear").innerHTML=ic("close",20);
 $("#sheet-close").innerHTML=ic("close");
-$("#glass-bar .search-entry").innerHTML=ic("search")+"<span>Search doctors, conditions, and locations</span>";
 renderTabbar();render();renderCMS();syncControls();
 setTimeout(()=>{const l=activeAlerts();if(l.length)sayAssert(`${l[0].label} alert: ${l[0].title}`)},800);
 })();
