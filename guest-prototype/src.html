@@ -763,6 +763,42 @@ mark{background:rgba(0,169,224,.35);color:inherit;border-radius:4px}
 .saved-mini{flex:0 0 232px;display:flex;align-items:center;gap:var(--s-12);padding:var(--s-12);border:0;text-align:left;color:#FFFFFF;scroll-snap-align:start}
 .saved-mini .grow b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tab-badge{position:absolute;top:var(--s-4);left:calc(50% + var(--s-8));min-width:20px;height:20px;padding:0 var(--s-4);border-radius:var(--r-pill);background:#FFFFFF;color:var(--c-blue);font-size:var(--fs-12);line-height:20px;font-weight:800;text-align:center;font-variant-numeric:tabular-nums}
+/* Side menu (old app "More options") – a sheet that enters from the right */
+.sheet-body > *{flex-shrink:0}
+.sheet.drawer{top:0;left:auto;width:min(336px,calc(100% - 48px));max-height:none;height:100%;border-radius:var(--r-glass) 0 0 var(--r-glass);transform:translateX(100%)}
+.sheet.drawer.show{transform:none}
+.sheet.drawer .grab{display:none}
+.sheet.drawer .sheet-head{padding-top:var(--s-48)}
+.sheet.drawer .sheet-body{padding-bottom:var(--s-48)}
+.menu-signin{display:flex;flex-direction:column;gap:var(--s-12);padding:var(--s-16);border-radius:var(--r-inner);background:var(--inner-fill);box-shadow:inset 0 0 0 1px var(--inner-line)}
+.menu-signin b{font-size:var(--fs-16);line-height:24px}
+.menu-signin .btn-primary{align-self:flex-start}
+.rrow .orb{width:32px;height:32px}
+.rrow .orb svg{width:16px;height:16px}
+.rrow .n-pill{margin-inline-start:auto;min-width:24px;height:24px;padding:0 var(--s-8);border-radius:var(--r-pill);background:#FFFFFF;color:var(--c-blue);font-size:var(--fs-12);line-height:24px;font-weight:800;text-align:center}
+.socials{display:flex;flex-wrap:wrap;gap:var(--s-12)}
+.social{width:48px;height:48px;border-radius:50%;border:0;display:grid;place-items:center;background:var(--inner-fill);box-shadow:inset 0 0 0 1px var(--inner-line);color:#FFFFFF}
+.social svg{width:20px;height:20px}
+.legal{display:flex;flex-wrap:wrap;gap:var(--s-8)}
+.legal .txt-btn{font-size:var(--fs-14)}
+.ver{font-size:var(--fs-14);line-height:20px;color:var(--c-text-2)}
+.menu-btn{position:relative;background:var(--inner-fill);box-shadow:inset 0 0 0 1px rgba(255,255,255,.3);color:#FFFFFF}
+/* MedBlog list and inbox (pages pushed over a tab) */
+.blog-list{display:flex;flex-direction:column}
+.blog{display:flex;gap:var(--s-12);align-items:flex-start;width:100%;padding:var(--s-12);border:0;background:none;text-align:left;color:#FFFFFF;transition:background-color var(--dur-fast)}
+.blog + .blog{border-top:1px solid var(--inner-line)}
+.blog:hover{background:rgba(255,255,255,.04)}
+.blog-th{position:relative;width:88px;height:88px;flex:none;border-radius:var(--r-inner);overflow:hidden;display:grid;place-items:center}
+.blog-th svg{position:relative;width:32px;height:32px}
+.blog-th::before{width:96px;height:96px;right:-40px;top:-40px}
+.blog-th::after{width:64px;height:64px;left:-24px;bottom:-32px}
+.blog-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:var(--s-4)}
+.blog-tx b{font-size:var(--fs-16);line-height:24px;font-weight:700;text-wrap:pretty}
+.blog-tx .t2 span + span::before{content:" · "}
+.inbox-i{position:relative}
+.inbox-i .grow b{font-weight:600}
+.inbox-i.unread .grow b{font-weight:800}
+.udot{width:8px;height:8px;border-radius:50%;background:var(--c-cyan);flex:none}
 .toast.has-act{pointer-events:auto;padding-inline-end:var(--s-8)}
 .toast .undo{min-height:40px;padding:0 var(--s-12);border:0;border-radius:var(--r-pill);background:#FFFFFF;color:var(--c-blue);font-weight:700;font-size:var(--fs-14)}
 .spec ul.rules{margin:0;padding-left:var(--s-16);display:flex;flex-direction:column;gap:var(--s-8);font-size:var(--fs-14);line-height:20px;color:var(--st-fg-2)}
@@ -811,6 +847,7 @@ mark{background:rgba(0,169,224,.35);color:inherit;border-radius:4px}
             <section class="screen" id="screen-care" aria-label="Find care" hidden><div class="scroller" id="scroller-care"><div class="content" id="care"></div></div></section>
             <section class="screen" id="screen-places" aria-label="Locations" hidden><div class="scroller"><div class="content" id="places"></div></div></section>
             <section class="screen" id="screen-saved" aria-label="Saved providers" hidden><div class="scroller"><div class="content" id="saved"></div></div></section>
+            <section class="screen" id="screen-page" aria-label="Page" hidden><div class="scroller" id="scroller-page"><div class="content" id="page"></div></div></section>
           </div>
 
           <div class="topbar" id="topbar" aria-hidden="true">
@@ -919,6 +956,8 @@ mark{background:rgba(0,169,224,.35);color:inherit;border-radius:4px}
           <li><b>Kept from the old app:</b> MedBlog stories with pause, quick links, UTSW resources (wayfinding, video visit prep), Find a provider by specialty, search history, and the city filter.</li>
           <li><b>MyChart quick links</b> (message your doctor, test results, visits, billing) become one card that explains sign-in, instead of four tiles that dead-end.</li>
           <li><b>Saved providers</b> appear on home only when the guest has saved someone.</li>
+          <li><b>More options menu</b> (from the old hamburger): MyChart sign-in, Inbox, Shuttle, patient resource guide, patient resources, COVID-19 resources, Why UT Southwestern, physician resources, full site, social links, and privacy policy.</li>
+          <li><b>MedBlog</b> “See all” opens a story list with topic filters. The home carousel and the list open the same stories.</li>
           <li><b>No appointment context</b> – that module is signed-in only.</li>
         </ul>
       </div>
@@ -1036,6 +1075,15 @@ var P={
  history:'<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/>',
  sparkle:'<path d="m12 3 1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2z"/>',
  parking:'<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 17V7h4a3 3 0 0 1 0 6H9"/>',
+ menu:'<path d="M4 7h16M4 12h16M4 17h16"/>',
+ bell:'<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/>',
+ bus:'<rect x="4" y="3" width="16" height="15" rx="3"/><path d="M4 11h16M8 18v3M16 18v3"/><circle cx="8" cy="14.5" r="1"/><circle cx="16" cy="14.5" r="1"/>',
+ shield:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+ globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
+ fb:'<path d="M15 3h-2.5A3.5 3.5 0 0 0 9 6.5V10H6.5v3.5H9V21h3.5v-7.5H15l.5-3.5h-3V7a1 1 0 0 1 1-1H15z"/>',
+ li:'<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 10.5V17M8 7.5v.01M12 17v-6.5M12 13.5a2.5 2.5 0 0 1 5 0V17"/>',
+ xs:'<path d="m4 4 16 16M20 4 4 20"/>',
+ ig:'<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5v.01"/>',
  doc:'<path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/>'
 };
 function ic(n,cls){return '<svg'+(cls?' class="'+cls+'"':'')+' viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">'+(P[n]||'')+'</svg>';}
@@ -1233,6 +1281,39 @@ function score(p,I){
 /* ---------- Home content (CMS-configured, fictional) ---------- */
 var TOP=["Primary care","Dermatology","Urgent care","Parking","Billing help","Pharmacy"];
 var SUGGEST={all:["Try “knee pain”","Try “dermatologist near me”","Try “parking garage hours”","Try “flu shot”"]};
+var BLOG=[
+ {t:"Starting a new medication? Five questions to ask your pharmacist",k:"Medications",d:"Oct. 7",m:"4 min read",i:"flask",a:"c",dest:"/medblog/new-medication-questions",body:"How a new prescription can interact with what you already take, and the simple questions that help you stay safe."},
+ {t:"Weekend warrior? How to protect your knees",k:"Orthopedics",d:"Oct. 5",m:"5 min read",i:"route",a:"l",dest:"/medblog/protect-your-knees",body:"Warm-ups, strength work, and the signs that knee pain needs a doctor’s visit."},
+ {t:"What inflammation means for your heart",k:"Heart",d:"Oct. 1",m:"6 min read",i:"heart",a:"p",dest:"/medblog/inflammation-heart",body:"Why inflammation matters for heart health, and everyday steps that can help lower it."},
+ {t:"Five ways to get ready for flu season",k:"Wellness",d:"Sept. 30",m:"4 min read",i:"syringe",a:"c",art:"flu",dest:"/medblog/flu-season-ready",body:"Simple steps that help you and your family stay healthy through the winter months."},
+ {t:"What to expect at your first appointment",k:"Your visit",d:"Sept. 26",m:"3 min read",i:"clip",a:"l",art:"visit",dest:"/medblog/first-visit",body:"What to bring, when to arrive, and how check-in works at UTSW clinics."},
+ {t:"Small daily habits for a healthier heart",k:"Heart",d:"Sept. 24",m:"5 min read",i:"heart",a:"p",art:"heart",dest:"/medblog/heart-habits",body:"Practical changes to movement, sleep, and meals that add up over time."},
+ {t:"Skin checks at home: What to look for and when to see a dermatologist",k:"Skin",d:"Sept. 23",m:"4 min read",i:"sparkle",a:"c",dest:"/medblog/skin-checks",body:"A monthly self-check takes a few minutes. Here’s what changes to watch for."},
+ {t:"Prenatal screening: What the results can tell you",k:"Pregnancy",d:"Sept. 22",m:"5 min read",i:"user",a:"l",dest:"/medblog/prenatal-screening",body:"What prenatal screening checks for, how to read the results, and questions to bring to your next visit."},
+ {t:"Sleep and blood sugar: How they affect each other",k:"Wellness",d:"Sept. 18",m:"4 min read",i:"clock",a:"p",dest:"/medblog/sleep-blood-sugar",body:"Short or broken sleep can raise blood sugar. Small changes to your evening routine can help."}
+];
+var BLOG_TOPICS=["All","Heart","Wellness","Medications","Orthopedics","Skin","Pregnancy","Your visit"];
+var INBOX=[
+ {id:"i1",t:"Severe weather: Use the north entrance today",s:"Emergency alert",d:"7:45 a.m.",ic:"alert",o:"c",unread:true,open:"alert:a1"},
+ {id:"i2",t:"New on MedBlog: Five questions to ask your pharmacist",s:"MedBlog",d:"Oct. 7",ic:"book",o:"l",unread:true,open:"blog:0"},
+ {id:"i3",t:"Flu shots are here – walk in weekdays through Dec. 18",s:"Announcement",d:"Oct. 1",ic:"syringe",o:"p",unread:false,open:"dest:campaign"},
+ {id:"i4",t:"Find care now understands everyday words like “knee pain”",s:"Announcement",d:"Oct. 1",ic:"steth",o:"c",unread:false,open:"dest:n2"}
+];
+var MENU=[
+ {k:"Patients and visitors",items:[
+  ["inbox","bell","Inbox"],["shuttle","bus","Shuttle"],["guide","book","Patient resource guide"],["resources","info","Patient resources"],["covid","shield","COVID-19 resources"]]},
+ {k:"About UT Southwestern",items:[
+  ["why","award","Why UT Southwestern"],["physician","steth","Physician resources"],["site","globe","Visit full site"]]}
+];
+var MENU_DEST={
+ shuttle:["Shuttle","Campus shuttle routes, stops, and live arrival times between parking, hospitals, and clinics.","/resources/shuttle"],
+ guide:["Patient resource guide","Everything you need before, during, and after a hospital stay, in one guide.","/resources/patient-guide"],
+ resources:["Patient resources","Billing help, medical records, interpreter services, and support programs.","/resources/patients"],
+ covid:["COVID-19 resources","Testing, vaccines, and visitor guidance.","/resources/covid-19"],
+ why:["Why UT Southwestern","Academic medicine, research, and specialists who work together on your care.","/about/why-utsw"],
+ physician:["Physician resources","Referrals, consults, and tools for referring physicians.","/physicians"],
+ site:["Visit full site","Opens the UT Southwestern website in your browser.","https://utswmed.example"]
+};
 var FEATURED=[
  {k:"MedBlog",t:"Five ways to get ready for flu season",m:"4 min read",art:"flu",dest:"/medblog/flu-season-ready",body:"Simple steps that help you and your family stay healthy through the winter months."},
  {k:"MedBlog",t:"What to expect at your first appointment",m:"3 min read",art:"visit",dest:"/medblog/first-visit",body:"What to bring, when to arrive, and how check-in works at UTSW clinics."},
@@ -1407,7 +1488,7 @@ R.campaign=function(){
 };
 R.featured=function(){
  var paused=S.carPaused||S.rm;
- return secHead("h-feat","From MedBlog",'<button class="sec-link" data-act="toast" data-ic="ext" data-msg="Opening MedBlog"><span>All stories</span>'+ic("chevR")+'</button>')+
+ return secHead("h-feat","From MedBlog",'<button class="sec-link" data-page="medblog" aria-label="See all MedBlog stories"><span>See all</span>'+ic("chevR")+'</button>')+
   '<div class="feat-rail" id="car" aria-roledescription="carousel" aria-labelledby="h-feat">'+
    FEATURED.map(function(f,i){
     return '<button class="feat press a" style="--j:'+i+'" data-dest="f'+i+'" aria-label="Story '+(i+1)+' of '+FEATURED.length+': '+esc(f.t)+', '+esc(f.m)+'">'+
@@ -1437,7 +1518,7 @@ R.news=function(){
 };
 function appbar(){
  return '<header class="appbar"><img class="logo a" src="'+LOGO+'" alt="UTSW MyCare" width="192" height="50">'+
-  '<div class="acts"><button class="pill-btn press a" data-act="mychart">'+ic("login")+'Sign in</button></div></header>';
+  '<div class="acts"><button class="circle menu-btn press a" data-act="menu" aria-haspopup="dialog" aria-label="More options'+(unread()?', '+unread()+' unread in inbox':'')+'">'+ic("menu")+(unread()?'<span class="badge-dot" aria-hidden="true"></span>':'')+'</button></div></header>';
 }
 var lastAlertKey="";
 function renderHome(animate){
@@ -1679,8 +1760,8 @@ function load(){
 function paintTop(){ var e=top(); if(e.v==="results") renderResArea(); else if(e.v==="profile") renderProfArea(); }
 
 /* Profile view */
-function subnav(title,actions){
- return '<div class="subnav glass-o"><button class="circle press" data-act="back" aria-label="Back">'+ic("back")+'</button><h1 tabindex="-1" id="view-title">'+esc(title)+'</h1>'+(actions||'')+'</div>';
+function subnav(title,actions,id,act){
+ return '<div class="subnav glass-o"><button class="circle press" data-act="'+(act||"back")+'" aria-label="Back">'+ic("back")+'</button><h1 tabindex="-1" id="'+(id||"view-title")+'">'+esc(title)+'</h1>'+(actions||'')+'</div>';
 }
 function viewProfile(e){
  var p=PBY[e.id];
@@ -1818,6 +1899,79 @@ function renderPlaces(){
   '<article class="glass pad a"><span class="orb c lg" aria-hidden="true">'+ic("route")+'</span><h2>Indoor wayfinding</h2><p>Step-by-step directions inside Clements University Hospital and our main campuses.</p><button class="btn-primary press" data-act="toast" data-ic="route" data-msg="Opening indoor wayfinding">Start wayfinding'+ic("arrowR")+'</button></article>';
 }
 
+/* ---------- Pages pushed over the current tab: MedBlog, Inbox ---------- */
+var PAGE=null, blogTopic="All";
+function unread(){ return INBOX.filter(function(x){return x.unread;}).length; }
+function openPage(kind){
+ if(!PAGE){ PAGE={from:S.tab,focus:document.activeElement}; $("#"+SCREEN[S.tab]).hidden=true; }
+ PAGE.kind=kind;
+ var sc=$("#screen-page"); sc.hidden=false; sc.setAttribute("aria-label",kind==="medblog"?"MedBlog":"Inbox");
+ renderPage("in"); $("#scroller-page").scrollTop=0; syncTop(); syncCarousel();
+ var t=$("#page-title"); if(t) t.focus({preventScroll:true});
+}
+function closePage(){
+ if(!PAGE) return; var f=PAGE.focus; PAGE=null;
+ $("#screen-page").hidden=true; $("#"+SCREEN[S.tab]).hidden=false; syncTop(); syncCarousel();
+ if(f&&document.contains(f)) f.focus({preventScroll:true});
+}
+function blogThumb(b){ return '<span class="blog-th svc-art art-'+b.a+'" aria-hidden="true">'+ic(b.i)+'</span>'; }
+function renderPage(dir){
+ var el=$("#page"), h;
+ el.className="content"+(dir&&!S.rm?" view-"+dir:"");
+ if(PAGE.kind==="medblog"){
+  var list=BLOG.filter(function(b){return blogTopic==="All"||b.k===blogTopic;});
+  h=subnav("MedBlog",'<button class="circle press" data-act="toast" data-ic="ext" data-msg="Opening MedBlog on the website" aria-label="Open MedBlog on the website">'+ic("ext")+'</button>',"page-title","page-back")+
+   '<p class="interp a">'+ic("book")+'<span>Health tips and news from UT&nbsp;Southwestern experts.</span></p>'+
+   '<div class="scopes a" role="group" aria-label="Topic">'+BLOG_TOPICS.map(function(t){return '<button class="pill press" data-topic="'+esc(t)+'" aria-pressed="'+(t===blogTopic)+'">'+esc(t)+'</button>';}).join("")+'</div>'+
+   '<p class="count-line a"><span><b>'+plural(list.length,"story","stories")+'</b>'+(blogTopic==="All"?'':' in '+esc(blogTopic))+'</span></p>'+
+   '<div class="glass blog-list a" role="list">'+list.map(function(b){
+    return '<div role="listitem"><button class="blog press" data-blog="'+BLOG.indexOf(b)+'">'+blogThumb(b)+'<span class="blog-tx"><span class="eyebrow">'+esc(b.k)+'</span><b>'+esc(b.t)+'</b><span class="t2"><span>'+b.d+'</span><span>'+b.m+'</span></span></span></button></div>';
+   }).join("")+'</div>';
+ } else {
+  h=subnav("Inbox",unread()?'<button class="sbtn ghost press" data-act="read-all">Mark all read</button>':'',"page-title","page-back")+
+   '<p class="interp a">'+ic("info")+'<span>As a guest, you get alerts and news here. Sign in with MyChart for messages from your care team.</span></p>'+
+   '<div class="glass list a" role="list">'+INBOX.map(function(x){
+    return '<div role="listitem"><button class="li inbox-i'+(x.unread?' unread':'')+'" data-inbox="'+x.id+'"><span class="orb '+x.o+'" aria-hidden="true">'+ic(x.ic)+'</span><span class="grow"><b>'+esc(x.t)+'</b><span class="t2">'+esc(x.s)+' · '+esc(x.d)+(x.unread?'<span class="sr-only">, unread</span>':'')+'</span></span>'+(x.unread?'<span class="udot" aria-hidden="true"></span>':ic("chevR","chev"))+'</button></div>';
+   }).join("")+'</div>';
+ }
+ el.innerHTML=h;
+}
+function blogSheet(i){
+ var b=BLOG[i];
+ openSheet(esc(b.k),(b.art?'<div class="dest-art" aria-hidden="true">'+art(b.art)+'</div>':'<div class="dest-art svc-art art-'+b.a+'" aria-hidden="true">'+ic(b.i)+'</div>')+
+  '<h3>'+esc(b.t)+'</h3><p class="t2">MedBlog · '+b.d+' · '+b.m+'</p><p>'+esc(b.body)+'</p><div class="dest">Configured destination: <code>'+esc(b.dest)+'</code></div>'+
+  '<button class="btn-primary block press" data-act="toast" data-ic="ext" data-msg="Opening the full story">Read the full story'+ic("arrowR")+'</button>');
+}
+function menuSheet(){
+ var n=unread();
+ openSheet("More options",
+  '<div class="menu-signin"><b>Already a patient?</b><p>Sign in with MyChart for messages, test results, visits, and billing.</p><button class="btn-primary press" data-act="mychart">'+ic("login")+'Sign in with MyChart</button></div>'+
+  MENU.map(function(g,gi){
+   return '<p class="group-label" id="mg-'+gi+'">'+g.k+'</p><div class="share-list" role="group" aria-labelledby="mg-'+gi+'">'+g.items.map(function(it){
+    var badge=it[0]==="inbox"&&n?'<span class="n-pill" aria-hidden="true">'+n+'</span>':'';
+    var ext=it[0]==="site"?ic("arrowUR","chev"):(badge?'':ic("chevR","chev"));
+    return '<button class="rrow" data-menu="'+it[0]+'"'+(badge?' aria-label="Inbox, '+n+' unread"':'')+'><span class="orb '+["c","p","l"][gi]+'" aria-hidden="true">'+ic(it[1])+'</span><span class="grow">'+it[2]+'</span>'+badge+ext+'</button>';
+   }).join("")+'</div>';
+  }).join("")+
+  '<p class="group-label" id="mg-f">Follow us</p><div class="socials" role="group" aria-labelledby="mg-f">'+
+   [["fb","Facebook"],["li","LinkedIn"],["xs","X"],["ig","Instagram"]].map(function(x){return '<button class="social press" data-act="toast" data-ic="ext" data-msg="Opening UT Southwestern on '+x[1]+'" aria-label="UT Southwestern on '+x[1]+'">'+ic(x[0])+'</button>';}).join("")+'</div>'+
+  '<div class="legal"><button class="txt-btn" data-act="toast" data-ic="ext" data-msg="Opening the privacy policy">Privacy policy</button><button class="txt-btn" data-act="toast" data-ic="ext" data-msg="Opening the terms of use">Terms of use</button></div>'+
+  '<p class="ver">UTSW MyCare · Version 2.0 (prototype)</p>',false,null,"drawer");
+}
+function menuGo(k){
+ if(k==="inbox"){ closeSheet(); setTimeout(function(){ openPage("inbox"); },S.rm?0:200); return; }
+ var d=MENU_DEST[k]; closeSheet();
+ if(k==="site") return toast("Opening the UT Southwestern website","ext");
+ setTimeout(function(){ openSheet(esc(d[0]),'<div class="dest-art svc-art art-c" aria-hidden="true">'+ic(MENU.reduce(function(a,g){g.items.forEach(function(it){if(it[0]===k)a=it[1];});return a;},"info"))+'</div><h3>'+esc(d[0])+'</h3><p>'+esc(d[1])+'</p><div class="dest">Configured destination: <code>'+esc(d[2])+'</code></div><button class="btn-primary block press" data-act="toast" data-ic="ext" data-msg="Opening '+esc(d[0])+'">Open'+ic("arrowR")+'</button>'); },S.rm?0:320);
+}
+function inboxOpen(id){
+ var x=INBOX.filter(function(i){return i.id===id;})[0]; if(!x) return;
+ x.unread=false; renderPage(null); renderHome(false);
+ var b=$('[data-inbox="'+id+'"]'); if(b) b.focus({preventScroll:true});
+ var o=x.open.split(":");
+ if(o[0]==="alert") alertSheet(o[1]); else if(o[0]==="blog") blogSheet(+o[1]); else destSheet(o[1]);
+}
+
 /* ---------- Tabs ---------- */
 var TABS=[["home","home","Home"],["care","steth","Find care"],["places","pin","Locations"],["saved","heart","Saved"]];
 var SCREEN={home:"screen-home",care:"screen-care",places:"screen-places",saved:"screen-saved"};
@@ -1838,6 +1992,7 @@ function placeLens(stretch){
 }
 function restartEntrance(el){ if(S.rm) return; el.classList.remove("anim"); void el.offsetWidth; el.classList.add("anim"); }
 function go(tab,quiet){
+ if(PAGE){ var from=PAGE.from; $("#screen-page").hidden=true; PAGE=null; if(tab===from){ $("#"+SCREEN[tab]).hidden=false; $(".scroller",$("#"+SCREEN[tab])).scrollTop=0; syncTop(); syncCarousel(); return; } }
  var target=$("#"+SCREEN[tab]);
  if(tab===S.tab&&!target.hidden){
   if(tab==="care"&&C.stack.length>1){ C.stack=[C.stack[0]]; renderCare("back"); $("#scroller-care").scrollTop=0; return; }
@@ -1860,7 +2015,7 @@ var lastFocus=null, sheetKind="";
 function openSheet(title,body,full,foot,kind){
  lastFocus=document.activeElement; sheetKind=kind||"";
  var sh=$("#sheet"), sc=$("#scrim");
- sh.className="sheet glass-o"+(full?" full":""); sh.style.transform="";
+ sh.className="sheet glass-o"+(full?" full":"")+(kind==="drawer"?" drawer":""); sh.style.transform="";
  sh.innerHTML='<div class="grab" id="grab" aria-hidden="true"><i></i></div><div class="sheet-head"><h2 id="sheet-title">'+title+'</h2><button class="circle close-btn press" data-act="close" aria-label="Close">'+ic("x")+'</button></div><div class="sheet-body" id="sheet-body">'+body+'</div>'+(foot?'<div class="sheet-foot" id="sheet-foot">'+foot+'</div>':'');
  sh.hidden=false; sc.hidden=false; app.classList.add("modal");
  ["#screens","#dock"].forEach(function(s){var el=$(s); el.setAttribute("aria-hidden","true"); el.inert=true;});
@@ -1887,7 +2042,7 @@ function alertSheet(id){
 function destSheet(key){
  var d;
  if(key==="campaign") d={k:"Campaign",t:"Flu shots are here",body:"Walk-in flu shot clinics are open weekdays, 8 a.m. to 5 p.m., through Dec. 18. No appointment needed.",dest:"/campaigns/flu-2026",cta:"Show clinics",art:"flu"};
- else if(key[0]==="f"){var f=FEATURED[+key.slice(1)]; d={k:f.k,t:f.t,body:f.body,dest:f.dest,cta:"Read on MedBlog",art:f.art};}
+ else if(key[0]==="f"){ return blogSheet([3,4,5][+key.slice(1)]); }
  else if(key[0]==="s"){var s=RESOURCES[+key.slice(1)]; d={k:"Resource",t:s.t,body:s.s+".",dest:s.dest,cta:"Open "+s.t.toLowerCase(),svc:s};}
  else {var n=NEWS[+key.slice(1)]; d={k:"Announcement",t:n.t,body:"Published "+n.d+". Visible to everyone until its expiry date.",dest:n.dest,cta:"Read more",art:"visit"};}
  var topArt=d.svc?'<div class="dest-art svc-art art-'+d.svc.art+'" aria-hidden="true">'+ic(d.svc.i)+'</div>':'<div class="dest-art" aria-hidden="true">'+art(d.art)+'</div>';
@@ -2093,7 +2248,7 @@ function setStory(i){
   if(n===i){ s.classList.remove("on"); void s.offsetWidth; s.classList.add("on"); s.setAttribute("aria-current","true"); } else { s.classList.remove("on"); s.removeAttribute("aria-current"); } });
 }
 function slideTo(i){ var car=$("#car"); if(!car) return; var c=car.children[i]; if(!c) return; car.scrollTo({left:c.offsetLeft-16,behavior:S.rm?"auto":"smooth"}); }
-function syncCarousel(){ var mod=$(".feat-mod"); if(!mod) return; mod.classList.toggle("paused",S.carPaused||S.rm||S.tab!=="home"||app.classList.contains("modal")); }
+function syncCarousel(){ var mod=$(".feat-mod"); if(!mod) return; mod.classList.toggle("paused",S.carPaused||S.rm||S.tab!=="home"||!!PAGE||app.classList.contains("modal")); }
 
 /* ---------- Pull to refresh ---------- */
 function refresh(){
@@ -2123,6 +2278,7 @@ function refresh(){
 /* ---------- Top bar ---------- */
 function syncTop(){
  var tb=$("#topbar");
+ if(PAGE){ tb.classList.remove("scrolled","compact"); return; }
  if(S.tab==="care"&&top().v!=="search"){ tb.classList.remove("scrolled","compact"); return; }
  var sc=$("#"+SCREEN[S.tab]+" .scroller"), st=sc?sc.scrollTop:0;
  tb.classList.toggle("scrolled",st>8); tb.classList.toggle("compact",st>(S.tab==="home"?176:96));
@@ -2166,6 +2322,11 @@ app.addEventListener("click",function(e){
  if(d.dismiss){ S.dismissed.push(d.dismiss); closeSheet(); renderHome(false); toast("Alert dismissed","check"); return; }
  if(d.dest) return destSheet(d.dest);
  if(d.news) return destSheet("n"+d.news);
+ if(d.page){ if(!$("#sheet").hidden) closeSheet(); return openPage(d.page); }
+ if(d.blog!=null) return blogSheet(+d.blog);
+ if(d.topic){ blogTopic=d.topic; renderPage(null); var tb=$('[data-topic="'+d.topic+'"]'); if(tb) tb.focus({preventScroll:true}); return; }
+ if(d.menu) return menuGo(d.menu);
+ if(d.inbox) return inboxOpen(d.inbox);
  if(d.dot!=null){ setStory(+d.dot); slideTo(+d.dot); return; }
  if(d.fill!=null){ var q=$("#q"); q.value=d.fill; renderResults(); q.focus(); return; }
  if(d.browse){ scope=d.browse; $$(".scopes .pill",$("#sheet")).forEach(function(c){c.setAttribute("aria-pressed",String(c.dataset.scope===scope));}); renderResults(); $("#q").focus(); return; }
@@ -2200,6 +2361,9 @@ app.addEventListener("click",function(e){
   case "mychart": return mychartSheet(d.feat);
   case "refresh": $("#scroller-home").scrollTo({top:0}); return refresh();
   case "back": return pop();
+  case "page-back": return closePage();
+  case "menu": return menuSheet();
+  case "read-all": INBOX.forEach(function(x){x.unread=false;}); renderPage(null); renderHome(false); toast("All marked as read","check"); var pt=$("#page-title"); if(pt) pt.focus({preventScroll:true}); return;
   case "cq-go": return runSearch($("#cq").value);
   case "cq-clear": var c=$("#cq"); c.value=""; C.draft=""; renderSugg(); c.focus(); return;
   case "clear-recents": S.recents=[]; store("recents",[]); renderCare(null); toast("Recent searches cleared","history"); var ci=$("#cq"); if(ci) ci.focus(); return;
@@ -2238,7 +2402,7 @@ app.addEventListener("keydown",function(e){
   if(e.key==="Enter"){ e.preventDefault(); if(sIdx>=0&&!l.hidden) pickSugg(sIdx); else runSearch(e.target.value); return; }
   if(e.key==="Escape"&&!l.hidden){ l.hidden=true; e.target.setAttribute("aria-expanded","false"); return; }
  }
- if(e.key==="Escape"){ if(!$("#perm").hidden) return permAnswer("denied"); if(!$("#sheet").hidden) return closeSheet(); if(S.tab==="care"&&C.stack.length>1) return pop(); }
+ if(e.key==="Escape"){ if(!$("#perm").hidden) return permAnswer("denied"); if($("#sheet").classList.contains("show")) return closeSheet(); if(PAGE) return closePage(); if(S.tab==="care"&&C.stack.length>1) return pop(); }
  if(e.key==="Tab"){
   var scopeEl=!$("#perm").hidden?$("#perm"):(!$("#sheet").hidden?$("#sheet"):null); if(!scopeEl) return;
   var f=$$("button:not([hidden]):not([disabled]),input",scopeEl).filter(function(x){return x.offsetParent!==null;}); if(!f.length) return;
