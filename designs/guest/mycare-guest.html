@@ -1087,7 +1087,7 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
     <div class="flow">
       <article class="fstep"><h3>Enter</h3><ul>
         <li><b>Home search</b> in the Blue header (All scope) and its top searches</li>
-        <li><b>Find a provider</b> tile and <b>Find care</b> tab (Providers scope)</li>
+        <li><b>Find care</b> tile and <b>Find care</b> tab (Providers scope)</li>
         <li><b>Near-me arrow</b> – providers near you, by distance</li>
         <li><b>Specialty list</b> and <b>search history</b>, as in the old app</li>
       </ul><button class="go-to" data-jump="home">Show home</button></article>
@@ -1227,7 +1227,7 @@ if (document.fonts && document.fonts.load) {
 /* EXTRA_GLYPHS: arrow_downward arrow_upward */
 const ICON_MAP = [
   ['home', 'home', 'Home', 'Tab bar', 'Navigation'],
-  ['findCare', 'stethoscope', 'Find care – providers', 'Tab bar, Find a provider tile, Providers scope', 'Navigation'],
+  ['findCare', 'stethoscope', 'Find care – providers', 'Tab bar, Find care tile, Providers scope', 'Navigation'],
   ['place', 'location_on', 'Locations and addresses', 'Tab bar, Locations tile, result cards, profile', 'Navigation'],
   ['wayfinding', 'directions_walk', 'Wayfinding', 'Tab bar, Wayfinding tile, resources', 'Navigation'],
   ['signIn', 'login', 'Sign in – MyChart', 'Tab bar, app bar, sign-in prompts', 'Navigation'],
@@ -1475,7 +1475,7 @@ function matchProvider(p, it) {
 
 /* ---------- Home content (fictional) ---------- */
 const TILES = [
-  { k: 'find', lbl: 'Find a provider', ic: 'findCare' }, { k: 'loc', lbl: 'Locations', ic: 'place' }, { k: 'way', lbl: 'Wayfinding', ic: 'wayfinding' },
+  { k: 'find', lbl: 'Find care', ic: 'findCare' }, { k: 'loc', lbl: 'Locations', ic: 'place' }, { k: 'way', lbl: 'Wayfinding', ic: 'wayfinding' },
   { k: 'urgent', lbl: 'Urgent care', ic: 'urgent' }, { k: 'video', lbl: 'Video visits', ic: 'video' }, { k: 'saved', lbl: 'Saved providers', ic: 'favorite' }
 ];
 const LOCKED = [
