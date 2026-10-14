@@ -11,7 +11,7 @@
   --page-accent:#004278; --page-accent-fg:#FFFFFF; --page-chip:#EBF0F5; --page-device:#14202B;
 
   /* App color tokens – UT Southwestern palette (from design/TOKENS.md). The app UI is light-only, per the brand deck. */
-  --c-blue:#004278; --c-blue-press:#00315A; --c-on-blue:#FFFFFF; --c-on-blue-2:#D6E4F0; --c-on-blue-line:rgba(255,255,255,.32); --c-on-blue-fill:rgba(255,255,255,.12);
+  --c-blue:#004278; --c-blue-press:#00315A; --c-on-blue:#FFFFFF; --c-on-blue-2:#D6E4F0; --c-on-blue-line:rgba(255,255,255,.32); --c-on-blue-fill:rgba(255,255,255,.12); --c-on-blue-tonal:rgba(255,255,255,.14); --c-on-blue-tonal-hover:rgba(255,255,255,.22); --c-on-blue-sheen:rgba(255,255,255,.16);
   --c-text:#333333; --c-text-2:#5B6770; --c-bg:#F7F8FA; --c-surface:#FFFFFF; --c-tint:#EBF0F5;
   --c-border:#D5DDE5; --c-border-strong:#7A8690; --c-skel:#E3E9EF;
   --c-cyan:#00A9E0; --c-wash:#66CBEC; --c-red:#B0003A; --c-red-bg:#FBEFF2; --c-magenta:#E0004D;
@@ -169,9 +169,11 @@ ul,ol{padding:0}
 .btn-ghost:hover{background:var(--c-tint)}
 .btn-white{background:var(--c-surface);color:var(--c-blue)}
 .btn-white:hover{background:var(--c-tint)}
-.btn-outline-white{background:transparent;color:var(--c-on-blue);box-shadow:inset 0 0 0 2px var(--c-on-blue-line)}
-.btn-outline-white:hover{background:var(--c-on-blue-fill)}
-.btn-outline-white[aria-pressed="true"]{background:var(--c-on-blue);color:var(--c-blue);box-shadow:none}
+/* Tonal button on Blue: secondary to the white primary; a translucent fill, no outline */
+.btn-tonal{background:var(--c-on-blue-tonal);color:var(--c-on-blue);box-shadow:inset 0 1px 0 var(--c-on-blue-sheen)}
+.btn-tonal:hover{background:var(--c-on-blue-tonal-hover)}
+.btn-tonal[aria-pressed="true"]{background:var(--c-on-blue);color:var(--c-blue);box-shadow:none}
+.btn-tonal[aria-pressed="true"] .hrt .ic{color:var(--c-magenta)}
 .btn-sm{min-height:44px;font-size:var(--fs-14);line-height:var(--lh-14);padding-inline:var(--sp-12)}
 .btn-block{width:100%}
 .btn .spinner,.spinner{width:20px;height:20px;border-radius:50%;border:2px solid currentColor;border-right-color:transparent;animation:spin 700ms linear infinite;flex:none}
@@ -432,7 +434,7 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
 .p-hero .tags .tag{background:var(--c-on-blue-fill);color:var(--c-on-blue);box-shadow:none}
 .p-hero .tags .tag .ic{color:var(--c-on-blue)}
 .p-acts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--sp-8)}
-.p-acts .btn-white{grid-column:1 / -1}
+.p-acts .btn-white{grid-column:1 / -1;box-shadow:0 1px 2px rgba(0,20,40,.24)}
 .p-sec{padding-inline:var(--sp-16);display:flex;flex-direction:column;gap:var(--sp-12)}
 .p-sec h3{font-size:var(--fs-18);line-height:var(--lh-18);font-weight:700;color:var(--c-blue)}
 .p-sec h4{font-size:var(--fs-14);line-height:var(--lh-14);font-weight:700;color:var(--c-text-2);margin:0}

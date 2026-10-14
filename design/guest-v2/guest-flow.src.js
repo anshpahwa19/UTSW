@@ -549,9 +549,9 @@ function viewProfile(id){
      <div class="p-id">${avatar(p,72)}<div class="stack" style="gap:var(--sp-4);min-width:0"><h2 id="p-name">${esc(name(p))}</h2><p>${esc(p.spec)}</p></div></div>
      <div class="tags">${p.accepting?`<span class="tag">${icf("check_circle",16)}Accepting new patients</span>`:`<span class="tag">${ic("do_not_disturb_on",16)}Not accepting new patients</span>`}${p.online?`<span class="tag">${ic("event_available",16)}Online scheduling</span>`:""}</div>
      <div class="p-acts">
-       <button class="btn btn-white press" data-action="request" data-id="${id}">${ic("calendar_add_on",24)}<span>Request an appointment</span></button>
-       <button class="btn btn-outline-white press" data-action="fav" data-id="${id}" data-style="hero" aria-pressed="${saved}">${saved?icf("favorite",20):ic("favorite",20)}<span>${saved?"Saved":"Save"}</span></button>
-       <button class="btn btn-outline-white press" data-action="share" data-id="${id}">${ic("share",20)}<span>Share</span></button>
+       <button class="btn btn-white press" data-action="request" data-id="${id}">${ic("calendar_add_on",20)}<span>Request an appointment</span></button>
+       <button class="btn btn-tonal btn-sm press" data-action="fav" data-id="${id}" data-style="hero" aria-pressed="${saved}">${saved?heart(20):ic("favorite",20)}<span>${saved?"Saved":"Save"}</span></button>
+       <button class="btn btn-tonal btn-sm press" data-action="share" data-id="${id}">${ic("share",20)}<span>Share</span></button>
      </div>
    </section>
    ${!p.accepting?`<div class="pad"><div class="notice"><span class="lead">${ic("info",20)}</span><span class="nb"><span>${drName(p)} isn’t accepting new patients right now. Current patients can still schedule.</span><span class="row-btns"><button class="btn btn-secondary btn-sm" data-action="run-accepting" data-q="${esc(p.spec)}">See ${esc(p.spec)} doctors accepting new patients</button></span></span></div></div>`:""}
