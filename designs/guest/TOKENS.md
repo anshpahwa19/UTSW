@@ -19,7 +19,7 @@ Guest tabs: **Home · Find care · Locations · Wayfinding · MyChart**.
 
 ## Flow map
 
-1. **Enter** – home search (All scope) and top searches; Find care tile and Find care tab (Providers scope); near-me arrow; specialty list and search history.
+1. **Enter** – home search (All scope) and top searches; Find my care tile and Find care tab (Providers scope); near-me arrow; specialty list and search history.
 2. **Search** – suggestions as you type (specialties, conditions, names); plain language and synonyms ("skin doc" → Dermatology); typo fixes ("dermatolgy"); "near Frisco" sets location; "Spanish-speaking" adds a language filter; recent (device) and popular searches.
 3. **Refine** – location (near me, ZIP or city; ask, denied, and no-fix fallbacks); Filters (eight attributes); Sort (best match, distance, last name A–Z, featured first).
 4. **Results** – cards to profile; loading skeleton, error, offline, no results with alternatives, each with retry.

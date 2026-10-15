@@ -82,7 +82,7 @@ button{font:inherit; color:inherit}
 .ms.f1{--fill:1}
 /* Until the icon font loads, glyphs stay invisible rather than showing their ligature names */
 html:not(.ms-ready) .ms{color:transparent!important}
-/* Icon container: always a circle (the dot in the MyCare symbol) – tint in lists, Blue in quick access */
+/* Icon container: always a circle (the dot in the MyCare symbol) – tint in lists, Blue in Quick links */
 .dot{width:var(--dot48); height:var(--dot48); border-radius:50%; display:grid; place-items:center; flex:none; background:var(--tint); color:var(--blue); transition:background-color var(--d-fast) var(--ease-out), color var(--d-fast) var(--ease-out)}
 .dot.d40{width:var(--dot40); height:var(--dot40)}
 .dot.d56{width:var(--dot56); height:var(--dot56)}
@@ -309,7 +309,7 @@ html:not(.ms-ready) .ms{color:transparent!important}
 .locked-body p{color:var(--ink-2)}
 .locked-body .btns{display:flex; flex-wrap:wrap; gap:var(--s3); margin-top:var(--s2)}
 
-/* ===================== Quick access ===================== */
+/* ===================== Quick links ===================== */
 .qa{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:var(--s2); padding-inline:var(--s4)}
 .qa-tile{position:relative; min-height:108px; border:0; border-radius:var(--r-lg); background:var(--surface); box-shadow:var(--shadow-1), 0 0 0 1px var(--line); padding:var(--s3); display:flex; flex-direction:column; justify-content:flex-start; align-items:flex-start; gap:var(--s3); text-align:left; color:var(--ink);
   transition:transform var(--d-snappy) var(--spring-snappy), background-color var(--d-fast) var(--ease-out)}
@@ -516,15 +516,9 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
 .pill-btn{min-height:var(--hit); padding:0 var(--s4) 0 var(--s3); border:0; border-radius:var(--r-pill); background:rgba(255,255,255,.14); color:#FFFFFF; font-weight:600; font-size:var(--t14); display:inline-flex; align-items:center; gap:var(--s2); white-space:nowrap; flex:none; transition:transform var(--d-snappy) var(--spring-snappy), background-color var(--d-fast)}
 .pill-btn:active{transform:scale(.95); background:rgba(255,255,255,.24); transition-duration:80ms}
 
-/* Quick access: open tiles are Blue; MyChart tiles are tint with a lock and the words “Sign in” */
+/* Quick links: open tiles are Blue; MyChart tiles are tint with a lock and route to sign-in */
 .qa-tile.lockd .dot{background:var(--tint); color:var(--blue); --grad:0}
 .qa-lock{position:absolute; top:var(--s3); right:var(--s3); color:var(--ink-2)}
-.qa-sub{display:flex; align-items:center; gap:var(--s2); padding:var(--s4) var(--s4) var(--s2); font-size:var(--t14); font-weight:600; color:var(--ink-2)}
-.qa-sub .ms{color:var(--blue)}
-.qa2{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:var(--s2); padding-inline:var(--s4)}
-.qa2 .qa-tile{min-height:72px; flex-direction:row; align-items:center; gap:var(--s3); padding:var(--s3) var(--s3)}
-.qa2 .qa-lock{top:var(--s2); right:var(--s2)}
-.qa2 .qa-txt{padding-right:var(--s3)}
 
 /* Find care, Locations, Wayfinding, MyChart tab pages */
 .ff-row{display:flex; gap:var(--s2); padding-inline:var(--s4)}
@@ -910,7 +904,7 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
         <li>Open Filters, pick Spanish and Online scheduling, then sort by distance</li>
         <li>Save a provider with the heart, then find it under Saved providers</li>
         <li>Open a profile and share it, or request an appointment</li>
-        <li>Tap a MyChart tile such as Test results</li>
+        <li>Tap Get your test results in Quick links</li>
         <li>Open the menu (top right of home) and check the Inbox</li>
         <li>Tap MedBlog “See all,” filter by topic, and open an article</li>
       </ul>
@@ -1059,7 +1053,7 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
     <div class="tbl"><table>
       <tbody>
         <tr><td><span class="sw" style="background:#004278"></span>Blue #004278</td><td>Header, names, primary buttons, selected chips · white on Blue 10.24:1</td></tr>
-        <tr><td><span class="sw" style="background:#EBF0F5"></span>Tint #EBF0F5</td><td>Initials circles, tags, MyChart tiles · Blue on tint 8.93:1</td></tr>
+        <tr><td><span class="sw" style="background:#EBF0F5"></span>Tint #EBF0F5</td><td>Initials circles, tags, sign-in Quick links · Blue on tint 8.93:1</td></tr>
         <tr><td><span class="sw" style="background:#5B6770"></span>#5B6770</td><td>Distance, meta, suggestion types · 5.46:1 on #F7F8FA, 6.05:1 on white</td></tr>
         <tr><td><span class="sw" style="background:#00A9E0"></span>Cyan #00A9E0</td><td>Shapes only – your-location dot, brand dot</td></tr>
         <tr><td><span class="sw" style="background:#B0003A"></span>Alert #B0003A</td><td>Emergency alerts and inline field errors (ZIP not found) · 6.4:1+ on white</td></tr>
@@ -1150,7 +1144,7 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
       <thead><tr><th>Old screen</th><th>Capability</th><th>Where it lives now</th></tr></thead>
       <tbody>
         <tr><td>Guest home</td><td>MedBlog carousel with dots and pause</td><td><b>MedBlog</b> module: swipeable cards, progress bar, previous and next buttons. It never auto-advances, so nothing needs pausing.</td></tr>
-        <tr><td>Guest home</td><td>Quick Links: message, test results, visits, billing</td><td><b>Quick access → In MyChart</b> tiles with a lock; each opens a sign-in prompt for that task</td></tr>
+        <tr><td>Guest home</td><td>Quick Links: message, test results, visits, billing</td><td><b>Quick links</b>: the same four names, each with a lock, opening a sign-in prompt for that task; plus <b>Find my care</b> and <b>Locations</b></td></tr>
         <tr><td>Guest home</td><td>UTSW Resources: #1 in DFW, wayfinding, video visit prep</td><td><b>UTSW resources</b> rows: recognition, internal and external wayfinding (opens the tab), prepare for a video visit</td></tr>
         <tr><td>Hamburger menu</td><td>Inbox</td><td><b>Menu → Inbox</b>: app notifications (alerts, announcements) with unread state and Mark all as read; care team messages stay in MyChart</td></tr>
         <tr><td>Hamburger menu</td><td>Shuttle</td><td><b>Menu → Campus shuttle</b>: routes, next departures, live map</td></tr>
@@ -1174,7 +1168,7 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
       <tbody>
         <tr><td>Home layout</td><td>Guest composition; CMS order and visibility in the controls</td></tr>
         <tr><td>Emergency alert</td><td>Collapsed, expanded, full details sheet, two alerts with priority; announced to screen readers</td></tr>
-        <tr><td>Search and quick access</td><td>Hero search, top searches, tiles routing to tabs, search scopes, or sign-in</td></tr>
+        <tr><td>Search and quick access</td><td>Hero search, top searches, six Quick links routing to Find care, Locations, or sign-in</td></tr>
         <tr><td>Featured and services</td><td>MedBlog, UTSW resources, flu campaign, announcements with dates</td></tr>
         <tr><td>Provider search</td><td>Keywords, plain language, synonyms and abbreviations, typo fixes, suggestions, recent and popular</td></tr>
         <tr><td>Location search</td><td>Near me, ZIP or city, permission ask, denied and no-fix fallbacks</td></tr>
@@ -1227,7 +1221,7 @@ if (document.fonts && document.fonts.load) {
 /* EXTRA_GLYPHS: arrow_downward arrow_upward */
 const ICON_MAP = [
   ['home', 'home', 'Home', 'Tab bar', 'Navigation'],
-  ['findCare', 'stethoscope', 'Find care – providers', 'Tab bar, Find care tile, Providers scope', 'Navigation'],
+  ['findCare', 'stethoscope', 'Find care – providers', 'Tab bar, Find my care tile, Providers scope', 'Navigation'],
   ['place', 'location_on', 'Locations and addresses', 'Tab bar, Locations tile, result cards, profile', 'Navigation'],
   ['wayfinding', 'directions_walk', 'Wayfinding', 'Tab bar, Wayfinding tile, resources', 'Navigation'],
   ['signIn', 'login', 'Sign in – MyChart', 'Tab bar, app bar, sign-in prompts', 'Navigation'],
@@ -1257,11 +1251,11 @@ const ICON_MAP = [
   ['clinic', 'door_front', 'Clinics', 'Locations, Wayfinding', 'Find care'],
   ['parking', 'local_parking', 'Parking', 'Locations, Wayfinding', 'Find care'],
   ['indoor', 'map', 'Indoor maps', 'Wayfinding', 'Find care'],
-  ['messages', 'chat', 'Message your doctor', 'MyChart tile', 'MyChart destinations'],
-  ['results', 'lab_profile', 'Test results', 'MyChart tile', 'MyChart destinations'],
-  ['visits', 'calendar_month', 'Manage your visits', 'MyChart tile', 'MyChart destinations'],
-  ['bill', 'receipt_long', 'Billing', 'MyChart tile, Pay as a guest', 'MyChart destinations'],
-  ['lock', 'lock', 'Needs sign-in', 'MyChart tiles and prompts', 'MyChart destinations'],
+  ['messages', 'chat', 'Message your doctor', 'Quick links', 'MyChart destinations'],
+  ['results', 'lab_profile', 'Test results', 'Quick links', 'MyChart destinations'],
+  ['visits', 'calendar_month', 'Manage your visits', 'Quick links', 'MyChart destinations'],
+  ['bill', 'receipt_long', 'Billing', 'Quick links, Pay as a guest', 'MyChart destinations'],
+  ['lock', 'lock', 'Needs sign-in', 'Quick links and sign-in prompts', 'MyChart destinations'],
   ['urgent', 'acute', 'Urgent care', 'Urgent care tile, virtual urgent care', 'Content and services'],
   ['video', 'videocam', 'Video visits', 'Video visits tile, video visit prep', 'Content and services'],
   ['vaccine', 'vaccines', 'Vaccines', 'Flu campaign badge only', 'Content and services'],
@@ -1475,14 +1469,13 @@ function matchProvider(p, it) {
 
 /* ---------- Home content (fictional) ---------- */
 const TILES = [
-  { k: 'find', lbl: 'Find care', ic: 'findCare' }, { k: 'loc', lbl: 'Locations', ic: 'place' }, { k: 'way', lbl: 'Wayfinding', ic: 'wayfinding' },
-  { k: 'urgent', lbl: 'Urgent care', ic: 'urgent' }, { k: 'video', lbl: 'Video visits', ic: 'video' }, { k: 'saved', lbl: 'Saved providers', ic: 'favorite' }
+  { k: 'find', lbl: 'Find my care', ic: 'findCare' }, { k: 'loc', lbl: 'Locations', ic: 'place' }
 ];
 const LOCKED = [
   { k: 'msg', lbl: 'Message your doctor', ic: 'messages', why: 'message your care team', what: 'Send questions to your care team and get answers, usually within two business days.' },
   { k: 'res', lbl: 'Get your test results', ic: 'results', why: 'see your test results', what: 'See lab and imaging results as soon as they are released, with notes from your provider.' },
-  { k: 'visits', lbl: 'Manage your visits', ic: 'visits', why: 'manage your visits', what: 'See upcoming visits, check in early, and cancel or reschedule.' },
-  { k: 'bill', lbl: 'Manage billing', ic: 'bill', why: 'manage billing', what: 'View statements, pay online, and set up a payment plan.' }
+  { k: 'visits', lbl: 'Manage Your Visits', ic: 'visits', why: 'manage your visits', what: 'See upcoming visits, check in early, and cancel or reschedule.' },
+  { k: 'bill', lbl: 'Manage Billing', ic: 'bill', why: 'manage billing', what: 'View statements, pay online, and set up a payment plan.' }
 ];
 const TOP = [['Primary care', 'Providers'], ['Knee pain doctor near Frisco', 'Providers'], ['Urgent care wait times', 'All'], ['Spanish-speaking dermatologist', 'Providers'], ['Parking', 'Locations'], ['Flu shots', 'All']];
 const POPULAR = ['Primary care', 'Dermatology', 'Knee pain', 'Cardiology', 'Migraine', 'Physical therapy'];
@@ -1574,7 +1567,7 @@ const INDEX = [
 ];
 
 /* ---------- CMS composition: fixed header, then configurable guest modules ---------- */
-const MOD_LABELS = { alerts: 'Emergency alert banner', greeting: 'Welcome', search: 'Search and top searches', signin: 'MyChart sign-in prompt', tiles: 'Quick access', featured: 'MedBlog (featured)', services: 'UTSW resources', campaign: 'Campaign banner', news: 'Announcements' };
+const MOD_LABELS = { alerts: 'Emergency alert banner', greeting: 'Welcome', search: 'Search and top searches', signin: 'MyChart sign-in prompt', tiles: 'Quick links', featured: 'MedBlog (featured)', services: 'UTSW resources', campaign: 'Campaign banner', news: 'Announcements' };
 const HEAD = ['alerts', 'greeting', 'search'];
 const cfg = ['tiles', 'signin', 'featured', 'services', 'campaign', 'news'].map(id => ({ id, on: true }));
 
@@ -1627,12 +1620,11 @@ const R = {
     </section>`;
   },
   tiles() {
-    const n = favs.size;
+    const open = t => `<button class="qa-tile" data-tile="${t.k}">${circle(t.ic, 48, 'solid')}<span class="qa-txt"><span class="qa-lbl">${t.lbl}</span></span></button>`;
+    const locked = t => `<button class="qa-tile lockd" data-locked="${t.k}" aria-label="${t.lbl}. Needs MyChart sign-in">${circle(t.ic, 48)}<span class="qa-txt"><span class="qa-lbl">${t.lbl}</span></span><span class="qa-lock">${ico('lock', 16)}</span></button>`;
     return `<section aria-labelledby="qa-h">
-      <div class="sec-head"><h2 id="qa-h">Quick access</h2></div>
-      <div class="qa">${TILES.map(t => `<button class="qa-tile" data-tile="${t.k}" ${t.k === 'saved' && n ? `aria-label="${t.lbl}, ${n} saved"` : ''}>${circle(t.ic, 48, 'solid')}<span class="qa-txt"><span class="qa-lbl">${t.lbl}</span>${t.k === 'saved' && n ? `<span class="qa-meta" aria-hidden="true"><i></i>${n} saved</span>` : ''}</span></button>`).join('')}</div>
-      <p class="qa-sub">${ico('lock', 16)}In MyChart – sign in to use</p>
-      <div class="qa2">${LOCKED.map(t => `<button class="qa-tile lockd" data-locked="${t.k}" aria-label="${t.lbl}. Needs MyChart sign-in">${circle(t.ic, 40)}<span class="qa-txt"><span class="qa-lbl">${t.lbl}</span></span><span class="qa-lock">${ico('lock', 16)}</span></button>`).join('')}</div>
+      <div class="sec-head"><h2 id="qa-h">Quick links</h2></div>
+      <div class="qa">${LOCKED.map(locked).join('')}${TILES.map(open).join('')}</div>
     </section>`;
   },
   featured() {
@@ -1732,8 +1724,6 @@ function initTile(t) {
       if (lk) return openLockedSheet(lk, t);
       if (k === 'find') return openSearch('Providers', '', t);
       if (k === 'loc') return setTab(2);
-      if (k === 'way') return setTab(3);
-      if (k === 'saved') return openPage('saved', t);
       openPage(k, t);
     }, RM() ? 0 : 120);
   });
