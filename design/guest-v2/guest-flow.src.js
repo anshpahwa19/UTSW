@@ -1195,7 +1195,7 @@ let scrollRaf=0;
 function onScroll(){
   cancelAnimationFrame(scrollRaf);scrollRaf=requestAnimationFrame(()=>{
     const y=view.scrollTop,move=canMove(),t=top().v;
-    $("#appbar").classList.toggle("scrolled",y>4);
+    const fh=$(".fc-head",view);$("#appbar").classList.toggle("scrolled",y>4&&!fh);if(fh)fh.classList.toggle("raised",y>4);
     applyScroll();
     const rh=$(".res-head",view);if(rh)rh.classList.toggle("raised",y>4);
     if(t==="home"){

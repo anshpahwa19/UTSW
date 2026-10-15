@@ -377,6 +377,9 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
 /* ---------- Find care ---------- */
 .fc-head{background:var(--c-blue);color:var(--c-on-blue);padding:0 var(--sp-16) var(--sp-8);display:flex;flex-direction:column;gap:var(--sp-8);position:sticky;top:0;z-index:2}
 .fc-head form{margin:0}
+/* Blue continues above the sticky header so no light sliver shows between it and the app bar (overscroll, subpixel scroll) */
+.fc-head{box-shadow:0 -96px 0 var(--c-blue);transition:box-shadow 300ms var(--ease-std)}
+.fc-head.raised{box-shadow:0 -96px 0 var(--c-blue),0 8px 24px rgba(0,30,60,.2)}
 .fc-head form{display:flex}
 .fc-head .field:focus-within{box-shadow:0 0 0 3px var(--c-cyan)}
 .loc-btn{display:flex;align-items:center;gap:var(--sp-8);min-height:44px;border:0;background:transparent;color:var(--c-on-blue);font-size:var(--fs-14);line-height:var(--lh-14);font-weight:600;cursor:pointer;padding-inline:var(--sp-16);border-radius:var(--r-full);text-align:left;align-self:flex-start;max-width:100%}
@@ -1995,7 +1998,7 @@ let scrollRaf=0;
 function onScroll(){
   cancelAnimationFrame(scrollRaf);scrollRaf=requestAnimationFrame(()=>{
     const y=view.scrollTop,move=canMove(),t=top().v;
-    $("#appbar").classList.toggle("scrolled",y>4);
+    const fh=$(".fc-head",view);$("#appbar").classList.toggle("scrolled",y>4&&!fh);if(fh)fh.classList.toggle("raised",y>4);
     applyScroll();
     const rh=$(".res-head",view);if(rh)rh.classList.toggle("raised",y>4);
     if(t==="home"){
