@@ -1109,7 +1109,7 @@ osRM.addEventListener?.("change",()=>setMotion(osRM.matches));
 function setCapture(on){
   S.capture=on;setMotion(on||osRM.matches);
   $$(".ghost-wrap,.flyer",screen).forEach(n=>n.remove());view.getAnimations({subtree:true}).forEach(a=>{try{a.finish()}catch(_){a.cancel()}});
-  $("#capture-mode").setAttribute("aria-pressed",String(on));$("#capture-mode").textContent=on?"Frozen – click to resume motion":"Freeze for capture";
+  screen.classList.toggle("capture",on);view.scrollTop=0;$("#capture-mode").setAttribute("aria-pressed",String(on));$("#capture-mode").textContent=on?"Frozen – click to resume motion":"Freeze for capture";
 }
 $("#capture-mode").addEventListener("click",()=>setCapture(!S.capture));
 

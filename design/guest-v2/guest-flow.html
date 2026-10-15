@@ -650,6 +650,13 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
 @keyframes shake{0%,100%{transform:none}25%{transform:translateX(-6px)}50%{transform:translateX(6px)}75%{transform:translateX(-3px)}}
 .bump{animation:pop 320ms var(--ease-ios)}
 
+/* Figma capture: the phone grows to the full length of the current screen (no inner scrolling) so capture plugins see everything */
+.screen.capture{height:auto;min-height:844px}
+.screen.capture .views{flex:none;overflow:visible}
+.screen.capture .view{position:relative;inset:auto;overflow:visible;min-height:calc(844px - var(--status-h) - 64px - var(--tabbar-h))}
+.screen.capture .ptr{display:none}
+.layout:has(.screen.capture) .stage{position:static}
+
 /* Reduced motion: OS setting or prototype toggle */
 .screen.rm *,.screen.rm *::before,.screen.rm *::after{animation-duration:1ms!important;animation-delay:0ms!important;animation-iteration-count:1!important;transition-duration:1ms!important;scroll-behavior:auto!important}
 .screen.rm .skel::after,.screen.rm .toast .t-bar,.screen.rm .locating::before,.screen.rm .locating::after{display:none}
@@ -749,7 +756,7 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
             <div class="seg" data-ctl="rm"><button data-v="0">Full</button><button data-v="1">Reduced</button></div></fieldset>
           <div class="ctrl"><span class="lbl">Figma capture</span>
             <button class="page-btn" id="capture-mode" aria-pressed="false">Freeze for capture</button>
-            <span class="cap-note">Stops all motion and shows every section in its final place. Or open the link with <code>#capture</code> at the end.</span></div>
+            <span class="cap-note">Stops all motion, shows every section in its final place, and lets the phone grow to the full length of the screen so the whole page can be captured. Or open the link with <code>#capture</code> at the end.</span></div>
           <div class="ctrl"><span class="lbl">Local data</span>
             <button class="page-btn" id="reset-local">Clear saved providers and recent searches</button></div>
         </div>
@@ -1917,7 +1924,7 @@ osRM.addEventListener?.("change",()=>setMotion(osRM.matches));
 function setCapture(on){
   S.capture=on;setMotion(on||osRM.matches);
   $$(".ghost-wrap,.flyer",screen).forEach(n=>n.remove());view.getAnimations({subtree:true}).forEach(a=>{try{a.finish()}catch(_){a.cancel()}});
-  $("#capture-mode").setAttribute("aria-pressed",String(on));$("#capture-mode").textContent=on?"Frozen – click to resume motion":"Freeze for capture";
+  screen.classList.toggle("capture",on);view.scrollTop=0;$("#capture-mode").setAttribute("aria-pressed",String(on));$("#capture-mode").textContent=on?"Frozen – click to resume motion":"Freeze for capture";
 }
 $("#capture-mode").addEventListener("click",()=>setCapture(!S.capture));
 
