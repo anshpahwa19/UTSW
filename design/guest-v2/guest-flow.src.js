@@ -1105,6 +1105,13 @@ $("#req").innerHTML=`<thead><tr><th>Requirement</th><th>In the prototype</th><th
 $("#req").addEventListener("click",e=>{const b=e.target.closest("[data-jump]");if(b)$(`#jumps [data-jump="${b.dataset.jump}"]`).click()});
 
 osRM.addEventListener?.("change",()=>setMotion(osRM.matches));
+/* Figma capture: freeze motion so every section sits in its final state (same path as reduced motion, plus a clean frame) */
+function setCapture(on){
+  S.capture=on;setMotion(on||osRM.matches);
+  $$(".ghost-wrap,.flyer",screen).forEach(n=>n.remove());view.getAnimations({subtree:true}).forEach(a=>{try{a.finish()}catch(_){a.cancel()}});
+  $("#capture-mode").setAttribute("aria-pressed",String(on));$("#capture-mode").textContent=on?"Frozen – click to resume motion":"Freeze for capture";
+}
+$("#capture-mode").addEventListener("click",()=>setCapture(!S.capture));
 
 /* ---------- Motion layer ---------- */
 const canMove=()=>!rm();
@@ -1291,5 +1298,6 @@ $("#search-ic").outerHTML=ic("search");
 $("#q-clear").innerHTML=ic("close",20);
 $("#sheet-close").innerHTML=ic("close");
 renderTabbar();render();renderCMS();syncControls();
+if(/^#(capture|still|figma)$/.test(location.hash))setCapture(true);
 setTimeout(()=>{const l=activeAlerts();if(l.length)sayAssert(`${l[0].label} alert: ${l[0].title}`)},800);
 })();
