@@ -459,8 +459,6 @@ h1,h2,h3,p{margin:0}
 .tab svg{width:24px;height:24px;transition:transform var(--dur-base) var(--ease-spring)}
 .tab[aria-current="page"]{color:#FFFFFF}
 .tab[aria-current="page"] svg{transform:translateY(-2px) scale(1.08)}
-.search-orb{width:64px;flex:none;display:grid;place-items:center;border:0;color:#FFFFFF}
-.search-orb svg{width:24px;height:24px}
 .home-ind{position:absolute;bottom:var(--s-8);left:50%;width:136px;height:4px;margin-left:-68px;border-radius:var(--r-pill);background:rgba(255,255,255,.85);z-index:21}
 
 /* Toast */
@@ -846,7 +844,7 @@ mark{background:rgba(0,169,224,.35);color:inherit;border-radius:4px}
       <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDI0IDEwMjQiPjxyZWN0IHdpZHRoPSIxMDI0IiBoZWlnaHQ9IjEwMjQiIGZpbGw9IiMwMDQyNzgiLz48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLjAwIDAuMDApIHNjYWxlKDEuMDAwMDApIj48cGF0aCBkPSJNMzAwIDI5MlY1MDBBMjEyIDIxMiAwIDAgMCA3MjQgNTAwVjI5MiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjE0MCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PGNpcmNsZSBjeD0iNTEyIiBjeT0iNDY4IiByPSIxMDIiIGZpbGw9IiMwMEE5RTAiLz48L2c+PC9zdmc+" alt="">
       <div>
         <p class="kicker">UTSW MyCare · Guest flow v2</p>
-        <h1>Guest home and Find care</h1>
+        <h1>Guest home and Find my care</h1>
       </div>
     </div>
     <ul class="facts" aria-label="Prototype facts">
@@ -868,7 +866,7 @@ mark{background:rgba(0,169,224,.35);color:inherit;border-radius:4px}
               <div class="ptr glass-o" id="ptr" aria-hidden="true"></div>
               <div class="scroller" id="scroller-home"><div class="content" id="home"></div></div>
             </section>
-            <section class="screen" id="screen-care" aria-label="Find care" hidden><div class="scroller" id="scroller-care"><div class="content" id="care"></div></div></section>
+            <section class="screen" id="screen-care" aria-label="Find my care" hidden><div class="scroller" id="scroller-care"><div class="content" id="care"></div></div></section>
             <section class="screen" id="screen-places" aria-label="Locations" hidden><div class="scroller"><div class="content" id="places"></div></div></section>
             <section class="screen" id="screen-saved" aria-label="Saved providers" hidden><div class="scroller"><div class="content" id="saved"></div></div></section>
             <section class="screen" id="screen-mychart" aria-label="MyChart" hidden><div class="scroller" id="scroller-mychart"><div class="content" id="mychart"></div></div></section>
@@ -890,7 +888,6 @@ mark{background:rgba(0,169,224,.35);color:inherit;border-radius:4px}
 
           <div class="dock" id="dock">
             <nav class="tabbar glass-o" id="tabbar" aria-label="Main"></nav>
-            <button class="search-orb glass-o spot press" data-act="search" aria-label="Search" aria-haspopup="dialog"></button>
           </div>
           <div class="home-ind" aria-hidden="true"></div>
 
@@ -962,10 +959,10 @@ mark{background:rgba(0,169,224,.35);color:inherit;border-radius:4px}
     <div class="spec-head">
       <p class="kicker">Spec</p>
       <h2 id="spec-h">One system, glass on brand blue</h2>
-      <p>The same tokens as the liquid glass home. This round adds the guest home rework and the Find care flow: search, location, filters, sorting, results states, the provider profile, saving, and sharing.</p>
+      <p>The same tokens as the liquid glass home. This round adds the guest home rework and the Find my care flow: search, location, filters, sorting, results states, the provider profile, saving, and sharing.</p>
     </div>
     <div class="spec-grid">
-      <div class="spec-card"><h3>Find care behavior</h3>
+      <div class="spec-card"><h3>Find my care behavior</h3>
         <ul class="rules">
           <li><b>Plain language.</b> “Itchy rash,” “heart doctor,” and “knee pain” map to a specialty. Abbreviations (PCP, GI, OB-GYN, PT) and misspellings (“dermatolgy”) map too, and the results say what was matched.</li>
           <li><b>Filters.</b> Choices in one group widen results (any). Groups narrow each other (all). Words like “Spanish-speaking” or “female” add a filter you can remove.</li>
@@ -1161,7 +1158,7 @@ var ALERTS=[
   posted:"7:45 a.m.",until:"2 p.m. today",start:"2026-10-14T07:45",end:"2026-10-14T14:00",dismissible:false},
  {id:"a2",priority:2,label:"Service alert",title:"MyChart maintenance tonight",
   summary:"MyChart will be unavailable from 11 p.m. to 1 a.m. Provider search and saved providers keep working.",
-  detail:["Scheduled maintenance will make MyChart unavailable from 11 p.m. tonight to 1 a.m. Thursday.","Find care, locations, and your saved providers are not affected. For urgent questions during this time, call the sample line below."],
+  detail:["Scheduled maintenance will make MyChart unavailable from 11 p.m. tonight to 1 a.m. Thursday.","Find my care, locations, and your saved providers are not affected. For urgent questions during this time, call the sample line below."],
   posted:"6 a.m.",until:"1 a.m. Thursday",start:"2026-10-14T06:00",end:"2026-10-15T01:00",dismissible:true},
  {id:"a0",priority:1,label:"Emergency alert",title:"Water main repair – Building C",summary:"",detail:[],posted:"Oct. 9",until:"Oct. 10",start:"2026-10-09T08:00",end:"2026-10-10T17:00",dismissible:false}
 ];
@@ -1325,7 +1322,7 @@ var INBOX=[
  {id:"i1",t:"Severe weather: Use the north entrance today",s:"Emergency alert",d:"7:45 a.m.",ic:"alert",o:"c",unread:true,open:"alert:a1"},
  {id:"i2",t:"New on MedBlog: Five questions to ask your pharmacist",s:"MedBlog",d:"Oct. 7",ic:"book",o:"l",unread:true,open:"blog:0"},
  {id:"i3",t:"Flu shots are here – walk in weekdays through Dec. 18",s:"Announcement",d:"Oct. 1",ic:"syringe",o:"p",unread:false,open:"dest:campaign"},
- {id:"i4",t:"Find care now understands everyday words like “knee pain”",s:"Announcement",d:"Oct. 1",ic:"steth",o:"c",unread:false,open:"dest:n2"}
+ {id:"i4",t:"Find my care now understands everyday words like “knee pain”",s:"Announcement",d:"Oct. 1",ic:"steth",o:"c",unread:false,open:"dest:n2"}
 ];
 var MENU=[
  {k:"Patients and visitors",items:[
@@ -1356,7 +1353,7 @@ var RESOURCES=[
 var NEWS=[
  {d:"Oct. 12",t:"New evening hours at Sample Medical Plaza",dest:"/news/evening-hours",pub:"2026-10-12",exp:"2026-12-31"},
  {d:"Oct. 8",t:"Updated visitor guidelines for inpatient units",dest:"/news/visitor-guidelines",pub:"2026-10-08",exp:"2026-11-30"},
- {d:"Oct. 1",t:"Find care now understands everyday words like “knee pain”",dest:"/news/find-care-search",pub:"2026-10-01",exp:"2026-11-30"},
+ {d:"Oct. 1",t:"Find my care now understands everyday words like “knee pain”",dest:"/news/find-care-search",pub:"2026-10-01",exp:"2026-11-30"},
  {d:"Sept. 2",t:"Summer parking changes",dest:"/news/summer-parking",pub:"2026-09-02",exp:"2026-10-01"}
 ];
 var INDEX=[];
@@ -1598,7 +1595,7 @@ function favBtn(p,cls,fav){
 
 /* Search view */
 function viewSearch(){
- var h='<div class="hello a"><p class="k">Find care</p><h1>Find care</h1><p>Search by name, specialty, or condition – or describe what’s going on, like “my knee hurts when I run.”</p></div>'+
+ var h='<div class="hello a"><h1>Find my care</h1><p>Search by name, specialty, or condition – or describe what’s going on, like “my knee hurts when I run.”</p></div>'+
   '<div class="combo a" role="search">'+
    '<div class="ifield">'+ic("search")+'<label class="sr-only" for="cq">Search providers</label>'+
     '<input id="cq" type="search" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="cq-list" autocomplete="off" enterkeyhint="search" placeholder="Name, specialty, or condition" value="'+esc(C.draft)+'">'+
@@ -2031,15 +2028,14 @@ function inboxOpen(id){
 }
 
 /* ---------- Tabs ---------- */
-var TABS=[["home","home","Home"],["care","steth","Find care"],["places","pin","Locations"],["mychart","login","MyChart"]];
+var TABS=[["home","home","Home"],["care","steth","Find my care"],["places","pin","Locations"],["mychart","login","MyChart"]];
 var SCREEN={home:"screen-home",care:"screen-care",places:"screen-places",saved:"screen-saved",mychart:"screen-mychart"};
-var TITLE={home:"Home",care:"Find care",places:"Locations",saved:"Saved providers",mychart:"MyChart"};
+var TITLE={home:"Home",care:"Find my care",places:"Locations",saved:"Saved providers",mychart:"MyChart"};
 function renderTabs(){
  $("#tabbar").innerHTML='<span class="lens" id="lens" aria-hidden="true"><i></i></span>'+TABS.map(function(t){
   var badge='';
   return '<button class="tab press" data-tab="'+t[0]+'"'+(t[0]===S.tab?' aria-current="page"':'')+(badge?' aria-label="Saved, '+plural(S.favs.length,"provider","providers")+'"':'')+'>'+ic(t[1])+t[2]+badge+'</button>';
  }).join("");
- $(".search-orb").innerHTML=ic("search");
  placeLens(false);
 }
 function placeLens(stretch){
@@ -2131,7 +2127,7 @@ function renderResults(){
  }
  var I=interpret(raw), html="";
  if((scope==="All"||scope==="Providers")&&I.specs.length){
-  html+='<div class="grp"><p class="group-label">Find care</p><div class="results"><button class="res" data-care="'+esc(raw)+'"><span class="orb c" aria-hidden="true">'+ic("steth")+'</span><span class="grow"><b>'+esc(I.specs.join(" and "))+' providers</b><span class="t2">Matched from “'+esc(raw)+'” – open Find care with filters</span></span>'+ic("chevR","chev")+'</button></div></div>';
+  html+='<div class="grp"><p class="group-label">Find my care</p><div class="results"><button class="res" data-care="'+esc(raw)+'"><span class="orb c" aria-hidden="true">'+ic("steth")+'</span><span class="grow"><b>'+esc(I.specs.join(" and "))+' providers</b><span class="t2">Matched from “'+esc(raw)+'” – open Find my care with filters</span></span>'+ic("chevR","chev")+'</button></div></div>';
  }
  var hits=INDEX.filter(function(x){return (scope==="All"||x.type===scope)&&((x.t+" "+x.s).toLowerCase().indexOf(q)>=0||(x.id&&I.specs.indexOf(PBY[x.id].spec)>=0));});
  if(!hits.length&&!html){box.innerHTML='<div class="results"><p class="empty">No results for “'+esc(raw)+'”. Try a specialty, a location, or a symptom.</p></div>';return;}
