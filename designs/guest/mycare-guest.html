@@ -520,7 +520,7 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
 .qa-tile.lockd .dot{background:var(--tint); color:var(--blue); --grad:0}
 .qa-lock{position:absolute; top:var(--s3); right:var(--s3); color:var(--ink-2)}
 
-/* Find care, Locations, Wayfinding, MyChart tab pages */
+/* Find my Care, Locations, Wayfinding, MyChart tab pages */
 .ff-row{display:flex; gap:var(--s2); padding-inline:var(--s4)}
 .ff-row .find-field{margin:0; width:auto; flex:1; min-width:0}
 .ff-row .find-field span:not(.ms){flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
@@ -829,7 +829,7 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
 
 <div class="board">
   <header class="board-head">
-    <h1>UTSW MyCare guest flow – home and Find care</h1>
+    <h1>UTSW MyCare guest flow – home and Find my Care</h1>
     <p>High-fidelity prototype of the app before anyone signs in: the guest home, and finding a provider from first search to a shared profile. Global search stays the hero in the Blue header; provider search is the same search with the Providers scope turned on. Every person, place, and alert is fictional sample data.</p>
     <nav class="jump" aria-label="On this page"><a href="#flow">Flow map</a><a href="#coverage">Coverage</a><a href="#tokens">Token spec</a><a href="#glyphs">Glyph map</a></nav>
   </header>
@@ -852,7 +852,7 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
         <button data-perm="denied" aria-pressed="false">Denied</button>
         <button data-perm="unavailable" aria-pressed="false">No fix</button>
       </div>
-      <p class="note">Try the arrow beside the Find care search. “No fix” is allowed but the phone can't find a location.</p>
+      <p class="note">Try the arrow beside the Find my Care search. “No fix” is allowed but the phone can't find a location.</p>
     </div>
     <div class="ctl">
       <h2 id="lbl-res">Provider results</h2>
@@ -936,7 +936,7 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
               </div>
             </div>
           </section>
-          <section class="screen" id="scr-find" aria-label="Find care" hidden><div class="scroller" id="find-body"></div></section>
+          <section class="screen" id="scr-find" aria-label="Find my Care" hidden><div class="scroller" id="find-body"></div></section>
           <section class="screen" id="scr-locs" aria-label="Locations" hidden><div class="scroller" id="locs-body"></div></section>
           <section class="screen" id="scr-way" aria-label="Wayfinding" hidden><div class="scroller" id="way-body"></div></section>
           <section class="screen" id="scr-mc" aria-label="MyChart" hidden><div class="scroller" id="mc-body"></div></section>
@@ -1081,7 +1081,7 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
     <div class="flow">
       <article class="fstep"><h3>Enter</h3><ul>
         <li><b>Home search</b> in the Blue header (All scope) and its top searches</li>
-        <li><b>Find care</b> tile and <b>Find care</b> tab (Providers scope)</li>
+        <li><b>Find my Care</b> tile and <b>Find my Care</b> tab (Providers scope)</li>
         <li><b>Near-me arrow</b> – providers near you, by distance</li>
         <li><b>Specialty list</b> and <b>search history</b>, as in the old app</li>
       </ul><button class="go-to" data-jump="home">Show home</button></article>
@@ -1109,15 +1109,15 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
       <article class="fstep"><h3>Act</h3><ul>
         <li><b>Request</b>: schedule online in MyChart, or call to schedule</li>
         <li><b>Share</b>: native share sheet with the public profile link only</li>
-        <li><b>Saved</b>: Find care tab, home tile, and the menu</li>
+        <li><b>Saved</b>: Find my Care tab and the menu</li>
       </ul><button class="go-to" data-jump="share">Show share</button></article>
     </div>
     <div class="nav-why">
       <article>
-        <h3>Guest tabs: Home · Find care · Locations · Wayfinding · MyChart</h3>
+        <h3>Guest tabs: Home · Find my Care · Locations · Wayfinding · MyChart</h3>
         <p>The old app's five tabs, kept in spirit so returning users find everything where they expect it. Visits and Messages – the signed-in tabs in the playful direction – mean nothing to a guest, so they wait until sign-in.</p>
         <ol>
-          <li><b>Find care</b> replaces “Providers”: it is where people go with a problem, not a name, and it can grow to services and urgent care without a rename.</li>
+          <li><b>Find my Care</b> replaces “Providers”: it is where people go with a problem, not a name, and it can grow to services and urgent care without a rename.</li>
           <li><b>Locations</b> and <b>Wayfinding</b> stay separate: one answers “which place,” the other “how do I get there and around inside.”</li>
           <li><b>MyChart</b> is sign-in only, plus Pay as a guest. Everything else from the old hamburger menu lives in the <b>menu</b> on the home app bar, as it did before, so the tab bar stays task-focused.</li>
         </ol>
@@ -1144,7 +1144,7 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
       <thead><tr><th>Old screen</th><th>Capability</th><th>Where it lives now</th></tr></thead>
       <tbody>
         <tr><td>Guest home</td><td>MedBlog carousel with dots and pause</td><td><b>MedBlog</b> module: swipeable cards, progress bar, previous and next buttons. It never auto-advances, so nothing needs pausing.</td></tr>
-        <tr><td>Guest home</td><td>Quick Links: message, test results, visits, billing</td><td><b>Quick links</b>: the same four names, each with a lock, opening a sign-in prompt for that task; plus <b>Find my care</b> and <b>Locations</b></td></tr>
+        <tr><td>Guest home</td><td>Quick Links: message, test results, visits, billing</td><td><b>Quick links</b>: the same four names, each with a lock, opening a sign-in prompt for that task; plus <b>Find my Care</b> and <b>Locations</b></td></tr>
         <tr><td>Guest home</td><td>UTSW Resources: #1 in DFW, wayfinding, video visit prep</td><td><b>UTSW resources</b> rows: recognition, internal and external wayfinding (opens the tab), prepare for a video visit</td></tr>
         <tr><td>Hamburger menu</td><td>Inbox</td><td><b>Menu → Inbox</b>: app notifications (alerts, announcements) with unread state and Mark all as read; care team messages stay in MyChart</td></tr>
         <tr><td>Hamburger menu</td><td>Shuttle</td><td><b>Menu → Campus shuttle</b>: routes, next departures, live map</td></tr>
@@ -1154,7 +1154,7 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
         <tr><td>MedBlog list</td><td>Back, title, filter, thumbnail list with dates</td><td><b>MedBlog</b> page from “See all”: topic filter chips, 96.0 thumbnails, titles, dates, Show more; each opens the article</td></tr>
         <tr><td>MyChart Login</td><td>Username, password, sign in, forgot, sign up, privacy</td><td><b>MyChart tab</b> panel with the same fields, show password, forgot link, create account, pay as a guest, privacy</td></tr>
         <tr><td>Find a Provider</td><td>Name, specialty, or condition field</td><td>Search overlay, <b>Providers</b> scope, same placeholder</td></tr>
-        <tr><td>Find a Provider</td><td>Near-me arrow</td><td>56.0 arrow beside the Find care field and in Locations</td></tr>
+        <tr><td>Find a Provider</td><td>Near-me arrow</td><td>56.0 arrow beside the Find my Care field and in Locations</td></tr>
         <tr><td>Find a Provider</td><td>ZIP code field</td><td>Location chip and sheet: ZIP or city, with errors for unknown ZIPs</td></tr>
         <tr><td>Find a Provider</td><td>Specialties list, Search History</td><td><b>Browse by specialty</b> A–Z with counts; <b>Recent searches</b> with Clear</td></tr>
         <tr><td>Filters</td><td>City list and Apply</td><td>Cities become location choices; Filters sheet adds eight attributes and “Show N providers”</td></tr>
@@ -1168,7 +1168,7 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
       <tbody>
         <tr><td>Home layout</td><td>Guest composition; CMS order and visibility in the controls</td></tr>
         <tr><td>Emergency alert</td><td>Collapsed, expanded, full details sheet, two alerts with priority; announced to screen readers</td></tr>
-        <tr><td>Search and quick access</td><td>Hero search, top searches, six Quick links routing to Find care, Locations, or sign-in</td></tr>
+        <tr><td>Search and quick access</td><td>Hero search, top searches, six Quick links routing to Find my Care, Locations, or sign-in</td></tr>
         <tr><td>Featured and services</td><td>MedBlog, UTSW resources, flu campaign, announcements with dates</td></tr>
         <tr><td>Provider search</td><td>Keywords, plain language, synonyms and abbreviations, typo fixes, suggestions, recent and popular</td></tr>
         <tr><td>Location search</td><td>Near me, ZIP or city, permission ask, denied and no-fix fallbacks</td></tr>
@@ -1221,36 +1221,36 @@ if (document.fonts && document.fonts.load) {
 /* EXTRA_GLYPHS: arrow_downward arrow_upward */
 const ICON_MAP = [
   ['home', 'home', 'Home', 'Tab bar', 'Navigation'],
-  ['findCare', 'stethoscope', 'Find care – providers', 'Tab bar, Find my care tile, Providers scope', 'Navigation'],
+  ['findCare', 'stethoscope', 'Find my Care – providers', 'Tab bar, Find my Care tile, Providers scope', 'Navigation'],
   ['place', 'location_on', 'Locations and addresses', 'Tab bar, Locations tile, result cards, profile', 'Navigation'],
   ['wayfinding', 'directions_walk', 'Wayfinding', 'Tab bar, Wayfinding tile, resources', 'Navigation'],
   ['signIn', 'login', 'Sign in – MyChart', 'Tab bar, app bar, sign-in prompts', 'Navigation'],
   ['search', 'search', 'Search', 'Search fields, suggestions', 'Navigation'],
   ['alert', 'warning', 'Emergency alert', 'Alert banner and details only – always filled', 'Alerts', 'f1'],
   ['expand', 'expand_more', 'Show more or less', 'Alert banner, location chip, sort chip', 'Alerts'],
-  ['favorite', 'favorite', 'Save provider', 'Result cards, profile, Saved providers – fills when saved', 'Find care'],
-  ['filters', 'tune', 'Filters', 'Search toolbar', 'Find care'],
-  ['sort', 'swap_vert', 'Sort', 'Search toolbar', 'Find care'],
-  ['nearMe', 'near_me', 'Near me', 'Near-me button, location sheet', 'Find care'],
-  ['myLoc', 'my_location', 'Recenter map', 'Wayfinding map', 'Find care'],
-  ['locOff', 'location_off', 'Location unavailable', 'Denied and no-fix notices', 'Find care'],
-  ['language', 'translate', 'Languages', 'Profile, Language setting', 'Find care'],
-  ['newPts', 'person_add', 'Accepting new patients', 'Tags, filters', 'Find care'],
-  ['online', 'edit_calendar', 'Online scheduling', 'Tags, filters, Schedule online', 'Find care'],
-  ['call', 'call', 'Call', 'Profile, request sheet', 'Find care'],
-  ['directions', 'directions', 'Directions', 'Profile locations, Locations tab', 'Find care'],
-  ['education', 'school', 'Education and certification', 'Profile', 'Find care'],
-  ['research', 'science', 'Research and publications', 'Profile', 'Find care'],
-  ['play', 'play_circle', 'Video', 'Profile media', 'Find care'],
-  ['offline', 'wifi_off', 'Offline', 'Offline panel', 'Find care'],
-  ['error', 'error', 'Something went wrong', 'Error panel', 'Find care', 'f1'],
-  ['popular', 'trending_up', 'Popular searches', 'Search', 'Find care'],
-  ['recent', 'history', 'Recent search', 'Search, Find care', 'Find care'],
-  ['hospital', 'domain', 'Hospitals', 'Locations, Wayfinding', 'Find care'],
-  ['building', 'apartment', 'Buildings', 'Locations, Wayfinding', 'Find care'],
-  ['clinic', 'door_front', 'Clinics', 'Locations, Wayfinding', 'Find care'],
-  ['parking', 'local_parking', 'Parking', 'Locations, Wayfinding', 'Find care'],
-  ['indoor', 'map', 'Indoor maps', 'Wayfinding', 'Find care'],
+  ['favorite', 'favorite', 'Save provider', 'Result cards, profile, Saved providers – fills when saved', 'Find my Care'],
+  ['filters', 'tune', 'Filters', 'Search toolbar', 'Find my Care'],
+  ['sort', 'swap_vert', 'Sort', 'Search toolbar', 'Find my Care'],
+  ['nearMe', 'near_me', 'Near me', 'Near-me button, location sheet', 'Find my Care'],
+  ['myLoc', 'my_location', 'Recenter map', 'Wayfinding map', 'Find my Care'],
+  ['locOff', 'location_off', 'Location unavailable', 'Denied and no-fix notices', 'Find my Care'],
+  ['language', 'translate', 'Languages', 'Profile, Language setting', 'Find my Care'],
+  ['newPts', 'person_add', 'Accepting new patients', 'Tags, filters', 'Find my Care'],
+  ['online', 'edit_calendar', 'Online scheduling', 'Tags, filters, Schedule online', 'Find my Care'],
+  ['call', 'call', 'Call', 'Profile, request sheet', 'Find my Care'],
+  ['directions', 'directions', 'Directions', 'Profile locations, Locations tab', 'Find my Care'],
+  ['education', 'school', 'Education and certification', 'Profile', 'Find my Care'],
+  ['research', 'science', 'Research and publications', 'Profile', 'Find my Care'],
+  ['play', 'play_circle', 'Video', 'Profile media', 'Find my Care'],
+  ['offline', 'wifi_off', 'Offline', 'Offline panel', 'Find my Care'],
+  ['error', 'error', 'Something went wrong', 'Error panel', 'Find my Care', 'f1'],
+  ['popular', 'trending_up', 'Popular searches', 'Search', 'Find my Care'],
+  ['recent', 'history', 'Recent search', 'Search, Find my Care', 'Find my Care'],
+  ['hospital', 'domain', 'Hospitals', 'Locations, Wayfinding', 'Find my Care'],
+  ['building', 'apartment', 'Buildings', 'Locations, Wayfinding', 'Find my Care'],
+  ['clinic', 'door_front', 'Clinics', 'Locations, Wayfinding', 'Find my Care'],
+  ['parking', 'local_parking', 'Parking', 'Locations, Wayfinding', 'Find my Care'],
+  ['indoor', 'map', 'Indoor maps', 'Wayfinding', 'Find my Care'],
   ['messages', 'chat', 'Message your doctor', 'Quick links', 'MyChart destinations'],
   ['results', 'lab_profile', 'Test results', 'Quick links', 'MyChart destinations'],
   ['visits', 'calendar_month', 'Manage your visits', 'Quick links', 'MyChart destinations'],
@@ -1469,7 +1469,7 @@ function matchProvider(p, it) {
 
 /* ---------- Home content (fictional) ---------- */
 const TILES = [
-  { k: 'find', lbl: 'Find my care', ic: 'findCare' }, { k: 'loc', lbl: 'Locations', ic: 'place' }
+  { k: 'find', lbl: 'Find my Care', ic: 'findCare' }, { k: 'loc', lbl: 'Locations', ic: 'place' }
 ];
 const LOCKED = [
   { k: 'msg', lbl: 'Message your doctor', ic: 'messages', why: 'message your care team', what: 'Send questions to your care team and get answers, usually within two business days.' },
@@ -1928,7 +1928,7 @@ function profileHTML(p) {
 }
 function savedHTML() {
   const list = [...favs].map(id => PV[id]).filter(Boolean);
-  return `<p class="kick">Find care</p><h1 id="page-h" tabindex="-1">Saved providers</h1>
+  return `<p class="kick">Find my Care</p><h1 id="page-h" tabindex="-1">Saved providers</h1>
     <p>Saved on this device only. Sign in later to keep them across devices.</p>
     ${list.length ? `<ul class="pcards" style="padding:0;margin-top:var(--s4)">${list.map(pcard).join('')}</ul>`
       : `<div class="st-panel" style="margin:var(--s4) 0 0">${circle('favorite', 56)}<h2>No saved providers yet</h2><p>Tap the heart on any provider to keep them here.</p><button class="btn btn-primary" data-open-search="Providers">Find a provider</button></div>`}`;
@@ -2379,7 +2379,7 @@ function renderSearch() {
 }
 
 /* ---------- Tabs ---------- */
-const TABS = [['Home', 'home', 'scr-home'], ['Find care', 'findCare', 'scr-find'], ['Locations', 'place', 'scr-locs'], ['Wayfinding', 'wayfinding', 'scr-way'], ['MyChart', 'signIn', 'scr-mc']];
+const TABS = [['Home', 'home', 'scr-home'], ['Find my Care', 'findCare', 'scr-find'], ['Locations', 'place', 'scr-locs'], ['Wayfinding', 'wayfinding', 'scr-way'], ['MyChart', 'signIn', 'scr-mc']];
 $('#tablist').innerHTML = TABS.map((t, i) => `<button class="tab" role="tab" id="tab-${i}" aria-controls="${t[2]}" aria-selected="${i === 0}" tabindex="${i === 0 ? 0 : -1}">${ico(t[1])}${t[0]}</button>`).join('');
 const tabs = $$('.tab', phone);
 tabs.forEach((b, i) => { b.onclick = () => setTab(i); b.addEventListener('keydown', e => { const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0; if (d) { const n = (i + d + tabs.length) % tabs.length; tabs[n].focus(); setTab(n); } }); });
@@ -2396,10 +2396,10 @@ function setTab(i) {
   moveInd(); updateBar();
 }
 
-/* Find care tab: the old Find a Provider screen, rebuilt around the global search */
+/* Find my Care tab: the old Find a Provider screen, rebuilt around the global search */
 function renderFind() {
   const n = favs.size;
-  $('#find-body').innerHTML = `<div class="page-h"><h1>Find care</h1><p>Search by name, specialty, or condition.</p></div>
+  $('#find-body').innerHTML = `<div class="page-h"><h1>Find my Care</h1><p>Search by name, specialty, or condition.</p></div>
     <div class="ff-row"><button class="find-field" data-open-search="Providers" aria-haspopup="dialog">${ico('search')}<span>Try “knee pain” or “skin doctor”</span></button>
       <button class="near-btn" data-near="find" aria-label="Find providers near me">${ico('nearMe')}</button></div>
     <button class="loc-line" data-loc-open>${ico(S.loc ? 'place' : 'nearMe', 20)}<span>${S.loc ? `Searching near <b>${esc(S.loc.sub)}</b>` : 'No location set · <b>Add ZIP code or city</b>'}</span></button>
