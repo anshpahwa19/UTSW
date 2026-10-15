@@ -1547,7 +1547,6 @@ function renderHome(animate){
   var inner=R[k](); if(!inner) return;
   html+='<section class="mod" data-mod="'+k+'" style="--i:'+(i++)+'">'+inner+'</section>';
  });
- html+='<footer class="foot"><span>Updated '+updated+'</span><button class="chip glass spot press" data-act="refresh">'+ic("refresh")+'Refresh</button><span>Sample data – fictional providers, locations, and alerts.</span></footer>';
  var home=$("#home"); home.classList.remove("anim"); home.innerHTML=html;
  if(animate&&!S.rm){ void home.offsetWidth; home.classList.add("anim"); }
  bindCarousel(); startRotator();
