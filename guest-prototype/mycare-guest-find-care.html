@@ -349,6 +349,11 @@ h1,h2,h3,p{margin:0}
 .signin p{color:var(--c-text-2)}
 .row{display:flex;flex-wrap:wrap;gap:var(--s-8);margin-top:var(--s-4)}
 
+/* Quick links – six equal tiles, two per row */
+.qlinks{grid-auto-rows:auto}
+.qlinks .tile{min-height:136px}
+.ql-lock{display:inline-flex;align-items:center;gap:var(--s-4)}
+.ql-lock svg{width:12px;height:12px;flex:none}
 /* Bento quick access */
 .bento{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(120px,auto);gap:var(--s-8)}
 .tile{display:flex;flex-direction:column;justify-content:space-between;gap:var(--s-12);padding:var(--s-16);border:0;text-align:left;color:#FFFFFF;overflow:hidden}
@@ -758,10 +763,6 @@ mark{background:rgba(0,169,224,.35);color:inherit;border-radius:4px}
 .mychart{padding:var(--s-16);display:flex;flex-direction:column;gap:var(--s-16)}
 .mychart h2{font-size:var(--fs-20);line-height:28px;font-weight:800;letter-spacing:-.02em}
 .mychart p{color:var(--c-text-2)}
-.mc-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s-8)}
-.mc{display:flex;align-items:center;gap:var(--s-12);min-height:64px;padding:var(--s-8) var(--s-12) var(--s-8) var(--s-8);border:0;border-radius:var(--r-inner);background:var(--inner-fill);box-shadow:inset 0 0 0 1px var(--inner-line);color:#FFFFFF;text-align:left;font-size:var(--fs-14);line-height:20px;font-weight:700}
-.mc .orb{width:40px;height:40px}
-.mc .lock-ic{width:16px;height:16px;flex:none;margin-inline-start:auto;color:var(--c-text-2)}
 .saved-mini{flex:0 0 232px;display:flex;align-items:center;gap:var(--s-12);padding:var(--s-12);border:0;text-align:left;color:#FFFFFF;scroll-snap-align:start}
 .saved-mini .grow b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tab-badge{position:absolute;top:var(--s-4);left:calc(50% + var(--s-8));min-width:20px;height:20px;padding:0 var(--s-4);border-radius:var(--r-pill);background:#FFFFFF;color:var(--c-blue);font-size:var(--fs-12);line-height:20px;font-weight:800;text-align:center;font-variant-numeric:tabular-nums}
@@ -956,7 +957,7 @@ mark{background:rgba(0,169,224,.35);color:inherit;border-radius:4px}
       <div class="spec-card"><h3>Guest home, module by module</h3>
         <ul class="rules">
           <li><b>Kept from the old app:</b> MedBlog stories with pause, quick links, UTSW resources (wayfinding, video visit prep), Find a provider by specialty, search history, and the city filter.</li>
-          <li><b>MyChart quick links</b> (message your doctor, test results, visits, billing) become one card that explains sign-in, instead of four tiles that dead-end.</li>
+          <li><b>Quick links</b> keep the old app’s four MyChart links with their exact names (Message your doctor, Get your test results, Manage your visits, Manage billing) and add Find my care and Locations. MyChart links are marked with a lock and open a sign-in explanation instead of dead-ending.</li>
           <li><b>Saved providers</b> appear on home only when the guest has saved someone.</li>
           <li><b>More options menu</b> (from the old hamburger): MyChart sign-in, Inbox, Shuttle, patient resource guide, patient resources, COVID-19 resources, Why UT Southwestern, physician resources, full site, social links, and privacy policy.</li>
           <li><b>MedBlog</b> “See all” opens a story list with topic filters. The home carousel and the list open the same stories.</li>
@@ -1345,7 +1346,7 @@ var TYPE_IC={Providers:["user","c"],Locations:["building","p"],Content:["book","
 var MODS={
  alerts:{label:"Emergency alert banner",pinned:true},
  search:{label:"Greeting and search entry"},
- quick:{label:"Quick access tiles"},
+ quick:{label:"Quick links"},
  saved:{label:"Saved providers",note:"Shows only when the guest has saved someone"},
  top:{label:"Top searches"},
  mychart:{label:"MyChart tools and sign-in"},
@@ -1442,22 +1443,21 @@ function searchHero(){
   '<span class="sh-go" aria-hidden="true">'+ic("arrowR")+'</span></button>';
 }
 var TILES=[
- {k:"find",i:"steth",t:"Find a doctor",s:"Search by name, specialty, condition, or your own words",size:"tall",orb:"c",tab:"care"},
- {k:"urgent",i:"urgent",t:"Urgent care",s:"Walk-in clinics",orb:"p",msg:"Showing urgent care clinics"},
- {k:"way",i:"route",t:"Wayfinding",s:"Directions on campus",orb:"l",msg:"Opening indoor wayfinding"},
- {k:"virtual",i:"video",t:"Virtual visits",s:"Care from home",orb:"l",msg:"Opening virtual visit options"},
- {k:"pay",i:"card",t:"Pay a bill",s:"Guest bill pay",orb:"c",msg:"Opening guest bill pay"},
- {k:"loc",i:"pin",t:"Locations",s:"Hospitals, clinics, and parking",size:"wide",orb:"p",tab:"places"}
+ {k:"msg",i:"msg",t:"Message your doctor",orb:"c",feat:true},
+ {k:"results",i:"flask",t:"Get your test results",orb:"p",feat:true},
+ {k:"visits",i:"cal",t:"Manage your visits",orb:"l",feat:true},
+ {k:"billing",i:"card",t:"Manage billing",orb:"c",feat:true},
+ {k:"find",i:"steth",t:"Find my care",s:"Doctors and specialists",orb:"p",tab:"care"},
+ {k:"loc",i:"pin",t:"Locations",s:"Hospitals, clinics, and parking",orb:"l",tab:"places"}
 ];
 R.quick=function(){
- return secHead("h-quick","Quick access")+'<div class="bento" role="group" aria-labelledby="h-quick">'+
+ return secHead("h-quick","Quick links")+'<div class="bento qlinks" role="group" aria-labelledby="h-quick">'+
   TILES.map(function(t,j){
-   var go=t.tab?'data-tab="'+t.tab+'"':'data-act="toast" data-ic="ext" data-msg="'+esc(t.msg)+'"';
-   var orb='<span class="orb '+t.orb+(t.size==="tall"?' lg':'')+'" aria-hidden="true">'+ic(t.i)+'</span>', inner;
-   if(t.size==="tall") inner='<span class="rings" aria-hidden="true"><i></i><i></i><i></i></span><span class="tile-top">'+orb+'</span><span class="tile-bottom"><span class="tile-t">'+esc(t.t)+'</span><span class="t2">'+esc(t.s)+'</span></span>';
-   else if(t.size==="wide") inner='<span class="tile-col"><span class="tile-top">'+orb+'</span><span><span class="tile-t">'+esc(t.t)+'</span><span class="t2">'+esc(t.s)+'</span></span></span><span class="map" aria-hidden="true">'+art("map")+'</span>';
-   else inner='<span class="tile-top">'+orb+'<span class="tile-go" aria-hidden="true">'+ic("arrowUR")+'</span></span><span><span class="tile-t">'+esc(t.t)+'</span><span class="t2">'+esc(t.s)+'</span></span>';
-   return '<button class="tile glass spot press a'+(t.size?' '+t.size:'')+'" style="--j:'+j+'" '+go+'>'+inner+'</button>';
+   var go=t.tab?'data-tab="'+t.tab+'"':'data-act="mychart" data-feat="'+esc(t.t)+'"';
+   var sub=t.feat?'<span class="t2 ql-lock">'+ic("lock")+'MyChart sign-in</span>':'<span class="t2">'+esc(t.s)+'</span>';
+   return '<button class="tile glass spot press a" style="--j:'+j+'" '+go+(t.feat?' aria-label="'+esc(t.t)+', MyChart sign-in required"':'')+'>'+
+    '<span class="tile-top"><span class="orb '+t.orb+'" aria-hidden="true">'+ic(t.i)+'</span><span class="tile-go" aria-hidden="true">'+ic(t.tab?"arrowR":"arrowUR")+'</span></span>'+
+    '<span><span class="tile-t">'+esc(t.t)+'</span>'+sub+'</span></button>';
   }).join("")+'</div>';
 };
 R.saved=function(){
@@ -1471,13 +1471,9 @@ R.top=function(){
  return secHead("h-top","Top searches")+'<div class="rail" role="group" aria-labelledby="h-top">'+
   TOP.map(function(q,j){return '<button class="chip glass spot press a" style="--j:'+j+'" data-act="search" data-q="'+esc(q)+'"><span class="rk" aria-hidden="true">'+(j+1)+'</span>'+esc(q)+'</button>';}).join("")+'</div>';
 };
-var MC=[["msg","Message your doctor","c"],["flask","Test results","p"],["cal","Manage visits","l"],["card","Billing","c"]];
 R.mychart=function(){
  return '<article class="glass mychart a" aria-labelledby="h-mc"><div><p class="eyebrow">Already a patient?</p><h2 id="h-mc">Do more with MyChart</h2></div>'+
-  '<p>Sign in with your MyChart account to message your care team, see test results, manage visits, and pay bills.</p>'+
-  '<div class="mc-grid" role="group" aria-label="MyChart tools, sign-in required">'+MC.map(function(m){
-   return '<button class="mc press" data-act="mychart" data-feat="'+esc(m[1])+'"><span class="orb '+m[2]+'" aria-hidden="true">'+ic(m[0])+'</span><span>'+m[1]+'<span class="sr-only">, sign-in required</span></span>'+ic("lock","lock-ic")+'</button>';
-  }).join("")+'</div>'+
+  '<p>Sign in with your MyChart account to message your doctor, get your test results, manage your visits, and manage billing.</p>'+
   '<div class="row"><button class="btn-primary press" data-act="mychart">'+ic("login")+'Sign in</button><button class="btn-ghost press" data-act="toast" data-ic="ext" data-msg="Opening MyChart sign-up">Sign up</button></div></article>';
 };
 R.campaign=function(){
@@ -2050,8 +2046,8 @@ function destSheet(key){
  openSheet(esc(d.k),topArt+'<h3>'+esc(d.t)+'</h3><p>'+esc(d.body)+'</p><div class="dest">Configured destination: <code>'+esc(d.dest)+'</code></div><button class="btn-primary block press" data-act="toast" data-ic="ext" data-msg="Opening '+esc(d.t)+'">'+esc(d.cta)+ic("arrowR")+'</button>');
 }
 function mychartSheet(feat){
- openSheet("MyChart",'<div class="dest-art svc-art art-c" aria-hidden="true">'+ic("lock")+'</div><h3>'+(feat?esc(feat)+' is in MyChart':'Sign in with MyChart')+'</h3>'+
-  '<p>Messages, test results, visits, and billing live in MyChart, your secure patient portal. Sign in or create an account to use them.</p>'+
+ openSheet("MyChart",'<div class="dest-art svc-art art-c" aria-hidden="true">'+ic("lock")+'</div><h3>'+(feat?esc(feat):'Sign in with MyChart')+'</h3>'+
+  '<p>'+(feat?esc(feat)+' happens in MyChart, your secure patient portal. ':'Message your doctor, get your test results, manage your visits, and manage billing in MyChart, your secure patient portal. ')+'Sign in or create an account to continue.</p>'+
   '<p>Your saved providers stay on this device either way.</p>'+
   '<div class="row"><button class="btn-primary press" data-act="toast" data-ic="ext" data-msg="Opening MyChart sign-in">'+ic("login")+'Sign in</button><button class="btn-ghost press" data-act="toast" data-ic="ext" data-msg="Opening MyChart sign-up">Create account</button></div>');
 }
