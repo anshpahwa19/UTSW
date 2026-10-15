@@ -508,7 +508,14 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
 /* ===================== Guest additions ===================== */
 /* Tab bar: tighter side inset so five labels (including “Wayfinding”) fit at 360 */
 .tabbar{left:var(--s2); right:var(--s2)}
-.tab{letter-spacing:-.01em}
+/* Flex, not equal grid columns: tabs share the width equally but are never narrower than their own label,
+   so a long label (Find my Care) widens its tab instead of spilling over its neighbors, in every browser.
+   If the five labels still cannot fit on one line (wider system font), .wrap lets labels break onto two lines. */
+.tabbar{display:flex}
+.tab{flex:1 1 0; min-width:max-content; padding-inline:var(--s1); letter-spacing:-.01em}
+.tab .tl{display:block; text-align:center; line-height:1.2; white-space:nowrap}
+.tabbar.wrap .tab{min-width:min-content; white-space:normal}
+.tabbar.wrap .tab .tl{white-space:normal}
 
 /* Logo yields width before the pill clips (never below the 187.0 brand minimum) */
 .appbar .logo{width:auto; flex:0 1 232px; min-width:200px; max-width:232px}
@@ -2380,12 +2387,13 @@ function renderSearch() {
 
 /* ---------- Tabs ---------- */
 const TABS = [['Home', 'home', 'scr-home'], ['Find my Care', 'findCare', 'scr-find'], ['Locations', 'place', 'scr-locs'], ['Wayfinding', 'wayfinding', 'scr-way'], ['MyChart', 'signIn', 'scr-mc']];
-$('#tablist').innerHTML = TABS.map((t, i) => `<button class="tab" role="tab" id="tab-${i}" aria-controls="${t[2]}" aria-selected="${i === 0}" tabindex="${i === 0 ? 0 : -1}">${ico(t[1])}${t[0]}</button>`).join('');
+$('#tablist').innerHTML = TABS.map((t, i) => `<button class="tab" role="tab" id="tab-${i}" aria-controls="${t[2]}" aria-selected="${i === 0}" tabindex="${i === 0 ? 0 : -1}">${ico(t[1])}<span class="tl">${t[0].replace('Find my ', 'Find\u00a0my ')}</span></button>`).join('');
 const tabs = $$('.tab', phone);
 tabs.forEach((b, i) => { b.onclick = () => setTab(i); b.addEventListener('keydown', e => { const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0; if (d) { const n = (i + d + tabs.length) % tabs.length; tabs[n].focus(); setTab(n); } }); });
 const screens = $$('.screen', phone);
 screens.forEach((s, i) => { s.setAttribute('role', 'tabpanel'); s.setAttribute('aria-labelledby', `tab-${i}`); });
-function moveInd() { const t = tabs[state.tab], ind = $('#tab-ind'); ind.style.width = `${t.offsetWidth}px`; ind.style.transform = `translateX(${t.offsetLeft}px)`; }
+function fitTabs() { const bar = $('.tabbar'); bar.classList.remove('wrap'); if (bar.scrollWidth > bar.clientWidth + 1) bar.classList.add('wrap'); }
+function moveInd() { fitTabs(); const t = tabs[state.tab], ind = $('#tab-ind'); ind.style.width = `${t.offsetWidth}px`; ind.style.transform = `translateX(${t.offsetLeft}px)`; }
 function setTab(i) {
   if (layers.length) [...layers].reverse().forEach(l => l.close());
   if (i === state.tab) { $('.scroller', screens[i]).scrollTo({ top: 0, behavior: RM() ? 'auto' : 'smooth' }); return; }
@@ -2607,6 +2615,7 @@ renderHome(); renderFind(); renderLocs(); renderWay(); renderMc(); syncMenuDot()
 renderCms();
 renderIconMap();
 requestAnimationFrame(moveInd);
-new ResizeObserver(moveInd).observe($('.tabbar'));
+{ const ro = new ResizeObserver(moveInd); ro.observe($('.tabbar')); tabs.forEach(t => ro.observe(t)); }
+document.fonts?.ready?.then(moveInd);
 })();
 </script>
