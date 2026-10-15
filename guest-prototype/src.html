@@ -759,7 +759,28 @@ mark{background:rgba(0,169,224,.35);color:inherit;border-radius:4px}
 .share-t .act-orb{width:56px;height:56px;border-radius:var(--r-inner)}
 .share-list{border-radius:var(--r-inner);background:var(--inner-fill);box-shadow:inset 0 0 0 1px var(--inner-line);overflow:hidden}
 
-/* Home: MyChart tools, saved rail */
+/* MyChart page */
+.mc-card{position:relative;overflow:hidden;border-radius:var(--r-glass);padding:var(--s-24) var(--s-16) var(--s-16);background:linear-gradient(160deg,var(--c-blue) 0%,#00335F 55%,#3B3F8F 120%);box-shadow:0 16px 40px rgba(0,10,30,.38);display:flex;flex-direction:column;gap:var(--s-16)}
+.mc-card::after{content:"";position:absolute;right:-96px;top:96px;width:240px;height:240px;border-radius:50%;background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);pointer-events:none}
+.mc-card > *{position:relative;z-index:1}
+.mc-card h2{font-size:var(--fs-24);line-height:32px;font-weight:800;letter-spacing:-.02em}
+.fl{display:flex;flex-direction:column;gap:var(--s-8)}
+.fl label{font-size:var(--fs-14);line-height:20px;font-weight:700}
+.lfield{display:flex;align-items:center;min-height:56px;padding:0 var(--s-4) 0 var(--s-16);border-radius:var(--r-inner);background:#FFFFFF;color:var(--c-gray);transition:box-shadow var(--dur-fast) var(--ease-std)}
+.lfield:focus-within{box-shadow:0 0 0 4px rgba(255,255,255,.35)}
+.lfield.bad{box-shadow:inset 0 0 0 2px var(--c-alert)}
+.lfield input{flex:1;min-width:0;border:0;outline:0;background:transparent;font-size:var(--fs-16);color:var(--c-gray);min-height:48px}
+.eye{width:48px;height:48px;border:0;background:none;color:#5B6770;display:grid;place-items:center;border-radius:50%;flex:none}
+.eye svg{width:24px;height:24px}
+.eye:focus-visible{outline:2px solid var(--c-blue);outline-offset:-4px}
+.mc-card .btn-primary{width:100%}
+.mc-card .txt-btn{align-self:center;font-size:var(--fs-16)}
+.mc-for{display:flex;gap:var(--s-8);align-items:flex-start;padding:var(--s-12) var(--s-16);border-radius:var(--r-inner);background:rgba(255,255,255,.12);box-shadow:inset 0 0 0 1px rgba(255,255,255,.24);font-size:var(--fs-14);line-height:20px;font-weight:600}
+.mc-for svg{width:16px;height:16px;flex:none;margin-top:var(--s-4)}
+.or.light{color:#FFFFFF}
+.or.light::before,.or.light::after{background:rgba(255,255,255,.3)}
+.mc-card .btn-ghost{width:100%}
+/* Home: sign-in card, saved rail */
 .mychart{padding:var(--s-16);display:flex;flex-direction:column;gap:var(--s-16)}
 .mychart h2{font-size:var(--fs-20);line-height:28px;font-weight:800;letter-spacing:-.02em}
 .mychart p{color:var(--c-text-2)}
@@ -850,6 +871,7 @@ mark{background:rgba(0,169,224,.35);color:inherit;border-radius:4px}
             <section class="screen" id="screen-care" aria-label="Find care" hidden><div class="scroller" id="scroller-care"><div class="content" id="care"></div></div></section>
             <section class="screen" id="screen-places" aria-label="Locations" hidden><div class="scroller"><div class="content" id="places"></div></div></section>
             <section class="screen" id="screen-saved" aria-label="Saved providers" hidden><div class="scroller"><div class="content" id="saved"></div></div></section>
+            <section class="screen" id="screen-mychart" aria-label="MyChart" hidden><div class="scroller" id="scroller-mychart"><div class="content" id="mychart"></div></div></section>
             <section class="screen" id="screen-page" aria-label="Page" hidden><div class="scroller" id="scroller-page"><div class="content" id="page"></div></div></section>
           </div>
 
@@ -959,7 +981,8 @@ mark{background:rgba(0,169,224,.35);color:inherit;border-radius:4px}
           <li><b>Kept from the old app:</b> MedBlog stories with pause, quick links, UTSW resources (wayfinding, video visit prep), Find a provider by specialty, search history, and the city filter.</li>
           <li><b>Quick links</b> keep the old app’s four MyChart links with their exact names (Message your doctor, Get your test results, Manage your visits, Manage billing) and add Find my care and Locations. MyChart links are marked with a lock and open a sign-in explanation instead of dead-ending.</li>
           <li><b>Saved providers</b> appear on home only when the guest has saved someone.</li>
-          <li><b>More options menu</b> (from the old hamburger): MyChart sign-in, Inbox, Shuttle, patient resource guide, patient resources, COVID-19 resources, Why UT Southwestern, physician resources, full site, social links, and privacy policy.</li>
+          <li><b>MyChart tab</b>: a sign-in page (username, password, show password, forgot, create an account) plus things a guest can do without signing in. Every sign-in entry point leads here and says only “Sign in.”</li>
+          <li><b>More options menu</b> (from the old hamburger): Sign in, Inbox, Saved providers, Shuttle, patient resource guide, patient resources, COVID-19 resources, Why UT Southwestern, physician resources, full site, social links, and privacy policy.</li>
           <li><b>MedBlog</b> “See all” opens a story list with topic filters. The home carousel and the list open the same stories.</li>
           <li><b>No appointment context</b> – that module is signed-in only.</li>
         </ul>
@@ -1078,6 +1101,8 @@ var P={
  history:'<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/>',
  sparkle:'<path d="m12 3 1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2z"/>',
  parking:'<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 17V7h4a3 3 0 0 1 0 6H9"/>',
+ eye:'<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+ eyeOff:'<path d="M10.6 5.1A10.4 10.4 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-2.2 3.2M6.6 6.6A17 17 0 0 0 2 12s3.6 7 10 7a9.7 9.7 0 0 0 5.4-1.6M9.9 9.9a3 3 0 0 0 4.2 4.2M2 2l20 20"/>',
  menu:'<path d="M4 7h16M4 12h16M4 17h16"/>',
  bell:'<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/>',
  bus:'<rect x="4" y="3" width="16" height="15" rx="3"/><path d="M4 11h16M8 18v3M16 18v3"/><circle cx="8" cy="14.5" r="1"/><circle cx="16" cy="14.5" r="1"/>',
@@ -1304,7 +1329,7 @@ var INBOX=[
 ];
 var MENU=[
  {k:"Patients and visitors",items:[
-  ["inbox","bell","Inbox"],["shuttle","bus","Shuttle"],["guide","book","Patient resource guide"],["resources","info","Patient resources"],["covid","shield","COVID-19 resources"]]},
+  ["inbox","bell","Inbox"],["saved","heart","Saved providers"],["shuttle","bus","Shuttle"],["guide","book","Patient resource guide"],["resources","info","Patient resources"],["covid","shield","COVID-19 resources"]]},
  {k:"About UT Southwestern",items:[
   ["why","award","Why UT Southwestern"],["physician","steth","Physician resources"],["site","globe","Visit full site"]]}
 ];
@@ -1349,7 +1374,7 @@ var MODS={
  quick:{label:"Quick links"},
  saved:{label:"Saved providers",note:"Shows only when the guest has saved someone"},
  top:{label:"Top searches"},
- mychart:{label:"MyChart tools and sign-in"},
+ mychart:{label:"Sign-in card"},
  campaign:{label:"Campaign banner"},
  featured:{label:"MedBlog stories"},
  resources:{label:"Services and resources"},
@@ -1453,9 +1478,9 @@ var TILES=[
 R.quick=function(){
  return secHead("h-quick","Quick links")+'<div class="bento qlinks" role="group" aria-labelledby="h-quick">'+
   TILES.map(function(t,j){
-   var go=t.tab?'data-tab="'+t.tab+'"':'data-act="mychart" data-feat="'+esc(t.t)+'"';
-   var sub=t.feat?'<span class="t2 ql-lock">'+ic("lock")+'MyChart sign-in</span>':'<span class="t2">'+esc(t.s)+'</span>';
-   return '<button class="tile glass spot press a" style="--j:'+j+'" '+go+(t.feat?' aria-label="'+esc(t.t)+', MyChart sign-in required"':'')+'>'+
+   var go=t.tab?'data-tab="'+t.tab+'"':'data-act="signin" data-feat="'+esc(t.t)+'"';
+   var sub=t.feat?'<span class="t2 ql-lock">'+ic("lock")+'Sign in</span>':'<span class="t2">'+esc(t.s)+'</span>';
+   return '<button class="tile glass spot press a" style="--j:'+j+'" '+go+(t.feat?' aria-label="'+esc(t.t)+', sign in required"':'')+'>'+
     '<span class="tile-top"><span class="orb '+t.orb+'" aria-hidden="true">'+ic(t.i)+'</span><span class="tile-go" aria-hidden="true">'+ic(t.tab?"arrowR":"arrowUR")+'</span></span>'+
     '<span><span class="tile-t">'+esc(t.t)+'</span>'+sub+'</span></button>';
   }).join("")+'</div>';
@@ -1472,9 +1497,9 @@ R.top=function(){
   TOP.map(function(q,j){return '<button class="chip glass spot press a" style="--j:'+j+'" data-act="search" data-q="'+esc(q)+'"><span class="rk" aria-hidden="true">'+(j+1)+'</span>'+esc(q)+'</button>';}).join("")+'</div>';
 };
 R.mychart=function(){
- return '<article class="glass mychart a" aria-labelledby="h-mc"><div><p class="eyebrow">Already a patient?</p><h2 id="h-mc">Do more with MyChart</h2></div>'+
-  '<p>Sign in with your MyChart account to message your doctor, get your test results, manage your visits, and manage billing.</p>'+
-  '<div class="row"><button class="btn-primary press" data-act="mychart">'+ic("login")+'Sign in</button><button class="btn-ghost press" data-act="toast" data-ic="ext" data-msg="Opening MyChart sign-up">Sign up</button></div></article>';
+ return '<article class="glass mychart a" aria-labelledby="h-mc"><div><p class="eyebrow">Already a patient?</p><h2 id="h-mc">Sign in for more</h2></div>'+
+  '<p>Sign in to message your doctor, get your test results, manage your visits, and manage billing.</p>'+
+  '<div class="row"><button class="btn-primary press" data-act="signin">'+ic("login")+'Sign in</button><button class="btn-ghost press" data-act="signin" data-create="1">Create an account</button></div></article>';
 };
 R.campaign=function(){
  return '<article class="camp rimmed a" aria-labelledby="h-camp"><span class="camp-glow" aria-hidden="true"></span><span class="camp-sweep" aria-hidden="true"></span>'+
@@ -1547,6 +1572,10 @@ function locChip(){
   '<span class="orb '+(l?'c':'l')+'" aria-hidden="true">'+ic(l&&l.kind==="near"?"nav":"pin")+'</span>'+
   '<span class="lc-t">'+(l?'<span class="lc-k">Near </span>'+esc(l.label):'Add a location')+'</span>'+ic("chevD")+'</button>';
 }
+function savedChip(){
+ var n=S.favs.length;
+ return '<button class="loc-chip glass spot press" data-tab="saved" aria-label="Saved providers, '+n+'"><span class="orb p" aria-hidden="true">'+ic("heart")+'</span><span class="lc-t">Saved'+(n?' · '+n:'')+'</span></button>';
+}
 function locText(){ return C.loc?(C.loc.kind==="near"?"near your current location":"near "+C.loc.label):""; }
 
 function provCard(p,j,ctx){
@@ -1576,7 +1605,7 @@ function viewSearch(){
     '<button class="clear" data-act="cq-clear" aria-label="Clear search"'+(C.draft?'':' hidden')+'>'+ic("x")+'</button>'+
     '<button class="go-btn press" data-act="cq-go" aria-label="Search">'+ic("arrowR")+'</button></div>'+
    '<ul id="cq-list" class="sugg glass-o" role="listbox" aria-label="Suggestions" hidden></ul></div>'+
-  '<div class="locbar a">'+locChip()+'</div>';
+  '<div class="locbar a">'+locChip()+savedChip()+'</div>';
  if(S.recents.length){
   h+='<section class="mod">'+secHead("h-rec","Recent searches",'<button class="sec-link" data-act="clear-recents"><span>Clear</span></button>')+
    '<div class="glass list a" role="group" aria-labelledby="h-rec">'+S.recents.map(function(r){
@@ -1837,7 +1866,7 @@ function push(entry){
 function pop(){
  if(C.stack.length<2) return;
  var leaving=C.stack.pop(), e=top();
- if(leaving.from&&leaving.from!=="care"){ var from=leaving.from; renderCare(null); go(from); return; }
+ if(leaving.from&&leaving.from!=="care"){ var from=leaving.from; renderCare(null); go(from,false,true); return; }
  renderCare("back");
  var sc=$("#scroller-care"); sc.scrollTop=e.scroll||0;
  var f=e.focus&&($('[data-prov="'+e.focus+'"]',$("#care"))||$('[data-run="'+e.focus+'"]',$("#care"))||$('[data-act="'+e.focus+'"]',$("#care")));
@@ -1866,18 +1895,49 @@ function syncFavs(id){
   b.setAttribute("aria-pressed",String(on));
   if(b.classList.contains("act")){ b.classList.toggle("done",on); b.lastChild.textContent=on?"Saved":"Save"; }
  });
- renderTabs(); renderSaved(false);
+ renderTabs(); renderSaved(false); if(top().v==="search"&&S.tab!=="care") renderCare(null);
  var hs=$('#home [data-mod="saved"]'); if(!!hs!==!!S.favs.length||hs) renderHome(false);
 }
 
 /* Saved tab */
 function renderSaved(animate){
  var el=$("#saved"), list=favList();
- el.innerHTML='<div class="hello a"><p class="k">Saved</p><h1>Saved providers</h1><p>'+(list.length?plural(list.length,"provider","providers")+' saved on this device.':'Keep the providers you’re considering in one place.')+'</p></div>'+
+ el.innerHTML=subnav("Saved providers","","saved-title","saved-back")+'<div class="hello a"><p>'+(list.length?plural(list.length,"provider","providers")+' saved on this device.':'Keep the providers you’re considering in one place.')+'</p></div>'+
   (list.length?'<div class="plist">'+list.map(function(p,j){return provCard(p,j,"saved");}).join("")+'</div>'+
-   '<p class="note a">'+ic("info")+'<span>As a guest, saved providers stay on this phone and work offline. They are removed if you delete the app. Sign in with MyChart to keep them across devices.</span></p>'
+   '<p class="note a">'+ic("info")+'<span>As a guest, saved providers stay on this phone and work offline. They are removed if you delete the app. Sign in to keep them across devices.</span></p>'
   :'<div class="glass state a"><span class="state-ic" aria-hidden="true">'+ic("heart")+'</span><h2>No saved providers yet</h2><p>Tap the heart on any provider to save them here. You can view them even when you’re offline.</p><div class="row"><button class="btn-primary press" data-tab="care">'+ic("search")+'Find a provider</button></div></div>');
  if(animate) restartEntrance(el);
+}
+
+/* MyChart page – sign in, or do things without signing in */
+var mcFor="", pwShown=false;
+function renderMyChart(){
+ $("#mychart").innerHTML='<div class="hello a"><h1>MyChart</h1><p>Sign in for visits, messages, results, and bills.</p></div>'+
+  '<section class="mc-card a" aria-labelledby="mc-h"><h2 id="mc-h">Sign in</h2>'+
+   (mcFor?'<p class="mc-for" role="status">'+ic("lock")+'<span>Sign in to continue to '+esc(mcFor.charAt(0).toLowerCase()+mcFor.slice(1))+'.</span></p>':'')+
+   '<form id="mc-form" class="grp" style="gap:var(--s-16)" novalidate autocomplete="off">'+
+    '<div class="fl"><label for="mc-user">Username</label><div class="lfield" id="mc-user-w"><input id="mc-user" type="text" autocapitalize="off" spellcheck="false" autocomplete="off" aria-describedby="mc-err"></div></div>'+
+    '<div class="fl"><label for="mc-pw">Password</label><div class="lfield" id="mc-pw-w"><input id="mc-pw" type="'+(pwShown?'text':'password')+'" autocomplete="off" aria-describedby="mc-err"><button type="button" class="eye" data-act="pw-eye" aria-pressed="'+pwShown+'" aria-label="Show password">'+ic("eye")+'</button></div></div>'+
+    '<div id="mc-err" role="alert"></div>'+
+    '<button class="btn-primary press" type="submit">'+ic("lock")+'Sign in</button></form>'+
+   '<button class="txt-btn" data-act="toast" data-ic="info" data-msg="Opening username and password help">Forgot username or password?</button>'+
+   '<p class="or light">New to MyChart?</p>'+
+   '<button class="btn-ghost press" id="mc-create" data-act="toast" data-ic="ext" data-msg="Opening account sign-up">Create an account</button>'+
+   '<p class="note" style="color:#FFFFFF">'+ic("info")+'<span>Prototype – nothing you type here is sent or saved.</span></p>'+
+  '</section>'+
+  '<section class="mod">'+secHead("h-nosign","Without signing in")+'<div class="glass list a" role="group" aria-labelledby="h-nosign">'+
+   [["card","c","Pay as a guest","Pay a bill with your statement number","Opening guest bill pay"],
+    ["calplus","p","Request an appointment","New patients can ask for a visit","Opening the appointment request form"],
+    ["phone","l","Get help with MyChart","Call 214-555-0100 (sample number)","Opening MyChart help"]].map(function(r){
+    return '<button class="li" data-act="toast" data-ic="ext" data-msg="'+r[4]+'"><span class="orb '+r[1]+'" aria-hidden="true">'+ic(r[0])+'</span><span class="grow"><b>'+r[2]+'</b><span class="t2">'+r[3]+'</span></span>'+ic("chevR","chev")+'</button>';
+   }).join("")+'</div></section>';
+}
+function mcSubmit(){
+ var u=$("#mc-user"), pw=$("#mc-pw"), err=$("#mc-err"), miss=[];
+ [["mc-user",u,"username"],["mc-pw",pw,"password"]].forEach(function(f){ var bad=!f[1].value.trim(); $("#"+f[0]+"-w").classList.toggle("bad",bad); if(bad){ f[1].setAttribute("aria-invalid","true"); miss.push(f[2]); } else f[1].removeAttribute("aria-invalid"); });
+ if(miss.length){ err.innerHTML='<p class="field-err">'+ic("alert")+'<span>Enter your '+miss.join(" and ")+'.</span></p>'; (u.value.trim()?pw:u).focus(); return; }
+ err.innerHTML=""; pw.value="";
+ toast("Sign-in isn’t part of this guest prototype","info");
 }
 
 /* Locations tab (carried over from the old app: buildings, clinics, hospitals, parking) */
@@ -1926,7 +1986,7 @@ function renderPage(dir){
    }).join("")+'</div>';
  } else {
   h=subnav("Inbox",unread()?'<button class="sbtn ghost press" data-act="read-all">Mark all read</button>':'',"page-title","page-back")+
-   '<p class="interp a">'+ic("info")+'<span>As a guest, you get alerts and news here. Sign in with MyChart for messages from your care team.</span></p>'+
+   '<p class="interp a">'+ic("info")+'<span>As a guest, you get alerts and news here. Sign in for messages from your care team.</span></p>'+
    '<div class="glass list a" role="list">'+INBOX.map(function(x){
     return '<div role="listitem"><button class="li inbox-i'+(x.unread?' unread':'')+'" data-inbox="'+x.id+'"><span class="orb '+x.o+'" aria-hidden="true">'+ic(x.ic)+'</span><span class="grow"><b>'+esc(x.t)+'</b><span class="t2">'+esc(x.s)+' · '+esc(x.d)+(x.unread?'<span class="sr-only">, unread</span>':'')+'</span></span>'+(x.unread?'<span class="udot" aria-hidden="true"></span>':ic("chevR","chev"))+'</button></div>';
    }).join("")+'</div>';
@@ -1942,7 +2002,7 @@ function blogSheet(i){
 function menuSheet(){
  var n=unread();
  openSheet("More options",
-  '<div class="menu-signin"><b>Already a patient?</b><p>Sign in with MyChart for messages, test results, visits, and billing.</p><button class="btn-primary press" data-act="mychart">'+ic("login")+'Sign in with MyChart</button></div>'+
+  '<div class="menu-signin"><b>Already a patient?</b><p>Sign in for visits, messages, results, and bills.</p><button class="btn-primary press" data-act="signin">'+ic("login")+'Sign in</button></div>'+
   MENU.map(function(g,gi){
    return '<p class="group-label" id="mg-'+gi+'">'+g.k+'</p><div class="share-list" role="group" aria-labelledby="mg-'+gi+'">'+g.items.map(function(it){
     var badge=it[0]==="inbox"&&n?'<span class="n-pill" aria-hidden="true">'+n+'</span>':'';
@@ -1957,6 +2017,7 @@ function menuSheet(){
 }
 function menuGo(k){
  if(k==="inbox"){ closeSheet(); setTimeout(function(){ openPage("inbox"); },S.rm?0:200); return; }
+ if(k==="saved"){ closeSheet(); go("saved"); return; }
  var d=MENU_DEST[k]; closeSheet();
  if(k==="site") return toast("Opening the UT Southwestern website","ext");
  setTimeout(function(){ openSheet(esc(d[0]),'<div class="dest-art svc-art art-c" aria-hidden="true">'+ic(MENU.reduce(function(a,g){g.items.forEach(function(it){if(it[0]===k)a=it[1];});return a;},"info"))+'</div><h3>'+esc(d[0])+'</h3><p>'+esc(d[1])+'</p><div class="dest">Configured destination: <code>'+esc(d[2])+'</code></div><button class="btn-primary block press" data-act="toast" data-ic="ext" data-msg="Opening '+esc(d[0])+'">Open'+ic("arrowR")+'</button>'); },S.rm?0:320);
@@ -1970,12 +2031,12 @@ function inboxOpen(id){
 }
 
 /* ---------- Tabs ---------- */
-var TABS=[["home","home","Home"],["care","steth","Find care"],["places","pin","Locations"],["saved","heart","Saved"]];
-var SCREEN={home:"screen-home",care:"screen-care",places:"screen-places",saved:"screen-saved"};
-var TITLE={home:"Home",care:"Find care",places:"Locations",saved:"Saved"};
+var TABS=[["home","home","Home"],["care","steth","Find care"],["places","pin","Locations"],["mychart","login","MyChart"]];
+var SCREEN={home:"screen-home",care:"screen-care",places:"screen-places",saved:"screen-saved",mychart:"screen-mychart"};
+var TITLE={home:"Home",care:"Find care",places:"Locations",saved:"Saved providers",mychart:"MyChart"};
 function renderTabs(){
  $("#tabbar").innerHTML='<span class="lens" id="lens" aria-hidden="true"><i></i></span>'+TABS.map(function(t){
-  var badge=t[0]==="saved"&&S.favs.length?'<span class="tab-badge" aria-hidden="true">'+S.favs.length+'</span>':'';
+  var badge='';
   return '<button class="tab press" data-tab="'+t[0]+'"'+(t[0]===S.tab?' aria-current="page"':'')+(badge?' aria-label="Saved, '+plural(S.favs.length,"provider","providers")+'"':'')+'>'+ic(t[1])+t[2]+badge+'</button>';
  }).join("");
  $(".search-orb").innerHTML=ic("search");
@@ -1988,7 +2049,9 @@ function placeLens(stretch){
  if(stretch&&!S.rm&&lens.firstChild.animate) lens.firstChild.animate([{transform:"scaleX(1)"},{transform:"scaleX(1.22) scaleY(.92)"},{transform:"scaleX(1)"}],{duration:300,easing:"cubic-bezier(.2,.8,.2,1)"});
 }
 function restartEntrance(el){ if(S.rm) return; el.classList.remove("anim"); void el.offsetWidth; el.classList.add("anim"); }
-function go(tab,quiet){
+var savedFrom="home";
+function go(tab,quiet,keep){
+ var prev=S.tab;
  if(PAGE){ var from=PAGE.from; $("#screen-page").hidden=true; PAGE=null; if(tab===from){ $("#"+SCREEN[tab]).hidden=false; $(".scroller",$("#"+SCREEN[tab])).scrollTop=0; syncTop(); syncCarousel(); return; } }
  var target=$("#"+SCREEN[tab]);
  if(tab===S.tab&&!target.hidden){
@@ -2000,7 +2063,8 @@ function go(tab,quiet){
  $$(".tab").forEach(function(b){ if(b.dataset.tab===tab) b.setAttribute("aria-current","page"); else b.removeAttribute("aria-current"); });
  $("#compact-title").textContent=TITLE[tab];
  if(tab==="places") renderPlaces();
- if(tab==="saved") renderSaved(false);
+ if(tab==="saved"){ if(!keep&&prev!=="saved") savedFrom=prev; renderSaved(false); }
+ if(tab==="mychart"&&prev!=="mychart"){ pwShown=false; renderMyChart(); }
  if(tab==="care"&&top().v==="search") renderCare(null);
  placeLens(true);
  if(!quiet) restartEntrance($(".content",target));
@@ -2044,12 +2108,6 @@ function destSheet(key){
  else {var n=NEWS[+key.slice(1)]; d={k:"Announcement",t:n.t,body:"Published "+n.d+". Visible to everyone until its expiry date.",dest:n.dest,cta:"Read more",art:"visit"};}
  var topArt=d.svc?'<div class="dest-art svc-art art-'+d.svc.art+'" aria-hidden="true">'+ic(d.svc.i)+'</div>':'<div class="dest-art" aria-hidden="true">'+art(d.art)+'</div>';
  openSheet(esc(d.k),topArt+'<h3>'+esc(d.t)+'</h3><p>'+esc(d.body)+'</p><div class="dest">Configured destination: <code>'+esc(d.dest)+'</code></div><button class="btn-primary block press" data-act="toast" data-ic="ext" data-msg="Opening '+esc(d.t)+'">'+esc(d.cta)+ic("arrowR")+'</button>');
-}
-function mychartSheet(feat){
- openSheet("MyChart",'<div class="dest-art svc-art art-c" aria-hidden="true">'+ic("lock")+'</div><h3>'+(feat?esc(feat):'Sign in with MyChart')+'</h3>'+
-  '<p>'+(feat?esc(feat)+' happens in MyChart, your secure patient portal. ':'Message your doctor, get your test results, manage your visits, and manage billing in MyChart, your secure patient portal. ')+'Sign in or create an account to continue.</p>'+
-  '<p>Your saved providers stay on this device either way.</p>'+
-  '<div class="row"><button class="btn-primary press" data-act="toast" data-ic="ext" data-msg="Opening MyChart sign-in">'+ic("login")+'Sign in</button><button class="btn-ghost press" data-act="toast" data-ic="ext" data-msg="Opening MyChart sign-up">Create account</button></div>');
 }
 
 /* Global search sheet (kept from the glass home) */
@@ -2194,7 +2252,7 @@ function requestSheet(id){
  var p=PBY[id], l=LOCS[p.locs[0]];
  var body=p.accepting
   ?'<p>'+esc(p.dr)+' is accepting new patients. Choose how you’d like to book.</p><div class="share-list">'+
-    (p.online?'<button class="rrow" data-act="toast" data-ic="ext" data-msg="Opening MyChart scheduling"><span class="orb c" aria-hidden="true">'+ic("cal")+'</span><span class="grow">Schedule online<small>Pick a time in MyChart. Sign in or create an account.</small></span>'+ic("arrowUR","chev")+'</button>':'')+
+    (p.online?'<button class="rrow" data-act="signin" data-feat="Schedule online"><span class="orb c" aria-hidden="true">'+ic("cal")+'</span><span class="grow">Schedule online<small>Sign in to pick a time.</small></span>'+ic("chevR","chev")+'</button>':'')+
     '<button class="rrow" data-act="call" data-ph="'+l.ph+'"><span class="orb p" aria-hidden="true">'+ic("phone")+'</span><span class="grow">Call the office<small><span class="phone">'+l.ph+'</span> (sample) · '+esc(l.h)+'</small></span></button>'+
     '<button class="rrow" data-act="toast" data-ic="ext" data-msg="Opening the appointment request form"><span class="orb l" aria-hidden="true">'+ic("doc")+'</span><span class="grow">Request a callback<small>We’ll call you within two business days.</small></span>'+ic("arrowUR","chev")+'</button></div>'
   :'<div class="notice"><b>'+ic("info")+esc(p.dr)+' isn’t accepting new patients</b><p>Current patients can still call the office at '+l.ph+' (sample number).</p></div>'+
@@ -2275,7 +2333,7 @@ function refresh(){
 /* ---------- Top bar ---------- */
 function syncTop(){
  var tb=$("#topbar");
- if(PAGE){ tb.classList.remove("scrolled","compact"); return; }
+ if(PAGE||S.tab==="saved"){ tb.classList.remove("scrolled","compact"); return; }
  if(S.tab==="care"&&top().v!=="search"){ tb.classList.remove("scrolled","compact"); return; }
  var sc=$("#"+SCREEN[S.tab]+" .scroller"), st=sc?sc.scrollTop:0;
  tb.classList.toggle("scrolled",st>8); tb.classList.toggle("compact",st>(S.tab==="home"?176:96));
@@ -2355,7 +2413,12 @@ app.addEventListener("click",function(e){
   case "close": return closeSheet();
   case "clear": var qq=$("#q"); qq.value=""; renderResults(); qq.focus(); return;
   case "alert-more": toggleAlerts(); var first=$("#alert-rest .alert-btn"); if(first) first.focus(); return;
-  case "mychart": return mychartSheet(d.feat);
+  case "signin":
+   if(!$("#sheet").hidden) closeSheet();
+   mcFor=d.feat||""; go("mychart"); renderMyChart(); $("#scroller-mychart").scrollTop=0;
+   setTimeout(function(){ var t=d.create?$("#mc-create"):$("#mc-user"); if(t) t.focus({preventScroll:true}); },S.rm?0:120); return;
+  case "pw-eye": pwShown=!pwShown; var pw=$("#mc-pw"); pw.type=pwShown?"text":"password"; b.setAttribute("aria-pressed",String(pwShown)); b.setAttribute("aria-label",pwShown?"Hide password":"Show password"); b.innerHTML=ic(pwShown?"eyeOff":"eye"); return;
+  case "saved-back": return go(savedFrom||"home",false,true);
   case "refresh": $("#scroller-home").scrollTo({top:0}); return refresh();
   case "back": return pop();
   case "page-back": return closePage();
@@ -2380,7 +2443,7 @@ app.addEventListener("click",function(e){
   case "bio": var id=top().id; C.bioOpen[id]=!C.bioOpen[id]; var bio=$("#bio"); bio.classList.toggle("clamp",!C.bioOpen[id]); b.setAttribute("aria-expanded",String(!!C.bioOpen[id])); b.textContent=C.bioOpen[id]?"Show less":"Read more"; return;
  }
 });
-app.addEventListener("submit",function(e){ if(e.target.id==="loc-form"){ e.preventDefault(); submitLoc(); } });
+app.addEventListener("submit",function(e){ if(e.target.id==="loc-form"){ e.preventDefault(); submitLoc(); } if(e.target.id==="mc-form"){ e.preventDefault(); mcSubmit(); } });
 app.addEventListener("input",function(e){
  if(e.target.id==="q") renderResults();
  if(e.target.id==="cq") renderSugg();
