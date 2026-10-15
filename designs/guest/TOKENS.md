@@ -2,16 +2,16 @@
 
 Prototype: `mycare-guest.html`, built from `src.html` by `build.py` (phone frame 390 × 844 pt, also checked at 360 pt and with large text). All people, places, and alerts are fictional sample data.
 
-Scope: the guest experience only – the guest home and the Find care / provider flow. The signed-in experience is the next round.
+Scope: the guest experience only – the guest home and the Find my Care / provider flow. The signed-in experience is the next round.
 
 Direction: inherited from `designs/playful/` without changes to its scales. The Blue hero keeps the global search as the hero feature (field, top searches, full-screen overlay). Provider search is the **Providers scope** of that same overlay, which adds a location chip, Filters, and Sort. Every base token (color, type, spacing, radii, motion, icons) is defined in `designs/playful/TOKENS.md`; this file lists only what the guest flow adds.
 
 ## Navigation
 
-Guest tabs: **Home · Find care · Locations · Wayfinding · MyChart**.
+Guest tabs: **Home · Find my Care · Locations · Wayfinding · MyChart**.
 
 - The old app's five tabs (Home, MyChart, Providers, Locations, Wayfinding), kept so returning users find things where they expect them. Visits and Messages (signed-in tabs in the playful direction) mean nothing to a guest.
-- **Find care** replaces "Providers": people arrive with a problem, not a name, and the tab can grow to services without a rename.
+- **Find my Care** replaces "Providers": people arrive with a problem, not a name, and the tab can grow to services without a rename.
 - **Locations** and **Wayfinding** stay separate: "which place" versus "how do I get there and around inside."
 - **MyChart** is sign-in only, plus Pay as a guest and a link to More. After sign-in it becomes the account tab, so the tab count never changes.
 - **Menu (hamburger)** stays on the home app bar, as in the old app, and opens the **More** drawer: Inbox, Saved providers, Campus shuttle; About UT Southwestern (Why UT Southwestern, Patient resource guide, Patient resources, Physician resources, COVID-19 resources, Visit the full website); Settings and help (Language, Help and contact us, Privacy policy); Follow us. Menu items come from the CMS, so admins can retire one (COVID-19) without a release. A cyan dot on the menu button means unread Inbox items.
@@ -19,7 +19,7 @@ Guest tabs: **Home · Find care · Locations · Wayfinding · MyChart**.
 
 ## Flow map
 
-1. **Enter** – home search (All scope) and top searches; Find my care tile and Find care tab (Providers scope); near-me arrow; specialty list and search history.
+1. **Enter** – home search (All scope) and top searches; Find my Care tile and Find my Care tab (Providers scope); near-me arrow; specialty list and search history.
 2. **Search** – suggestions as you type (specialties, conditions, names); plain language and synonyms ("skin doc" → Dermatology); typo fixes ("dermatolgy"); "near Frisco" sets location; "Spanish-speaking" adds a language filter; recent (device) and popular searches.
 3. **Refine** – location (near me, ZIP or city; ask, denied, and no-fix fallbacks); Filters (eight attributes); Sort (best match, distance, last name A–Z, featured first).
 4. **Results** – cards to profile; loading skeleton, error, offline, no results with alternatives, each with retry.
