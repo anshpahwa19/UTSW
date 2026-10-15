@@ -1170,7 +1170,7 @@ function markScroll(root,animate,baseDelay){
     else items.push([el,0]);
   });
   items.forEach(([el,d])=>{
-    el.classList.add("sd");const top=layoutTop(el)-y,intro=top<vh-24;
+    el.classList.add("sd");const top=layoutTop(el)-y,intro=top<vh;
     if(intro&&animate&&canMove())el.animate([{opacity:0,transform:"translate3d(0,32px,0)"},{opacity:1,transform:"none"}],{duration:720,delay:baseDelay+Math.min(n++,7)*55+d*300,easing:EASE_IOS,fill:"backwards"});
     /* Section-level heading that rises out of a mask as the section arrives (only for sections that arrive by scrolling) */
     const hd=intro?null:el.querySelector(":scope>.sec-h,:scope>.mod-head .sec-h,:scope>h3,:scope>.lbl-h,:scope>.grp-h .lbl-h");
