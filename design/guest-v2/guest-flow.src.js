@@ -257,7 +257,7 @@ const MODS={
 };
 const S={
   alerts:1,fw:390,ts:1,rm:osRM.matches,playing:!osRM.matches,
-  tab:"home",stacks:{home:[{v:"home"}],find:[{v:"find"}],locations:[{v:"locations"}],saved:[{v:"saved"}],menu:[{v:"menu"}]},
+  tab:"home",stacks:{home:[{v:"home"}],find:[{v:"find"}],locations:[{v:"locations"}],saved:[{v:"saved"}],mychart:[{v:"mychart"}]},
   perm:"ask",osAnswer:null,loc:null,data:"live",
   q:"",pq:null,filters:blankFilters(),sort:"relevance",loading:false,
   saved:store.get("saved",[]),recent:store.get("recent",[]),
@@ -330,14 +330,15 @@ function switchTab(t,reset){
 function focusTitle(){setTimeout(()=>{const h=$("#appbar .ttl")||$("#view h1");if(h){h.setAttribute("tabindex","-1");h.focus({preventScroll:true})}},rm()?0:50)}
 
 /* ---------- App bar + tab bar ---------- */
-const TABS=[["home","Home","home"],["find","Find my care","stethoscope"],["locations","Locations","location_on"],["saved","Saved","favorite"],["menu","Menu","menu"]];
-const TITLES={find:"Find my care",results:"Doctors",profile:"Doctor profile",saved:"Saved providers",locations:"Locations",menu:"Menu",medblog:"MedBlog",inbox:"Inbox"};
+const TABS=[["home","Home","home"],["find","Find my care","stethoscope"],["locations","Locations","location_on"],["saved","Saved","favorite"],["mychart","MyChart","login"]];
+const TITLES={find:"Find my care",results:"Doctors",profile:"Doctor profile",saved:"Saved providers",locations:"Locations",menu:"Menu",mychart:"MyChart",medblog:"MedBlog",inbox:"Inbox"};
 function renderAppbar(){
   const t=top(),depth=S.stacks[S.tab].length;
-  const back=depth>1?`<button class="icon-btn" data-action="back" aria-label="Back">${ico("arrow_back")}</button>`:"";
-  if(t.v==="home"){$("#appbar").innerHTML=`<span class="logo" role="img" aria-label="UTSW MyCare"><!--LOGO_REVERSED--></span><span class="spacer"></span>
+  const menuBtn=`<button class="icon-btn" data-action="open-menu" aria-label="Menu">${ico("menu")}</button>`;
+  const back=depth>1?`<button class="icon-btn" data-action="back" aria-label="Back">${ico("arrow_back")}</button>`:menuBtn;
+  if(t.v==="home"){$("#appbar").innerHTML=`${menuBtn}<span class="logo" role="img" aria-label="UTSW MyCare"><!--LOGO_REVERSED--></span><span class="spacer"></span>
     <button class="icon-btn" data-action="mychart" aria-label="Sign in to MyChart">${ico("account_circle")}</button>`;return}
-  $("#appbar").innerHTML=`${back}<h1 class="ttl${back?" with-back":""}"><span class="t1">${TITLES[t.v]}</span>${t.v==="profile"?`<span class="t2" aria-hidden="true">${esc(name(PBY[t.id]))}</span>`:""}</h1>`;
+  $("#appbar").innerHTML=`${back}<h1 class="ttl with-back"><span class="t1">${TITLES[t.v]}</span>${t.v==="profile"?`<span class="t2" aria-hidden="true">${esc(name(PBY[t.id]))}</span>`:""}</h1>`;
 }
 function renderTabbar(){
   $("#tabbar").innerHTML=TABS.map(([k,l,g])=>`<button class="tab" data-action="tab" data-tab="${k}"${k==="saved"&&S.saved.length?` aria-label="${l}, ${S.saved.length} provider${S.saved.length>1?"s":""}"`:""}><span class="pill">${ict(g)}${k==="saved"&&S.saved.length?`<span class="cnt" aria-hidden="true">${S.saved.length}</span>`:""}</span><span>${l}</span></button>`).join("")+`<span class="tab-ind" id="tab-ind" aria-hidden="true"></span>`;
@@ -597,8 +598,6 @@ function unread(){return INBOX.filter(m=>!S.inboxRead.has(m.id)).length}
 function viewMenu(){
   const n=unread();
   return `<div class="res-body" style="gap:var(--sp-24)">
-   <div class="mychart"><h2>Have a MyChart account?</h2><p>Sign in to see your visits, messages, and test results.</p>
-     <button class="btn btn-primary" style="align-self:flex-start" data-action="mychart">${ic("lock",20)}<span>Sign in with MyChart</span></button></div>
    <section class="grp" aria-labelledby="mn-1"><h2 class="lbl-h" id="mn-1">Updates</h2><div class="card list">
      ${mrow("inbox","Inbox",n?`${n} new message${n>1?"s":""} from UTSW MyCare`:"No new messages",`data-action="push" data-v="inbox"${n?` aria-label="Inbox, ${n} new"`:""}`,(n?`<span class="new-pill" aria-hidden="true">${n} new</span>`:"")+CHEV)}
      ${mrow("newspaper","MedBlog","Health news and tips from our experts",`data-action="push" data-v="medblog"`,CHEV)}</div></section>
@@ -618,6 +617,33 @@ function viewMenu(){
      ${mrow("description","Terms of use","",`data-action="toast" data-kind="out" data-msg="Opens the terms of use"`,OUT)}
      ${mrow("accessibility_new","Accessibility","",`data-action="toast" data-kind="out" data-msg="Opens the accessibility statement"`,OUT)}</div></section>
    <p class="fine">UTSW MyCare version 2.0 (prototype) · Sample menu destinations</p></div>`;
+}
+function viewMyChart(err){
+  const e=err||{};
+  return `<div class="res-body" style="gap:var(--sp-24)">
+   <p class="mc-lead">Sign in for visits, messages, results, and bills.</p>
+   <form class="mc-card on-blue" data-form="mc" novalidate aria-labelledby="mc-h">
+     <span class="mc-orb" aria-hidden="true"></span>
+     <h2 id="mc-h">Sign in to MyChart</h2>
+     <div class="mc-field"><label for="mc-user">Username</label>
+       <div class="mc-input${e.user?" invalid":""}"><input id="mc-user" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" ${e.user?`aria-invalid="true" aria-describedby="mc-user-err"`:""}></div>
+       ${e.user?`<span class="mc-err" id="mc-user-err">${icf("error",16)}<span>Enter your MyChart username.</span></span>`:""}</div>
+     <div class="mc-field"><label for="mc-pw">Password</label>
+       <div class="mc-input${e.pw?" invalid":""}"><input id="mc-pw" type="password" autocomplete="current-password" ${e.pw?`aria-invalid="true" aria-describedby="mc-pw-err"`:""}>
+         <button type="button" class="icon-btn" data-action="pw-toggle" aria-pressed="false" aria-label="Show password">${ic("visibility",20)}</button></div>
+       ${e.pw?`<span class="mc-err" id="mc-pw-err">${icf("error",16)}<span>Enter your password.</span></span>`:""}</div>
+     <button type="submit" class="btn btn-white mc-pill" id="mc-submit">${ic("lock",20)}<span>Sign in</span></button>
+     <button type="button" class="mc-link" data-action="toast" data-kind="go" data-msg="Opens MyChart account recovery">Forgot username or password?</button>
+     <div class="mc-or" aria-hidden="true"><span>New to MyChart?</span></div>
+     <button type="button" class="btn mc-pill mc-outline" data-action="toast" data-kind="out" data-msg="Opens MyChart sign-up"><span class="sr-only">New to MyChart? </span>Create an account</button>
+   </form>
+   <section class="grp" aria-labelledby="mc-guest-h"><h2 class="sec-h" id="mc-guest-h">Without signing in</h2>
+     <div class="card list">
+       ${mrow("receipt_long","Pay as a guest","Pay a bill with your statement number",`data-action="toast" data-kind="out" data-msg="Opens guest bill pay"`,CHEV)}
+       ${mrow("stethoscope","Find a doctor","Search providers and request an appointment",`data-action="tab" data-tab="find"`,CHEV)}
+       ${mrow("support_agent","MyChart help","Call 214-555-0190, Monday – Friday, 7 a.m. – 7 p.m.",`data-action="toast" data-kind="go" data-msg="Opens MyChart help"`,CHEV)}
+     </div></section>
+   <p class="fine">Sign-in goes to MyChart. This guest prototype doesn’t sign you in.</p></div>`;
 }
 function viewInbox(){
   return `<div class="res-body"><div class="res-sum"><h2>${unread()?`${unread()} new`:"All caught up"}</h2><p>Updates from UTSW MyCare. Personal messages from your care team are in MyChart.</p></div>
@@ -643,7 +669,7 @@ function render(anim,opts={}){
   screenTransition(anim,()=>{
     renderAppbar();
     view.setAttribute("aria-label",t.v==="home"?"Home":TITLES[t.v]);
-    view.innerHTML=t.v==="home"?viewHome():t.v==="find"?viewFind():t.v==="results"?viewResults():t.v==="profile"?viewProfile(t.id):t.v==="saved"?viewSaved():t.v==="locations"?viewLocations():t.v==="medblog"?viewMedblog():t.v==="inbox"?viewInbox():viewMenu();
+    view.innerHTML=t.v==="home"?viewHome():t.v==="find"?viewFind():t.v==="results"?viewResults():t.v==="profile"?viewProfile(t.id):t.v==="saved"?viewSaved():t.v==="locations"?viewLocations():t.v==="medblog"?viewMedblog():t.v==="inbox"?viewInbox():t.v==="mychart"?viewMyChart():viewMenu();
     if(t.v==="results")renderResultsBody();
     if(t.v==="home"){initCarousel();ptrInit()}
     if(opts.scroll!=null)view.scrollTop=opts.scroll;
@@ -929,6 +955,10 @@ view.addEventListener("input",e=>{
 });
 screen.addEventListener("submit",e=>{
   e.preventDefault();const f=e.target.dataset.form;
+  if(f==="mc"){const u=$("#mc-user").value.trim(),pw=$("#mc-pw").value;
+    if(!u||!pw){const keepU=$("#mc-user").value;view.innerHTML=viewMyChart({user:!u,pw:!pw});$("#mc-user").value=keepU;(u?$("#mc-pw"):$("#mc-user")).focus();sayAssert(!u?"Enter your MyChart username.":"Enter your password.");markScroll(view,false,0);return}
+    const b=$("#mc-submit");b.disabled=true;b.innerHTML=`<span class="spinner" aria-hidden="true"></span><span>Signing in</span>`;
+    setTimeout(()=>{b.disabled=false;b.innerHTML=ic("lock",20)+"<span>Sign in</span>";toast("Sign-in continues in MyChart. This guest prototype stops here.","info")},900);return}
   if(f==="fc"){const v=$("#fq").value.trim();if(v){$("#fq").blur();runSearch(v)}}
   if(f==="zip"){const r=resolvePlace($("#zip").value);if(r.err){$("#sheet-body").innerHTML=locSheetBody(r.err);const z=$("#zip");z.focus();sayAssert(r.err)}else setLoc(r.loc)}
 });
@@ -995,7 +1025,9 @@ screen.addEventListener("click",e=>{
    case "share":openShare(id);break;
    case "request":openRequest(id);break;
    case "bio":{const b=$("#bio");const open=!b.classList.contains("open");const h0=b.offsetHeight;b.classList.toggle("open",open);if(canMove())b.animate([{height:h0+"px"},{height:b.offsetHeight+"px"}],{duration:440,easing:EASE_IOS});el.setAttribute("aria-expanded",String(open));el.firstElementChild.textContent=open?"Show less":"Read more";break}
-   case "mychart":toast("MyChart sign-in isn’t part of this guest prototype","info");break;
+   case "mychart":if(!$("#layer").hidden)closeSheet(()=>switchTab("mychart",true));else switchTab("mychart",true);break;
+   case "open-menu":push({v:"menu"});break;
+   case "pw-toggle":{const i=$("#mc-pw"),on=i.type==="password";i.type=on?"text":"password";el.setAttribute("aria-pressed",String(on));el.setAttribute("aria-label",on?"Hide password":"Show password");el.innerHTML=ic(on?"visibility_off":"visibility",20);break}
    case "close-sheet":closeSheet();break;
    case "toast":toast(el.dataset.msg,el.dataset.kind);break;
    case "toast-close":closeSheet();toast(el.dataset.msg,el.dataset.kind);break;
@@ -1052,7 +1084,7 @@ $("#cms").addEventListener("change",e=>{const c=e.target.closest("input[data-cms
 function reset(){
   if(!$("#sys").hidden){$("#sys").hidden=true;$("#sys").innerHTML="";$("#layer").removeAttribute("inert")}
   const L=$("#layer");L.hidden=true;L.classList.remove("open");sheetKind=null;const s=$("#search");s.hidden=true;s.classList.remove("open");setInert(false);
-  S.stacks={home:[{v:"home"}],find:[{v:"find"}],locations:[{v:"locations"}],saved:[{v:"saved"}],menu:[{v:"menu"}]};
+  S.stacks={home:[{v:"home"}],find:[{v:"find"}],locations:[{v:"locations"}],saved:[{v:"saved"}],mychart:[{v:"mychart"}]};
   S.filters=blankFilters();S.sort="relevance";S.fcText="";clearTimeout(loadT);S.loading=false;view.scrollTop=0;
 }
 const goTab=t=>{S.tab=t;markTab()};
@@ -1076,7 +1108,8 @@ const JUMPS=[
  ["profile","Provider profile","Full profile with research",()=>{goTab("find");S.stacks.find.push({v:"profile",id:"avery-morgan"});render("fade")}],
  ["missing","Profile, missing data","Optional sections hidden",()=>{goTab("find");S.stacks.find.push({v:"profile",id:"omar-haddad"});render("fade")}],
  ["share","Share sheet","Public link only",()=>{goTab("find");S.stacks.find.push({v:"profile",id:"avery-morgan"});render("fade");setTimeout(()=>openShare("avery-morgan"),rm()?0:350)}],
- ["menu","Menu","Patients, about UTSW, follow us",()=>{goTab("menu");render("fade")}],
+ ["menu","Menu","Top-left menu: resources, about UTSW",()=>{goTab("home");S.stacks.home.push({v:"menu"});render("fade")}],
+ ["mychart","MyChart","Sign-in screen and guest options",()=>{goTab("mychart");render("fade")}],
  ["medblog","MedBlog, see all","Topic filter and story list",()=>{S.blogCat="All";S.blogMore=false;goTab("home");S.stacks.home.push({v:"medblog"});render("fade")}],
  ["saved","Saved providers","Stored on this device",()=>{if(!S.saved.length){S.saved=["avery-morgan","priya-shah"];store.set("saved",S.saved);renderTabbar()}goTab("saved");render("fade")}]
 ];
@@ -1098,6 +1131,7 @@ const REQ=[
  ["Provider profile","Credentials, bio, specialties, conditions, languages, locations, contact, research and media, related","profile"],
  ["Favorites","Save and remove with Undo, saved list, stored on the device","saved"],
  ["Share","Native share sheet with public link only","share"],
+ ["MyChart (old app’s MyChart login)","Tab with sign-in form, show password, forgot link, create account, and guest options","mychart"],
  ["Menu (old app’s More options)","Inbox, MedBlog, patient resources, shuttle, COVID-19, about UTSW, physicians, full website, social, privacy","menu"],
  ["MedBlog see all (old app)","Latest story, topic filter, dated list with read times, show more","medblog"]
 ];
