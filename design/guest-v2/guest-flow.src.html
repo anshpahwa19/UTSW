@@ -375,7 +375,7 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
 .ann-date{width:56px;flex:none;font-size:var(--fs-12);line-height:var(--lh-12);font-weight:700;color:var(--c-blue);letter-spacing:.04em;align-self:flex-start;padding-top:var(--sp-4)}
 .new-pill{font-size:var(--fs-12);line-height:var(--lh-12);font-weight:700;color:var(--c-on-blue);background:var(--c-blue);border-radius:var(--r-full);padding:var(--sp-4) var(--sp-8);align-self:flex-start}
 
-/* ---------- Find care ---------- */
+/* ---------- Find my care ---------- */
 .fc-head{background:var(--c-blue);color:var(--c-on-blue);padding:var(--sp-12) var(--sp-16) var(--sp-8);display:flex;flex-direction:column;gap:var(--sp-8);position:sticky;top:0;z-index:2}
 .fc-head form{margin:0}
 /* Blue continues above the sticky header so no light sliver shows between it and the app bar (overscroll, subpixel scroll) */
@@ -473,6 +473,8 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
 /* ---------- Tab bar ---------- */
 .tabbar{flex:none;background:var(--c-surface);box-shadow:0 -1px 0 var(--c-border);display:grid;grid-template-columns:repeat(5,minmax(0,1fr));padding:var(--sp-4) var(--sp-4) var(--sp-24);position:relative;z-index:3}
 .tab{min-height:56px;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--sp-4);font-size:var(--fs-12);line-height:var(--lh-12);font-weight:600;color:var(--c-text-2);cursor:pointer;padding:var(--sp-4) 0;border-radius:var(--r-12);position:relative}
+.tab>span:last-child{white-space:nowrap}
+.screen.large .tab>span:last-child{white-space:normal;text-align:center}
 .tab .pill{width:56px;height:32px;border-radius:var(--r-full);display:grid;place-items:center;transition:background var(--dur-base) var(--ease-out);position:relative}
 .tab-ic path{transition:opacity var(--dur-base) var(--ease-std)}
 .tab-ic .f{opacity:0}
@@ -681,7 +683,7 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
   <header class="page-head">
     <span class="appicon" role="img" aria-label="UTSW MyCare app icon"><!--APP_ICON--></span>
     <div>
-      <h1>UTSW MyCare guest flow: Home and Find care</h1>
+      <h1>UTSW MyCare guest flow: Home and Find my care</h1>
       <p>Interactive prototype · iOS frame 390 × 844 pt, also checked at 360 pt · Guest only · Fictional providers and sample data</p>
     </div>
   </header>
@@ -803,7 +805,7 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
           <li><b>Sheets</b>: while a sheet is open, the screen behind steps back to 94% with rounded corners over a dark ground, as on iOS.</li>
           <li><b>Lists that change</b>: sorting or removing a filter glides each result card to its new place (FLIP), new cards fade in, and counts roll to their new value. Removing a saved doctor slides the card out and closes the gap.</li>
           <li><b>Feedback</b>: the heart fills outward from its center; the Undo toast shows a hairline countdown; pull to refresh draws a ring that turns solid when releasing will refresh; finding your location shows soft sonar rings; “Read more” opens the bio by height.</li>
-          <li><b>Pacing</b>: the MedBlog dot fills during each 6 s dwell and advances when full; it pauses on touch, hover, or focus. The search screen’s chips and rows, Find care suggestions, and the profile header settle in with short staggers. On first open the alert banner arrives after the hero.</li>
+          <li><b>Pacing</b>: the MedBlog dot fills during each 6 s dwell and advances when full; it pauses on touch, hover, or focus. The search screen’s chips and rows, Find my care suggestions, and the profile header settle in with short staggers. On first open the alert banner arrives after the hero.</li>
           <li>Ambient motion is limited to the slow light behind the hero (22 s). No bounces, confetti, or blinking. Reduced motion turns all of it off and shows every section in place.</li>
         </ul>
       </section>

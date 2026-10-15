@@ -330,8 +330,8 @@ function switchTab(t,reset){
 function focusTitle(){setTimeout(()=>{const h=$("#appbar .ttl")||$("#view h1");if(h){h.setAttribute("tabindex","-1");h.focus({preventScroll:true})}},rm()?0:50)}
 
 /* ---------- App bar + tab bar ---------- */
-const TABS=[["home","Home","home"],["find","Find care","stethoscope"],["locations","Locations","location_on"],["saved","Saved","favorite"],["menu","Menu","menu"]];
-const TITLES={find:"Find a doctor",results:"Doctors",profile:"Doctor profile",saved:"Saved providers",locations:"Locations",menu:"Menu",medblog:"MedBlog",inbox:"Inbox"};
+const TABS=[["home","Home","home"],["find","Find my care","stethoscope"],["locations","Locations","location_on"],["saved","Saved","favorite"],["menu","Menu","menu"]];
+const TITLES={find:"Find my care",results:"Doctors",profile:"Doctor profile",saved:"Saved providers",locations:"Locations",menu:"Menu",medblog:"MedBlog",inbox:"Inbox"};
 function renderAppbar(){
   const t=top(),depth=S.stacks[S.tab].length;
   const back=depth>1?`<button class="icon-btn" data-action="back" aria-label="Back">${ico("arrow_back")}</button>`:"";
@@ -418,7 +418,7 @@ function viewHome(){
     ${visibleModules().map((m,i)=>`<section class="mod rise" style="--i:${i+1}" aria-labelledby="h-${m.id}">${M[m.id]()}</section>`).join("")}</div>`;
 }
 
-/* ---------- Find care landing ---------- */
+/* ---------- Find my care landing ---------- */
 function locLabel(){
   if(S.loc)return `<span class="lt">${S.loc.kind==="gps"?"Near you":"Near "+esc(S.loc.label)}${S.loc.sub?` <span>· ${esc(S.loc.sub)}</span>`:""}</span>`;
   if(S.osAnswer==="denied")return `<span class="lt">Location off <span>· Enter ZIP code or city</span></span>`;
@@ -916,7 +916,7 @@ function renderSearch(q){
      +(provs.length>3?`<button class="row" data-action="search-all" data-q="${esc(q)}"><span class="rt"><b>See all ${provs.length} doctors</b></span>${ic("chevron_right",20)}</button>`:"")
      :l.map(r=>`<button class="row" data-action="search-pick" data-msg="${esc(r.t)}">${well(KIND[k][1])}<span class="rt"><b>${hl(r.t,q)}</b><span>${esc(r.s)}</span></span>${ic("chevron_right",20)}</button>`).join("")}</div></section>`).join("")
     :`<div class="card state">${well("search_off",48)}<h2>No matches for “${esc(q)}”</h2><p>Try a specialty, such as cardiology, a condition, or a clinic name.</p></div>`)
-    +`<button class="btn btn-secondary btn-block" data-action="search-all" data-q="${esc(q)}">${ic("stethoscope",20)}<span>Search Find care for “${esc(q)}”</span></button>`;
+    +`<button class="btn btn-secondary btn-block" data-action="search-all" data-q="${esc(q)}">${ic("stethoscope",20)}<span>Search Find my care for “${esc(q)}”</span></button>`;
   sayPolite(groups.length?"Results updated":"No results");
 }
 $("#q").addEventListener("input",e=>renderSearch(e.target.value));
@@ -1061,7 +1061,7 @@ const setResults=(q,cb)=>{goTab("find");S.q=q;S.pq=parse(q);const pq=S.pq;pq.lan
 const JUMPS=[
  ["home","Guest home","Alerts, search, modules",()=>{goTab("home");render("fade")}],
  ["gsearch","Global search","Top searches and grouped results",()=>{goTab("home");render("fade");setTimeout(()=>openSearch("knee"),50)}],
- ["find","Find care","Recent, popular, specialties",()=>{goTab("find");render("fade")}],
+ ["find","Find my care","Recent, popular, specialties",()=>{goTab("find");render("fade")}],
  ["suggest","Auto-suggestions","Typing “derm”",()=>{goTab("find");S.fcText="derm";render("fade")}],
  ["plain","Plain-language search","“spanish speaking pediatrician”",()=>{S.data="live";setResults("spanish speaking pediatrician")}],
  ["typo","Spelling correction","“dermotology”",()=>{S.data="live";setResults("dermotology")}],
