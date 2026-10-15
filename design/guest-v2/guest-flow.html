@@ -317,7 +317,6 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
 .tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--sp-12)}
 .tile{min-height:104px;border:0;background:var(--c-surface);border-radius:var(--r-16);box-shadow:0 0 0 1px var(--c-border);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:var(--sp-8);padding:var(--sp-16) var(--sp-8) var(--sp-12);cursor:pointer;text-align:center;font-size:var(--fs-14);line-height:var(--lh-14);font-weight:600;position:relative;color:var(--c-text)}
 .tile:hover{box-shadow:0 0 0 2px var(--c-blue)}
-.tile .out{position:absolute;top:var(--sp-8);right:var(--sp-8);color:var(--c-text-2)}
 
 /* Find a doctor module */
 .fd{padding:var(--sp-16);display:flex;flex-direction:column;gap:var(--sp-16)}
@@ -1186,7 +1185,7 @@ function renderAlerts(){
 const M={};
 M.tiles=()=>`<div class="mod-head"><h2 class="sec-h" id="h-tiles">Quick links</h2></div>
   <div class="tiles">${[["find","Find my care","stethoscope"],["locations","Locations","location_on"],["message","Message your doctor","chat",1],["results","Get your test results","labs",1],["visits","Manage Your Visits","calendar_month",1],["billing","Manage Billing","credit_card",1]]
-   .map(([k,l,g,out])=>`<button class="tile press" data-action="tile" data-k="${k}" data-l="${l}"${out?` aria-label="${l}, opens MyChart"`:""}>${well(g,48)}<span>${l}</span>${out?`<span class="out" aria-hidden="true">${ic("open_in_new",20)}</span>`:""}</button>`).join("")}</div>`;
+   .map(([k,l,g,out])=>`<button class="tile press" data-action="tile" data-k="${k}" data-l="${l}"${out?` aria-label="${l}, opens MyChart"`:""}>${well(g,48)}<span>${l}</span></button>`).join("")}</div>`;
 M.finddoc=()=>`<div class="card fd">
    <div class="fd-top">${well("stethoscope",48)}<div class="stack" style="gap:var(--sp-4)"><h2 id="h-finddoc">Find a doctor near you</h2>
    <p>Search ${PROV.length} sample providers by name, specialty, condition, or language.</p></div></div>
@@ -1217,7 +1216,7 @@ M.resources=()=>`<div class="mod-head"><h2 class="sec-h" id="h-resources">UTSW r
 M.mychart=()=>`<div class="mychart"><h2 id="h-mychart">Already a UT&nbsp;Southwestern patient?</h2>
   <p>Sign in with MyChart to see your visits, messages, and test results.</p>
   <div class="row-btns"><button class="btn btn-primary" data-action="mychart">${ic("lock",20)}<span>Sign in with MyChart</span></button>
-  <button class="btn btn-ghost" data-action="toast" data-kind="out" data-msg="Opens MyChart sign-up"><span>Create an account</span>${ic("open_in_new",20)}</button></div></div>`;
+  <button class="btn btn-ghost" data-action="toast" data-kind="out" data-msg="Opens MyChart sign-up"><span>Create an account</span></button></div></div>`;
 M.announcements=()=>`<div class="mod-head"><h2 class="sec-h" id="h-announcements">Announcements</h2></div>
   <div class="card list">${ANN.map(a=>`<button class="row" data-action="toast" data-kind="go" data-msg="Opens: ${esc(a.t)}"><span class="ann-date">${a.d}</span><span class="rt"><b>${esc(a.t)}</b><span>${esc(a.s)}</span></span>${a.isNew?`<span class="new-pill">New</span>`:ic("chevron_right",20)}</button>`).join("")}</div>`;
 M.summer=()=>"";
@@ -1385,7 +1384,7 @@ function viewProfile(id){
    ${p.edu?`<section class="p-sec" aria-labelledby="ps-edu"><h3 id="ps-edu">Education and credentials</h3><div class="kv">${p.edu.map(([k,v])=>`<div><span class="lead lead-16">${ic("school",20)}</span><p>${esc(v)}<span>${esc(k)}</span></p></div>`).join("")}</div></section>`:""}
    ${p.research||p.video?`<section class="p-sec" aria-labelledby="ps-res"><h3 id="ps-res">Research and media</h3><div class="card list">
      ${p.video?`<button class="row" data-action="toast" data-kind="go" data-msg="Plays: ${esc(p.video[0])}">${well("play_circle")}<span class="rt"><b>${esc(p.video[0])}</b><span>${esc(p.video[1])}</span></span>${ic("chevron_right",20)}</button>`:""}
-     ${(p.research||[]).map(([t,s])=>`<button class="row" data-action="toast" data-kind="out" data-msg="Opens the publication website">${well("menu_book")}<span class="rt"><b>${esc(t)}</b><span>${esc(s)}</span></span>${ic("open_in_new",20)}</button>`).join("")}</div></section>`:""}
+     ${(p.research||[]).map(([t,s])=>`<button class="row" data-action="toast" data-kind="out" data-msg="Opens the publication website">${well("menu_book")}<span class="rt"><b>${esc(t)}</b><span>${esc(s)}</span></span>${ic("chevron_right",20)}</button>`).join("")}</div></section>`:""}
    ${rel.length?`<section class="p-sec" aria-labelledby="ps-rel"><h3 id="ps-rel">Related doctors</h3><div class="h-scroll">
      ${rel.map(r=>`<button class="card mini rel press" data-action="profile" data-id="${r.id}">${avatar(r,56)}<b>${esc(name(r))}</b><span>${esc(r.spec)}${distTo(r)!=null?` · ${fmtMi(distTo(r))}`:""}</span></button>`).join("")}</div></section>`:""}
    <p class="fine pad">Profile details come from the UTSW provider directory. Sample profile of a fictional provider.${!p.bio?" This directory entry has no biography or education yet, so those sections are hidden.":""}</p>
@@ -1406,7 +1405,7 @@ function viewLocations(){
   return `<div class="res-body"><div class="notice"><span class="lead">${ic("info",20)}</span><span>Find a location and indoor maps are outside this prototype. Sample locations are listed for context.</span></div>
    <div class="card list">${ls.map(l=>`<button class="row" data-action="toast" data-kind="go" data-msg="Opens ${esc(l.n)}">${well("location_on")}<span class="rt"><b>${esc(l.n)}</b><span>${esc(l.a)}${locDist(l)!=null?` · ${fmtMi(locDist(l))}`:""}</span></span>${ic("chevron_right",20)}</button>`).join("")}</div></div>`;
 }
-const OUT=ic("open_in_new",20),CHEV=ic("chevron_right",20);
+const OUT=ic("chevron_right",20),CHEV=ic("chevron_right",20);
 const mrow=(g,t,sub,act,extra="")=>`<button class="row" ${act}>${well(g)}<span class="rt"><b>${t}</b>${sub?`<span>${sub}</span>`:""}</span>${extra}</button>`;
 function unread(){return INBOX.filter(m=>!S.inboxRead.has(m.id)).length}
 function viewMenu(){
@@ -1427,7 +1426,7 @@ function viewMenu(){
      ${mrow("medical_information","Resources for physicians","Referrals and clinical tools",`data-action="toast" data-kind="out" data-msg="Opens physician resources on the UTSW website"`,OUT)}
      ${mrow("language","Visit the full website","utsouthwestern.edu",`data-action="toast" data-kind="out" data-msg="Opens the UT Southwestern website"`,OUT)}</div></section>
    <section class="grp" aria-labelledby="mn-4"><h2 class="lbl-h" id="mn-4">Follow us</h2>
-     <div class="chips">${["Facebook","Instagram","LinkedIn","X"].map(x=>`<button class="chip" data-action="toast" data-kind="out" data-msg="Opens UT Southwestern on ${x}" aria-label="${x}, opens in the ${x} app">${x}${ic("open_in_new",16)}</button>`).join("")}</div></section>
+     <div class="chips">${["Facebook","Instagram","LinkedIn","X"].map(x=>`<button class="chip" data-action="toast" data-kind="out" data-msg="Opens UT Southwestern on ${x}" aria-label="${x}, opens in the ${x} app">${x}</button>`).join("")}</div></section>
    <section class="grp" aria-labelledby="mn-5"><h2 class="sr-only" id="mn-5">Legal and settings</h2><div class="card list">
      ${mrow("privacy_tip","Privacy policy","",`data-action="toast" data-kind="out" data-msg="Opens the privacy policy"`,OUT)}
      ${mrow("description","Terms of use","",`data-action="toast" data-kind="out" data-msg="Opens the terms of use"`,OUT)}
@@ -1509,7 +1508,7 @@ function ptrInit(){
 
 /* ---------- Toast + live regions ---------- */
 let toastT;
-const TOAST_IC={done:()=>icf("check_circle",20),go:()=>ic("arrow_forward",20),out:()=>ic("open_in_new",20),info:()=>ic("info",20)};
+const TOAST_IC={done:()=>icf("check_circle",20),go:()=>ic("arrow_forward",20),out:()=>ic("arrow_forward",20),info:()=>ic("info",20)};
 function toast(msg,kind="done",act){
   const t=$("#toast");t.innerHTML=(TOAST_IC[kind]||TOAST_IC.done)()+`<span class="tm">${esc(msg)}</span>`+(act?`<button type="button" id="toast-act">${act.label}</button>`:"")+(act&&canMove()?`<span class="t-bar" aria-hidden="true"></span>`:"");
   t.classList.toggle("has-act",!!act);t.classList.add("show");
@@ -1655,8 +1654,8 @@ function openRequest(id){
   const p=PBY[id],l=nearestLoc(p);
   openSheet("request","Request an appointment",`<div class="kv"><div>${avatar(p,40)}<p><b>${esc(name(p))}</b><span>${esc(p.spec)}</span></p></div></div>
    ${!p.accepting?`<div class="notice warn"><span class="lead">${ic("info",20)}</span><span>${drName(p)} isn’t accepting new patients. If you’re already a patient, you can still schedule.</span></div>`:""}
-   <div class="btn-stack">${p.online?`<button class="btn btn-primary btn-block" data-action="toast-close" data-kind="out" data-msg="Opens MyChart scheduling. Sign-in is part of MyChart, not this prototype."><span>Schedule online in MyChart</span>${ic("open_in_new",20)}</button>`:""}
-   <button class="btn ${p.online?"btn-secondary":"btn-primary"} btn-block" data-action="toast-close" data-kind="out" data-msg="Opens the appointment request form on the UTSW website"><span>Send a request online</span>${ic("open_in_new",20)}</button></div>
+   <div class="btn-stack">${p.online?`<button class="btn btn-primary btn-block" data-action="toast-close" data-kind="out" data-msg="Opens MyChart scheduling. Sign-in is part of MyChart, not this prototype."><span>Schedule online in MyChart</span></button>`:""}
+   <button class="btn ${p.online?"btn-secondary":"btn-primary"} btn-block" data-action="toast-close" data-kind="out" data-msg="Opens the appointment request form on the UTSW website"><span>Send a request online</span></button></div>
    <div class="card loc-card"><div class="kv"><div><span class="lead lead-16">${ic("call",20)}</span><p>Call to schedule<span style="color:var(--c-text);font-size:var(--fs-18);line-height:var(--lh-18);font-weight:700;user-select:all">${l.ph}</span><span>${esc(l.n)} · Monday – Friday, 8 a.m. – 5 p.m.</span></p></div></div>
      <div class="row-btns"><button class="btn btn-secondary btn-sm" data-action="toast" data-kind="out" data-msg="Opens the phone app: ${l.ph}">${ic("call",20)}<span>Call</span></button><button class="btn btn-ghost btn-sm" data-action="copy" data-text="${l.ph}" data-msg="Phone number copied">${ic("content_copy",20)}<span>Copy number</span></button></div></div>
    <p class="fine">For a medical emergency, call 911. Appointment requests don’t share any health information from this app.</p>`);
