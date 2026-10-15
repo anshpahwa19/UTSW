@@ -977,6 +977,7 @@ $("#sheet-body").addEventListener("change",e=>{
 });
 screen.addEventListener("click",e=>{
   const el=e.target.closest("[data-action]");if(!el||!screen.contains(el))return;
+  if(el.closest("#drawer")&&el.dataset.action!=="close-drawer")closeDrawer(true);
   const act=el.dataset.action,id=el.dataset.id;
   switch(act){
    case "back":{const t0=top();let f=null;
@@ -1026,7 +1027,8 @@ screen.addEventListener("click",e=>{
    case "request":openRequest(id);break;
    case "bio":{const b=$("#bio");const open=!b.classList.contains("open");const h0=b.offsetHeight;b.classList.toggle("open",open);if(canMove())b.animate([{height:h0+"px"},{height:b.offsetHeight+"px"}],{duration:440,easing:EASE_IOS});el.setAttribute("aria-expanded",String(open));el.firstElementChild.textContent=open?"Show less":"Read more";break}
    case "mychart":if(!$("#layer").hidden)closeSheet(()=>switchTab("mychart",true));else switchTab("mychart",true);break;
-   case "open-menu":push({v:"menu"});break;
+   case "open-menu":openDrawer();break;
+   case "close-drawer":closeDrawer();break;
    case "pw-toggle":{const i=$("#mc-pw"),on=i.type==="password";i.type=on?"text":"password";el.setAttribute("aria-pressed",String(on));el.setAttribute("aria-label",on?"Hide password":"Show password");el.innerHTML=ic(on?"visibility_off":"visibility",20);break}
    case "close-sheet":closeSheet();break;
    case "toast":toast(el.dataset.msg,el.dataset.kind);break;
@@ -1040,9 +1042,10 @@ screen.addEventListener("click",e=>{
 screen.addEventListener("keydown",e=>{
   if(e.key==="Escape"){
     if(!$("#sys").hidden){const c=$('[data-sys="cancel"]')||$('[data-sys="deny"]');if(c)c.click();e.stopPropagation();return}
+    if(!$("#drawer").hidden){closeDrawer();e.stopPropagation();return}
     if(!$("#layer").hidden){closeSheet();e.stopPropagation()}else if(!$("#search").hidden)closeSearch();
   }
-  if(!$("#sys").hidden)trap(e,$("#sys"));else if(!$("#layer").hidden)trap(e,$("#sheet"));else if(!$("#search").hidden)trap(e,$("#search"));
+  if(!$("#drawer").hidden)trap(e,$("#drawer .drawer"));else if(!$("#sys").hidden)trap(e,$("#sys"));else if(!$("#layer").hidden)trap(e,$("#sheet"));else if(!$("#search").hidden)trap(e,$("#search"));
 });
 
 /* ---------- Page controls ---------- */
@@ -1083,6 +1086,7 @@ $("#cms").addEventListener("change",e=>{const c=e.target.closest("input[data-cms
 /* Jumps: set up a state from scratch */
 function reset(){
   if(!$("#sys").hidden){$("#sys").hidden=true;$("#sys").innerHTML="";$("#layer").removeAttribute("inert")}
+  const Dr=$("#drawer");Dr.hidden=true;Dr.classList.remove("open");
   const L=$("#layer");L.hidden=true;L.classList.remove("open");sheetKind=null;const s=$("#search");s.hidden=true;s.classList.remove("open");setInert(false);
   S.stacks={home:[{v:"home"}],find:[{v:"find"}],locations:[{v:"locations"}],saved:[{v:"saved"}],mychart:[{v:"mychart"}]};
   S.filters=blankFilters();S.sort="relevance";S.fcText="";clearTimeout(loadT);S.loading=false;view.scrollTop=0;
@@ -1108,7 +1112,7 @@ const JUMPS=[
  ["profile","Provider profile","Full profile with research",()=>{goTab("find");S.stacks.find.push({v:"profile",id:"avery-morgan"});render("fade")}],
  ["missing","Profile, missing data","Optional sections hidden",()=>{goTab("find");S.stacks.find.push({v:"profile",id:"omar-haddad"});render("fade")}],
  ["share","Share sheet","Public link only",()=>{goTab("find");S.stacks.find.push({v:"profile",id:"avery-morgan"});render("fade");setTimeout(()=>openShare("avery-morgan"),rm()?0:350)}],
- ["menu","Menu","Top-left menu: resources, about UTSW",()=>{goTab("home");S.stacks.home.push({v:"menu"});render("fade")}],
+ ["menu","Menu","Drawer from the top-left button",()=>{goTab("home");render("fade");setTimeout(openDrawer,rm()?0:200)}],
  ["mychart","MyChart","Sign-in screen and guest options",()=>{goTab("mychart");render("fade")}],
  ["medblog","MedBlog, see all","Topic filter and story list",()=>{S.blogCat="All";S.blogMore=false;goTab("home");S.stacks.home.push({v:"medblog"});render("fade")}],
  ["saved","Saved providers","Stored on this device",()=>{if(!S.saved.length){S.saved=["avery-morgan","priya-shah"];store.set("saved",S.saved);renderTabbar()}goTab("saved");render("fade")}]
@@ -1326,11 +1330,26 @@ function rollNumber(el,from,to){
   od.animate([{transform:"none",opacity:1},{transform:`translate3d(0,${up?-100:100}%,0)`,opacity:0}],{...o,fill:"forwards"}).onfinish=()=>{if(el.contains(nw))el.textContent=to};
 }
 
+/* ---------- Menu drawer ---------- */
+let drawerFocus=null;
+function openDrawer(){
+  const D=$("#drawer");if(!D.hidden)return;drawerFocus=document.activeElement;
+  $("#drawer-body").innerHTML=viewMenu();$("#drawer-body").scrollTop=0;D.hidden=false;setInert(true);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>D.classList.add("open")));
+  if(canMove())stagger($$("#drawer-body .lbl-h,#drawer-body .card,#drawer-body .chips,#drawer-body>.res-body>.fine"),140,40,10);
+  setTimeout(()=>$("#drawer-title").focus(),rm()?0:60);
+}
+function closeDrawer(keepFocus){
+  const D=$("#drawer");if(D.hidden)return;D.classList.remove("open");
+  setTimeout(()=>{D.hidden=true;if($("#layer").hidden&&$("#search").hidden)setInert(false);if(!keepFocus&&drawerFocus&&document.contains(drawerFocus))drawerFocus.focus()},rm()?0:460);
+}
+
 /* ---------- Boot ---------- */
 $("#search-back").innerHTML=ico("arrow_back");
 $("#search-ic").outerHTML=ic("search");
 $("#q-clear").innerHTML=ic("close",20);
 $("#sheet-close").innerHTML=ic("close");
+$("#drawer-close").innerHTML=ic("close");
 renderTabbar();render();renderCMS();syncControls();
 if(/^#(capture|still|figma)$/.test(location.hash))setCapture(true);
 setTimeout(()=>{const l=activeAlerts();if(l.length)sayAssert(`${l[0].label} alert: ${l[0].title}`)},800);

@@ -441,6 +441,19 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
 .blog-lead{overflow:hidden;display:flex;flex-direction:column;border:0;padding:0;text-align:left;cursor:pointer;color:var(--c-text);width:100%}
 .res-head .tchip{flex:none;white-space:nowrap}
 
+/* Menu drawer: slides in from the left over a dimmed screen */
+.drawer-layer{position:absolute;inset:0;z-index:10}
+.drawer-layer .scrim{opacity:0;transition:opacity 400ms var(--ease-std)}
+.drawer-layer.open .scrim{opacity:1}
+.drawer{position:absolute;left:0;top:var(--status-h);bottom:0;width:min(86%,336px);background:var(--c-bg);display:flex;flex-direction:column;border-radius:0 var(--r-24) var(--r-24) 0;overflow:hidden;
+  box-shadow:8px 0 32px rgba(0,20,40,.24);transform:translate3d(-104%,0,0);transition:transform 460ms cubic-bezier(0.32,0.72,0,1)}
+.drawer-layer.open .drawer{transform:none}
+.drawer-head{flex:none;height:64px;display:flex;align-items:center;justify-content:space-between;gap:var(--sp-8);padding-inline:var(--sp-16) var(--sp-8);background:var(--c-blue);color:var(--c-on-blue)}
+.drawer-head h2{font-size:var(--fs-20);line-height:var(--lh-20);font-weight:700}
+.drawer-head .icon-btn:hover{background:var(--c-on-blue-fill)}
+.drawer-body{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none}
+.drawer-body::-webkit-scrollbar{display:none}
+
 /* MyChart sign-in */
 .mc-lead{color:var(--c-text-2)}
 .mc-card{position:relative;overflow:hidden;isolation:isolate;margin:0;border-radius:var(--r-24);padding:var(--sp-24) var(--sp-16);display:flex;flex-direction:column;gap:var(--sp-16);color:var(--c-on-blue);
@@ -757,6 +770,13 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
               <div class="sheet-body" id="sheet-body"></div>
               <div class="sheet-foot" id="sheet-foot" hidden></div>
             </div>
+          </div>
+          <div class="drawer-layer" id="drawer" hidden>
+            <div class="scrim" data-action="close-drawer"></div>
+            <aside class="drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
+              <div class="drawer-head on-blue"><h2 id="drawer-title" tabindex="-1">Menu</h2><button class="icon-btn" id="drawer-close" data-action="close-drawer" aria-label="Close menu"></button></div>
+              <div class="drawer-body" id="drawer-body"></div>
+            </aside>
           </div>
           <div class="sys-layer" id="sys" hidden></div>
         </div>
