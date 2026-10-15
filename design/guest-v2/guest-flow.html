@@ -50,7 +50,7 @@
 body{background:var(--page-bg); color:var(--page-fg); font-family:var(--font); font-size:var(--fs-16); line-height:var(--lh-16); font-optical-sizing:auto; -webkit-font-smoothing:antialiased}
 .sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 button{font:inherit;color:inherit}
-h1,h2,h3,p,ol,ul{margin:0}
+h1,h2,h3,p,ol,ul,form{margin:0}
 ul,ol{padding:0}
 
 /* ---------- Icons: Material Symbols Rounded, inlined as SVG ---------- */
@@ -375,10 +375,12 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
 .new-pill{font-size:var(--fs-12);line-height:var(--lh-12);font-weight:700;color:var(--c-on-blue);background:var(--c-blue);border-radius:var(--r-full);padding:var(--sp-4) var(--sp-8);align-self:flex-start}
 
 /* ---------- Find care ---------- */
-.fc-head{background:var(--glass-blue);-webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);color:var(--c-on-blue);padding:0 var(--sp-16) var(--sp-16);display:flex;flex-direction:column;gap:var(--sp-12);position:sticky;top:0;z-index:2}
+.fc-head{background:var(--c-blue);color:var(--c-on-blue);padding:0 var(--sp-16) var(--sp-8);display:flex;flex-direction:column;gap:var(--sp-8);position:sticky;top:0;z-index:2}
+.fc-head form{margin:0}
 .fc-head form{display:flex}
 .fc-head .field:focus-within{box-shadow:0 0 0 3px var(--c-cyan)}
-.loc-btn{display:flex;align-items:center;gap:var(--sp-8);min-height:44px;border:0;background:transparent;color:var(--c-on-blue);font-size:var(--fs-14);line-height:var(--lh-14);font-weight:600;cursor:pointer;padding-inline:var(--sp-4);border-radius:var(--r-8);text-align:left;align-self:flex-start;max-width:100%}
+.loc-btn{display:flex;align-items:center;gap:var(--sp-8);min-height:44px;border:0;background:transparent;color:var(--c-on-blue);font-size:var(--fs-14);line-height:var(--lh-14);font-weight:600;cursor:pointer;padding-inline:var(--sp-16);border-radius:var(--r-full);text-align:left;align-self:flex-start;max-width:100%}
+.loc-btn>.ic:last-child{margin-inline-start:calc(var(--sp-4) * -1)}
 .loc-btn .lt{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .loc-btn .lt span{color:var(--c-on-blue-2);font-weight:500}
 .loc-btn:hover{background:var(--c-on-blue-fill)}
@@ -1229,7 +1231,7 @@ function viewFind(){
       <input id="fq" type="search" placeholder="Name, specialty, or condition" autocomplete="off" enterkeyhint="search" value="${esc(S.fcText)}" aria-describedby="fq-hint" aria-controls="fc-sug">
       <button type="button" class="icon-btn" id="fq-clear" data-action="fc-clear" aria-label="Clear search"${S.fcText?"":" hidden"}>${ic("close",20)}</button></div></form>
     <span class="sr-only" id="fq-hint">Try plain words, like knee pain or Spanish-speaking pediatrician. Suggestions appear below as you type.</span>
-    <button class="loc-btn" data-action="loc-sheet" aria-haspopup="dialog">${ic(S.loc?"my_location":"location_on",20)}${locLabel()}${ic("expand_more",20)}</button>
+    <button class="loc-btn" data-action="loc-sheet" aria-haspopup="dialog">${ic(S.loc?"my_location":"location_on",24)}${locLabel()}${ic("expand_more",20)}</button>
   </div>
   <div class="fc-body" id="fc-sug" aria-live="off">${S.fcText.trim()?suggestHTML(S.fcText):idleHTML()}</div>`;
 }

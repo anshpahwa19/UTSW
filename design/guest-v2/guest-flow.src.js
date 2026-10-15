@@ -431,7 +431,7 @@ function viewFind(){
       <input id="fq" type="search" placeholder="Name, specialty, or condition" autocomplete="off" enterkeyhint="search" value="${esc(S.fcText)}" aria-describedby="fq-hint" aria-controls="fc-sug">
       <button type="button" class="icon-btn" id="fq-clear" data-action="fc-clear" aria-label="Clear search"${S.fcText?"":" hidden"}>${ic("close",20)}</button></div></form>
     <span class="sr-only" id="fq-hint">Try plain words, like knee pain or Spanish-speaking pediatrician. Suggestions appear below as you type.</span>
-    <button class="loc-btn" data-action="loc-sheet" aria-haspopup="dialog">${ic(S.loc?"my_location":"location_on",20)}${locLabel()}${ic("expand_more",20)}</button>
+    <button class="loc-btn" data-action="loc-sheet" aria-haspopup="dialog">${ic(S.loc?"my_location":"location_on",24)}${locLabel()}${ic("expand_more",20)}</button>
   </div>
   <div class="fc-body" id="fc-sug" aria-live="off">${S.fcText.trim()?suggestHTML(S.fcText):idleHTML()}</div>`;
 }
