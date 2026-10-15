@@ -245,7 +245,7 @@ const store={get(k,d){try{const v=localStorage.getItem("mycare-guest-"+k);return
 const blankFilters=()=>({specs:new Set(),conds:new Set(),langs:new Set(),gender:"any",hosp:new Set(),dist:"any",accepting:false,online:false});
 const osRM=window.matchMedia("(prefers-reduced-motion: reduce)");
 const MODS={
- tiles:{name:"Quick access tiles",meta:"Six tiles"},
+ tiles:{name:"Quick links",meta:"Six tiles · four open MyChart"},
  finddoc:{name:"Find a doctor near you",meta:"Location shortcut and popular specialties"},
  saved:{name:"Your saved providers",meta:"Shows only when this device has saved providers"},
  featured:{name:"MedBlog",meta:"Carousel · three stories"},
@@ -369,9 +369,9 @@ function renderAlerts(){
     <button class="more-alerts" aria-expanded="false" aria-controls="alert-stack" data-action="more-alerts"><span>1 more alert</span>${ic("expand_more",20)}</button>`:""}</section>`;
 }
 const M={};
-M.tiles=()=>`<div class="mod-head"><h2 class="sec-h" id="h-tiles">Quick access</h2></div>
-  <div class="tiles">${[["find","Find a doctor","stethoscope"],["locations","Locations","location_on"],["wayfinding","Indoor maps","map"],["urgent","Urgent care","medical_services"],["virtual","Virtual visits","video_camera_front"],["bill","Pay a bill","receipt_long",1]]
-   .map(([k,l,g,out])=>`<button class="tile press" data-action="tile" data-k="${k}" data-l="${l}"${out?` aria-label="${l}, opens the billing website"`:""}>${well(g,48)}<span>${l}</span>${out?`<span class="out">${ic("open_in_new",20)}</span>`:""}</button>`).join("")}</div>`;
+M.tiles=()=>`<div class="mod-head"><h2 class="sec-h" id="h-tiles">Quick links</h2></div>
+  <div class="tiles">${[["find","Find my care","stethoscope"],["locations","Locations","location_on"],["message","Message your doctor","chat",1],["results","Get your test results","labs",1],["visits","Manage Your Visits","calendar_month",1],["billing","Manage Billing","credit_card",1]]
+   .map(([k,l,g,out])=>`<button class="tile press" data-action="tile" data-k="${k}" data-l="${l}"${out?` aria-label="${l}, opens MyChart"`:""}>${well(g,48)}<span>${l}</span>${out?`<span class="out" aria-hidden="true">${ic("open_in_new",20)}</span>`:""}</button>`).join("")}</div>`;
 M.finddoc=()=>`<div class="card fd">
    <div class="fd-top">${well("stethoscope",48)}<div class="stack" style="gap:var(--sp-4)"><h2 id="h-finddoc">Find a doctor near you</h2>
    <p>Search ${PROV.length} sample providers by name, specialty, condition, or language.</p></div></div>
@@ -964,7 +964,7 @@ screen.addEventListener("click",e=>{
    case "search-pick":closeSearch();toast("Opens: "+el.dataset.msg,"go");break;
    case "search-all":closeSearch(()=>runSearch(el.dataset.q));break;
    case "gs-profile":closeSearch(()=>push({v:"profile",id}));break;
-   case "tile":{const k=el.dataset.k;if(k==="find")switchTab("find",true);else if(k==="locations")switchTab("locations",true);else toast("Opens "+el.dataset.l,k==="bill"?"out":"go");break}
+   case "tile":{const k=el.dataset.k;if(k==="find")switchTab("find",true);else if(k==="locations")switchTab("locations",true);else toast(`Opens MyChart: ${el.dataset.l}. Sign-in is part of MyChart, not this guest prototype.`,"out");break}
    case "near-me":S.fcText="";runSearch("",{});if(!S.loc)setTimeout(useMyLocation,rm()?0:350);break;
    case "run":{const go=()=>{S.fcText="";runSearch(el.dataset.q)};if(!$("#layer").hidden)closeSheet(go);else go();break}
    case "run-accepting":S.fcText="";runSearch(el.dataset.q);S.filters.accepting=true;render();load();break;
@@ -1088,7 +1088,7 @@ $("#jumps").addEventListener("click",e=>{const b=e.target.closest("[data-jump]")
 const REQ=[
  ["Home layout","Guest composition from CMS modules, configured order, visibility rules, expiry","home"],
  ["Emergency alert banner","Banner, details sheet, emergency-first priority, dismiss where allowed","home"],
- ["Search and quick access","Search entry, top searches, quick tiles routing to Find care and Locations","gsearch"],
+ ["Search and quick access","Search entry, top searches, Quick links tiles routing to Find my care, Locations, and MyChart","gsearch"],
  ["Featured content and services","MedBlog carousel, flu shot campaign, UTSW resources, announcements","home"],
  ["Provider search","Keyword, plain-language mapping, auto-suggestions, recent and popular searches, spelling","plain"],
  ["Location-based search","Near me with OS prompt, ZIP or city entry, denied and can’t-locate fallbacks","denied"],
