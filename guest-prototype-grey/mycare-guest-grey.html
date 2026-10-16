@@ -37,7 +37,7 @@
 
   /* Glass tokens – one set for every card, tile, sheet and the tab bar */
   /* Grey draft: nothing blue sits behind the blur any more, so the fill carries the color itself */
-  --glass-fill:rgba(0,66,120,.92);
+  --glass-fill:rgba(0,66,120,.96);
   --glass-fill-o:rgba(0,51,95,.96);
   --glass-blur:blur(24px) saturate(160%);
   --glass-sheen:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,0) 16px);
@@ -875,6 +875,13 @@ mark{background:rgba(0,169,224,.35);color:inherit;border-radius:4px}
 .subnav .sbtn.ghost{color:var(--c-blue);box-shadow:inset 0 0 0 1px rgba(0,66,120,.5)}
 /* Keyboard focus that draws outside a card lands on grey */
 .pc-main:focus-visible::after{outline-color:var(--c-blue)}
+/* Tighter rhythm on grey: a light background makes the old gaps read as empty space.
+   Modules sit 24.0 apart (was 32.0); a heading sits 12.0 above its content (was 16.0) and its row is 32.0 tall,
+   while the See all link keeps a 48.0 touch target by bleeding 8.0 above and below. */
+.content{gap:var(--s-24)}
+.mod{gap:var(--s-12)}
+.sec-head{min-height:32px}
+.sec-link{margin-block:calc(var(--s-8) * -1)}
 .app .eye:focus-visible{outline-color:var(--c-blue)}
 
 /* Reduce transparency – solid surfaces, no blur, no light */
@@ -1010,7 +1017,7 @@ mark{background:rgba(0,169,224,.35);color:inherit;border-radius:4px}
       <p class="kicker">Draft for stakeholder feedback</p>
       <h2 id="spec-h">One system, blue glass on a grey background</h2>
       <p>This draft answers one piece of stakeholder feedback: put the app on a calm grey and keep the glass objects blue. Features, flows, copy, layout, and tokens match guest flow v2. Only the background and the colors of text that sits directly on it change.</p>
-      <p>Background: a cool grey, #EEF0F3 at the top to #E6E9ED at the bottom, with no colored aurora. Glass: UT&nbsp;Southwestern Blue #004278 at 92% (sheets, tab bar, and toast #00335F at 96%). Without blue behind the blur, the fill carries the color. Headings, links, counts, the status bar, and the top bar on grey turn Blue #004278. Body copy on grey is #333333 and secondary notes are #4A5866. The top band and sub-view headers are light frosted bars with blue text, and the logo is the full-color horizontal version.</p>
+      <p>Background: a cool grey, #EEF0F3 at the top to #E6E9ED at the bottom, with no colored aurora. Glass: UT&nbsp;Southwestern Blue #004278 at 96% (sheets, tab bar, and toast #00335F at 96%). Without blue behind the blur, the fill carries the color. Headings, links, counts, the status bar, and the top bar on grey turn Blue #004278. Body copy on grey is #333333 and secondary notes are #4A5866. The top band and sub-view headers are light frosted bars with blue text, and the logo is the full-color horizontal version.</p>
     </div>
     <div class="spec-grid">
       <div class="spec-card"><h3>Find my care behavior</h3>
@@ -1055,8 +1062,8 @@ mark{background:rgba(0,169,224,.35);color:inherit;border-radius:4px}
           <div><code>8.0</code><i style="width:8px"></i>Card, chip, and badge gaps</div>
           <div><code>12.0</code><i style="width:12px"></i>Inner padding, row gaps</div>
           <div><code>16.0</code><i style="width:16px"></i>Screen gutter, card padding</div>
-          <div><code>24.0</code><i style="width:24px"></i>Dock inset, state padding</div>
-          <div><code>32.0</code><i style="width:32px"></i>Gap between modules</div>
+          <div><code>24.0</code><i style="width:24px"></i>Gap between modules, dock inset, state padding</div>
+          <div><code>32.0</code><i style="width:32px"></i>Status bar side inset, sheet bottom padding</div>
           <div><code>40.0</code><i style="width:40px"></i>Room for the save button</div>
           <div><code>48.0</code><i style="width:48px"></i>Status bar, top padding</div>
         </div>
@@ -1069,9 +1076,9 @@ mark{background:rgba(0,169,224,.35);color:inherit;border-radius:4px}
           <tr><td>#004278 on the darkest grey (#E6E9ED): headings, links, counts, status bar</td><td class="ok">8.41</td><td>4.5</td></tr>
           <tr><td>#333333 / #4A5866 on grey (body copy / notes)</td><td class="ok">10.37 / 5.99</td><td>4.5</td></tr>
           <tr><td>#004278 / #4A5866 on the light top bar over a blue card</td><td class="ok">7.31 / 5.21</td><td>4.5</td></tr>
-          <tr><td>White / #D6E4F0 on blue glass over grey</td><td class="ok">8.49 / 6.55</td><td>4.5</td></tr>
-          <tr><td>#D6E4F0 on an inner fill in spotlit glass</td><td class="ok">4.74</td><td>4.5</td></tr>
-          <tr><td>Focus ring: #004278 on grey / white on blue glass</td><td class="ok">8.41 / 8.49</td><td>3.0</td></tr>
+          <tr><td>White / #D6E4F0 on blue glass over grey</td><td class="ok">9.33 / 7.20</td><td>4.5</td></tr>
+          <tr><td>#D6E4F0 on an inner fill in spotlit glass</td><td class="ok">5.17</td><td>4.5</td></tr>
+          <tr><td>Focus ring: #004278 on grey / white on blue glass</td><td class="ok">8.41 / 9.33</td><td>3.0</td></tr>
           <tr><td>#004278 on white (menu button, topic pill, primary button)</td><td class="ok">10.24</td><td>4.5</td></tr>
           <tr><td>#333333 / #5B6770 on white search field</td><td class="ok">12.63 / 5.78</td><td>4.5</td></tr>
           <tr><td>White on #B0003A (field error on grey)</td><td class="ok">7.22</td><td>4.5</td></tr>
