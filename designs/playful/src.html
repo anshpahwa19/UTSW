@@ -1,0 +1,1885 @@
+<title>MyCare Playful Home</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=__ICON_NAMES__&display=block">
+<style>
+/* Layout: presentation board – controls | 390 × 844 phone | token spec, then the iconography system full width.
+   App direction: a Blue hero holds the greeting and search (always above appointments); content rides up on a light sheet.
+   Blue family for depth, one cyan accent, a Blue gradient campaign card; motion and gestures carry the play. */
+:root{
+  /* Board chrome (theme-aware) */
+  --bd-bg:#F2F5F8; --bd-panel:#FFFFFF; --bd-ink:#1F2A33; --bd-muted:#5B6770; --bd-line:#D5DDE5; --bd-accent:#004278; --bd-chip:#EBF0F5; --bd-bezel:#0E2236;
+
+  /* ===== App palette (identical across themes – the app frame is a brand surface) ===== */
+  --blue:#004278; --blue-80:#336893; --pms542:#7BAFD4; --cyan:#00A9E0;
+  --bg:#F7F8FA; --surface:#FFFFFF; --tint:#EBF0F5; --tint-2:#D1DDE6; --sky:#D6E4F0;
+  --line:#D5DDE5; --line-strong:#808B96;
+  --ink:#333333; --ink-2:#5B6770;
+  --on-blue-2:#D6E4F0; --on-blue-3:#A9C7E0;
+  --alert:#B0003A;
+
+  --ts:1;
+  --font:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+
+  /* Spacing – one 4-pt scale */
+  --s1:4.0px; --s2:8.0px; --s3:12.0px; --s4:16.0px; --s6:24.0px; --s8:32.0px; --s10:40.0px; --s12:48.0px;
+  --hit:44.0px; --hit-lg:48.0px;
+
+  /* Radii */
+  --r-sm:8.0px; --r-md:12.0px; --r-lg:16.0px; --r-xl:24.0px; --r-pill:999px;
+
+  /* Motion */
+  --d-fast:150ms; --d-base:240ms; --d-slow:400ms;
+  --ease-out:cubic-bezier(.2,.8,.2,1); --ease-in-out:cubic-bezier(.65,0,.35,1);
+  --spring-snappy:linear(0, 0.066, 0.218, 0.401, 0.58, 0.735, 0.857, 0.945, 1.003, 1.037, 1.051, 1.054, 1.049, 1.04, 1.03, 1.02, 1.012, 1.006, 1.002, 0.999, 0.998, 0.997, 0.997, 0.997, 1);
+  --spring-gentle:linear(0, 0.049, 0.158, 0.285, 0.412, 0.526, 0.624, 0.706, 0.772, 0.825, 0.867, 0.899, 0.924, 0.943, 0.957, 0.968, 0.976, 0.983, 0.987, 0.991, 0.993, 0.995, 0.996, 0.997, 1);
+  --d-snappy:360ms; --d-gentle:400ms;
+
+  --shadow-1:0 1px 2px rgba(16,38,60,.06), 0 2px 8px rgba(16,38,60,.06);
+  --shadow-2:0 4px 12px rgba(16,38,60,.10), 0 16px 40px rgba(16,38,60,.14);
+  --focus:0 0 0 2px #FFFFFF, 0 0 0 5px #004278;
+  --focus-on-blue:0 0 0 2px #004278, 0 0 0 4px #FFFFFF;
+  --glow:radial-gradient(90% 70% at 100% 20%, rgba(0,169,224,.30) 0, rgba(0,169,224,0) 70%);
+  --hero-glow:radial-gradient(75% 55% at 100% 58%, rgba(0,169,224,.26) 0, rgba(0,169,224,0) 72%);
+
+  /* Icon axes – inherited, so a container's state (selected, pressed, dark) reaches its glyph */
+  --fill:0; --wght:500; --grad:0;
+}
+/* Tokens that follow the text-size setting are declared again on .phone so they resolve against its --ts */
+:root,.phone{
+  --t12:calc(12.0px * var(--ts)); --t14:calc(14.0px * var(--ts)); --t16:calc(16.0px * var(--ts)); --t18:calc(18.0px * var(--ts));
+  --t20:calc(20.0px * var(--ts)); --t24:calc(24.0px * var(--ts)); --t28:calc(28.0px * var(--ts)); --t32:calc(32.0px * var(--ts));
+  --i16:calc(16.0px * var(--ts)); --i20:calc(20.0px * var(--ts)); --i24:calc(24.0px * var(--ts)); --i32:calc(32.0px * var(--ts));
+  --dot40:calc(40.0px * var(--ts)); --dot48:calc(48.0px * var(--ts)); --dot56:calc(56.0px * var(--ts));
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){ --bd-bg:#0B141C; --bd-panel:#121E29; --bd-ink:#E6EDF3; --bd-muted:#A3B1BD; --bd-line:#26384A; --bd-accent:#A9C7E0; --bd-chip:#1A2A39; --bd-bezel:#000A12; color-scheme:dark }
+}
+:root[data-theme="dark"]{ --bd-bg:#0B141C; --bd-panel:#121E29; --bd-ink:#E6EDF3; --bd-muted:#A3B1BD; --bd-line:#26384A; --bd-accent:#A9C7E0; --bd-chip:#1A2A39; --bd-bezel:#000A12; color-scheme:dark }
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{background:var(--bd-bg)}
+body{color:var(--bd-ink); font-family:var(--font); font-size:16.0px; line-height:1.5; padding-inline:16.0px; padding-block:24.0px 48.0px}
+button{font:inherit; color:inherit}
+.vh{position:absolute!important; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
+
+/* ===================== Icon system ===================== */
+.ms{
+  font-family:"Material Symbols Rounded"; font-weight:normal; font-style:normal; font-size:var(--i24);
+  width:1em; height:1em; line-height:1; display:inline-block; flex:none; overflow:hidden; text-align:center;
+  letter-spacing:normal; text-transform:none; white-space:nowrap; word-wrap:normal; direction:ltr;
+  font-feature-settings:"liga"; -webkit-font-smoothing:antialiased; -webkit-user-select:none; user-select:none;
+  --opsz:24;
+  font-variation-settings:"FILL" var(--fill), "wght" var(--wght), "GRAD" var(--grad), "opsz" var(--opsz);
+  transition:font-variation-settings var(--d-base) var(--ease-out), transform var(--d-snappy) var(--spring-snappy);
+}
+.ms.s16{font-size:var(--i16); --opsz:20}
+.ms.s20{font-size:var(--i20); --opsz:20}
+.ms.s32{font-size:var(--i32); --opsz:32}
+.ms.f1{--fill:1}
+/* Until the icon font loads, glyphs stay invisible rather than showing their ligature names */
+html:not(.ms-ready) .ms{color:transparent!important}
+/* Icon container: always a circle (the dot in the MyCare symbol) – tint in lists, Blue in quick access */
+.dot{width:var(--dot48); height:var(--dot48); border-radius:50%; display:grid; place-items:center; flex:none; background:var(--tint); color:var(--blue); transition:background-color var(--d-fast) var(--ease-out), color var(--d-fast) var(--ease-out)}
+.dot.d40{width:var(--dot40); height:var(--dot40)}
+.dot.d56{width:var(--dot56); height:var(--dot56)}
+.dot.solid{background:var(--blue); color:#FFFFFF}
+/* Grade −25 keeps white glyphs from looking heavier on Blue */
+.on-dark,.dot.solid,.btn-primary,.hero,.appbar,.appt-hd,.alert-wrap,.toast,.map .go{--grad:-25}
+.alert-ico,.search-field{--grad:0}
+
+/* ===================== Board ===================== */
+.board{max-width:1320px; margin:0 auto; display:grid; gap:32.0px; grid-template-columns:minmax(0,1fr); justify-items:center}
+.board-head{width:100%; max-width:1320px}
+.board-head h1{font-size:28.0px; line-height:1.2; margin:0 0 8.0px; letter-spacing:-.01em; text-wrap:balance}
+.board-head p{margin:0; color:var(--bd-muted); max-width:72ch}
+.jump{display:flex; flex-wrap:wrap; gap:8.0px; margin-top:12.0px}
+.jump a{display:inline-flex; align-items:center; min-height:40px; padding:0 16.0px; border-radius:999px; background:var(--bd-chip); color:var(--bd-accent); font-weight:600; font-size:14.0px; text-decoration:none}
+.jump a:focus-visible{outline:3px solid var(--bd-accent); outline-offset:2px}
+.panel{background:var(--bd-panel); border:1px solid var(--bd-line); border-radius:16.0px; padding:16.0px; width:100%}
+.controls{display:grid; gap:24.0px; align-content:start}
+.ctl h2,.spec h2{font-size:14.0px; text-transform:uppercase; letter-spacing:.06em; color:var(--bd-muted); margin:0 0 8.0px}
+.seg{display:flex; background:var(--bd-chip); border-radius:999px; padding:4.0px; gap:4.0px}
+.seg button{flex:1; min-height:40px; border:0; background:transparent; border-radius:999px; font-size:14.0px; font-weight:600; cursor:pointer; color:var(--bd-ink)}
+.seg button[aria-pressed="true"]{background:var(--bd-panel); color:var(--bd-accent); box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.seg button:focus-visible,.cms button:focus-visible,.cms input:focus-visible,.sx-toggle:focus-visible{outline:3px solid var(--bd-accent); outline-offset:2px}
+.cms{list-style:none; margin:0; padding:0; display:grid; gap:4.0px}
+.cms li{display:flex; align-items:center; gap:8.0px; padding:4.0px 8.0px; border-radius:8.0px; background:var(--bd-chip); font-size:14.0px}
+.cms li.off{opacity:.55}
+.cms li.sep{background:none; padding:8.0px 0 0; font-size:12.0px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--bd-muted)}
+.cms label{flex:1; display:flex; gap:8.0px; align-items:center; min-height:40px; cursor:pointer}
+.cms input{width:20px; height:20px; accent-color:#004278}
+.cms .mv{width:40px; height:40px; border:1px solid var(--bd-line); background:var(--bd-panel); color:var(--bd-ink); border-radius:8.0px; cursor:pointer; display:grid; place-items:center}
+.cms .mv:disabled{opacity:.35; cursor:default}
+.cms .lock{font-size:12.0px; color:var(--bd-muted); text-align:right}
+.note{font-size:14.0px; color:var(--bd-muted); margin:8.0px 0 0}
+.hints{margin:0; padding-left:16.0px; font-size:14.0px; color:var(--bd-muted); display:grid; gap:4.0px}
+
+.stage{display:grid; justify-items:center; gap:12.0px}
+.caption{font-size:14.0px; color:var(--bd-muted); margin:0; text-align:center}
+
+@media (min-width:820px){
+  .board{grid-template-columns:300px auto; align-items:start; justify-items:stretch}
+  .board-head{grid-column:1 / -1}
+  .spec,.icons-sec{grid-column:1 / -1}
+}
+@media (min-width:1240px){
+  .board{grid-template-columns:280px auto minmax(0,1fr)}
+  .spec{grid-column:auto; max-height:868px; overflow:auto}
+}
+
+/* ===================== Phone frame ===================== */
+.device{background:var(--bd-bezel); padding:12.0px; border-radius:56px; box-shadow:0 24px 64px rgba(0,30,60,.28)}
+.phone{
+  --pw:390px;
+  width:var(--pw); height:844px; position:relative; overflow:hidden; border-radius:44px; background:var(--bg); color:var(--ink);
+  font-family:var(--font); font-size:var(--t16); line-height:1.5; font-optical-sizing:auto; isolation:isolate;
+  transition:width var(--d-slow) var(--ease-in-out);
+  -webkit-tap-highlight-color:transparent;
+}
+@media (max-width:460px){
+  .device{padding:0; background:none; box-shadow:none; border-radius:0; width:100%}
+  .phone{width:100%; max-width:var(--pw); border-radius:24.0px; border:1px solid var(--bd-line); margin:0 auto}
+}
+/* Zero-specificity resets, so component spacing always wins */
+:where(.phone) :where(h1,h2,h3,p){margin:0}
+.phone :focus-visible{outline:none; box-shadow:var(--focus)}
+.hero :focus-visible,.appbar :focus-visible,.appt-hd :focus-visible{box-shadow:var(--focus-on-blue)}
+.phone button{cursor:pointer; -webkit-user-select:none; user-select:none}
+.phone button[disabled]{cursor:default; opacity:.7}
+
+.statusbar{position:absolute; inset:0 0 auto 0; height:48.0px; z-index:70; display:flex; align-items:center; justify-content:space-between; padding:0 32.0px; font-size:14.0px; font-weight:600; color:var(--ink); pointer-events:none; transition:color var(--d-base) var(--ease-out)}
+.phone.bar-light .statusbar{color:#FFFFFF}
+.statusbar .sb-r{display:flex; gap:4.0px; align-items:center}
+.statusbar .sb-r i{display:block; width:16px; height:12px; border-radius:2px; background:currentColor}
+.statusbar .sb-r i:nth-child(2){width:24px; height:12px; border-radius:4px; background:none; border:2px solid currentColor}
+
+.screens{position:absolute; inset:0; transition:transform var(--d-gentle) var(--spring-gentle)}
+.screen{position:absolute; inset:0; display:flex; flex-direction:column; background:var(--bg)}
+.scroller{flex:1; overflow-y:auto; overflow-x:hidden; overscroll-behavior:contain; scrollbar-width:none; padding-bottom:calc(96px + var(--s6))}
+.scroller::-webkit-scrollbar{display:none}
+.scroller.home{background:var(--blue); padding-bottom:0}
+.shade{position:absolute; inset:0; z-index:44; background:rgba(0,20,40,.2); opacity:0; pointer-events:none; transition:opacity var(--d-gentle) var(--ease-out)}
+.phone.pushed .screens{transform:translateX(-24%)}
+.phone.pushed .shade{opacity:1}
+
+/* ===================== Shared components ===================== */
+.icon-btn{width:var(--hit); height:var(--hit); border-radius:var(--r-pill); border:0; background:var(--surface); color:var(--blue); display:grid; place-items:center; position:relative; box-shadow:inset 0 0 0 1px var(--line); transition:transform var(--d-snappy) var(--spring-snappy), background-color var(--d-fast)}
+.icon-btn:active{transform:scale(.92); transition-duration:80ms; --fill:1}
+.icon-btn.ghost{background:rgba(255,255,255,.14); color:#FFFFFF; box-shadow:none}
+.icon-btn.ghost:active{background:rgba(255,255,255,.24)}
+.badge{position:absolute; top:4px; right:4px; min-width:18px; height:18px; padding:0 4px; border-radius:var(--r-pill); background:#FFFFFF; color:var(--blue); font-size:12.0px; font-weight:800; line-height:18px; text-align:center; box-shadow:0 0 0 2px var(--blue)}
+.avatar{width:32px; height:32px; border-radius:50%; background:var(--blue); color:#FFFFFF; font-size:12.0px; font-weight:700; display:grid; place-items:center; flex:none}
+.appbar .avatar{width:36px; height:36px; background:#FFFFFF; color:var(--blue); font-size:14.0px; box-shadow:0 0 0 2px rgba(255,255,255,.28)}
+#btn-acct.signed{background:transparent}
+.appbar .icon-btn.ghost{background:rgba(255,255,255,.10)}
+.btn{min-height:var(--hit-lg); padding:0 var(--s6); border:0; border-radius:var(--r-pill); font-weight:600; font-size:var(--t16); display:inline-flex; align-items:center; justify-content:center; gap:var(--s2); position:relative; overflow:hidden; transition:transform var(--d-snappy) var(--spring-snappy), background-color var(--d-fast) var(--ease-out)}
+.btn:active{transform:scale(.96); transition-duration:80ms; --fill:1}
+.btn-primary{background:var(--blue); color:#FFFFFF}
+.btn-secondary{background:var(--surface); color:var(--blue); box-shadow:inset 0 0 0 1.5px var(--blue)}
+.btn-tonal{background:var(--tint); color:var(--blue)}
+.btn.loading .lbl{opacity:0}
+.btn .dots{position:absolute; inset:0; display:none; align-items:center; justify-content:center; gap:6px}
+.btn.loading .dots{display:flex}
+.btn .dots i{width:8px; height:8px; border-radius:50%; background:currentColor; animation:dotHop 600ms var(--ease-in-out) infinite}
+.btn .dots i:nth-child(2){animation-delay:100ms}
+.btn .dots i:nth-child(3){animation-delay:200ms}
+.kick{font-size:var(--t12); font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--blue)}
+.sec-head{display:flex; align-items:center; justify-content:space-between; gap:var(--s3); padding-inline:var(--s4); margin-bottom:var(--s3)}
+.sec-head h2{font-size:var(--t20); line-height:1.3; font-weight:700; color:var(--blue); letter-spacing:-.01em}
+.sec-head .sub{font-size:var(--t14); color:var(--ink-2)}
+.link{min-height:var(--hit); padding:0 var(--s2); margin-right:calc(-1 * var(--s2)); border:0; background:none; color:var(--blue); font-weight:600; font-size:var(--t14); border-radius:var(--r-sm); display:inline-flex; align-items:center; gap:var(--s1); white-space:nowrap; flex:none}
+/* Grouped list: one list style for services, announcements, tabs, results, and notifications */
+.group{list-style:none; margin:0 var(--s4); padding:0; background:var(--surface); border-radius:var(--r-lg); box-shadow:var(--shadow-1), 0 0 0 1px var(--line); overflow:hidden}
+.group > li{position:relative}
+.group > li + li::before{content:""; position:absolute; top:0; left:68px; right:0; height:1px; background:var(--line)}
+.row{width:100%; min-height:64px; border:0; background:none; display:flex; align-items:center; gap:var(--s3); padding:var(--s3) var(--s4); text-align:left; color:var(--ink); transition:background-color var(--d-fast) var(--ease-out)}
+.row:active{background:var(--tint); --fill:1}
+.row:active .dot{background:var(--blue); color:#FFFFFF; --grad:-25}
+.row .txt{flex:1; min-width:0; display:grid}
+.row .rt{font-size:var(--t16); font-weight:600; line-height:1.35}
+.row .rs{font-size:var(--t14); color:var(--ink-2); line-height:1.4}
+.row .chev{color:var(--ink-2)}
+.row .unread{width:8px; height:8px; border-radius:50%; background:var(--blue); flex:none}
+.datebox{width:var(--dot48); height:var(--dot48); flex:none; border-radius:var(--r-md); background:var(--tint); color:var(--blue); display:grid; place-content:center; text-align:center; line-height:1.1}
+.datebox .m{font-size:var(--t12); font-weight:700}
+.datebox .d{font-size:var(--t18); font-weight:700}
+
+/* App bar (Blue, reversed logo) */
+.appbar{position:sticky; top:0; z-index:20; display:flex; align-items:center; gap:var(--s2); padding:48.0px var(--s4) var(--s2); background:var(--blue); transition:box-shadow var(--d-base) var(--ease-out)}
+.appbar.scrolled{box-shadow:0 8px 24px rgba(0,20,40,.24)}
+.appbar .logo{display:block; width:232px; height:auto; margin-left:calc(-1 * var(--s4)); flex:none}
+.appbar .sp{flex:1}
+
+/* Pull to refresh (dot motif) */
+.ptr{position:absolute; left:0; right:0; top:104px; height:0; display:grid; place-items:center; z-index:5; pointer-events:none}
+.ptr svg{width:40px; height:40px; transform:translateY(calc(var(--pull,0) * 1px - 20px)) scale(var(--ptr-s,0)); opacity:var(--ptr-o,0)}
+.ptr .arc{stroke:#FFFFFF; stroke-width:4; fill:none; stroke-linecap:round; stroke-dasharray:60; stroke-dashoffset:calc(60 - var(--ptr-p,0) * 60)}
+.ptr .pdot{fill:var(--cyan); transform-origin:24px 24px; transform:translateY(calc((1 - var(--ptr-p,0)) * -14px))}
+.ptr.refreshing .pdot{animation:dotHop 600ms var(--ease-in-out) infinite}
+.ptr.refreshing .arc{animation:arcSpin 900ms linear infinite; transform-origin:24px 24px; stroke-dashoffset:20}
+@keyframes dotHop{0%,100%{transform:translateY(0)}45%{transform:translateY(-10px)}}
+@keyframes arcSpin{to{transform:rotate(360deg)}}
+#home-inner{transform:translateY(calc(var(--pull,0) * 1px))}
+#home-inner.settle{transition:transform var(--d-gentle) var(--spring-snappy)}
+
+/* Module entrance (staggered) */
+.mod{min-width:0; animation:modIn 420ms var(--spring-snappy) both; animation-delay:calc(var(--i,0) * 40ms)}
+@keyframes modIn{from{opacity:0; transform:translateY(16px)}}
+.mod.out{animation:modOut 160ms var(--ease-in-out) both; animation-delay:calc(var(--i,0) * 16ms)}
+@keyframes modOut{to{opacity:0; transform:translateY(-8px)}}
+
+/* ===================== Hero: greeting and search (always above appointments) ===================== */
+.hero{position:relative; display:grid; grid-template-columns:minmax(0,1fr); gap:var(--s6); padding:var(--s2) 0 var(--s12); color:#FFFFFF; background:var(--hero-glow), var(--blue); overflow:hidden}
+.hero-art{position:absolute; right:-136px; top:58%; width:288px; height:288px; transform:translateY(-50%); pointer-events:none}
+.hero > .mod{position:relative}
+.content{position:relative; z-index:1; display:grid; grid-template-columns:minmax(0,1fr); gap:var(--s8); margin-top:calc(-1 * var(--s6)); padding:var(--s6) 0 calc(96px + var(--s8)); background:var(--bg); border-radius:var(--r-xl) var(--r-xl) 0 0; min-height:480px; box-shadow:0 -8px 24px rgba(0,20,40,.12)}
+
+/* ===================== Emergency alert (serious) ===================== */
+.alerts{padding-inline:var(--s4)}
+.alert-wrap{background:var(--alert); color:#FFFFFF; border-radius:var(--r-lg); overflow:hidden; box-shadow:0 8px 24px rgba(0,0,0,.25), 0 0 0 1px rgba(255,255,255,.18)}
+.alert{padding:var(--s4)}
+.alert-row{display:flex; gap:var(--s3); align-items:flex-start}
+.alert-ico{width:40px; height:40px; flex:none; border-radius:50%; background:#FFFFFF; color:var(--alert); display:grid; place-items:center}
+.alert-txt{flex:1; min-width:0}
+.alert-kicker{display:flex; gap:var(--s2); align-items:center; font-size:var(--t14); font-weight:700; letter-spacing:.04em; text-transform:uppercase}
+.alert-kicker .pri{font-weight:600; letter-spacing:0; text-transform:none}
+.alert-title{font-size:var(--t16); font-weight:600; line-height:1.4; margin-top:var(--s1)}
+.alert-tog{width:var(--hit); height:var(--hit); flex:none; margin:-4px -8px 0 0; border:0; border-radius:50%; background:transparent; color:#FFFFFF; display:grid; place-items:center}
+.alert-tog .ms,.more-alerts .ms{transition:transform var(--d-base) var(--ease-out)}
+.alert-tog[aria-expanded="true"] .ms,.more-alerts[aria-expanded="true"] .ms{transform:rotate(180deg)}
+.alert-wrap :focus-visible{box-shadow:0 0 0 3px #FFFFFF!important}
+.alert-body{display:grid; grid-template-rows:0fr; transition:grid-template-rows var(--d-base) var(--ease-out)}
+.alert-body > div{overflow:hidden}
+.alert.open .alert-body{grid-template-rows:1fr}
+.alert-body p{font-size:var(--t16); margin-top:var(--s3)}
+.alert-meta{font-size:var(--t14); margin-top:var(--s2)}
+.alert-actions{display:flex; flex-wrap:wrap; gap:var(--s2); margin-top:var(--s3); padding-bottom:var(--s1)}
+.alert-btn{min-height:var(--hit); padding:0 var(--s4); border-radius:var(--r-pill); border:0; background:#FFFFFF; color:var(--alert); font-weight:600; font-size:var(--t16)}
+.more-alerts{width:100%; min-height:var(--hit-lg); border:0; border-top:1px solid rgba(255,255,255,.35); background:rgba(0,0,0,.14); color:#FFFFFF; font-weight:600; font-size:var(--t14); display:flex; align-items:center; justify-content:center; gap:var(--s2)}
+.alert.extra{display:none; border-top:1px solid rgba(255,255,255,.35)}
+.alert-wrap.all .alert.extra{display:block; animation:calmIn var(--d-base) var(--ease-out) both}
+@keyframes calmIn{from{opacity:0}}
+
+/* ===================== Greeting (on Blue) ===================== */
+.greet{padding:0 var(--s4)}
+.greet-top{display:flex; align-items:center; justify-content:space-between; gap:var(--s2); min-height:var(--hit)}
+.eyebrow{font-size:var(--t14); font-weight:600; color:var(--on-blue-3)}
+.upd-chip{min-height:var(--hit); border:0; background:none; padding:0; margin-right:calc(-1 * var(--s1)); color:var(--on-blue-2); display:inline-flex; align-items:center}
+.upd-chip .pill{display:inline-flex; align-items:center; gap:var(--s1); height:32px; padding:0 var(--s3); border-radius:var(--r-pill); background:rgba(255,255,255,.10); box-shadow:inset 0 0 0 1px rgba(255,255,255,.16); font-size:var(--t12); font-weight:600; white-space:nowrap; transition:background-color var(--d-fast)}
+.upd-chip:active .pill{background:rgba(255,255,255,.2)}
+.greet-top{flex-wrap:wrap}
+.greet h1{font-size:var(--t32); line-height:1.15; font-weight:700; letter-spacing:-.02em; color:#FFFFFF; text-wrap:balance}
+.greet .sub{margin-top:var(--s2); color:var(--on-blue-2); max-width:34ch}
+.spin .ms{animation:spin 600ms var(--ease-in-out)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.fade-up{display:inline-block; animation:fadeUp 420ms var(--spring-snappy) both; animation-delay:var(--dl,0ms)}
+@keyframes fadeUp{from{opacity:0; transform:translateY(40%)}}
+
+/* ===================== Search (on Blue) ===================== */
+.search-field{width:calc(100% - 2 * var(--s4)); margin-inline:var(--s4); min-height:56px; border:0; background:var(--surface); border-radius:var(--r-pill); display:flex; align-items:center; gap:var(--s3); padding:0 var(--s2) 0 var(--s4); color:var(--ink-2); font-size:var(--t16); text-align:left; box-shadow:0 8px 24px rgba(0,20,40,.28); transition:transform var(--d-snappy) var(--spring-snappy)}
+.search-field > .ms{color:var(--blue)}
+.search-field > span:not(.ms):not(.go){flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.search-field .go{width:40px; height:40px; border-radius:50%; background:var(--blue); color:#FFFFFF; display:grid; place-items:center; flex:none; --grad:-25}
+.search-field:active{transform:scale(.98); transition-duration:80ms}
+.ts-row{display:flex; align-items:center; gap:var(--s2); margin-top:var(--s3); padding:0 var(--s4); overflow-x:auto; scrollbar-width:none; -webkit-mask-image:linear-gradient(90deg, #000 calc(100% - var(--s6)), transparent); mask-image:linear-gradient(90deg, #000 calc(100% - var(--s6)), transparent)}
+.ts-row::-webkit-scrollbar{display:none}
+.ts-row .ts-k{flex:none; font-size:var(--t12); font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--on-blue-3)}
+.chip{flex:none; min-height:var(--hit); padding:0 var(--s4); border:0; border-radius:var(--r-pill); background:var(--tint); color:var(--blue); font-weight:600; font-size:var(--t14); display:inline-flex; align-items:center; gap:var(--s2); white-space:nowrap; transition:transform var(--d-snappy) var(--spring-snappy), background-color var(--d-fast)}
+.chip:active{transform:scale(.95); transition-duration:80ms; background:var(--tint-2)}
+.chip[aria-pressed="true"]{background:var(--blue); color:#FFFFFF}
+.chip.glass{background:rgba(255,255,255,.12); color:#FFFFFF; box-shadow:inset 0 0 0 1px rgba(255,255,255,.2)}
+.chip.glass:active{background:rgba(255,255,255,.22)}
+.chip.pop{animation:chipPop 360ms var(--spring-snappy) both; animation-delay:calc(var(--i,0) * 30ms + 100ms)}
+@keyframes chipPop{from{opacity:0; transform:translateY(8px) scale(.94)}}
+.chips{list-style:none; margin:0; display:flex; gap:var(--s2); padding:0 var(--s4); flex-wrap:wrap}
+.ts-label{font-size:var(--t14); font-weight:600; color:var(--ink-2); padding-inline:var(--s4); margin:var(--s4) 0 var(--s2); display:flex; justify-content:space-between; align-items:center}
+
+/* ===================== Upcoming appointments ===================== */
+.dstrip{display:flex; gap:var(--s2); padding:var(--s1) var(--s4) var(--s3); overflow-x:auto; scrollbar-width:none}
+.dstrip::-webkit-scrollbar{display:none}
+.dpill{flex:none; width:64px; min-height:80px; border:0; border-radius:var(--r-lg); background:var(--surface); box-shadow:0 0 0 1px var(--line); display:grid; justify-items:center; align-content:center; gap:2px; color:var(--ink); padding:var(--s2) 0; transition:background-color var(--d-base) var(--ease-out), color var(--d-base) var(--ease-out), box-shadow var(--d-base) var(--ease-out), transform var(--d-snappy) var(--spring-snappy)}
+.dpill .m{font-size:var(--t12); font-weight:600; color:var(--ink-2); line-height:1.3}
+.dpill .d{font-size:var(--t20); font-weight:700; line-height:1.1}
+.dpill .ms{color:var(--blue); margin-top:2px}
+.dpill:active{transform:scale(.95)}
+.dpill[aria-selected="true"]{background:var(--blue); color:#FFFFFF; box-shadow:0 8px 16px rgba(0,66,120,.28); --grad:-25; --fill:1}
+.dpill[aria-selected="true"] .m,.dpill[aria-selected="true"] .ms{color:var(--on-blue-2)}
+.dpill.add{background:transparent; box-shadow:inset 0 0 0 1.5px var(--line-strong); color:var(--blue); font-size:var(--t12); font-weight:600; gap:var(--s1)}
+.appt-wrap{overflow:hidden; padding:var(--s1) var(--s4) var(--s6); margin:calc(-1 * var(--s1)) 0 calc(-1 * var(--s6)); touch-action:pan-y}
+.appt{background:var(--surface); border-radius:var(--r-lg); box-shadow:var(--shadow-2), 0 0 0 1px var(--line); overflow:hidden; will-change:transform}
+.appt.dragging{cursor:grabbing}
+.appt-hd{position:relative; overflow:hidden; background:var(--glow), var(--blue); color:#FFFFFF; padding:var(--s4); cursor:grab}
+.appt-hd-art{position:absolute; right:-32px; top:-40px; width:152px; height:152px; pointer-events:none}
+.appt-hd > *:not(svg){position:relative}
+.hd-row{display:flex; align-items:center; justify-content:space-between; gap:var(--s2); flex-wrap:wrap}
+.hpill{display:inline-flex; align-items:center; gap:var(--s1); font-size:var(--t12); font-weight:600; padding:var(--s1) var(--s3); border-radius:var(--r-pill); background:rgba(255,255,255,.14); white-space:nowrap}
+.hpill.count .ms{color:var(--cyan)}
+.appt-time{font-size:var(--t28); font-weight:700; letter-spacing:-.02em; line-height:1.15; margin-top:var(--s3)}
+.appt-date{font-size:var(--t16); font-weight:600; color:var(--on-blue-2); margin-top:var(--s1)}
+.appt-arrive{font-size:var(--t14); color:var(--on-blue-3)}
+.appt-bd{padding:var(--s4); display:grid; gap:var(--s4)}
+.appt-line{display:flex; gap:var(--s3); align-items:flex-start; font-size:var(--t16)}
+.appt-line > .ms{color:var(--blue); margin:2px 6px 0}
+.appt-line b{display:block; font-weight:600; line-height:1.35}
+.appt-line small{display:block; font-size:var(--t14); color:var(--ink-2)}
+.map{position:relative; display:block; width:100%; height:120px; border:0; padding:0; border-radius:var(--r-md); overflow:hidden; background:#E6EDF3; text-align:left; transition:transform var(--d-snappy) var(--spring-snappy)}
+.map:active{transform:scale(.98)}
+.map svg{position:absolute; inset:0; width:100%; height:100%}
+.map .eta{position:absolute; left:var(--s2); bottom:var(--s2); display:inline-flex; align-items:center; gap:var(--s1); background:#FFFFFF; color:var(--ink); font-size:var(--t12); font-weight:600; padding:var(--s1) var(--s3); border-radius:var(--r-pill); box-shadow:var(--shadow-1)}
+.map .go{position:absolute; right:var(--s2); bottom:var(--s2); display:inline-flex; align-items:center; gap:var(--s1); background:var(--blue); color:#FFFFFF; font-size:var(--t14); font-weight:600; padding:var(--s2) var(--s3); border-radius:var(--r-pill); box-shadow:0 4px 12px rgba(0,66,120,.3)}
+.prep{background:var(--tint); border-radius:var(--r-md); padding:var(--s3) var(--s4); display:grid; gap:var(--s1)}
+.prep h3{font-size:var(--t14); font-weight:700; color:var(--blue)}
+.prep .btn{margin-top:var(--s2); width:100%}
+.chk{display:flex; align-items:center; gap:var(--s3); min-height:var(--hit); border:0; background:none; padding:0; text-align:left; font-size:var(--t14); color:var(--ink)}
+.chk .box{width:24px; height:24px; flex:none; border-radius:6px; box-shadow:inset 0 0 0 2px var(--line-strong); background:#FFFFFF; color:#FFFFFF; display:grid; place-items:center; transition:background-color var(--d-fast), box-shadow var(--d-fast)}
+.chk .box .ms{opacity:0}
+.chk[aria-checked="true"] .box{background:var(--blue); box-shadow:none}
+.chk[aria-checked="true"] .box .ms{opacity:1; animation:iconPop 360ms var(--spring-snappy)}
+.callout{display:flex; gap:var(--s3); align-items:flex-start; background:var(--tint); border-radius:var(--r-md); padding:var(--s3) var(--s4); font-size:var(--t14); color:var(--ink)}
+.callout .ms{color:var(--blue)}
+.callout b{display:block; color:var(--blue)}
+.aacts{display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:var(--s2)}
+.aact{border:0; background:none; padding:var(--s1) 0 0; display:grid; justify-items:center; align-content:start; gap:var(--s2); color:var(--ink); font-size:var(--t12); font-weight:600; line-height:1.3; text-align:center; min-height:76px; border-radius:var(--r-md); transition:transform var(--d-snappy) var(--spring-snappy)}
+.aact:active{transform:scale(.94); --fill:1}
+.aact:active .dot{background:var(--tint-2)}
+.aact.done .dot{background:var(--blue); color:#FFFFFF; --fill:1; --grad:-25}
+.aact.done .dot .ms{animation:iconPop 420ms var(--spring-snappy)}
+@keyframes iconPop{from{transform:scale(.5)}}
+.appt-ft{display:flex; align-items:center; gap:var(--s2); padding:var(--s3) var(--s4); border-top:1px solid var(--line); font-size:var(--t12); font-weight:600; color:var(--ink-2)}
+.appt-ft .ms{color:var(--blue)}
+
+/* Guest: locked appointment preview */
+.locked{margin-inline:var(--s4); background:var(--surface); border-radius:var(--r-lg); box-shadow:var(--shadow-2), 0 0 0 1px var(--line); overflow:hidden}
+.lk-hd{background:var(--glow), var(--blue); padding:var(--s4); display:grid; gap:var(--s2); filter:blur(1.5px)}
+.lk-bd{padding:var(--s4) var(--s4) 0; display:grid; gap:var(--s2); filter:blur(1.5px)}
+.sk{display:block; height:12px; border-radius:6px; background:var(--tint)}
+.lk-hd .sk{background:rgba(255,255,255,.22)}
+.sk.w1{width:32%; height:20px; border-radius:10px} .sk.w2{width:56%; height:24px} .sk.w3{width:72%} .sk.w4{width:48%}
+.locked-body{display:grid; justify-items:start; gap:var(--s2); padding:var(--s4)}
+.locked-body h2{font-size:var(--t20); font-weight:700; color:var(--blue); letter-spacing:-.01em; margin-top:var(--s2)}
+.locked-body p{color:var(--ink-2)}
+.locked-body .btns{display:flex; flex-wrap:wrap; gap:var(--s3); margin-top:var(--s2)}
+
+/* ===================== Quick access ===================== */
+.qa{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:var(--s2); padding-inline:var(--s4)}
+.qa-tile{position:relative; min-height:108px; border:0; border-radius:var(--r-lg); background:var(--surface); box-shadow:var(--shadow-1), 0 0 0 1px var(--line); padding:var(--s3); display:flex; flex-direction:column; justify-content:flex-start; align-items:flex-start; gap:var(--s3); text-align:left; color:var(--ink);
+  transition:transform var(--d-snappy) var(--spring-snappy), background-color var(--d-fast) var(--ease-out)}
+.qa-tile:active,.qa-tile.pressed{transform:scale(.96); transition-duration:90ms; --fill:1; background:var(--tint)}
+.qa-lbl{font-size:var(--t14); font-weight:600; line-height:1.3}
+.qa-txt{display:grid; gap:2px}
+.qa-meta{display:inline-flex; align-items:center; gap:var(--s1); font-size:var(--t12); font-weight:700; color:var(--blue)}
+.qa-meta i{width:8px; height:8px; border-radius:50%; background:var(--cyan); box-shadow:0 0 0 2px var(--tint)}
+
+/* ===================== Featured ===================== */
+.car{display:flex; gap:var(--s3); overflow-x:auto; scroll-snap-type:x mandatory; padding:var(--s1) var(--s4) var(--s2); scroll-padding-inline:var(--s4); scrollbar-width:none; overscroll-behavior-x:contain}
+.car::-webkit-scrollbar{display:none}
+.feat{flex:0 0 78%; scroll-snap-align:start; border:0; padding:0; text-align:left; background:var(--surface); border-radius:var(--r-lg); overflow:hidden; box-shadow:var(--shadow-1), 0 0 0 1px var(--line); display:flex; flex-direction:column; color:var(--ink); transition:transform var(--d-snappy) var(--spring-snappy)}
+.feat:active{transform:scale(.98); transition-duration:80ms}
+.feat-art{position:relative; display:block; height:144px; overflow:hidden}
+.feat-art svg{position:absolute; inset:0; width:100%; height:100%; transform:translateX(var(--par,0px))}
+.feat-body{display:grid; gap:var(--s1); padding:var(--s4)}
+.feat-title{font-size:var(--t18); font-weight:700; line-height:1.3; letter-spacing:-.01em}
+.feat-meta{font-size:var(--t14); color:var(--ink-2)}
+.car-ctrl{display:flex; justify-content:space-between; align-items:center; padding-inline:var(--s4); margin-top:var(--s2)}
+.car-track{position:relative; width:72px; height:4px; border-radius:2px; background:var(--line); overflow:hidden}
+.car-thumb{position:absolute; top:0; bottom:0; left:0; border-radius:2px; background:var(--blue)}
+.car-arrows{display:flex; gap:var(--s2)}
+
+/* ===================== Campaign (the one warm moment) ===================== */
+.camp{position:relative; overflow:hidden; margin-inline:var(--s4); border-radius:var(--r-xl); color:#FFFFFF; background:radial-gradient(90% 70% at 100% 0%, rgba(0,169,224,.30) 0, rgba(0,169,224,0) 70%), linear-gradient(160deg, var(--blue-80) 0%, var(--blue) 58%); box-shadow:0 12px 32px -16px rgba(0,66,120,.55); --grad:-25}
+.camp > *{position:relative}
+.camp-top{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:var(--s4); align-items:start; padding:var(--s6) var(--s6) var(--s4)}
+.camp-tag{display:inline-flex; align-items:center; gap:var(--s2); min-height:24px; padding:0 var(--s3) 0 var(--s2); border-radius:var(--r-pill); background:rgba(255,255,255,.14); font-size:var(--t12); font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:#FFFFFF}
+.camp-tag i{width:8px; height:8px; border-radius:50%; background:var(--cyan); box-shadow:0 0 0 3px rgba(0,169,224,.3)}
+.camp h2{font-size:var(--t28); line-height:1.15; font-weight:700; letter-spacing:-.015em; margin-top:var(--s3); text-wrap:balance}
+.camp-top > p{grid-column:1 / -1; margin-top:calc(-1 * var(--s2)); font-size:var(--t16); line-height:1.5; color:var(--on-blue-2)}
+.camp-art{position:relative; width:96px; height:96px; display:grid; place-items:center; margin:calc(-1 * var(--s1)) calc(-1 * var(--s2)) 0 0}
+.camp-art svg{position:absolute; inset:0; width:100%; height:100%; overflow:visible}
+.camp-art .rings{transform-origin:50% 50%; animation:campSpin 1200ms var(--spring-gentle) both}
+.camp-art .dot{background:#FFFFFF; color:var(--blue); box-shadow:0 8px 20px -6px rgba(0,20,40,.5); --grad:0; animation:iconPop 520ms var(--spring-snappy) both 120ms}
+@keyframes campSpin{from{transform:rotate(-90deg) scale(.8); opacity:0}}
+.camp-facts{list-style:none; margin:0 var(--s4); padding:0; display:grid; grid-template-columns:1fr 1fr; border-radius:var(--r-lg); background:rgba(0,30,60,.28); box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+.camp-facts li{display:grid; grid-template-columns:auto minmax(0,1fr); column-gap:var(--s2); align-content:start; padding:var(--s3)}
+.camp-facts li + li{box-shadow:inset 1px 0 0 rgba(255,255,255,.12)}
+.camp-facts .ms{grid-row:span 2; color:var(--pms542); margin-top:2px}
+.camp-facts .k{font-size:var(--t12); font-weight:600; line-height:1.4; color:var(--on-blue-3)}
+.camp-facts .v{font-size:var(--t14); font-weight:600; line-height:1.4; color:#FFFFFF}
+.camp-cta{display:flex; gap:var(--s3); padding:var(--s4) var(--s4) var(--s4) var(--s4)}
+.camp-cta .btn-light{flex:1; background:#FFFFFF; color:var(--blue); --grad:0}
+.camp-cta .btn-light .ms{transition:transform var(--d-snappy) var(--spring-snappy)}
+.camp-cta .btn-light:hover .ms,.camp-cta .btn-light:focus-visible .ms{transform:translateX(4px)}
+.camp-cal{flex:none; width:var(--hit-lg); height:var(--hit-lg); border:0; border-radius:50%; display:grid; place-items:center; background:rgba(255,255,255,.14); color:#FFFFFF; box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.5); transition:transform var(--d-snappy) var(--spring-snappy), background-color var(--d-fast) var(--ease-out)}
+.camp-cal:active{transform:scale(.92); transition-duration:80ms}
+.camp-cal[aria-pressed="true"]{background:#FFFFFF; color:var(--blue); --fill:1; --grad:0}
+.camp-cal[aria-pressed="true"] .ms{animation:iconPop 360ms var(--spring-snappy)}
+.phone.rm .camp-art .rings,.phone.rm .camp-art .dot{animation:fadeOnly var(--d-base) var(--ease-out) both}
+.phone.rm .camp-cal:active,.phone.rm .camp-cta .btn-light .ms{transform:none}
+
+/* ===================== Tab bar ===================== */
+.tabbar{position:absolute; left:var(--s3); right:var(--s3); bottom:var(--s4); z-index:25; display:grid; grid-template-columns:repeat(5,1fr); background:rgba(255,255,255,.94); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border-radius:var(--r-xl); padding:var(--s1); box-shadow:0 8px 24px rgba(16,38,60,.16), 0 0 0 1px var(--line)}
+.tab-ind{position:absolute; top:var(--s1); bottom:var(--s1); left:0; width:0; border-radius:20px; background:var(--tint); transition:transform var(--d-snappy) var(--spring-snappy), width var(--d-snappy) var(--spring-snappy)}
+.tab{position:relative; z-index:1; min-height:56px; border:0; background:none; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; color:var(--ink-2); font-size:12.0px; white-space:nowrap; font-weight:600; border-radius:20px; padding:0; transition:transform var(--d-snappy) var(--spring-snappy), color var(--d-base) var(--ease-out)}
+.tab .ms{font-size:24.0px}
+.tab[aria-selected="true"]{color:var(--blue); font-weight:700; --fill:1}
+.tab:active{transform:scale(.94); transition-duration:80ms}
+.screen.enter-r{animation:scrIn var(--d-base) var(--ease-out) both; --dx:24px}
+.screen.enter-l{animation:scrIn var(--d-base) var(--ease-out) both; --dx:-24px}
+@keyframes scrIn{from{opacity:0; transform:translateX(var(--dx))}}
+
+/* ===================== Other tabs ===================== */
+.page-h{padding:56.0px var(--s4) var(--s4)}
+.page-h h1{font-size:var(--t28); font-weight:700; color:var(--blue); letter-spacing:-.02em; line-height:1.2}
+.page-h p{color:var(--ink-2); margin-top:var(--s1)}
+.find-field{width:calc(100% - 2 * var(--s4)); margin-inline:var(--s4); min-height:56px; border:1px solid var(--line-strong); background:var(--surface); border-radius:var(--r-pill); display:flex; align-items:center; gap:var(--s3); padding:0 var(--s4); color:var(--ink-2); font-size:var(--t16); text-align:left}
+.find-field .ms{color:var(--blue)}
+
+/* ===================== Search overlay ===================== */
+.so{position:absolute; inset:0; z-index:40; background:var(--bg); display:flex; flex-direction:column; clip-path:inset(var(--ct,0) var(--cr,0) var(--cb,0) var(--cl,0) round var(--crad,0px)); transition:clip-path var(--d-slow) var(--spring-gentle)}
+.so-head{display:flex; gap:var(--s2); align-items:center; padding:56.0px var(--s4) var(--s3)}
+.so-input{flex:1; min-width:0; display:flex; align-items:center; gap:var(--s2); min-height:52px; border:1px solid var(--line-strong); border-radius:var(--r-pill); background:var(--surface); padding:0 var(--s1) 0 var(--s4)}
+.so-input > .ms{color:var(--blue)}
+.so-input input::-webkit-search-cancel-button{-webkit-appearance:none; display:none}
+.phone .so-input input:focus-visible{box-shadow:none}
+.so-input input{-webkit-appearance:none; appearance:none; flex:1; min-width:0; border:0; outline:0; background:none; font:inherit; font-size:var(--t16); color:var(--ink); min-height:var(--hit)}
+.so-input:focus-within{box-shadow:var(--focus)}
+.so-input .icon-btn{box-shadow:none}
+.so-body{flex:1; overflow-y:auto; padding-bottom:var(--s8)}
+.so-body .group{margin-top:var(--s2)}
+#so-filters{flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none; padding-block:var(--s1)}
+.so .group .row{animation:modIn 320ms var(--spring-snappy) both; animation-delay:calc(var(--i,0) * 30ms)}
+mark{background:var(--tint-2); color:inherit; border-radius:4px}
+.empty{padding:var(--s6) var(--s4); color:var(--ink-2)}
+
+/* ===================== Article (container transform from a featured card) ===================== */
+.article{position:absolute; inset:0; z-index:45; background:var(--surface); clip-path:inset(var(--ct,0) var(--cr,0) var(--cb,0) var(--cl,0) round var(--crad,0px)); transition:clip-path var(--d-gentle) var(--spring-gentle), opacity var(--d-base) var(--ease-out)}
+.art-scroll{position:absolute; inset:0; overflow-y:auto; scrollbar-width:none}
+.art-scroll::-webkit-scrollbar{display:none}
+.art-inner{transform:translateY(var(--ty,0px)); transition:transform var(--d-gentle) var(--spring-gentle)}
+.art-hero{position:relative; overflow:hidden; height:var(--hh,240px); width:var(--hw,100%); margin-left:var(--hx,0px); transition:height var(--d-gentle) var(--spring-gentle), width var(--d-gentle) var(--spring-gentle), margin-left var(--d-gentle) var(--spring-gentle)}
+.art-hero svg{position:absolute; inset:0; width:100%; height:100%}
+.art-body{padding:var(--s6) var(--s6) var(--s12); opacity:0; transform:translateY(16px); transition:opacity var(--d-base) var(--ease-out), transform var(--d-base) var(--ease-out)}
+.article.in .art-body{opacity:1; transform:none; transition-delay:120ms}
+.art-body h1{font-size:var(--t28); line-height:1.2; font-weight:700; letter-spacing:-.02em; color:var(--blue); margin-top:var(--s2)}
+.art-body .art-meta{font-size:var(--t14); color:var(--ink-2); margin-top:var(--s2)}
+.art-body p:not(.kick):not(.art-meta){margin-top:var(--s4)}
+.art-bar{position:absolute; top:56.0px; left:var(--s4); right:var(--s4); display:flex; justify-content:space-between; opacity:0; transition:opacity var(--d-base) var(--ease-out)}
+.article.in .art-bar{opacity:1; transition-delay:160ms}
+.art-bar .icon-btn{box-shadow:var(--shadow-1)}
+
+/* ===================== Pushed detail page ===================== */
+.page{position:absolute; inset:0; z-index:46; background:var(--bg); display:flex; flex-direction:column; transform:translateX(100%); transition:transform var(--d-gentle) var(--spring-gentle); box-shadow:-8px 0 32px rgba(16,38,60,.14)}
+.page.in{transform:none}
+.page-bar{display:flex; align-items:center; gap:var(--s2); padding:48.0px var(--s4) var(--s2)}
+.page-body{flex:1; overflow-y:auto; padding:var(--s2) var(--s6) var(--s12)}
+.page-body h1{font-size:var(--t28); line-height:1.2; font-weight:700; letter-spacing:-.02em; color:var(--blue); margin-top:var(--s2); text-wrap:balance}
+.page-body p{margin-top:var(--s3)}
+.page-body .group{margin:var(--s4) 0 0}
+.page-body .btn{margin-top:var(--s6); width:100%}
+.page-edge{position:absolute; left:0; top:0; bottom:0; width:24px; z-index:2; touch-action:pan-y; cursor:ew-resize}
+
+/* ===================== Sheet ===================== */
+.backdrop{position:absolute; inset:0; z-index:50; background:rgba(0,20,40,.4); opacity:0; transition:opacity var(--d-base) var(--ease-out)}
+.backdrop.show{opacity:1}
+.sheet{position:absolute; left:0; right:0; bottom:0; z-index:51; background:var(--surface); border-radius:var(--r-xl) var(--r-xl) 0 0; padding:var(--s3) var(--s6) var(--s8); max-height:85%; overflow-y:auto; transform:translateY(100%); transition:transform var(--d-slow) var(--spring-gentle)}
+.sheet.show{transform:none}
+.sheet .grab{width:40px; height:4px; border-radius:var(--r-pill); background:var(--line); margin:0 auto var(--s4)}
+.sheet h2{font-size:var(--t24); line-height:1.25; color:var(--blue); font-weight:700; letter-spacing:-.01em; padding-right:var(--s12)}
+.sheet p{margin-top:var(--s3)}
+.sheet .meta{font-size:var(--t14); color:var(--ink-2)}
+.sheet .close{position:absolute; top:var(--s3); right:var(--s3)}
+.sheet .btn{margin-top:var(--s6); width:100%}
+.sheet .group{margin:var(--s4) 0 0; box-shadow:0 0 0 1px var(--line)}
+.sheet .kick-alert{display:inline-flex; align-items:center; gap:var(--s2); background:var(--alert); color:#FFFFFF; font-weight:700; font-size:var(--t14); text-transform:uppercase; letter-spacing:.04em; padding:var(--s1) var(--s3) var(--s1) var(--s2); border-radius:var(--r-pill); margin-bottom:var(--s3); --grad:-25}
+.sheet .phone-num{font-weight:700; color:var(--blue); user-select:all}
+.sheet-empty{display:grid; justify-items:center; text-align:center; gap:var(--s2); padding-top:var(--s4)}
+.sheet-empty p{color:var(--ink-2)}
+
+/* ===================== Toast ===================== */
+.toast{position:absolute; left:var(--s4); right:var(--s4); bottom:104px; z-index:60; display:flex; align-items:center; gap:var(--s3); background:var(--blue); color:#FFFFFF; padding:var(--s3) var(--s4); border-radius:var(--r-lg); font-weight:600; font-size:var(--t14); box-shadow:var(--shadow-2); transform:translateY(16px) scale(.96); opacity:0; pointer-events:none; transition:transform var(--d-snappy) var(--spring-snappy), opacity var(--d-fast)}
+.toast.show{transform:none; opacity:1}
+.toast-i{display:grid; place-items:center; color:var(--cyan); flex:none}
+.toast-i .tdot{width:10px; height:10px; border-radius:50%; background:var(--cyan)}
+.toast.show .toast-i .ms{animation:iconPop 420ms var(--spring-snappy)}
+
+/* ===================== Reduced motion: calm cross-fades, no bounce, no parallax ===================== */
+.phone.rm *, .phone.rm *::before, .phone.rm *::after{transition-timing-function:var(--ease-out)!important}
+.phone.rm .ms{transition:none!important; animation:none!important}
+.phone.rm .mod{animation:fadeOnly var(--d-base) var(--ease-out) both; animation-delay:0ms}
+.phone.rm .mod.out{animation:fadeOut 120ms linear both}
+.phone.rm .chip.pop,.phone.rm .so .group .row,.phone.rm .fade-up,.phone.rm .screen.enter-r,.phone.rm .screen.enter-l{animation:fadeOnly var(--d-base) var(--ease-out) both; animation-delay:0ms}
+.phone.rm .ptr.refreshing .pdot,.phone.rm .ptr.refreshing .arc,.phone.rm .btn .dots i{animation:none}
+.phone.rm .qa-tile:active,.phone.rm .qa-tile.pressed,.phone.rm .btn:active,.phone.rm .chip:active,.phone.rm .aact:active,.phone.rm .icon-btn:active,.phone.rm .search-field:active,.phone.rm .tab:active,.phone.rm .dpill:active,.phone.rm .feat:active,.phone.rm .map:active{transform:none}
+.phone.rm .feat-art svg{transform:none!important}
+.phone.rm .so{transition:opacity var(--d-base) var(--ease-out)}
+.phone.rm .article{clip-path:none; transition:opacity var(--d-base) var(--ease-out)}
+.phone.rm .art-inner,.phone.rm .art-hero,.phone.rm .art-body{transition:opacity var(--d-base) var(--ease-out)!important; transform:none!important}
+.phone.rm .page{transform:none; opacity:0; transition:opacity var(--d-base) var(--ease-out)}
+.phone.rm .page.in{opacity:1}
+.phone.rm.pushed .screens{transform:none}
+.phone.rm .sheet{transition:opacity var(--d-base) var(--ease-out); transform:none; opacity:0}
+.phone.rm .sheet.show{opacity:1}
+.phone.rm .toast{transform:none}
+.phone.rm #home-inner{transform:none!important}
+@keyframes fadeOnly{from{opacity:0}}
+@keyframes fadeOut{to{opacity:0}}
+
+/* ===================== Token spec ===================== */
+.spec{font-size:14.0px}
+.spec h2{margin-top:24.0px}
+.spec h2:first-child{margin-top:0}
+.spec table{width:100%; border-collapse:collapse; font-variant-numeric:tabular-nums}
+.spec th,.spec td{text-align:left; padding:8.0px 8.0px 8.0px 0; border-bottom:1px solid var(--bd-line); vertical-align:top}
+.spec th{font-weight:600; color:var(--bd-muted); font-size:12.0px; text-transform:uppercase; letter-spacing:.05em}
+.spec code,.icons-sec code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12.0px; background:var(--bd-chip); padding:2px 4px; border-radius:4px; overflow-wrap:anywhere}
+.sw{display:inline-block; width:16px; height:16px; border-radius:50%; vertical-align:-3px; margin-right:8.0px; box-shadow:inset 0 0 0 1px rgba(0,0,0,.15)}
+.tbl{overflow-x:auto}
+.spec p{margin:8.0px 0 0; color:var(--bd-muted)}
+.spec a{color:var(--bd-accent)}
+
+/* ===================== Iconography section ===================== */
+.icons-sec{justify-self:stretch; padding:24.0px}
+.ic-head{max-width:72ch; display:grid; gap:8.0px; margin-bottom:24.0px}
+.ic-head .kicker{font-size:14.0px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--bd-muted); margin:0}
+.ic-head h2{font-size:28.0px; line-height:1.2; margin:0; letter-spacing:-.01em; text-wrap:balance}
+.ic-head p{margin:0; color:var(--bd-muted)}
+.ic-grid{display:grid; gap:16.0px; grid-template-columns:repeat(auto-fit, minmax(min(100%, 320px), 1fr))}
+.ic-card{border:1px solid var(--bd-line); border-radius:16.0px; padding:16.0px; display:grid; gap:12.0px; align-content:start; min-width:0}
+.ic-card h3{font-size:16.0px; line-height:1.3; margin:0}
+.ic-card p,.ic-card li{font-size:14.0px; color:var(--bd-muted); margin:0}
+.ic-card b{color:var(--bd-ink)}
+.ic-card ul{margin:0; padding-left:16.0px; display:grid; gap:8.0px}
+.ic-wide{grid-column:1 / -1}
+.ic-demo{background:var(--bg); color:var(--ink); border-radius:12.0px; padding:16.0px; display:flex; flex-wrap:wrap; gap:16.0px; align-items:center; justify-content:center}
+.ic-demo figure{margin:0; display:grid; justify-items:center; gap:8.0px; text-align:center; max-width:128px}
+.ic-demo figcaption{font-size:12.0px; line-height:1.4; color:var(--ink-2)}
+.ic-demo.grid2{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); justify-items:center; align-items:start}
+.kl-wrap{display:flex; flex-wrap:wrap; gap:16.0px; align-items:center}
+.kl{position:relative; width:192px; height:192px; flex:none; border-radius:8.0px; overflow:hidden}
+.kl svg{position:absolute; inset:0}
+.kl .ms{position:absolute; inset:0; font-size:192px; color:rgba(0,66,120,.55)}
+.kl-legend{list-style:none; padding:0!important; display:grid; gap:8.0px; min-width:0; flex:1}
+.kl-legend li{display:flex; gap:8.0px; align-items:center}
+.kl-legend i{width:16px; height:16px; border-radius:4px; flex:none; box-shadow:inset 0 0 0 1px #D5DDE5}
+.kl-legend i.ring{border-radius:50%; box-shadow:inset 0 0 0 2px #00A9E0; background:#FFFFFF}
+.ramp{display:grid; gap:8.0px}
+.ramp-row{display:grid; grid-template-columns:136px minmax(0,1fr); gap:12.0px; align-items:center}
+.ramp-row .ic-demo{padding:12.0px; min-height:72px}
+.sx-tab{position:relative; display:inline-flex; flex-direction:column; align-items:center; gap:2px; font-size:12.0px; font-weight:700; color:var(--blue); padding:4.0px 12.0px; border-radius:20px; background:var(--tint); --fill:1}
+.sx-tab .ms{font-size:24.0px}
+.sx-toggle{border:0; background:none; padding:4.0px; display:grid; justify-items:center; gap:4.0px; cursor:pointer; color:var(--ink); font-size:12.0px; font-weight:600; border-radius:12.0px; min-width:64px}
+.sx-toggle[aria-pressed="true"]{--fill:1; font-weight:700; color:var(--blue)}
+.sx-toggle[aria-pressed="true"] .dot{background:var(--blue); color:#FFFFFF; --grad:-25}
+.treat{display:grid; gap:12.0px}
+.treat-row{display:grid; grid-template-columns:minmax(0,176px) minmax(0,1fr); gap:12.0px; align-items:center}
+.treat-row .ic-demo{padding:12.0px; gap:8.0px; min-height:72px}
+.plain-demo{display:flex; align-items:center; gap:8.0px; font-size:14.0px; font-weight:600; color:var(--ink)}
+.plain-demo .ms{color:var(--blue)}
+.alert-demo{background:#B0003A!important; color:#FFFFFF!important; justify-content:flex-start!important}
+.alert-demo b{color:#FFFFFF; font-size:14.0px; letter-spacing:.04em}
+.pairs{width:100%; border-collapse:collapse; font-size:14.0px}
+.pairs td{padding:4.0px 8.0px 4.0px 0; border-bottom:1px solid var(--bd-line); color:var(--bd-muted); vertical-align:middle}
+.pairs td:first-child{width:48px}
+.pairs td b{font-variant-numeric:tabular-nums}
+.avoid{list-style:none; padding:0!important}
+.avoid li{display:flex; gap:12.0px; align-items:flex-start}
+.dot.no{position:relative; overflow:hidden; background:#FBEFF2; color:#B0003A}
+.dot.no::after{content:""; position:absolute; left:-8px; right:-8px; top:50%; height:3px; margin-top:-1.5px; background:#B0003A; transform:rotate(-45deg)}
+.gmap-groups{display:grid; gap:16.0px}
+.gm-group h4{font-size:12.0px; text-transform:uppercase; letter-spacing:.06em; color:var(--bd-muted); margin:0 0 8.0px}
+.gmap{list-style:none; margin:0; padding:0!important; display:grid; gap:8.0px; grid-template-columns:repeat(auto-fill, minmax(min(100%, 240px), 1fr))}
+.gmap li{display:flex; gap:12.0px; align-items:flex-start; padding:8.0px; border-radius:12.0px; background:var(--bd-chip)}
+.gm-t{display:grid; gap:2px; min-width:0}
+.gm-t b{font-size:14.0px; line-height:1.3}
+.gm-t code{justify-self:start}
+.gm-t small{font-size:12.0px; line-height:1.4; color:var(--bd-muted)}
+</style>
+
+<div class="board">
+  <header class="board-head">
+    <h1>UTSW MyCare home – interactive direction</h1>
+    <p>High-fidelity prototype of the patient app home screen. A Blue hero puts the greeting and search first – search always sits above appointments – and the content rides up on a light sheet. Appointments get a date strip and a rich card with a countdown, map preview, and round actions. The energy comes from motion and gestures. All people, dates, and alerts are fictional sample data.</p>
+    <nav class="jump" aria-label="On this page"><a href="#iconography">Iconography</a><a href="#tokens">Token spec</a></nav>
+  </header>
+
+  <aside class="controls panel" aria-label="Prototype controls">
+    <div class="ctl">
+      <h2 id="lbl-aud">Audience</h2>
+      <div class="seg" role="group" aria-labelledby="lbl-aud">
+        <button id="aud-guest" aria-pressed="false">Guest</button>
+        <button id="aud-auth" aria-pressed="true">Signed in</button>
+      </div>
+    </div>
+    <div class="ctl">
+      <h2 id="lbl-alert">Emergency alerts</h2>
+      <div class="seg" role="group" aria-labelledby="lbl-alert">
+        <button data-alerts="0" aria-pressed="false">None</button>
+        <button data-alerts="1" aria-pressed="true">One</button>
+        <button data-alerts="2" aria-pressed="false">Two</button>
+      </div>
+      <p class="note">Active window and priority come from the CMS. With two alerts, the higher priority shows first; the rest sit behind “Show all alerts.”</p>
+    </div>
+    <div class="ctl">
+      <h2 id="lbl-w">Phone width</h2>
+      <div class="seg" role="group" aria-labelledby="lbl-w">
+        <button data-w="390" aria-pressed="true">390 pt</button>
+        <button data-w="360" aria-pressed="false">360 pt</button>
+      </div>
+    </div>
+    <div class="ctl">
+      <h2 id="lbl-ts">Text size</h2>
+      <div class="seg" role="group" aria-labelledby="lbl-ts">
+        <button data-ts="1" aria-pressed="true">Default</button>
+        <button data-ts="1.25" aria-pressed="false">Large</button>
+      </div>
+    </div>
+    <div class="ctl">
+      <h2 id="lbl-m">Motion</h2>
+      <div class="seg" role="group" aria-labelledby="lbl-m">
+        <button data-rm="0" aria-pressed="true">Full</button>
+        <button data-rm="1" aria-pressed="false">Reduced</button>
+      </div>
+    </div>
+    <div class="ctl">
+      <h2 id="lbl-cms">Module layout (CMS)</h2>
+      <ul class="cms" id="cms" aria-labelledby="lbl-cms"></ul>
+      <p class="note">The header – alert, greeting, and search – is fixed, so search always sits above appointments. Content below it follows the CMS order and visibility per audience, with no app release.</p>
+    </div>
+    <div class="ctl">
+      <h2>Try this</h2>
+      <ul class="hints">
+        <li>Pick a date in the appointment strip, or swipe the card</li>
+        <li>Tap the map for directions; tick the video visit checklist</li>
+        <li>Add an appointment to your calendar</li>
+        <li>Tap a featured article – it grows into the full story</li>
+        <li>Open a service – it slides in; drag from its left edge to go back</li>
+        <li>Open notifications and mark them as read</li>
+        <li>Drag down on the home screen to refresh</li>
+        <li>Sign in from the guest home</li>
+      </ul>
+    </div>
+  </aside>
+
+  <div class="stage">
+    <div class="device">
+      <div class="phone bar-light" id="phone" lang="en">
+        <div class="statusbar" aria-hidden="true"><span>9:41</span><span class="sb-r"><i></i><i></i></span></div>
+        <div class="screens">
+          <section class="screen" id="scr-home" aria-label="Home">
+            <div class="ptr" id="ptr" aria-hidden="true">
+              <svg viewBox="0 0 48 48"><path class="arc" d="M12 18v8a12 12 0 0 0 24 0v-8"/><circle class="pdot" cx="24" cy="24" r="6"/></svg>
+            </div>
+            <div class="scroller home" id="scroller">
+              <header class="appbar" id="appbar">
+                <img class="logo" alt="UTSW MyCare" src="data:image/svg+xml;base64,__LOGO__">
+                <span class="sp"></span>
+                <button class="icon-btn ghost" id="btn-bell" aria-label="Notifications"><span class="ms" aria-hidden="true">notifications</span><span class="badge" id="bell-badge" aria-hidden="true" hidden></span></button>
+                <button class="icon-btn ghost" id="btn-acct" aria-label="Account"><span class="ms" aria-hidden="true">account_circle</span></button>
+              </header>
+              <div id="home-inner">
+                <div class="hero" id="hero">
+                  <svg class="hero-art" viewBox="0 0 288 288" aria-hidden="true"><circle cx="144" cy="144" r="140" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="2"/><circle cx="144" cy="144" r="100" fill="none" stroke="rgba(255,255,255,.10)" stroke-width="2"/><circle cx="144" cy="144" r="60" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="2"/></svg>
+                  <div id="hero-mods" style="display:contents"></div>
+                </div>
+                <div class="content" id="modules"></div>
+              </div>
+            </div>
+          </section>
+          <section class="screen" id="scr-find" aria-label="Find care" hidden>
+            <div class="scroller">
+              <div class="page-h"><h1>Find care</h1><p>Search providers by name, specialty, or condition.</p></div>
+              <button class="find-field" data-open-search="Providers"><span class="ms" aria-hidden="true">search</span><span>Try “knee pain” or “dermatology”</span></button>
+              <p class="ts-label">Popular specialties</p>
+              <ul class="chips" id="find-chips"></ul>
+            </div>
+          </section>
+          <section class="screen" id="scr-appts" aria-label="Visits" hidden>
+            <div class="scroller"><div class="page-h"><h1>Visits</h1><p id="appts-sub"></p></div><ul class="group" id="appts-list"></ul></div>
+          </section>
+          <section class="screen" id="scr-msgs" aria-label="Messages" hidden>
+            <div class="scroller"><div class="page-h"><h1>Messages</h1><p id="msgs-sub"></p></div><ul class="group" id="msgs-list"></ul></div>
+          </section>
+          <section class="screen" id="scr-menu" aria-label="Menu" hidden>
+            <div class="scroller"><div class="page-h"><h1>Menu</h1><p>Settings, help, and more</p></div><ul class="group" id="menu-list"></ul></div>
+          </section>
+        </div>
+        <div class="shade" aria-hidden="true"></div>
+
+        <nav class="tabbar" aria-label="Main">
+          <span class="tab-ind" id="tab-ind" aria-hidden="true"></span>
+          <div role="tablist" aria-label="Main sections" style="display:contents" id="tablist"></div>
+        </nav>
+
+        <div class="so" id="so" role="dialog" aria-modal="true" aria-label="Search" hidden>
+          <div class="so-head">
+            <button class="icon-btn" id="so-back" aria-label="Close search"><span class="ms" aria-hidden="true">arrow_back</span></button>
+            <label class="so-input" for="so-q"><span class="ms s20" aria-hidden="true">search</span><span class="vh">Search UT Southwestern</span>
+              <input id="so-q" type="search" autocomplete="off" placeholder="Doctors, locations, and more">
+              <button class="icon-btn" id="so-clear" aria-label="Clear search" hidden><span class="ms s20" aria-hidden="true">close</span></button>
+            </label>
+          </div>
+          <div class="so-body">
+            <div class="chips" role="group" aria-label="Search in" id="so-filters"></div>
+            <div id="so-recent"></div>
+            <div id="so-top"><p class="ts-label">Top searches</p><ul class="chips" id="so-chips"></ul></div>
+            <div id="so-results" aria-live="polite"></div>
+          </div>
+        </div>
+
+        <section class="article" id="article" role="dialog" aria-modal="true" aria-labelledby="art-h" hidden>
+          <div class="art-scroll" id="art-scroll"><div class="art-inner" id="art-inner"><div class="art-hero" id="art-hero"></div><div class="art-body" id="art-body"></div></div></div>
+          <div class="art-bar"><button class="icon-btn" id="art-close" aria-label="Close article"><span class="ms" aria-hidden="true">close</span></button><button class="icon-btn" id="art-share" aria-label="Share article"><span class="ms" aria-hidden="true">share</span></button></div>
+        </section>
+
+        <section class="page" id="page" role="dialog" aria-modal="true" aria-labelledby="page-h" hidden>
+          <div class="page-edge" id="page-edge" aria-hidden="true"></div>
+          <div class="page-bar"><button class="icon-btn" id="page-back" aria-label="Back"><span class="ms" aria-hidden="true">arrow_back</span></button></div>
+          <div class="page-body" id="page-body"></div>
+        </section>
+
+        <div class="backdrop" id="backdrop" hidden></div>
+        <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-h" hidden>
+          <div class="grab" aria-hidden="true"></div>
+          <button class="icon-btn close" id="sheet-x" aria-label="Close"><span class="ms" aria-hidden="true">close</span></button>
+          <div id="sheet-body"></div>
+        </div>
+
+        <div class="toast" id="toast" role="status" aria-live="polite"><span class="toast-i" id="toast-i" aria-hidden="true"><i class="tdot"></i></span><span id="toast-t"></span></div>
+        <div class="vh" id="live-alert" aria-live="assertive" aria-atomic="true"></div>
+        <div class="vh" id="live" aria-live="polite" aria-atomic="true"></div>
+      </div>
+    </div>
+    <p class="caption" id="cap">390 × 844 pt · fictional sample data</p>
+  </div>
+
+  <section class="spec panel" id="tokens" aria-label="Token spec">
+    <h2>Type scale (Inter, Inter Display optical size at 20.0 and up)</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>Size</th><th>Weight</th><th>Line</th><th>Used for</th></tr></thead>
+      <tbody>
+        <tr><td>32.0</td><td>700</td><td>1.15</td><td>Greeting headline</td></tr>
+        <tr><td>28.0</td><td>700</td><td>1.15–1.2</td><td>Appointment time, campaign headline; tab page, article, and detail page titles</td></tr>
+        <tr><td>24.0</td><td>700</td><td>1.2</td><td>Sheet titles</td></tr>
+        <tr><td>20.0</td><td>700</td><td>1.1–1.3</td><td>Section headings, date strip day numbers</td></tr>
+        <tr><td>18.0</td><td>600–700</td><td>1.3</td><td>Featured titles, announcement dates</td></tr>
+        <tr><td>16.0</td><td>400–600</td><td>1.5</td><td>Body (minimum), buttons, list titles, search, appointment date</td></tr>
+        <tr><td>14.0</td><td>400–600</td><td>1.5</td><td>Meta, chips, tile labels, captions</td></tr>
+        <tr><td>12.0</td><td>600–700</td><td>1.3–1.4</td><td>Eyebrows, tab and action labels, date strip months, source line, badges</td></tr>
+      </tbody>
+    </table></div>
+    <p>Sizes scale with the system text setting (try Large); layouts wrap rather than clip. Tab labels and tab icons stay fixed and rely on the platform's large-content viewer.</p>
+
+    <h2>Spacing (4-pt scale)</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>Token</th><th>Value</th><th>Used for</th></tr></thead>
+      <tbody>
+        <tr><td><code>s1</code></td><td>4.0</td><td>Icon-to-text nudges, pill padding</td></tr>
+        <tr><td><code>s2</code></td><td>8.0</td><td>Tile, chip, and date-strip gaps; map overlay inset</td></tr>
+        <tr><td><code>s3</code></td><td>12.0</td><td>Icon-to-label gaps, list row padding, card footers</td></tr>
+        <tr><td><code>s4</code></td><td>16.0</td><td>Screen gutter, card padding, card sections</td></tr>
+        <tr><td><code>s6</code></td><td>24.0</td><td>Hero rhythm, content sheet overlap and top padding, banners</td></tr>
+        <tr><td><code>s8</code></td><td>32.0</td><td>Gap between content modules</td></tr>
+        <tr><td><code>s10</code></td><td>40.0</td><td>Reserved (large section breaks)</td></tr>
+        <tr><td><code>s12</code></td><td>48.0</td><td>Status bar inset, hero bottom padding</td></tr>
+      </tbody>
+    </table></div>
+    <p>Touch targets: 44.0 minimum, 48.0 for primary buttons and actions; at least 8.0 between targets.</p>
+
+    <h2>Color – a Blue family, one accent, one warm moment</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>Role</th><th>Value</th><th>Pairing (contrast)</th></tr></thead>
+      <tbody>
+        <tr><td><span class="sw" style="background:#004278"></span>UT Southwestern Blue</td><td>#004278</td><td>Hero, app bar, appointment header, icons, buttons · white on Blue 10.24:1</td></tr>
+        <tr><td><span class="sw" style="background:#336893"></span>Blue 80% · PMS 542</td><td>#336893 · #7BAFD4</td><td>Featured artwork only – shapes, never text</td></tr>
+        <tr><td><span class="sw" style="background:#D6E4F0"></span>On Blue</td><td>#D6E4F0 · #A9C7E0</td><td>Secondary text on Blue 7.91:1 and 5.82:1</td></tr>
+        <tr><td><span class="sw" style="background:#333333"></span>Gray (body)</td><td>#333333</td><td>Body and list titles · 11.89:1 on #F7F8FA</td></tr>
+        <tr><td><span class="sw" style="background:#5B6770"></span>Secondary text</td><td>#5B6770</td><td>Meta and chevrons · 5.46:1 on #F7F8FA, 5.06:1 on #EBF0F5</td></tr>
+        <tr><td><span class="sw" style="background:#EBF0F5"></span>Tint</td><td>#EBF0F5 · #D1DDE6 pressed</td><td>List circles, chips, action circles, tab indicator · Blue on tint 8.93:1</td></tr>
+        <tr><td><span class="sw" style="background:#F7F8FA"></span>Surfaces and lines</td><td>#F7F8FA · #FFFFFF · #D5DDE5 · #808B96</td><td>Content sheet, cards, hairlines · field outline #808B96 is 3.27:1</td></tr>
+        <tr><td><span class="sw" style="background:#00A9E0"></span>PMS 2995 cyan</td><td>#00A9E0</td><td>The one accent, shapes only – brand dot, hero glow, countdown icon, unread dots (3.78:1 on Blue)</td></tr>
+        <tr><td><span class="sw" style="background:linear-gradient(160deg,#336893,#004278)"></span>Campaign gradient</td><td>#336893 → #004278 · cyan glow 30%</td><td>Campaign card only · white headline and On Blue text, 4.5:1 or better at every text position; facts on a 28% navy panel</td></tr>
+        <tr><td><span class="sw" style="background:#B0003A"></span>Alert</td><td>#B0003A</td><td>Emergency alerts only · white 7.22:1 · always with icon and “Alert”</td></tr>
+      </tbody>
+    </table></div>
+
+    <h2>Icons</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>Token</th><th>Value</th><th>Used for</th></tr></thead>
+      <tbody>
+        <tr><td><code>icon-16</code></td><td>16.0 · opsz 20</td><td>With 12.0 text (pills, source line, map labels)</td></tr>
+        <tr><td><code>icon-20</code></td><td>20.0 · opsz 20</td><td>With 14.0–16.0 text: buttons, rows, appointment details</td></tr>
+        <tr><td><code>icon-24</code></td><td>24.0 · opsz 24</td><td>Standalone controls, tab bar, app bar, tiles, actions</td></tr>
+        <tr><td><code>icon-32</code></td><td>32.0 · opsz 32</td><td>Inside 56.0 circles only (sign-in prompts, campaign badge)</td></tr>
+        <tr><td><code>circle</code></td><td>40.0 · 48.0 · 56.0</td><td>Blue in quick access; tint in lists and actions, Blue when pressed or done</td></tr>
+        <tr><td><code>wght</code></td><td>500</td><td>Every size</td></tr>
+        <tr><td><code>GRAD</code></td><td>0 · −25 on Blue</td><td>White glyphs on Blue and alert red</td></tr>
+        <tr><td><code>FILL</code></td><td>0 at rest · 1 selected, pressed, confirmed</td><td>Animates in 240 ms, ease-out</td></tr>
+      </tbody>
+    </table></div>
+    <p>Full system below, under <a href="#iconography">Iconography</a>.</p>
+
+    <h2>Radii</h2>
+    <div class="tbl"><table>
+      <tbody>
+        <tr><td><code>r-sm</code> 8.0</td><td>Small controls</td></tr>
+        <tr><td><code>r-md</code> 12.0</td><td>Map preview, prep panels, date boxes</td></tr>
+        <tr><td><code>r-lg</code> 16.0</td><td>Every card: appointment, date strip, tiles, featured, lists, alert, toast</td></tr>
+        <tr><td><code>r-xl</code> 24.0</td><td>Content sheet top, campaign card, tab bar, sheets</td></tr>
+        <tr><td><code>r-pill</code></td><td>Buttons, chips, pills, search field</td></tr>
+      </tbody>
+    </table></div>
+
+    <h2>Motion</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>Token</th><th>Value</th><th>Used for</th></tr></thead>
+      <tbody>
+        <tr><td><code>d-fast</code></td><td>150 ms, ease-out</td><td>Color changes, fades, pressed fills</td></tr>
+        <tr><td><code>d-base</code></td><td>240 ms, ease-out <code>cubic-bezier(.2,.8,.2,1)</code></td><td>Alert reveal, date pill selection, icon fill, article text</td></tr>
+        <tr><td><code>d-slow</code></td><td>400 ms, ease-in-out <code>cubic-bezier(.65,0,.35,1)</code></td><td>Width change, search expand</td></tr>
+        <tr><td><code>spring-snappy</code></td><td>stiffness 700, damping 36, mass 1 · 360 ms · 5% overshoot</td><td>Appointment card swap and height, press release, tab indicator, entrances, toast</td></tr>
+        <tr><td><code>spring-gentle</code></td><td>stiffness 400, damping 40, mass 1 · 400 ms · no overshoot</td><td>Article expand, page push, sheets, search expand, pull-to-refresh settle</td></tr>
+        <tr><td>Press</td><td>scale 0.96 in 80 ms, release on snappy spring</td><td>Tiles, buttons, chips, cards</td></tr>
+        <tr><td>Stagger</td><td>40 ms per module, 30 ms per chip or row</td><td>Entrances</td></tr>
+      </tbody>
+    </table></div>
+    <p>Springs ship as CSS <code>linear()</code> curves sampled from the spring equation (24 steps). Reduced motion swaps every transform for a 240 ms cross-fade: no bounce, scale, parallax, or looping motion, and icon fills change instantly. The emergency alert only ever fades or reveals in height.</p>
+  </section>
+
+  <section class="icons-sec panel" id="iconography" aria-labelledby="ic-h">
+    <header class="ic-head">
+      <p class="kicker">Iconography</p>
+      <h2 id="ic-h">One rounded icon family, one color, tuned to the MyCare scale</h2>
+      <p>Every icon comes from Material Symbols Rounded, a variable icon font, and every icon is UT Southwestern Blue – or white on Blue. Icons are outlined at rest and fill when they are selected, pressed, or confirmed. Destinations and actions sit in circles; controls and clinical details stay plain.</p>
+    </header>
+    <div class="ic-grid">
+      <article class="ic-card">
+        <h3>Why this family</h3>
+        <ul>
+          <li>Rounded ends and corners echo the round-capped U in the MyCare symbol.</li>
+          <li>Four variable axes – fill, weight, grade, and optical size – so states animate without swapping files, and strokes look even from 16.0 to 32.0.</li>
+          <li>The broadest open healthcare vocabulary: stethoscope, lab report, test tubes, pill, video visit, and wait times.</li>
+          <li>One source for iOS and Android under the Apache 2.0 license, trimmed to the __APP_GLYPHS__ glyphs MyCare uses (__FONT_KB__&nbsp;KB).</li>
+        </ul>
+        <p><b>Also considered:</b> SF Symbols (licensed for Apple platforms only), Phosphor (no variable axes, smaller healthcare set), and a custom set (most ownable, highest cost – keep it for brand-only glyphs later, drawn on this grid).</p>
+      </article>
+
+      <article class="ic-card">
+        <h3>Grid and keylines</h3>
+        <div class="kl-wrap">
+          <div class="kl" aria-hidden="true">
+            <svg viewBox="0 0 192 192" width="192" height="192">
+              <defs><pattern id="kl-grid" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M8 0H0V8" fill="none" stroke="#E3E9EF" stroke-width="1"/></pattern></defs>
+              <rect width="192" height="192" fill="#EBF0F5"/>
+              <rect x="16" y="16" width="160" height="160" fill="#FFFFFF"/>
+              <rect x="16" y="16" width="160" height="160" fill="url(#kl-grid)"/>
+            </svg>
+            <span class="ms">stethoscope</span>
+            <svg viewBox="0 0 192 192" width="192" height="192">
+              <g fill="none" stroke="#00A9E0" stroke-width="1.5">
+                <circle cx="96" cy="96" r="80"/>
+                <rect x="24" y="24" width="144" height="144" rx="16"/>
+                <rect x="32" y="16" width="128" height="160" rx="16"/>
+                <rect x="16" y="32" width="160" height="128" rx="16"/>
+              </g>
+            </svg>
+          </div>
+          <ul class="kl-legend">
+            <li><i style="background:#FFFFFF"></i>20.0 live area</li>
+            <li><i style="background:#EBF0F5"></i>2.0 padding on a 24.0 canvas</li>
+            <li><i class="ring"></i>Keylines: 20.0 circle, 18.0 square, 16.0 × 20.0 and 20.0 × 16.0</li>
+          </ul>
+        </div>
+        <p>Weight 500 at every size; optical size follows the glyph size, so strokes stay even. A future custom glyph uses this grid, rounded caps, and the same stroke.</p>
+      </article>
+
+      <article class="ic-card">
+        <h3>Sizes, paired with text</h3>
+        <div class="ramp">
+          <div class="ramp-row"><div class="ic-demo"><span class="plain-demo" style="font-size:12.0px;color:#5B6770"><span class="ms s16" aria-hidden="true">link</span>From MyChart</span></div><p><b>16.0</b> with 12.0 text – pills and the source line</p></div>
+          <div class="ramp-row"><div class="ic-demo"><span class="plain-demo"><span class="ms s20" aria-hidden="true">location_on</span>Suite 410</span></div><p><b>20.0</b> with 14.0–16.0 text – buttons, rows, details</p></div>
+          <div class="ramp-row"><div class="ic-demo"><span class="sx-tab"><span class="ms" aria-hidden="true">calendar_month</span>Visits</span></div><p><b>24.0</b> standalone – tab bar, app bar, tiles, actions</p></div>
+          <div class="ramp-row"><div class="ic-demo"><span class="dot d56"><span class="ms s32" aria-hidden="true">lock</span></span></div><p><b>32.0</b> only inside a 56.0 circle – sign-in prompts and the campaign badge</p></div>
+        </div>
+        <p>Icons scale with the text-size setting, and every target stays 44.0 or larger whatever the glyph size.</p>
+      </article>
+
+      <article class="ic-card">
+        <h3>States</h3>
+        <div class="ic-demo grid2">
+          <figure><span class="dot"><span class="ms" aria-hidden="true">chat</span></span><figcaption>Outline – at rest</figcaption></figure>
+          <figure><span class="dot solid"><span class="ms f1" aria-hidden="true">chat</span></span><figcaption>Filled on Blue – pressed or done</figcaption></figure>
+          <figure><span class="sx-tab"><span class="ms" aria-hidden="true">chat</span>Messages</span><figcaption>Filled on tint – selected tab</figcaption></figure>
+          <figure><span class="dot" style="background:var(--blue);color:#FFFFFF;--grad:0"><span class="ms" aria-hidden="true">chat</span></span><figcaption>Grade 0 on Blue looks heavy – use −25</figcaption></figure>
+        </div>
+        <div class="ic-demo" role="group" aria-label="Try the pressed state">
+          <button class="sx-toggle" aria-pressed="false"><span class="dot"><span class="ms" aria-hidden="true">directions_walk</span></span>Wayfinding</button>
+          <button class="sx-toggle" aria-pressed="true"><span class="dot"><span class="ms" aria-hidden="true">calendar_add_on</span></span>Calendar</button>
+          <button class="sx-toggle" aria-pressed="false"><span class="dot"><span class="ms" aria-hidden="true">directions_car</span></span>Rideshare</button>
+          <button class="sx-toggle" aria-pressed="false"><span class="dot"><span class="ms" aria-hidden="true">open_in_new</span></span>MyChart</button>
+        </div>
+        <p>Tap the row above to toggle. Fill animates over 240 ms and changes instantly with reduced motion. The label or selected state always says it too, so state never rests on color.</p>
+      </article>
+
+      <article class="ic-card">
+        <h3>Three treatments</h3>
+        <div class="treat">
+          <div class="treat-row"><div class="ic-demo"><span class="plain-demo"><span class="ms s20" aria-hidden="true">location_on</span>Suite 410</span><span class="icon-btn"><span class="ms" aria-hidden="true">notifications</span></span></div><p><b>Plain</b> – controls, tab and app bars, appointment details, and chevrons.</p></div>
+          <div class="treat-row"><div class="ic-demo"><span class="dot solid"><span class="ms" aria-hidden="true">stethoscope</span></span><span class="dot"><span class="ms" aria-hidden="true">directions_walk</span></span><span class="dot d40"><span class="ms s20" aria-hidden="true">receipt_long</span></span></div><p><b>Circle</b> – Blue in quick access, tint for appointment actions and list rows; Blue with a filled glyph when pressed or done.</p></div>
+          <div class="treat-row"><div class="ic-demo alert-demo"><span class="alert-ico"><span class="ms f1" aria-hidden="true">warning</span></span><b>ALERT</b></div><p><b>Alert</b> – emergency alerts only, always filled and always with the word “Alert.”</p></div>
+        </div>
+      </article>
+
+      <article class="ic-card">
+        <h3>Color pairs</h3>
+        <table class="pairs">
+          <tbody>
+            <tr><td><span class="dot d40 solid"><span class="ms s20" aria-hidden="true">stethoscope</span></span></td><td>Blue + white</td><td><b>10.24:1</b></td><td>Quick access, pressed and done</td></tr>
+            <tr><td><span class="dot d40"><span class="ms s20" aria-hidden="true">search</span></span></td><td>Tint #EBF0F5 + Blue</td><td><b>8.93:1</b></td><td>Actions, lists, chips</td></tr>
+            <tr><td><span class="dot d40" style="background:#FFFFFF;box-shadow:inset 0 0 0 1px #D5DDE5"><span class="ms s20" aria-hidden="true">notifications</span></span></td><td>White + Blue</td><td><b>10.24:1</b></td><td>Icon buttons, plain icons</td></tr>
+            <tr><td><span class="dot d40" style="background:#F7F8FA;color:#5B6770;box-shadow:inset 0 0 0 1px #D5DDE5"><span class="ms s20" aria-hidden="true">chevron_right</span></span></td><td>#5B6770 on #F7F8FA</td><td><b>5.46:1</b></td><td>Chevrons and meta icons</td></tr>
+            <tr><td><span class="dot d40 solid" style="color:#00A9E0"><span class="ms s20" aria-hidden="true">schedule</span></span></td><td>Blue + cyan</td><td><b>3.78:1</b></td><td>Countdown and success check</td></tr>
+            <tr><td><span class="dot d40" style="background:#FFFFFF;color:#B0003A;box-shadow:inset 0 0 0 1px #D5DDE5"><span class="ms s20 f1" aria-hidden="true">warning</span></span></td><td>White + alert red</td><td><b>7.22:1</b></td><td>Alerts only</td></tr>
+          </tbody>
+        </table>
+        <p>Icons carry one color – Blue, or white on Blue. No per-icon colors: they read as decoration, compete with the alert red, and make a medical app feel like a toy.</p>
+      </article>
+
+      <article class="ic-card">
+        <h3>Avoid</h3>
+        <ul class="avoid">
+          <li><span class="dot d40 no"><span class="ms s20" aria-hidden="true">local_hospital</span></span><p><b>Crosses as medical shorthand.</b> A red cross on white is a protected emblem (Geneva Conventions; 18 U.S.C. § 706), and any cross reads as first aid.</p></li>
+          <li><span class="dot d40 no"><span class="ms s20" aria-hidden="true">emergency</span></span><p><b>Asterisks and Star of Life shapes.</b> They signal ambulances and emergency departments, not urgent care.</p></li>
+          <li><span class="dot d40 no"><span class="ms s20" aria-hidden="true">syringe</span></span><p><b>Needles</b>, unless the content is about vaccines. They can raise anxiety.</p></li>
+          <li><span class="dot d40 no"><span class="ms s20" aria-hidden="true">ecg_heart</span></span><p><b>Heartbeat lines as decoration.</b> A cliché that implies cardiology.</p></li>
+        </ul>
+        <p>Also avoid a different color for each icon, emoji, outline and filled glyphs mixed at rest, icon-only status, a second icon family, and sizes off the ramp (18.0, 22.0, 28.0).</p>
+      </article>
+
+      <article class="ic-card">
+        <h3>Accessibility</h3>
+        <ul>
+          <li>Icons beside text are decorative and hidden from screen readers, so ligature names like “calendar_add_on” are never read aloud.</li>
+          <li>Icon-only buttons carry a name: “Notifications, two unread,” “Close search,” “Refresh home.”</li>
+          <li>Targets stay 44.0 or larger, at least 8.0 apart, whatever the glyph size.</li>
+          <li>Glyphs that carry meaning keep 3:1 against their background; text keeps 4.5:1.</li>
+          <li>State changes shape (outline to filled) and container color, and the label or selected state says it too.</li>
+          <li>Icons scale with text size. Until the icon font loads, glyphs stay invisible instead of showing their names.</li>
+        </ul>
+      </article>
+
+      <article class="ic-card">
+        <h3>Engineering handoff</h3>
+        <ul>
+          <li><b>Concepts, not glyphs.</b> Screens and the CMS refer to a concept key such as <code>findCare</code> or <code>addCal</code>; the glyph map resolves it. Admins pick tile icons from this approved list – no uploads, no colors.</li>
+          <li><b>One subset font.</b> Ship only the mapped glyphs in one woff2 (__FONT_KB__&nbsp;KB with all four axes) bundled with the app, not fetched at runtime.</li>
+          <li><b>Axes.</b> <code>'FILL' 0|1, 'wght' 500, 'GRAD' 0|-25, 'opsz' 20–32</code>. Animate FILL for state changes.</li>
+          <li><b>Native.</b> iOS and Android load the same variable font, or export vectors at FILL 0 and 1 named <code>ic_find_care_outline</code> and <code>ic_find_care_filled</code>.</li>
+        </ul>
+      </article>
+
+      <article class="ic-card ic-wide">
+        <h3>Glyph map – one concept, one glyph</h3>
+        <p>__APP_GLYPHS__ concepts and __APP_GLYPHS__ glyphs: no glyph means two things, and no concept has two glyphs. The prototype renders every icon from this list.</p>
+        <div class="gmap-groups" id="ic-map"></div>
+      </article>
+    </div>
+  </section>
+</div>
+
+<script>
+(() => {
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const phone = $('#phone');
+const sysRM = matchMedia('(prefers-reduced-motion: reduce)');
+const state = { aud: 'auth', alerts: 1, rm: sysRM.matches, alertOpen: false, alertsAll: false, tab: 0, appt: 0, feat: 0, added: new Set(), checks: new Set(), unread: 2, recent: [], greetOn: true, fluCal: false, updated: 'Updated 9:41 a.m.' };
+const RM = () => state.rm;
+
+/* Keep times, abbreviated dates, and “UT Southwestern” from breaking across lines (style guide) */
+const NB = [[/(\d) (a\.m\.|p\.m\.)/g, '$1 $2'], [/\b(Jan|Feb|Aug|Sept|Oct|Nov|Dec)\. (\d)/g, '$1. $2'], [/UT Southwestern/g, 'UT Southwestern']];
+const nbText = s => NB.reduce((v, [re, to]) => v.replace(re, to), s);
+function nbsp(root) {
+  const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  for (let n = w.nextNode(); n; n = w.nextNode()) { const v = nbText(n.nodeValue); if (v !== n.nodeValue) n.nodeValue = v; }
+}
+
+/* ---------- Icon font readiness ---------- */
+const markIcons = () => document.documentElement.classList.add('ms-ready');
+if (document.fonts && document.fonts.load) {
+  document.fonts.load('24px "Material Symbols Rounded"', 'home').then(f => { if (f.length) markIcons(); }).catch(() => {});
+} else markIcons();
+
+/* ---------- Iconography: one concept, one glyph. The glyph map in the spec is generated from this list. ---------- */
+/* EXTRA_GLYPHS: arrow_downward arrow_upward ecg_heart emergency local_hospital syringe */
+const ICON_MAP = [
+  ['home', 'home', 'Home', 'Tab bar', 'Navigation'],
+  ['findCare', 'stethoscope', 'Find care – providers and specialties', 'Tab bar, Find care tile, provider results', 'Navigation'],
+  ['visits', 'calendar_month', 'Visits and scheduling', 'Tab bar, Schedule tile, date strip', 'Navigation'],
+  ['messages', 'chat', 'Messages', 'Tab bar, Messages tile, message rows', 'Navigation'],
+  ['menu', 'menu', 'Menu', 'Tab bar', 'Navigation'],
+  ['search', 'search', 'Search', 'Search fields', 'Navigation'],
+  ['notifications', 'notifications', 'Notifications', 'App bar', 'Navigation'],
+  ['account', 'account_circle', 'Account (guest)', 'App bar – signed in shows initials', 'Navigation'],
+  ['alert', 'warning', 'Emergency alert', 'Alert banner and details only – always filled', 'Alerts', 'f1'],
+  ['expand', 'expand_more', 'Show more or less', 'Alert banner', 'Alerts'],
+  ['source', 'link', 'From MyChart', 'Appointment source line', 'Appointments'],
+  ['inPerson', 'person', 'In-person visit', 'Visit type', 'Appointments'],
+  ['video', 'videocam', 'Video care', 'Video visits, Join video visit, Virtual urgent care', 'Appointments'],
+  ['lab', 'labs', 'Lab visit', 'Visit type', 'Appointments'],
+  ['countdown', 'schedule', 'Time – countdowns and hours', 'Appointment countdown, travel time, campaign hours', 'Appointments'],
+  ['place', 'location_on', 'Place and locations', 'Appointment place, Locations tile, location results', 'Appointments'],
+  ['devices', 'devices', 'Join from any device', 'Video visit place', 'Appointments'],
+  ['prep', 'info', 'Visit preparation', 'Lab prep note', 'Appointments'],
+  ['check', 'check', 'Checklist item done', 'Video visit checklist', 'Appointments'],
+  ['directions', 'directions', 'Directions', 'Map preview', 'Appointments'],
+  ['wayfinding', 'directions_walk', 'Wayfinding', 'Appointment action', 'Appointments'],
+  ['rideshare', 'directions_car', 'Rideshare', 'Appointment action', 'Appointments'],
+  ['addCal', 'calendar_add_on', 'Add to calendar', 'Appointment action, campaign walk-in hours', 'Appointments'],
+  ['added', 'event_available', 'Added to calendar', 'Confirmed state of Add to calendar', 'Appointments', 'f1'],
+  ['external', 'open_in_new', 'Opens in MyChart', 'Appointment action', 'Appointments'],
+  ['results', 'lab_profile', 'Test results', 'Test results tile', 'Destinations and services'],
+  ['bill', 'receipt_long', 'Bills and statements', 'Pay a bill tile, statement reminder, billing results', 'Destinations and services'],
+  ['urgent', 'acute', 'Urgent care and wait times', 'Urgent care tile, wait-time results', 'Destinations and services'],
+  ['parking', 'local_parking', 'Parking', 'Parking results', 'Destinations and services'],
+  ['events', 'groups', 'Classes and events', 'Classes and events tile', 'Destinations and services'],
+  ['rx', 'pill', 'Prescriptions', 'Prescription refills', 'Destinations and services'],
+  ['vaccine', 'vaccines', 'Vaccines and shots', 'Flu shot campaign badge – literal vaccine content only', 'Destinations and services'],
+  ['opinion', 'fact_check', 'Second opinions', 'Services', 'Destinations and services'],
+  ['aid', 'volunteer_activism', 'Financial assistance', 'Services, assistance results', 'Destinations and services'],
+  ['article', 'article', 'Articles and guides', 'Content results', 'Destinations and services'],
+  ['records', 'folder_open', 'Medical records', 'Records results', 'Destinations and services'],
+  ['profile', 'manage_accounts', 'Profile and settings', 'Menu', 'Destinations and services'],
+  ['help', 'help', 'Help and contact', 'Menu', 'Destinations and services'],
+  ['privacy', 'privacy_tip', 'Privacy and terms', 'Menu', 'Destinations and services'],
+  ['signIn', 'login', 'Sign in', 'Guest rows in Visits, Messages, and Menu', 'Destinations and services'],
+  ['lock', 'lock', 'Signed-in content', 'Sign-in prompts', 'Controls and feedback'],
+  ['refresh', 'refresh', 'Refresh', 'Greeting', 'Controls and feedback'],
+  ['next', 'chevron_right', 'Open or next', 'Rows, carousel', 'Controls and feedback'],
+  ['prev', 'chevron_left', 'Previous', 'Carousel', 'Controls and feedback'],
+  ['back', 'arrow_back', 'Back', 'Search, detail pages', 'Controls and feedback'],
+  ['go', 'arrow_forward', 'Go', 'Search field, campaign button', 'Controls and feedback'],
+  ['close', 'close', 'Close or clear', 'Search, sheets, articles', 'Controls and feedback'],
+  ['share', 'share', 'Share', 'Articles', 'Controls and feedback'],
+  ['recent', 'history', 'Recent search', 'Search', 'Controls and feedback'],
+  ['copy', 'content_copy', 'Copy', 'Alert details', 'Controls and feedback'],
+  ['markRead', 'done_all', 'Mark all as read', 'Notifications', 'Controls and feedback'],
+  ['done', 'check_circle', 'Done', 'Confirmation messages', 'Controls and feedback', 'f1']
+];
+const ICONS = Object.fromEntries(ICON_MAP.map(r => [r[0], r]));
+const ico = (key, size = 24, cls = '') => {
+  const r = ICONS[key];
+  const c = ['ms', size === 24 ? '' : 's' + size, r && r[5] ? r[5] : '', cls].filter(Boolean).join(' ');
+  return `<span class="${c}" aria-hidden="true">${r ? r[1] : key}</span>`;
+};
+const circle = (key, size = 40, cls = '') => `<span class="dot${size === 48 ? '' : ' d' + size}${cls ? ' ' + cls : ''}" aria-hidden="true">${ico(key, size === 40 ? 20 : size === 56 ? 32 : 24)}</span>`;
+const row = ({ ic, lead, title, sub, attrs = '', unread = false }) =>
+  `<li><button class="row" ${attrs}>${lead || circle(ic)}<span class="txt"><span class="rt">${title}</span>${sub ? `<span class="rs">${sub}</span>` : ''}</span>${unread ? '<span class="unread" aria-hidden="true"></span>' : ''}${ico('next', 20, 'chev')}</button></li>`;
+
+/* ---------- Sample data (fictional) ---------- */
+const USER = { first: 'Jordan', full: 'Jordan Rivera', ini: 'JR' };
+const ALERTS = [
+  { id: 'a1', pri: 1, title: 'Severe weather: Some clinics close at 3 p.m. today',
+    summary: 'Outpatient clinics close early because of an ice storm warning. Emergency departments stay open.',
+    window: 'Active Oct. 13, 7:45 a.m. – 11:59 p.m.',
+    full: 'Because of an ice storm warning for North Texas, outpatient clinics close at 3 p.m. today, Monday, Oct. 13. If your appointment is affected, a care team member will call you to reschedule. Emergency departments and inpatient units stay open. For questions, call 214-648-3266.' },
+  { id: 'a2', pri: 2, title: 'Water main repair: Use the east entrance',
+    summary: 'The west lobby doors at the sample Pavilion are closed until 6 p.m. Follow posted signs.',
+    window: 'Active Oct. 13, 6 a.m. – 6 p.m.',
+    full: 'Crews are repairing a water main near the west lobby of the sample Pavilion. Use the east entrance until 6 p.m. today. Valet parking has moved to the east drive. For help, call 214-648-3266.' }
+];
+const APPTS = [
+  { m: 'Oct.', d: '14', rel: 'Tomorrow', count: 'In 24 hours', type: 'In person', typeIc: 'inPerson', date: 'Tuesday, Oct. 14', time: '9:30 a.m.', arrive: 'Arrive by 9:15 a.m. to check in',
+    who: 'Avery Lin, M.D.', ini: 'AL', dept: 'Internal Medicine – annual checkup',
+    placeIc: 'place', where: 'William P. Clements Jr. University Hospital', whereSub: 'Floor 4, Suite 410 (sample)',
+    extra: 'map', eta: '18 min by car', actions: ['wayfinding', 'rideshare', 'calendar', 'mychart'] },
+  { m: 'Oct.', d: '16', rel: 'This week', count: 'In 3 days', type: 'Video visit', typeIc: 'video', date: 'Thursday, Oct. 16', time: '2 p.m.', arrive: 'Join up to 15 minutes early',
+    who: 'Morgan Patel, M.D.', ini: 'MP', dept: 'Dermatology – follow-up',
+    placeIc: 'devices', where: 'Video visit in MyChart', whereSub: 'Join from your phone or computer',
+    extra: 'video', checklist: ['Test your camera and microphone', 'Find a quiet, well-lit spot'], actions: ['calendar', 'mychart'] },
+  { m: 'Oct.', d: '20', rel: 'Next week', count: 'In 7 days', type: 'Lab', typeIc: 'lab', date: 'Monday, Oct. 20', time: '7:45 a.m.', arrive: 'Walk in to the lab on Floor 1',
+    who: 'Outpatient lab', ini: 'LB', dept: 'Blood draw – ordered by Dr. Lin',
+    placeIc: 'place', where: 'Clements University Hospital', whereSub: 'Lab, Floor 1 (sample)',
+    extra: 'map', prep: 'Fasting – water only after midnight.', eta: '18 min by car', actions: ['wayfinding', 'rideshare', 'calendar', 'mychart'] }
+];
+const ACTIONS = {
+  wayfinding: ['wayfinding', 'Wayfinding', 'Wayfinding'], rideshare: ['rideshare', 'Rideshare', 'Rideshare'],
+  calendar: ['addCal', 'Calendar', 'Add to calendar'], mychart: ['external', 'MyChart', 'Open in MyChart']
+};
+const TILES = {
+  auth: [
+    { k: 'find', lbl: 'Find care', ic: 'findCare' }, { k: 'sched', lbl: 'Schedule', ic: 'visits' }, { k: 'msg', lbl: 'Messages', ic: 'messages', badge: 2 },
+    { k: 'res', lbl: 'Test results', ic: 'results' }, { k: 'bill', lbl: 'Pay a bill', ic: 'bill' }, { k: 'loc', lbl: 'Locations', ic: 'place' }
+  ],
+  guest: [
+    { k: 'find', lbl: 'Find care', ic: 'findCare' }, { k: 'urgent', lbl: 'Urgent care', ic: 'urgent' }, { k: 'loc', lbl: 'Locations', ic: 'place' },
+    { k: 'bill', lbl: 'Pay a bill', ic: 'bill' }, { k: 'video', lbl: 'Video visits', ic: 'video' }, { k: 'events', lbl: 'Classes and events', ic: 'events' }
+  ]
+};
+const TOP = ['Primary care', 'Urgent care wait times', 'Parking', 'Flu shots', 'Dermatology', 'Billing questions'];
+/* Featured art: the Blue family – Blue, Blue 80%, PMS 542, sky – with one cyan dot each */
+const ART = {
+  a: { dark: true, svg: '<rect width="304" height="144" fill="#004278"/><circle cx="268" cy="8" r="120" fill="#336893"/><path d="M160 -12v72a56 56 0 0 0 112 0v-72" fill="none" stroke="#7BAFD4" stroke-width="20" stroke-linecap="round"/><circle cx="216" cy="64" r="12" fill="#00A9E0"/><circle cx="56" cy="112" r="40" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="2"/>' },
+  b: { dark: false, svg: '<rect width="304" height="144" fill="#D6E4F0"/><circle cx="212" cy="72" r="52" fill="#004278"/><circle cx="236" cy="56" r="44" fill="#D6E4F0"/><g fill="#336893"><circle cx="72" cy="40" r="3"/><circle cx="104" cy="88" r="2"/><circle cx="56" cy="104" r="2"/><circle cx="132" cy="36" r="2"/></g><circle cx="168" cy="100" r="8" fill="#00A9E0"/>' },
+  c: { dark: true, svg: '<rect width="304" height="144" fill="#336893"/><rect x="96" y="28" width="148" height="96" rx="16" fill="#004278"/><circle cx="170" cy="70" r="20" fill="#7BAFD4"/><path d="M136 124a34 34 0 0 1 68 0" fill="#7BAFD4"/><circle cx="226" cy="44" r="6" fill="#00A9E0"/><circle cx="40" cy="24" r="64" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="2"/>' },
+  d: { dark: false, svg: '<rect width="304" height="144" fill="#7BAFD4"/><circle cx="232" cy="64" r="64" fill="#D6E4F0"/><circle cx="232" cy="64" r="36" fill="none" stroke="#004278" stroke-width="10"/><circle cx="72" cy="120" r="48" fill="#336893" opacity=".5"/><circle cx="232" cy="64" r="8" fill="#00A9E0"/>' }
+};
+const artSVG = m => `<svg viewBox="0 0 304 144" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${ART[m].svg}</svg>`;
+const FEATURED = [
+  { aud: 'all', kick: 'Patient guide', title: 'Getting ready for your first visit', meta: 'Article · 4 min read', m: 'a',
+    body: ['Bring a photo ID, your insurance card, and a list of the medicines you take, including vitamins.', 'Plan to arrive 15 minutes early so there is time to check in and park. You can also check in ahead of time in MyChart.', 'Write down two or three questions before you go. Your care team wants to hear them.'] },
+  { aud: 'all', kick: 'Health tips', title: 'Five ways to sleep better this fall', meta: 'Article · 6 min read', m: 'b',
+    body: ['Keep the same bedtime and wake time, even on weekends.', 'Get outside in the morning – daylight helps set your body clock. Keep your bedroom cool, dark, and quiet, and put screens away an hour before bed.', 'Limit caffeine after noon. If you still have trouble sleeping for more than a few weeks, talk with your primary care provider.'] },
+  { aud: 'auth', kick: 'For you', title: 'What to expect at your video visit', meta: 'Guide · 3 min read', m: 'c',
+    body: ['You can join from MyChart on your phone, tablet, or computer.', 'Find a quiet, well-lit spot and test your camera and microphone before the visit. Join up to 15 minutes early.', 'If the connection drops, your provider will call you at the number in your profile.'] },
+  { aud: 'all', kick: 'Seasonal', title: 'Flu or COVID-19? Know the signs', meta: 'Article · 5 min read', m: 'd',
+    body: ['Both can cause fever, cough, and tiredness, and a test is the only way to know which one you have.', 'Rest, drink fluids, and stay home while you are sick. Call your care team if symptoms get worse or do not improve.', 'For trouble breathing or chest pain, call 911.'] }
+];
+const SERVICES = [
+  { k: 'vuc', t: 'Virtual urgent care', s: 'Video visits, 7 a.m. to 11 p.m. daily', ic: 'video' },
+  { k: 'rx', t: 'Prescription refills', s: 'Request refills from your care team', ic: 'rx', aud: 'auth' },
+  { k: 'opinion', t: 'Second opinions', s: 'Get a specialist review of your diagnosis', ic: 'opinion' },
+  { k: 'aid', t: 'Financial assistance', s: 'See if you qualify for help with costs', ic: 'aid' }
+];
+const ANN = [
+  { k: 'ann1', m: 'Oct.', d: '10', t: 'Price estimates are now online', s: 'See costs before your visit' },
+  { k: 'ann2', m: 'Oct.', d: '6', t: 'New visitor hours start Nov. 1', s: 'Two visitors at a time, 8 a.m. to 8 p.m.' },
+  { k: 'ann3', m: 'Sept.', d: '29', t: 'MyCare now speaks Spanish', s: 'Change your language in Menu' }
+];
+const NOTIFS = [
+  { ic: 'messages', t: 'New message from Dr. Lin’s care team', s: 'Your lab order is ready · 8:12 a.m.', go: 'tab:3' },
+  { ic: 'visits', t: 'Appointment tomorrow at 9:30 a.m.', s: 'Avery Lin, M.D. · 7 a.m.', go: 'appts' },
+  { ic: 'bill', t: 'Your Sept. statement is ready', s: 'Amount due by Oct. 31 · Yesterday', go: 'page:statement' }
+];
+const PAGES = {
+  sched: { kick: 'Schedule', title: 'Schedule an appointment', body: ['Book a visit with a provider you have seen in the past three years, or request a new-patient appointment.', 'Scheduling happens in MyChart, so new appointments show up there and on your home screen.'], cta: 'Continue in MyChart', done: 'Opening scheduling in MyChart' },
+  res: { kick: 'Test results', title: 'Your test results', body: ['Results appear in MyChart as soon as they are released, often before your care team calls you.', 'Your provider may add notes to explain what the numbers mean.'], cta: 'Open results in MyChart', done: 'Opening test results in MyChart' },
+  bill: { kick: 'Billing', title: 'Pay a bill', body: ['See statements, set up a payment plan, or pay online.', 'Questions about a bill? Call 214-648-3266.'], cta: 'Pay a bill', done: 'Opening billing' },
+  statement: { kick: 'Billing', title: 'Your Sept. statement is ready', body: ['Statement date: Oct. 1. Amount due: $45 (sample) by Oct. 31.', 'You can pay online, set up a payment plan, or ask about financial assistance.'], cta: 'View statement', done: 'Opening your statement' },
+  video: { kick: 'Video visits', title: 'See a provider from home', body: ['Video visits work on your phone, tablet, or computer.', 'Test your camera and microphone before your visit, and join up to 15 minutes early.'], cta: 'Start a video visit', done: 'Opening video visits' },
+  events: { kick: 'Classes and events', title: 'Classes and events', body: ['Childbirth classes, support groups, and health talks – most are free, and many are online.'], cta: 'Browse classes', done: 'Opening the class calendar' },
+  vuc: { kick: 'Service', title: 'Virtual urgent care', body: ['Get care for minor illnesses and injuries by video, 7 a.m. to 11 p.m. every day.', 'For chest pain, trouble breathing, or other emergencies, call 911.'], cta: 'Start a visit', done: 'Opening virtual urgent care' },
+  rx: { kick: 'Service', title: 'Prescription refills', body: ['Request refills for medicines your UT Southwestern providers prescribe.', 'Most requests are answered within two business days.'], cta: 'Request a refill', done: 'Opening refill requests in MyChart' },
+  opinion: { kick: 'Service', title: 'Second opinions', body: ['A specialist reviews your records and diagnosis and shares a recommendation.', 'Your care team can help send records from another hospital.'], cta: 'Request a second opinion', done: 'Opening the request form' },
+  aid: { kick: 'Service', title: 'Financial assistance', body: ['You may qualify for help paying for care based on household income and size.', 'Applications take about 15 minutes.'], cta: 'Check if you qualify', done: 'Opening the application' },
+  ann1: { kick: 'Announcement · Oct. 10', title: 'Price estimates are now online', body: ['See an estimate of your costs before a visit or procedure, based on your insurance.'], cta: 'Get an estimate', done: 'Opening price estimates' },
+  ann2: { kick: 'Announcement · Oct. 6', title: 'New visitor hours start Nov. 1', body: ['Patients may have two visitors at a time from 8 a.m. to 8 p.m. Some units have different rules.'], cta: 'See visitor guidelines', done: 'Opening visitor guidelines' },
+  ann3: { kick: 'Announcement · Sept. 29', title: 'MyCare now speaks Spanish', body: ['Switch the app language in Menu, under Profile and settings.'], cta: 'Change language', done: 'Opening language settings' },
+  news: { kick: 'Announcements', title: 'All announcements', list: 'ann' },
+  flu: { kick: 'Seasonal campaign', title: 'Flu shots are here', body: ['Get yours at any UT Southwestern primary care clinic. Walk in on Saturdays, 8 a.m. to noon.', 'Flu shots are covered by most insurance plans.'], cta: 'Find a flu shot', done: 'Opening flu shot locations' },
+  msg1: { kick: 'Message · 8:12 a.m.', title: 'Your lab order is ready', body: ['Hi Jordan, Dr. Lin ordered blood work before your visit. Please go to the lab on Floor 1 any weekday, 7 a.m. to 5 p.m.', '– Dr. Lin’s care team (sample)'], cta: 'Reply in MyChart', done: 'Opening this conversation in MyChart' },
+  msg2: { kick: 'Message · Yesterday', title: 'Your statement for Sept. is available', body: ['Your Sept. statement is ready to view. You can pay online or set up a payment plan.'], cta: 'View statement', done: 'Opening your statement' },
+  profile: { kick: 'Menu', title: 'Profile and settings', body: ['Update your contact details, notification choices, and app language.'], cta: 'Edit profile', done: 'Opening profile settings' },
+  help: { kick: 'Menu', title: 'Help and contact us', body: ['For appointments and general questions, call 214-648-3266.', 'For technical help with MyCare, use Send feedback in Menu.'], cta: 'Send feedback', done: 'Opening the feedback form' },
+  privacy: { kick: 'Menu', title: 'Privacy and terms', body: ['Read how UT Southwestern protects your information and how MyCare uses it.'], cta: 'Read the privacy notice', done: 'Opening the privacy notice' }
+};
+const INDEX = [
+  ['Providers','Avery Lin, M.D.','Internal Medicine (sample)','findCare'],
+  ['Providers','Morgan Patel, M.D.','Dermatology (sample)','findCare'],
+  ['Providers','Primary care doctors','Accepting new patients','findCare'],
+  ['Providers','Dermatology','Specialty – 24 providers (sample)','findCare'],
+  ['Locations','William P. Clements Jr. University Hospital','Hospital (sample address)','place'],
+  ['Locations','Urgent care wait times','Live waits at nearby clinics','urgent'],
+  ['Locations','Parking','Garages, valet, and rates','parking'],
+  ['Content','Flu shots','Where to get yours this season','article'],
+  ['Content','Getting ready for your first visit','Patient guide','article'],
+  ['Resources','Billing questions','Statements, payment plans, and help','bill'],
+  ['Resources','Financial assistance','Applications and eligibility','aid'],
+  ['Resources','Medical records','Request copies online','records']
+];
+const RESULT_CTA = { Providers: 'Request an appointment', Locations: 'Get directions', Content: 'Read article', Resources: 'Open' };
+
+/* ---------- CMS composition: a fixed header (alert, greeting, search), then configurable content ---------- */
+const MOD_LABELS = { alerts: 'Emergency alert banner', greeting: 'Greeting', search: 'Search and top searches', appts: 'Upcoming appointments', signin: 'Sign-in prompt', tiles: 'Quick access', featured: 'Featured content', services: 'Highlighted services', campaign: 'Campaign banner', news: 'Announcements' };
+const HEAD = ['alerts', 'greeting', 'search'];
+const DEFAULT_CFG = {
+  auth: ['appts','tiles','featured','services','campaign','news'],
+  guest: ['signin','tiles','featured','services','campaign','news']
+};
+const cfg = { auth: DEFAULT_CFG.auth.map(id => ({ id, on: true })), guest: DEFAULT_CFG.guest.map(id => ({ id, on: true })) };
+
+/* ---------- Module renderers ---------- */
+const R = {
+  alerts() {
+    if (!state.alerts) return '';
+    const list = ALERTS.slice(0, state.alerts);
+    const a = list.map((al, i) => `
+      <div class="alert ${i ? 'extra' : ''} ${state.alertOpen && i === 0 ? 'open' : ''}" data-alert="${al.id}">
+        <div class="alert-row">
+          <span class="alert-ico">${ico('alert')}</span>
+          <div class="alert-txt">
+            <p class="alert-kicker">Alert${list.length > 1 ? `<span class="pri">· Priority ${al.pri} of ${list.length}</span>` : ''}</p>
+            <p class="alert-title" id="at-${al.id}">${al.title}</p>
+          </div>
+          ${i === 0 ? `<button class="alert-tog" aria-expanded="${state.alertOpen}" aria-controls="ab-${al.id}" aria-label="${state.alertOpen ? 'Hide' : 'Show'} alert details">${ico('expand')}</button>` : ''}
+        </div>
+        <div class="alert-body" id="ab-${al.id}" ${i === 0 ? '' : 'style="grid-template-rows:1fr"'}><div>
+          <p>${al.summary}</p>
+          <p class="alert-meta">${al.window}</p>
+          <div class="alert-actions"><button class="alert-btn" data-alert-full="${al.id}">Read full alert</button></div>
+        </div></div>
+      </div>`).join('');
+    const more = list.length > 1 ? `<button class="more-alerts" aria-expanded="${state.alertsAll}">${state.alertsAll ? 'Show fewer alerts' : `Show all alerts (${list.length})`} ${ico('expand', 20)}</button>` : '';
+    return `<section class="alerts" aria-label="Emergency alerts"><div class="alert-wrap ${state.alertsAll ? 'all' : ''}">${a}${more}</div></section>`;
+  },
+  greeting() {
+    const auth = state.aud === 'auth';
+    return `<section class="greet" aria-labelledby="greet-h">
+      <div class="greet-top"><p class="eyebrow">${auth ? 'Monday, Oct. 13' : 'Welcome'}</p><button class="upd-chip" id="btn-refresh" data-refresh aria-label="Refresh home, ${state.updated.toLowerCase()}"><span class="pill">${ico('refresh', 16)}<span class="upd-time">${state.updated}</span></span></button></div>
+      ${auth ? `<h1 id="greet-h"><span class="fade-up">Good morning,</span> <span class="fade-up" style="--dl:80ms">${USER.first}</span></h1>
+        <p class="sub">Three appointments coming up – the next one is tomorrow at 9:30 a.m.</p>`
+      : `<h1 id="greet-h"><span class="fade-up">Care from UT Southwestern, in one app</span></h1>
+        <p class="sub">Find a doctor, get directions, and check urgent care wait times.</p>`}
+    </section>`;
+  },
+  search() {
+    return `<section aria-label="Search">
+      <button class="search-field" data-open-search="All" aria-haspopup="dialog">${ico('search')}<span>Search doctors and places</span><span class="go" aria-hidden="true">${ico('go', 20)}</span></button>
+      <div class="ts-row" role="group" aria-label="Top searches"><span class="ts-k" aria-hidden="true">Top</span>${TOP.map(t => `<button class="chip glass" data-q="${t}">${t}</button>`).join('')}</div>
+    </section>`;
+  },
+  appts() {
+    return `<section aria-labelledby="appt-h">
+      <div class="sec-head"><div><h2 id="appt-h">Upcoming appointments</h2><p class="sub">From MyChart · three upcoming</p></div><button class="link" data-tab="2">See all</button></div>
+      <div class="dstrip" id="dstrip" role="tablist" aria-label="Choose an appointment">${APPTS.map((a, i) => `<button class="dpill" role="tab" id="dp-${i}" aria-controls="appt-wrap" aria-selected="${i === state.appt}" tabindex="${i === state.appt ? 0 : -1}" aria-label="${a.rel}, ${a.date}, ${a.time}, ${a.type}"><span class="m">${a.m}</span><span class="d">${a.d}</span>${ico(a.typeIc, 16)}</button>`).join('')}
+        <button class="dpill add" data-page="sched">${ico('visits', 20)}Schedule</button></div>
+      <div class="appt-wrap" id="appt-wrap" role="tabpanel" aria-labelledby="dp-${state.appt}">${apptCard(state.appt)}</div>
+    </section>`;
+  },
+  signin() {
+    return `<section class="locked" aria-labelledby="locked-h">
+      <div class="lk-hd" aria-hidden="true"><span class="sk w1"></span><span class="sk w2"></span><span class="sk w4"></span></div>
+      <div class="lk-bd" aria-hidden="true"><span class="sk w3"></span><span class="sk w4"></span></div>
+      <div class="locked-body">
+        ${circle('lock', 56)}
+        <h2 id="locked-h">See your appointments here</h2>
+        <p>Sign in with your MyChart account to get directions, check-in times, and reminders.</p>
+        <div class="btns"><button class="btn btn-primary" data-signin><span class="lbl">Sign in</span><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span></button><button class="btn btn-secondary" data-toast="Opening account sign-up">Create account</button></div>
+      </div>
+    </section>`;
+  },
+  tiles() {
+    return `<section aria-labelledby="qa-h">
+      <div class="sec-head"><h2 id="qa-h">Quick access</h2></div>
+      <div class="qa">${TILES[state.aud].map(t => `<button class="qa-tile" data-tile="${t.k}" ${t.badge ? `aria-label="${t.lbl}, ${t.badge} new"` : ''}>${circle(t.ic, 48, 'solid')}<span class="qa-txt"><span class="qa-lbl">${t.lbl}</span>${t.badge ? `<span class="qa-meta" aria-hidden="true"><i></i>${t.badge} new</span>` : ''}</span></button>`).join('')}</div>
+    </section>`;
+  },
+  featured() {
+    const items = FEATURED.filter(f => f.aud === 'all' || f.aud === state.aud);
+    return `<section aria-labelledby="feat-h">
+      <div class="sec-head"><h2 id="feat-h">Featured</h2></div>
+      <div class="car" id="car" role="group" aria-roledescription="carousel" aria-label="Featured content">${items.map((f, i) => `
+        <button class="feat" data-feat="${FEATURED.indexOf(f)}" aria-roledescription="slide" aria-label="${f.kick}: ${f.title}. ${f.meta}. ${i + 1} of ${items.length}">
+          <span class="feat-art">${artSVG(f.m)}</span>
+          <span class="feat-body"><span class="kick">${f.kick}</span><span class="feat-title">${f.title}</span><span class="feat-meta">${f.meta}</span></span>
+        </button>`).join('')}
+      </div>
+      <div class="car-ctrl">
+        <span class="car-track" aria-hidden="true"><span class="car-thumb" id="car-thumb"></span></span>
+        <span class="vh" id="car-pos" aria-live="polite"></span>
+        <div class="car-arrows"><button class="icon-btn" id="car-prev" aria-label="Previous featured item">${ico('prev')}</button><button class="icon-btn" id="car-next" aria-label="Next featured item">${ico('next')}</button></div>
+      </div>
+    </section>`;
+  },
+  services() {
+    const items = SERVICES.filter(s => !s.aud || s.aud === state.aud);
+    return `<section aria-labelledby="svc-h">
+      <div class="sec-head"><h2 id="svc-h">Services for you</h2></div>
+      <ul class="group">${items.map(s => row({ ic: s.ic, title: s.t, sub: s.s, attrs: `data-page="${s.k}"` })).join('')}</ul>
+    </section>`;
+  },
+  campaign() {
+    const on = state.fluCal;
+    return `<section class="camp" aria-labelledby="camp-h">
+      <div class="camp-top">
+        <div><p class="camp-tag"><i></i>Flu season</p><h2 id="camp-h">Flu shots are here</h2></div>
+        <div class="camp-art" aria-hidden="true"><svg viewBox="0 0 96 96"><g class="rings"><circle cx="48" cy="48" r="47" fill="#336893" opacity=".55"/><circle cx="48" cy="48" r="38" fill="none" stroke="#7BAFD4" stroke-width="1.5" stroke-dasharray="3 5" opacity=".8"/><circle cx="86" cy="22" r="5" fill="#00A9E0"/><circle cx="12" cy="74" r="3" fill="#7BAFD4"/></g></svg>${circle('vaccine', 56)}</div>
+        <p>Protect yourself and the people around you. It takes about 10 minutes, and most plans cover it.</p>
+      </div>
+      <ul class="camp-facts">
+        <li>${ico('countdown', 20)}<span class="k">Walk in</span><span class="v">Saturdays, 8 a.m. to noon</span></li>
+        <li>${ico('place', 20)}<span class="k">Where</span><span class="v">Any primary care clinic</span></li>
+      </ul>
+      <div class="camp-cta">
+        <button class="btn btn-light" data-page="flu"><span class="lbl">Find a flu shot</span>${ico('go', 20)}</button>
+        <button class="camp-cal" data-flu-cal aria-pressed="${on}" aria-label="Add Saturday walk-in hours to calendar">${ico(on ? 'added' : 'addCal', 24)}</button>
+      </div>
+    </section>`;
+  },
+  news() {
+    return `<section aria-labelledby="ann-h">
+      <div class="sec-head"><h2 id="ann-h">Announcements</h2><button class="link" data-page="news">See all</button></div>
+      <ul class="group">${ANN.map(annRow).join('')}</ul>
+    </section>`;
+  }
+};
+function annRow(a) { return row({ lead: `<span class="datebox" aria-hidden="true"><span class="m">${a.m}</span><span class="d">${a.d}</span></span>`, title: a.t, sub: a.s, attrs: `data-page="${a.k}" aria-label="${a.m} ${a.d}: ${a.t}"` }); }
+
+/* ---------- Appointment card ---------- */
+const MAP_SVG = `<svg viewBox="0 0 296 120" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+  <rect width="296" height="120" fill="#E6EDF3"/>
+  <rect x="12" y="10" width="72" height="40" rx="6" fill="#D6E4F0"/><rect x="104" y="10" width="64" height="40" rx="6" fill="#DCE5EE"/><rect x="188" y="10" width="96" height="40" rx="6" fill="#D6E4F0"/>
+  <rect x="12" y="70" width="72" height="44" rx="6" fill="#DCE5EE"/><rect x="104" y="70" width="64" height="44" rx="6" fill="#D1DDE6"/><rect x="188" y="70" width="96" height="44" rx="6" fill="#DCE5EE"/>
+  <path d="M0 60H296M94 0V120M178 0V120" stroke="#FFFFFF" stroke-width="12"/>
+  <path d="M28 60H94V30H178V60H232" fill="none" stroke="#004278" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="28" cy="60" r="7" fill="#00A9E0" stroke="#FFFFFF" stroke-width="3"/>
+  <path d="M232 60c-10 0-16-7-16-15a16 16 0 0 1 32 0c0 8-6 15-16 15z" fill="#004278" transform="translate(0 -2)"/><circle cx="232" cy="43" r="6" fill="#FFFFFF"/>
+</svg>`;
+function apptCard(i) {
+  const a = APPTS[i];
+  let extra = '';
+  if (a.prep) extra += `<p class="callout">${ico('prep', 20)}<span><b>Before your visit</b>${a.prep}</span></p>`;
+  if (a.extra === 'map') extra += `<button class="map" data-dir aria-label="Directions to ${a.where}, about ${a.eta} (sample)">${MAP_SVG}<span class="eta">${ico('countdown', 16)}${a.eta}</span><span class="go">${ico('directions', 16)}Directions</span></button>`;
+  if (a.extra === 'video') extra += `<div class="prep"><h3>Before your visit</h3>${a.checklist.map((c, k) => `<button class="chk" role="checkbox" aria-checked="${state.checks.has(`${i}-${k}`)}" data-chk="${i}-${k}"><span class="box">${ico('check', 16)}</span><span>${c}</span></button>`).join('')}<button class="btn btn-primary" data-join>${ico('video', 20)}<span class="lbl">Join video visit</span></button></div>`;
+  const acts = a.actions.map(k => {
+    const done = k === 'calendar' && state.added.has(i);
+    return `<button class="aact${done ? ' done' : ''}" data-act="${k}" aria-label="${done ? 'Added to calendar' : ACTIONS[k][2]}">${circle(done ? 'added' : ACTIONS[k][0], 48)}<span>${done ? 'Added' : ACTIONS[k][1]}</span></button>`;
+  }).join('');
+  return `<article class="appt" data-i="${i}" aria-label="Appointment ${i + 1} of ${APPTS.length}">
+    <header class="appt-hd">
+      <svg class="appt-hd-art" viewBox="0 0 152 152" aria-hidden="true"><path d="M40 0v64a36 36 0 0 0 72 0V0" fill="none" stroke="rgba(255,255,255,.09)" stroke-width="22" stroke-linecap="round"/></svg>
+      <div class="hd-row"><span class="hpill">${ico(a.typeIc, 16)}${a.type}</span><span class="hpill count">${ico('countdown', 16)}${a.count}</span></div>
+      <p class="appt-time">${a.time}</p>
+      <p class="appt-date">${a.rel} · ${a.date}</p>
+      <p class="appt-arrive">${a.arrive}</p>
+    </header>
+    <div class="appt-bd">
+      <div class="appt-line"><span class="avatar" aria-hidden="true">${a.ini}</span><span><b>${a.who}</b><small>${a.dept}</small></span></div>
+      <div class="appt-line">${ico(a.placeIc, 20)}<span><b>${a.where}</b><small>${a.whereSub}</small></span></div>
+      ${extra}
+      <div class="aacts">${acts}</div>
+    </div>
+    <p class="appt-ft">${ico('source', 16)}From MyChart · <span class="upd-time">${state.updated}</span></p>
+  </article>`;
+}
+const spring = () => getComputedStyle(document.documentElement).getPropertyValue('--spring-snappy').trim() || 'ease-out';
+function selectAppt(i, dir = 0) {
+  const wrap = $('#appt-wrap'); if (!wrap) return;
+  i = (i + APPTS.length) % APPTS.length;
+  if (dir === 0) dir = i > state.appt ? 1 : -1;
+  const h0 = wrap.offsetHeight;
+  state.appt = i;
+  wrap.innerHTML = apptCard(i); nbsp(wrap);
+  wrap.setAttribute('aria-labelledby', `dp-${i}`);
+  $$('#dstrip [role="tab"]').forEach((p, k) => { p.setAttribute('aria-selected', k === i); p.tabIndex = k === i ? 0 : -1; });
+  const h1 = wrap.offsetHeight;
+  if (RM()) { wrap.firstElementChild.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 240, easing: 'ease-out' }); return; }
+  wrap.animate([{ height: `${h0}px` }, { height: `${h1}px` }], { duration: 360, easing: spring() });
+  wrap.firstElementChild.animate([{ opacity: 0, transform: `translateX(${dir * 48}px)` }, { opacity: 1, transform: 'none' }], { duration: 320, easing: 'cubic-bezier(.2,.8,.2,1)' });
+}
+function initAppts() {
+  const strip = $('#dstrip'), wrap = $('#appt-wrap');
+  $$('[role="tab"]', strip).forEach((p, k) => {
+    p.onclick = () => { if (k !== state.appt) selectAppt(k); };
+    p.onkeydown = e => { const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0; if (d) { e.preventDefault(); const n = (k + d + APPTS.length) % APPTS.length; selectAppt(n, d); $(`#dp-${n}`).focus(); } };
+  });
+  wrap.addEventListener('click', e => {
+    const a = APPTS[state.appt], i = state.appt;
+    const chk = e.target.closest('[data-chk]');
+    if (chk) { const k = chk.dataset.chk; const on = !state.checks.has(k); on ? state.checks.add(k) : state.checks.delete(k); chk.setAttribute('aria-checked', on); return; }
+    if (e.target.closest('[data-dir]')) return toast(`Opening directions to ${a.where} in Maps`);
+    if (e.target.closest('[data-join]')) return toast('Opening the video visit in MyChart');
+    const b = e.target.closest('[data-act]'); if (!b) return;
+    const k = b.dataset.act;
+    if (k === 'calendar') {
+      if (state.added.has(i)) return toast('Already in your calendar', true);
+      state.added.add(i);
+      b.classList.add('done'); b.setAttribute('aria-label', 'Added to calendar');
+      b.innerHTML = `${circle('added', 48)}<span>Added</span>`;
+      return toast(`Added ${a.date}, ${a.time} to your calendar`, true);
+    }
+    toast({ wayfinding: 'Opening indoor wayfinding', rideshare: 'Choose a rideshare app – pickup set to your location', mychart: 'Opening this appointment in MyChart' }[k]);
+  });
+  /* Swipe the card to move between appointments */
+  let sx = 0, sy = 0, dx = 0, on = false, lock = null, card = null, t0 = 0;
+  wrap.addEventListener('pointerdown', e => {
+    if (e.target.closest('button')) return;
+    card = wrap.firstElementChild; on = true; lock = null; dx = 0; sx = e.clientX; sy = e.clientY; t0 = performance.now();
+  });
+  wrap.addEventListener('pointermove', e => {
+    if (!on) return;
+    const mx = e.clientX - sx, my = e.clientY - sy;
+    if (lock === null && (Math.abs(mx) > 8 || Math.abs(my) > 8)) { lock = Math.abs(mx) > Math.abs(my) ? 'x' : 'y'; if (lock === 'x') { wrap.setPointerCapture(e.pointerId); card.classList.add('dragging'); } }
+    if (lock !== 'x') return;
+    dx = mx; card.style.transform = `translateX(${dx}px)`; card.style.opacity = String(1 - Math.min(Math.abs(dx) / 400, .4));
+  });
+  const end = () => {
+    if (!on) return; on = false;
+    if (lock !== 'x') return;
+    const v = Math.abs(dx) / Math.max(1, performance.now() - t0);
+    card.classList.remove('dragging');
+    if (Math.abs(dx) > 80 || v > .6) { const d = dx < 0 ? 1 : -1; selectAppt(state.appt + d, d); }
+    else { card.style.transition = `transform 360ms ${spring()}, opacity 240ms ease-out`; card.style.transform = ''; card.style.opacity = ''; }
+  };
+  wrap.addEventListener('pointerup', end); wrap.addEventListener('pointercancel', end);
+}
+
+/* ---------- Render home ---------- */
+const heroEl = $('#hero-mods'), modulesEl = $('#modules'), homeInner = $('#home-inner');
+function renderHome({ animate = true, flip = false } = {}) {
+  let first;
+  if (flip && !RM()) { first = {}; $$('.mod', modulesEl).forEach(m => first[m.dataset.m] = m.getBoundingClientRect().top); }
+  let i = 0;
+  const wrapMod = (id) => { const html = R[id](); return html ? `<div class="mod" data-m="${id}" style="--i:${i++}">${html}</div>` : ''; };
+  heroEl.innerHTML = HEAD.filter(id => id !== 'greeting' || state.greetOn).map(wrapMod).join('');
+  modulesEl.innerHTML = cfg[state.aud].filter(m => m.on).map(m => wrapMod(m.id)).join('');
+  if (!animate || flip) $$('.mod', homeInner).forEach(m => m.style.animation = 'none');
+  if (first) {
+    $$('.mod', modulesEl).forEach(m => {
+      const was = first[m.dataset.m]; if (was == null) return;
+      const dy = was - m.getBoundingClientRect().top; if (!dy) return;
+      m.animate([{ transform: `translateY(${dy}px)` }, { transform: 'none' }], { duration: 360, easing: spring() });
+    });
+  }
+  wireHome();
+  renderChrome();
+  renderTabsContent();
+  nbsp(phone);
+}
+function renderChrome() {
+  const auth = state.aud === 'auth';
+  const badge = $('#bell-badge');
+  badge.hidden = !auth || !state.unread; badge.textContent = state.unread;
+  $('#btn-bell').setAttribute('aria-label', auth && state.unread ? `Notifications, ${['no', 'one', 'two', 'three'][state.unread] || state.unread} unread` : 'Notifications');
+  $('#btn-acct').setAttribute('aria-label', auth ? `Account, signed in as ${USER.full}` : 'Sign in');
+  $('#btn-acct').innerHTML = auth ? `<span class="avatar" aria-hidden="true">${USER.ini}</span>` : ico('account');
+  $('#btn-acct').classList.toggle('signed', auth);
+}
+function wireHome() {
+  const tog = $('.alert-tog', homeInner);
+  if (tog) tog.onclick = () => {
+    state.alertOpen = !state.alertOpen;
+    tog.closest('.alert').classList.toggle('open', state.alertOpen);
+    tog.setAttribute('aria-expanded', state.alertOpen);
+    tog.setAttribute('aria-label', `${state.alertOpen ? 'Hide' : 'Show'} alert details`);
+  };
+  const more = $('.more-alerts', homeInner);
+  if (more) more.onclick = () => {
+    state.alertsAll = !state.alertsAll;
+    $('.alert-wrap', homeInner).classList.toggle('all', state.alertsAll);
+    more.setAttribute('aria-expanded', state.alertsAll);
+    more.firstChild.textContent = state.alertsAll ? 'Show fewer alerts ' : `Show all alerts (${state.alerts}) `;
+  };
+  $$('[data-alert-full]', homeInner).forEach(b => b.onclick = () => openAlertSheet(b.dataset.alertFull, b));
+  if ($('#appt-wrap')) initAppts();
+  if ($('#car')) initCarousel();
+  $$('.qa-tile', modulesEl).forEach(initTile);
+}
+
+/* ---------- Quick access: pressed state and routing ---------- */
+function initTile(t) {
+  const up = () => t.classList.remove('pressed');
+  t.addEventListener('pointerdown', () => t.classList.add('pressed'));
+  ['pointerup', 'pointercancel', 'pointerleave'].forEach(ev => t.addEventListener(ev, up));
+  t.addEventListener('click', () => {
+    const k = t.dataset.tile;
+    setTimeout(() => {
+      if (k === 'find') return setTab(1);
+      if (k === 'msg') return setTab(3);
+      if (k === 'loc') return openSearch('Locations', '', t);
+      if (k === 'urgent') return openSearch('Locations', 'Urgent care wait times', t);
+      openPage(k, t);
+    }, RM() ? 0 : 120);
+  });
+}
+
+/* ---------- Featured carousel: progress, gentle art parallax, expand into article ---------- */
+function initCarousel() {
+  const car = $('#car'); const cards = $$('.feat', car); const thumb = $('#car-thumb');
+  const n = cards.length;
+  thumb.style.width = `${100 / n}%`;
+  const update = () => {
+    const max = Math.max(1, car.scrollWidth - car.clientWidth);
+    thumb.style.transform = `translateX(${(car.scrollLeft / max) * (n - 1) * 100}%)`;
+    let best = 0, bestD = 1e9;
+    cards.forEach((c, i) => {
+      const d = (c.offsetLeft - car.scrollLeft - 16) / c.offsetWidth;
+      if (!RM()) c.querySelector('svg').style.setProperty('--par', `${(-d * 24).toFixed(1)}px`);
+      if (Math.abs(d) < bestD) { bestD = Math.abs(d); best = i; }
+    });
+    if (best !== state.feat) { state.feat = best; $('#car-pos').textContent = `Item ${best + 1} of ${n}`; }
+  };
+  const goTo = i => { i = Math.max(0, Math.min(n - 1, i)); car.scrollTo({ left: cards[i].offsetLeft - 16, behavior: RM() ? 'auto' : 'smooth' }); };
+  car.addEventListener('scroll', () => requestAnimationFrame(update), { passive: true });
+  $('#car-prev').onclick = () => goTo(state.feat - 1);
+  $('#car-next').onclick = () => goTo(state.feat + 1);
+  cards.forEach(c => c.onclick = () => openArticle(c, +c.dataset.feat));
+  state.feat = 0; update();
+}
+
+/* ---------- Layers (search, article, page, sheet): inert background, Escape closes the top one ---------- */
+const layers = [];
+let artDark = false;
+function updateBar() {
+  const top = layers[layers.length - 1];
+  let light = state.tab === 0;
+  if (top) { if (top.el.id === 'article') light = artDark; else if (top.el.id !== 'sheet') light = false; }
+  phone.classList.toggle('bar-light', light);
+}
+function refreshInert() {
+  const top = layers[layers.length - 1];
+  ['.screens', '.tabbar'].forEach(s => $(s, phone).toggleAttribute('inert', !!top));
+  layers.forEach(l => l.el.toggleAttribute('inert', l !== top));
+  updateBar();
+}
+function pushLayer(el, close) { layers.push({ el, close }); refreshInert(); }
+function popLayer(el) { const i = layers.findIndex(l => l.el === el); if (i > -1) layers.splice(i, 1); refreshInert(); }
+phone.addEventListener('keydown', e => { if (e.key === 'Escape' && layers.length) { e.preventDefault(); layers[layers.length - 1].close(); } });
+const phoneRadius = () => getComputedStyle(phone).borderTopLeftRadius || '0px';
+function setClip(el, r) {
+  const pr = phone.getBoundingClientRect();
+  el.style.setProperty('--ct', `${Math.max(0, r.top - pr.top)}px`); el.style.setProperty('--cb', `${Math.max(0, pr.bottom - r.bottom)}px`);
+  el.style.setProperty('--cl', `${Math.max(0, r.left - pr.left)}px`); el.style.setProperty('--cr', `${Math.max(0, pr.right - r.right)}px`);
+}
+function clearClip(el) { ['--ct', '--cb', '--cl', '--cr'].forEach(p => el.style.setProperty(p, '0px')); el.style.setProperty('--crad', phoneRadius()); }
+
+/* ---------- Article: container transform from the card ---------- */
+const article = $('#article'), artInner = $('#art-inner'), artHero = $('#art-hero');
+let artFrom = null, artTimer;
+function startState(card) {
+  const pr = phone.getBoundingClientRect(), cr = card.getBoundingClientRect();
+  setClip(article, cr); article.style.setProperty('--crad', '16px');
+  artHero.style.setProperty('--hh', '144px'); artHero.style.setProperty('--hw', `${cr.width}px`); artHero.style.setProperty('--hx', `${cr.left - pr.left}px`);
+  artInner.style.setProperty('--ty', `${cr.top - pr.top}px`);
+}
+function openArticle(card, idx) {
+  const f = FEATURED[idx]; artFrom = card; clearTimeout(artTimer); artDark = ART[f.m].dark;
+  artHero.innerHTML = artSVG(f.m);
+  $('#art-body').innerHTML = `<p class="kick">${f.kick}</p><h1 id="art-h" tabindex="-1">${f.title}</h1><p class="art-meta">${f.meta}</p>${f.body.map(p => `<p>${p}</p>`).join('')}`;
+  nbsp($('#art-body'));
+  const els = [article, artInner, artHero];
+  els.forEach(e => e.style.transition = 'none');
+  article.hidden = false; article.classList.remove('in'); $('#art-scroll').scrollTop = 0;
+  if (RM()) article.style.opacity = '0'; else startState(card);
+  void article.offsetWidth;
+  els.forEach(e => e.style.transition = '');
+  requestAnimationFrame(() => {
+    const pr = phone.getBoundingClientRect();
+    clearClip(article); artHero.style.setProperty('--hh', '240px'); artHero.style.setProperty('--hw', `${pr.width}px`); artHero.style.setProperty('--hx', '0px'); artInner.style.setProperty('--ty', '0px');
+    article.style.opacity = ''; article.classList.add('in');
+  });
+  pushLayer(article, closeArticle);
+  setTimeout(() => $('#art-h')?.focus({ preventScroll: true }), RM() ? 0 : 420);
+}
+function closeArticle() {
+  article.classList.remove('in');
+  const card = artFrom && document.contains(artFrom) && artFrom.getBoundingClientRect().width ? artFrom : null;
+  if (!RM() && card) { $('#art-scroll').scrollTop = 0; startState(card); }
+  else article.style.opacity = '0';
+  artTimer = setTimeout(() => { article.hidden = true; article.style.opacity = ''; }, RM() ? 240 : 400);
+  popLayer(article); artFrom?.focus?.();
+}
+$('#art-close').onclick = closeArticle;
+$('#art-share').onclick = () => toast('Opening share options');
+
+/* ---------- Pushed detail page (with history and edge-swipe back) ---------- */
+const page = $('#page'); let pageFrom = null, pageTimer, pageHist = [];
+function openPage(key, from, replay = false) {
+  let p = PAGES[key];
+  if (key.startsWith('r:')) { const r = INDEX[+key.slice(2)]; p = { kick: r[0], title: r[1], body: [`${r[2]}.`], cta: RESULT_CTA[r[0]], done: `Opening ${r[1]}` }; }
+  if (!p) return;
+  const already = page.classList.contains('in');
+  if (!replay) pageHist.push(key);
+  const list = p.list === 'ann' ? `<ul class="group">${ANN.map(annRow).join('')}</ul>` : '';
+  const body = $('#page-body');
+  body.innerHTML = `<p class="kick">${p.kick}</p><h1 id="page-h" tabindex="-1">${p.title}</h1>${(p.body || []).map(t => `<p>${t}</p>`).join('')}${list}${p.cta ? `<button class="btn btn-primary" id="page-cta">${p.cta}</button>` : ''}`;
+  if ($('#page-cta')) $('#page-cta').onclick = () => toast(p.done);
+  nbsp(body); body.scrollTop = 0;
+  if (already) {
+    if (!RM()) body.animate([{ opacity: 0, transform: `translateX(${replay ? -24 : 24}px)` }, { opacity: 1, transform: 'none' }], { duration: 240, easing: 'cubic-bezier(.2,.8,.2,1)' });
+    $('#page-h').focus({ preventScroll: true });
+    return;
+  }
+  pageFrom = from || document.activeElement; clearTimeout(pageTimer);
+  page.hidden = false; page.style.transform = '';
+  void page.offsetWidth;
+  page.classList.add('in'); phone.classList.add('pushed');
+  pushLayer(page, closePage);
+  setTimeout(() => $('#page-h')?.focus({ preventScroll: true }), RM() ? 0 : 300);
+}
+function pageBack() { if (pageHist.length > 1) { pageHist.pop(); openPage(pageHist[pageHist.length - 1], null, true); } else closePage(); }
+function closePage() {
+  pageHist = [];
+  page.classList.remove('in'); phone.classList.remove('pushed'); page.style.transform = '';
+  pageTimer = setTimeout(() => { page.hidden = true; }, 420);
+  popLayer(page); pageFrom?.focus?.();
+}
+$('#page-back').onclick = pageBack;
+page.addEventListener('click', e => { const p = e.target.closest('[data-page]'); if (p) openPage(p.dataset.page, p); });
+(() => {
+  const edge = $('#page-edge'); let x0 = 0, dx = 0, t0 = 0, on = false;
+  edge.addEventListener('pointerdown', e => { on = true; x0 = e.clientX; dx = 0; t0 = performance.now(); edge.setPointerCapture(e.pointerId); page.style.transition = 'none'; });
+  edge.addEventListener('pointermove', e => { if (!on) return; dx = Math.max(0, e.clientX - x0); page.style.transform = `translateX(${dx}px)`; });
+  const end = () => { if (!on) return; on = false; page.style.transition = ''; const v = dx / Math.max(1, performance.now() - t0); if (dx > 120 || v > .5) closePage(); else page.style.transform = ''; };
+  edge.addEventListener('pointerup', end); edge.addEventListener('pointercancel', end);
+})();
+
+/* ---------- Delegated clicks inside the phone ---------- */
+phone.addEventListener('click', e => {
+  if (e.target.closest('#page')) return;
+  const fc = e.target.closest('[data-flu-cal]'); if (fc) { state.fluCal = !state.fluCal; fc.setAttribute('aria-pressed', state.fluCal); fc.innerHTML = ico(state.fluCal ? 'added' : 'addCal', 24); toast(state.fluCal ? 'Saturday flu shot walk-in added to your calendar' : 'Removed from your calendar', state.fluCal); return; }
+  const t = e.target.closest('[data-toast]'); if (t) { toast(t.dataset.toast); return; }
+  const s = e.target.closest('[data-open-search]'); if (s) { openSearch(s.dataset.openSearch, '', s); return; }
+  const q = e.target.closest('[data-q]'); if (q && !q.closest('#so')) { openSearch('All', q.dataset.q, q); return; }
+  const si = e.target.closest('[data-signin]'); if (si) { signIn(si); return; }
+  const pg = e.target.closest('[data-page]'); if (pg) { openPage(pg.dataset.page, pg); return; }
+  const tb = e.target.closest('[data-tab]'); if (tb) { setTab(+tb.dataset.tab); return; }
+  const r = e.target.closest('[data-refresh]'); if (r) { doRefresh(); return; }
+});
+
+/* ---------- Toast and live regions ---------- */
+let toastTimer;
+function toast(msg, done = false) {
+  const t = $('#toast');
+  $('#toast-i').innerHTML = done ? ico('done', 20) : '<i class="tdot"></i>';
+  $('#toast-t').textContent = nbText(msg);
+  t.classList.remove('show'); void t.offsetWidth; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
+}
+const say = msg => { const l = $('#live'); l.textContent = ''; setTimeout(() => l.textContent = msg, 50); };
+
+/* ---------- Sheet (alert details, notifications, account) ---------- */
+let sheetReturn = null;
+function openSheet(html, from) {
+  sheetReturn = from || document.activeElement;
+  const sh = $('#sheet'), bd = $('#backdrop');
+  $('#sheet-body').innerHTML = html; nbsp($('#sheet-body'));
+  sh.hidden = false; bd.hidden = false;
+  requestAnimationFrame(() => requestAnimationFrame(() => { sh.classList.add('show'); bd.classList.add('show'); }));
+  setTimeout(() => $('#sheet-h')?.focus(), 60);
+  pushLayer(sh, closeSheet);
+}
+function closeSheet() {
+  const sh = $('#sheet'), bd = $('#backdrop');
+  sh.classList.remove('show'); bd.classList.remove('show');
+  setTimeout(() => { sh.hidden = true; bd.hidden = true; }, 260);
+  popLayer(sh);
+  sheetReturn?.focus?.();
+}
+$('#sheet-x').onclick = closeSheet;
+$('#backdrop').onclick = closeSheet;
+function selectNum() { const n = $('#sheet .phone-num'); if (!n) return; const r = document.createRange(); r.selectNodeContents(n); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+function openAlertSheet(id, from) {
+  const a = ALERTS.find(x => x.id === id);
+  openSheet(`<span class="kick-alert">${ico('alert', 20)}Alert · Priority ${a.pri}</span>
+    <h2 id="sheet-h" tabindex="-1">${a.title}</h2>
+    <p>${a.full.replace('214-648-3266', '<span class="phone-num">214-648-3266</span>')}</p>
+    <p class="meta">${a.window}. Issued by UT Southwestern Emergency Management (sample).</p>
+    <button class="btn btn-primary" id="copy-num">${ico('copy', 20)}<span class="lbl">Copy phone number</span></button>`, from);
+  $('#copy-num').onclick = () => {
+    const fallback = () => { selectNum(); toast('Phone number selected – copy it from the text'); };
+    try { navigator.clipboard.writeText('214-648-3266').then(() => toast('Copied 214-648-3266', true), fallback); }
+    catch (e) { fallback(); }
+  };
+}
+function openNotifications(from) {
+  if (state.aud !== 'auth') {
+    openSheet(`<h2 id="sheet-h" tabindex="-1">Notifications</h2><div class="sheet-empty">${circle('lock', 56)}<p>Sign in to get appointment reminders and message alerts.</p></div><button class="btn btn-primary" id="sheet-signin">Sign in</button>`, from);
+    $('#sheet-signin').onclick = () => { closeSheet(); signIn($('#btn-acct')); };
+    return;
+  }
+  const html = () => `<h2 id="sheet-h" tabindex="-1">Notifications</h2>
+    <ul class="group">${NOTIFS.map((n, i) => row({ ic: n.ic, title: n.t, sub: n.s, attrs: `data-notif="${i}"`, unread: i < state.unread })).join('')}</ul>
+    <button class="btn btn-tonal" id="mark-read" ${state.unread ? '' : 'disabled aria-disabled="true"'}>${ico('markRead', 20)}<span class="lbl">${state.unread ? 'Mark all as read' : 'All caught up'}</span></button>`;
+  openSheet(html(), from);
+  const wire = () => {
+    $('#mark-read').onclick = () => { if (!state.unread) return; state.unread = 0; $('#sheet-body').innerHTML = html(); nbsp($('#sheet-body')); wire(); renderChrome(); $('#mark-read').focus(); toast('All notifications marked as read', true); };
+    $$('[data-notif]', $('#sheet-body')).forEach(b => b.onclick = () => {
+      const go = NOTIFS[+b.dataset.notif].go; closeSheet();
+      if (go.startsWith('tab:')) setTab(+go.slice(4));
+      else if (go === 'appts') { if (state.tab !== 0) setTab(0); if ($('#appt-wrap')) { if (state.appt !== 0) selectAppt(0); $('#appt-wrap').scrollIntoView({ behavior: RM() ? 'auto' : 'smooth', block: 'center' }); } }
+      else openPage(go.slice(5), $('#btn-bell'));
+    });
+  };
+  wire();
+}
+
+/* ---------- Search overlay (expands from the field or chip) ---------- */
+const so = $('#so'); let soFrom = null; let soFilter = 'All';
+const FILTERS = ['All', 'Providers', 'Locations', 'Content', 'Resources'];
+$('#so-filters').innerHTML = FILTERS.map(f => `<button class="chip" data-f="${f}" aria-pressed="false">${f}</button>`).join('');
+$$('#so-filters button').forEach(b => b.onclick = () => { soFilter = b.dataset.f; syncFilters(); runSearch(); });
+const syncFilters = () => $$('#so-filters button').forEach(b => b.setAttribute('aria-pressed', b.dataset.f === soFilter));
+function openSearch(filter = 'All', q = '', from) {
+  soFrom = from || document.activeElement; soFilter = filter; syncFilters();
+  const fr = (from && from.getBoundingClientRect && from.getBoundingClientRect().width ? from : $('.search-field', phone))?.getBoundingClientRect();
+  so.style.transition = 'none';
+  if (!RM() && fr) { setClip(so, fr); so.style.setProperty('--crad', '28px'); } else so.style.opacity = '0';
+  so.hidden = false;
+  const input = $('#so-q'); input.value = q;
+  $('#so-chips').innerHTML = TOP.map((t, i) => `<li><button class="chip pop" style="--i:${i}" data-sq="${t}">${t}</button></li>`).join('');
+  $$('#so-chips [data-sq]').forEach(b => b.onclick = () => { input.value = b.dataset.sq; runSearch(); input.focus(); });
+  void so.offsetWidth; so.style.transition = '';
+  requestAnimationFrame(() => { clearClip(so); so.style.opacity = ''; });
+  if (!layers.some(l => l.el === so)) pushLayer(so, closeSearch);
+  runSearch();
+  setTimeout(() => input.focus(), RM() ? 0 : 120);
+}
+function closeSearch() { so.hidden = true; popLayer(so); soFrom?.focus?.(); }
+$('#so-back').onclick = closeSearch;
+$('#so-q').addEventListener('input', runSearch);
+$('#so-q').addEventListener('keydown', e => { if (e.key === 'Enter') { const f = $('#so-results .row'); if (f) f.click(); } });
+$('#so-clear').onclick = () => { $('#so-q').value = ''; runSearch(); $('#so-q').focus(); };
+function esc(s) { return s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+function runSearch() {
+  const q = $('#so-q').value.trim(); $('#so-clear').hidden = !q;
+  $('#so-top').hidden = !!q;
+  const recent = $('#so-recent');
+  recent.innerHTML = !q && state.recent.length ? `<p class="ts-label"><span>Recent</span><button class="link" id="clear-recent">Clear</button></p><ul class="group">${state.recent.map(r => row({ lead: circle('recent'), title: esc(r), attrs: `data-recent="${esc(r)}"` })).join('')}</ul>` : '';
+  $$('[data-recent]', recent).forEach(b => b.onclick = () => { $('#so-q').value = b.dataset.recent; runSearch(); $('#so-q').focus(); });
+  if ($('#clear-recent')) $('#clear-recent').onclick = () => { state.recent = []; runSearch(); $('#so-q').focus(); };
+  const words = q.toLowerCase().split(/\s+/).filter(Boolean);
+  let rows = INDEX.map((r, i) => [r, i]).filter(([r]) => soFilter === 'All' || r[0] === soFilter);
+  if (words.length) rows = rows.filter(([r]) => words.every(w => (r[1] + ' ' + r[2]).toLowerCase().includes(w)));
+  else rows = rows.slice(0, soFilter === 'All' ? 4 : 6);
+  const hl = s => { let o = esc(s); words.forEach(w => { o = o.replace(new RegExp(`(${w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'ig'), '<mark>$1</mark>'); }); return o; };
+  $('#so-results').innerHTML = `<p class="ts-label">${q ? `${rows.length} ${rows.length === 1 ? 'result' : 'results'}` : soFilter === 'All' ? 'Suggested' : soFilter}</p>` +
+    (rows.length ? `<ul class="group">${rows.map(([r, i], n) => row({ ic: r[3], title: hl(r[1]), sub: `${r[0]} · ${esc(r[2])}`, attrs: `data-result="${i}" style="--i:${n}"` })).join('')}</ul>`
+      : `<p class="empty">No matches for “${esc(q)}”. Try a doctor’s name, a specialty, or a city.</p>`);
+  nbsp($('#so-results'));
+  $$('[data-result]', $('#so-results')).forEach(b => b.onclick = () => {
+    const r = INDEX[+b.dataset.result];
+    state.recent = [r[1], ...state.recent.filter(x => x !== r[1])].slice(0, 3);
+    openPage(`r:${b.dataset.result}`, b);
+  });
+}
+
+/* ---------- Tabs with a sliding indicator ---------- */
+const TABS = [['Home', 'home', 'scr-home'], ['Find care', 'findCare', 'scr-find'], ['Visits', 'visits', 'scr-appts'], ['Messages', 'messages', 'scr-msgs'], ['Menu', 'menu', 'scr-menu']];
+$('#tablist').innerHTML = TABS.map((t, i) => `<button class="tab" role="tab" id="tab-${i}" aria-controls="${t[2]}" aria-selected="${i === 0}" tabindex="${i === 0 ? 0 : -1}">${ico(t[1])}${t[0]}</button>`).join('');
+const tabs = $$('.tab', phone);
+tabs.forEach((b, i) => { b.onclick = () => setTab(i); b.addEventListener('keydown', e => { const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0; if (d) { const n = (i + d + tabs.length) % tabs.length; tabs[n].focus(); setTab(n); } }); });
+const screens = $$('.screen', phone);
+screens.forEach((s, i) => { s.setAttribute('role', 'tabpanel'); s.setAttribute('aria-labelledby', `tab-${i}`); });
+function moveInd() { const t = tabs[state.tab], ind = $('#tab-ind'); ind.style.width = `${t.offsetWidth}px`; ind.style.transform = `translateX(${t.offsetLeft}px)`; }
+function setTab(i) {
+  if (layers.length) [...layers].reverse().forEach(l => l.close());
+  if (i === state.tab) { if (i === 0) $('#scroller').scrollTo({ top: 0, behavior: RM() ? 'auto' : 'smooth' }); return; }
+  const prev = state.tab; state.tab = i;
+  tabs.forEach((b, j) => { b.setAttribute('aria-selected', j === i); b.tabIndex = j === i ? 0 : -1; });
+  screens[prev].hidden = true;
+  const s = screens[i]; s.hidden = false; s.classList.remove('enter-l', 'enter-r'); void s.offsetWidth; s.classList.add(i > prev ? 'enter-r' : 'enter-l');
+  moveInd(); updateBar();
+}
+function renderTabsContent() {
+  $('#find-chips').innerHTML = ['Primary care', 'Cardiology', 'Dermatology', 'Orthopaedics', 'Pediatrics', 'Women’s health'].map(t => `<li><button class="chip" data-q="${t}">${t}</button></li>`).join('');
+  const auth = state.aud === 'auth';
+  const signRow = (title) => row({ ic: 'signIn', title, attrs: 'data-signin' });
+  $('#appts-sub').textContent = auth ? 'From MyChart · three upcoming' : 'Sign in to see your appointments';
+  $('#appts-list').innerHTML = auth ? APPTS.map(a => row({ ic: a.typeIc, title: `${a.date}, ${a.time}`, sub: a.who, attrs: 'data-toast="Opening this appointment in MyChart"' })).join('') : signRow('Sign in');
+  $('#msgs-sub').textContent = auth ? 'Two new messages' : 'Sign in to message your care team';
+  $('#msgs-list').innerHTML = auth ? [row({ ic: 'messages', title: 'Dr. Lin’s care team', sub: 'Your lab order is ready', attrs: 'data-page="msg1"', unread: true }), row({ ic: 'bill', title: 'Billing', sub: 'Your statement for Sept. is available', attrs: 'data-page="msg2"', unread: true })].join('') : signRow('Sign in');
+  $('#menu-list').innerHTML = [auth ? row({ ic: 'profile', title: 'Profile and settings', attrs: 'data-page="profile"' }) : signRow('Sign in or create account'),
+    row({ ic: 'help', title: 'Help and contact us', attrs: 'data-page="help"' }), row({ ic: 'privacy', title: 'Privacy and terms', attrs: 'data-page="privacy"' })].join('');
+}
+
+/* ---------- Guest to signed-in ---------- */
+function setAudience(aud) {
+  if (aud === state.aud) return;
+  $('#aud-guest').setAttribute('aria-pressed', aud === 'guest'); $('#aud-auth').setAttribute('aria-pressed', aud === 'auth');
+  const swap = () => {
+    state.aud = aud; state.appt = 0; state.unread = aud === 'auth' ? 2 : 0;
+    renderHome(); renderCms(); $('#scroller').scrollTop = 0;
+    say(aud === 'auth' ? `Signed in as ${USER.full}. Home updated with your appointments.` : 'Signed out. Showing guest home.');
+  };
+  const mods = $$('.mod', homeInner);
+  if (RM() || !mods.length) { swap(); return; }
+  mods.forEach((m, i) => { m.style.animation = ''; m.style.setProperty('--i', i); m.classList.add('out'); });
+  setTimeout(swap, 180 + mods.length * 16);
+}
+function signIn(btn) {
+  if (btn && btn.classList.contains('btn')) { btn.classList.add('loading'); btn.setAttribute('aria-busy', 'true'); }
+  say('Signing in');
+  if (state.tab !== 0) setTab(0);
+  setTimeout(() => { setAudience('auth'); toast(`Signed in as ${USER.first}`, true); }, RM() ? 300 : 800);
+}
+$('#aud-guest').onclick = () => setAudience('guest');
+$('#aud-auth').onclick = () => setAudience('auth');
+$('#btn-acct').onclick = e => {
+  if (state.aud === 'guest') return signIn(e.currentTarget);
+  openSheet(`<h2 id="sheet-h" tabindex="-1">${USER.full}</h2><p class="meta">Signed in with MyChart (sample account)</p><button class="btn btn-secondary" id="sign-out">Sign out</button>`, e.currentTarget);
+  $('#sign-out').onclick = () => { closeSheet(); setAudience('guest'); };
+};
+$('#btn-bell').onclick = e => openNotifications(e.currentTarget);
+
+/* ---------- Pull to refresh (dot motif) ---------- */
+const scroller = $('#scroller'), ptr = $('#ptr');
+let pull = 0, pulling = false, startY = 0, refreshing = false;
+const setPull = p => { pull = p; const prog = Math.min(p / 72, 1); homeInner.style.setProperty('--pull', p); ptr.style.setProperty('--pull', p); ptr.style.setProperty('--ptr-p', prog); ptr.style.setProperty('--ptr-s', Math.min(prog * 1.2, 1)); ptr.style.setProperty('--ptr-o', prog > .05 ? 1 : 0); };
+function ptrStart(y) { if (scroller.scrollTop > 0 || refreshing) return; pulling = true; startY = y; homeInner.classList.remove('settle'); }
+function ptrMove(y, e) {
+  if (!pulling) return; const d = y - startY;
+  if (d <= 0) { setPull(0); return; }
+  if (e && e.cancelable) e.preventDefault();
+  setPull(RM() ? Math.min(d * .5, 72) : 110 * (1 - Math.exp(-d / 160)));
+}
+function ptrEnd() { if (!pulling) return; pulling = false; homeInner.classList.add('settle'); if (pull >= 64) doRefresh(); else setPull(0); }
+scroller.addEventListener('touchstart', e => ptrStart(e.touches[0].clientY), { passive: true });
+scroller.addEventListener('touchmove', e => ptrMove(e.touches[0].clientY, e), { passive: false });
+scroller.addEventListener('touchend', ptrEnd);
+scroller.addEventListener('pointerdown', e => { if (e.pointerType === 'mouse' && !e.target.closest('button,a,input,.car,.appt-wrap,.dstrip,.ts-row')) ptrStart(e.clientY); });
+window.addEventListener('pointermove', e => { if (e.pointerType === 'mouse' && pulling) ptrMove(e.clientY, e); });
+window.addEventListener('pointerup', e => { if (e.pointerType === 'mouse') ptrEnd(); });
+function doRefresh() {
+  if (refreshing) return; refreshing = true;
+  homeInner.classList.add('settle'); setPull(64); ptr.classList.add('refreshing'); say('Refreshing home');
+  const rb = $('#btn-refresh'); if (rb && !RM()) { rb.classList.remove('spin'); void rb.offsetWidth; rb.classList.add('spin'); }
+  setTimeout(() => {
+    ptr.classList.remove('refreshing'); setPull(0); refreshing = false;
+    state.updated = 'Updated just now';
+    $$('.upd-time', phone).forEach(u => u.textContent = state.updated);
+    $('#btn-refresh')?.setAttribute('aria-label', `Refresh home, ${state.updated.toLowerCase()}`);
+    toast('Home is up to date', true); say('Home updated');
+  }, 1100);
+}
+
+/* ---------- Scroll: app bar shadow ---------- */
+scroller.addEventListener('scroll', () => { $('#appbar').classList.toggle('scrolled', scroller.scrollTop > 4); }, { passive: true });
+
+/* ---------- Board controls ---------- */
+const pressSeg = (sel, attr, val) => $$(sel).forEach(b => b.setAttribute('aria-pressed', b.dataset[attr] === String(val)));
+$$('[data-alerts]').forEach(b => b.onclick = () => {
+  const n = +b.dataset.alerts; state.alerts = n; state.alertsAll = false; state.alertOpen = false;
+  pressSeg('[data-alerts]', 'alerts', n);
+  renderHome({ animate: false });
+  const m = $('.mod[data-m="alerts"]'); if (m && n) m.style.animation = 'calmIn var(--d-base) var(--ease-out) both';
+  if (n) { const a = ALERTS[0]; const l = $('#live-alert'); l.textContent = ''; setTimeout(() => l.textContent = `Alert: ${a.title}${n > 1 ? `. ${n} active alerts.` : ''}`, 60); }
+  if (state.tab !== 0) setTab(0);
+  $('#scroller').scrollTop = 0;
+});
+$$('[data-w]').forEach(b => b.onclick = () => { phone.style.setProperty('--pw', b.dataset.w + 'px'); pressSeg('[data-w]', 'w', b.dataset.w); $('#cap').textContent = `${b.dataset.w} × 844 pt · fictional sample data`; setTimeout(moveInd, 420); });
+$$('[data-ts]').forEach(b => b.onclick = () => { phone.style.setProperty('--ts', b.dataset.ts); pressSeg('[data-ts]', 'ts', b.dataset.ts); setTimeout(moveInd, 50); });
+const applyRM = v => { state.rm = v; phone.classList.toggle('rm', v); pressSeg('[data-rm]', 'rm', v ? 1 : 0); };
+$$('[data-rm]').forEach(b => b.onclick = () => applyRM(b.dataset.rm === '1'));
+sysRM.addEventListener?.('change', e => applyRM(e.matches));
+
+function renderCms() {
+  const list = cfg[state.aud];
+  const head = HEAD.map(id => `<li><label><input type="checkbox" ${id === 'greeting' ? `id="cms-greet" ${state.greetOn ? 'checked' : ''}` : `id="cms-${id}" checked disabled`}>${MOD_LABELS[id]}</label><span class="lock">${id === 'search' ? 'Always on top' : id === 'alerts' ? 'Pinned' : 'Header'}</span></li>`).join('');
+  $('#cms').innerHTML = `<li class="sep">Header</li>${head}<li class="sep">Content</li>` + list.map((m, i) => `<li class="${m.on ? '' : 'off'}"><label><input type="checkbox" id="cms-${state.aud}-${m.id}" data-cms="${i}" ${m.on ? 'checked' : ''}>${MOD_LABELS[m.id]}</label>
+      <button class="mv" data-up="${i}" aria-label="Move ${MOD_LABELS[m.id]} up" ${i === 0 ? 'disabled' : ''}>${ico('arrow_upward', 20)}</button><button class="mv" data-down="${i}" aria-label="Move ${MOD_LABELS[m.id]} down" ${i === list.length - 1 ? 'disabled' : ''}>${ico('arrow_downward', 20)}</button></li>`).join('');
+  $('#cms-greet').onchange = e => { state.greetOn = e.target.checked; renderHome({ animate: false }); };
+  $$('#cms [data-cms]').forEach(c => c.onchange = () => { list[+c.dataset.cms].on = c.checked; renderCms(); renderHome({ flip: true }); });
+  const mv = (i, d) => { const j = i + d; [list[i], list[j]] = [list[j], list[i]]; renderCms(); renderHome({ flip: true }); ($(`#cms [data-${d < 0 ? 'up' : 'down'}="${j}"]:not(:disabled)`) || $(`#cms [data-${d < 0 ? 'down' : 'up'}="${j}"]`))?.focus(); };
+  $$('#cms [data-up]').forEach(b => b.onclick = () => mv(+b.dataset.up, -1));
+  $$('#cms [data-down]').forEach(b => b.onclick = () => mv(+b.dataset.down, 1));
+}
+
+/* ---------- Iconography spec: glyph map and pressed-state demo ---------- */
+function renderIconMap() {
+  const groups = [...new Set(ICON_MAP.map(r => r[4]))];
+  $('#ic-map').innerHTML = groups.map(g => `<section class="gm-group"><h4>${g}</h4><ul class="gmap">${ICON_MAP.filter(r => r[4] === g).map(r =>
+    `<li>${circle(r[0])}<span class="gm-t"><b>${r[2]}</b><code>${r[1]}</code><small>${r[3]}</small></span></li>`).join('')}</ul></section>`).join('');
+}
+$$('.sx-toggle').forEach(b => b.onclick = () => b.setAttribute('aria-pressed', String(b.getAttribute('aria-pressed') !== 'true')));
+
+/* ---------- Boot ---------- */
+applyRM(state.rm);
+renderHome();
+renderCms();
+renderIconMap();
+requestAnimationFrame(moveInd);
+new ResizeObserver(moveInd).observe($('.tabbar'));
+})();
+</script>

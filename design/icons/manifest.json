@@ -1,0 +1,410 @@
+{
+  "family": "Material Symbols Rounded",
+  "license": "Apache-2.0",
+  "source": "https://fonts.google.com/icons?icon.style=Rounded",
+  "variants": {
+    "24": {
+      "style": "default",
+      "opsz": 24,
+      "wght": 400,
+      "fill": 0,
+      "grade": 0,
+      "use": "Default UI icon at 24"
+    },
+    "24f": {
+      "style": "fill1",
+      "opsz": 24,
+      "wght": 400,
+      "fill": 1,
+      "grade": 0,
+      "use": "Selected, status, and the duotone wash at 24"
+    },
+    "24g": {
+      "style": "gradN25",
+      "opsz": 24,
+      "wght": 400,
+      "fill": 0,
+      "grade": -25,
+      "use": "White icon on UT Southwestern Blue"
+    },
+    "20": {
+      "style": "default",
+      "opsz": 20,
+      "wght": 400,
+      "fill": 0,
+      "grade": 0,
+      "use": "Buttons, rows, notices at 20"
+    },
+    "20f": {
+      "style": "fill1",
+      "opsz": 20,
+      "wght": 400,
+      "fill": 1,
+      "grade": 0,
+      "use": "Filled status at 20"
+    },
+    "16": {
+      "style": "wght500",
+      "opsz": 20,
+      "wght": 500,
+      "fill": 0,
+      "grade": 0,
+      "use": "Inline with 12.0 text, drawn at 16"
+    },
+    "16f": {
+      "style": "wght500fill1",
+      "opsz": 20,
+      "wght": 500,
+      "fill": 1,
+      "grade": 0,
+      "use": "Filled status inline with 12.0 text"
+    },
+    "40f": {
+      "style": "fill1",
+      "opsz": 40,
+      "wght": 400,
+      "fill": 1,
+      "grade": 0,
+      "use": "Map pin"
+    }
+  },
+  "glyphs": {
+    "home": [
+      "24",
+      "24f"
+    ],
+    "stethoscope": [
+      "24",
+      "24f",
+      "20"
+    ],
+    "calendar_month": [
+      "24",
+      "24f"
+    ],
+    "chat": [
+      "24",
+      "24f"
+    ],
+    "menu": [
+      "24",
+      "24f",
+      "24g"
+    ],
+    "search": [
+      "24",
+      "20"
+    ],
+    "close": [
+      "24",
+      "20"
+    ],
+    "arrow_back": [
+      "24g",
+      "24"
+    ],
+    "arrow_forward": [
+      "20"
+    ],
+    "notifications": [
+      "24",
+      "24f",
+      "24g"
+    ],
+    "account_circle": [
+      "24g"
+    ],
+    "person": [
+      "24",
+      "24f"
+    ],
+    "warning": [
+      "24f",
+      "16f"
+    ],
+    "error": [
+      "24f",
+      "16f"
+    ],
+    "thunderstorm": [
+      "24",
+      "24f"
+    ],
+    "local_parking": [
+      "24",
+      "24f",
+      "20"
+    ],
+    "apartment": [
+      "20"
+    ],
+    "schedule": [
+      "20",
+      "24",
+      "24f"
+    ],
+    "call": [
+      "24",
+      "24f",
+      "20"
+    ],
+    "sync": [
+      "16"
+    ],
+    "location_on": [
+      "24",
+      "24f",
+      "20",
+      "16",
+      "40f"
+    ],
+    "video_camera_front": [
+      "24",
+      "24f",
+      "16"
+    ],
+    "directions": [
+      "20"
+    ],
+    "map": [
+      "24"
+    ],
+    "directions_car": [
+      "24"
+    ],
+    "calendar_add_on": [
+      "24",
+      "20"
+    ],
+    "event_available": [
+      "24f",
+      "16"
+    ],
+    "edit_calendar": [
+      "24",
+      "24f"
+    ],
+    "open_in_new": [
+      "20",
+      "16"
+    ],
+    "refresh": [
+      "24"
+    ],
+    "medical_services": [
+      "24",
+      "24f"
+    ],
+    "receipt_long": [
+      "24",
+      "24f"
+    ],
+    "labs": [
+      "24",
+      "24f"
+    ],
+    "medication": [
+      "24",
+      "24f"
+    ],
+    "prescriptions": [
+      "24",
+      "24f"
+    ],
+    "cardiology": [
+      "24",
+      "24f"
+    ],
+    "article": [
+      "24",
+      "24f"
+    ],
+    "folder_open": [
+      "24",
+      "24f"
+    ],
+    "trending_up": [
+      "16"
+    ],
+    "check_circle": [
+      "20f",
+      "16f"
+    ],
+    "lock": [
+      "24",
+      "24f",
+      "20"
+    ],
+    "logout": [
+      "20"
+    ],
+    "content_copy": [
+      "20"
+    ],
+    "near_me": [
+      "20",
+      "16"
+    ],
+    "my_location": [
+      "20",
+      "24"
+    ],
+    "chevron_right": [
+      "24",
+      "20"
+    ],
+    "chevron_left": [
+      "24"
+    ],
+    "expand_more": [
+      "20"
+    ],
+    "expand_less": [
+      "20"
+    ],
+    "play_arrow": [
+      "24f"
+    ],
+    "pause": [
+      "24f"
+    ],
+    "favorite": [
+      "24",
+      "24f",
+      "24g",
+      "20",
+      "20f"
+    ],
+    "share": [
+      "24g",
+      "20"
+    ],
+    "tune": [
+      "20"
+    ],
+    "swap_vert": [
+      "20"
+    ],
+    "history": [
+      "20"
+    ],
+    "north_west": [
+      "20"
+    ],
+    "translate": [
+      "20",
+      "16"
+    ],
+    "school": [
+      "20"
+    ],
+    "local_hospital": [
+      "20",
+      "16"
+    ],
+    "check": [
+      "20"
+    ],
+    "wifi_off": [
+      "24"
+    ],
+    "cloud_off": [
+      "24"
+    ],
+    "location_off": [
+      "24"
+    ],
+    "search_off": [
+      "24"
+    ],
+    "science": [
+      "24"
+    ],
+    "play_circle": [
+      "24"
+    ],
+    "menu_book": [
+      "24"
+    ],
+    "sms": [
+      "24"
+    ],
+    "mail": [
+      "24"
+    ],
+    "link": [
+      "24"
+    ],
+    "more_horiz": [
+      "24"
+    ],
+    "info": [
+      "20"
+    ],
+    "workspace_premium": [
+      "16",
+      "24",
+      "24f"
+    ],
+    "do_not_disturb_on": [
+      "16"
+    ],
+    "settings": [
+      "20"
+    ],
+    "inbox": [
+      "24",
+      "24f"
+    ],
+    "newspaper": [
+      "24",
+      "24f"
+    ],
+    "airport_shuttle": [
+      "24",
+      "24f"
+    ],
+    "medical_information": [
+      "24",
+      "24f"
+    ],
+    "language": [
+      "24",
+      "24f"
+    ],
+    "coronavirus": [
+      "24",
+      "24f"
+    ],
+    "privacy_tip": [
+      "24",
+      "24f"
+    ],
+    "accessibility_new": [
+      "24",
+      "24f"
+    ],
+    "description": [
+      "24",
+      "24f"
+    ],
+    "credit_card": [
+      "24",
+      "24f"
+    ],
+    "login": [
+      "24",
+      "24f"
+    ],
+    "visibility": [
+      "20"
+    ],
+    "visibility_off": [
+      "20"
+    ],
+    "support_agent": [
+      "24",
+      "24f"
+    ]
+  }
+}
