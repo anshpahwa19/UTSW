@@ -1036,7 +1036,7 @@ mark{background:rgba(0,169,224,.35);color:inherit;border-radius:4px}
       <div class="spec-card"><h3>Guest home, module by module</h3>
         <ul class="rules">
           <li><b>Kept from the old app:</b> MedBlog stories with pause, quick links, UTSW resources (wayfinding, video visit prep), Find a provider by specialty, search history, and the city filter.</li>
-          <li><b>Quick links</b> keep the old app’s four MyChart links with their exact names (Message your doctor, Get your test results, Manage your visits, Manage billing) and add Find my care and Locations. MyChart links are marked with a lock and open a sign-in explanation instead of dead-ending.</li>
+          <li><b>Quick links</b> keep the old app’s four MyChart links with their exact names (Message your doctor, Get your test results, Manage your visits, Manage billing) and add Find my care and Locations. MyChart links open a sign-in explanation instead of dead-ending. In this draft they carry no visible “Sign in” line; screen readers still hear “sign in required.”</li>
           <li><b>Saved providers</b> appear on home only when the guest has saved someone.</li>
           <li><b>MyChart tab</b>: a sign-in page (username, password, show password, forgot, create an account) plus things a guest can do without signing in. Every sign-in entry point leads here and says only “Sign in.”</li>
           <li><b>More options menu</b> (from the old hamburger): Sign in, Inbox, Saved providers, Shuttle, patient resource guide, patient resources, COVID-19 resources, Why UT Southwestern, physician resources, full site, social links, and privacy policy.</li>
@@ -1541,7 +1541,7 @@ R.quick=function(){
  return secHead("h-quick","Quick links")+'<div class="bento qlinks" role="group" aria-labelledby="h-quick">'+
   TILES.map(function(t,j){
    var go=t.tab?'data-tab="'+t.tab+'"':'data-act="signin" data-feat="'+esc(t.t)+'"';
-   var sub=t.feat?'<span class="t2 ql-lock">'+ic("lock")+'Sign in</span>':'<span class="t2">'+esc(t.s)+'</span>';
+   var sub=t.feat?'':'<span class="t2">'+esc(t.s)+'</span>';   /* grey draft: no visible "Sign in" line on MyChart tiles; the accessible name still says sign in is required */
    return '<button class="tile glass spot press a" style="--j:'+j+'" '+go+(t.feat?' aria-label="'+esc(t.t)+', sign in required"':'')+'>'+
     '<span class="tile-top"><span class="orb '+t.orb+'" aria-hidden="true">'+ic(t.i)+'</span><span class="tile-go" aria-hidden="true">'+ic(t.tab?"arrowR":"arrowUR")+'</span></span>'+
     '<span><span class="tile-t">'+esc(t.t)+'</span>'+sub+'</span></button>';
