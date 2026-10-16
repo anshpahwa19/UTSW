@@ -1,390 +1,421 @@
-"""Build the four MyCare logo iterations as outlined-type SVGs.
+"""Build the MyCare logo directions (round 2).
 
-    python3 logo-iterations/build.py            # writes logo-iterations/<name>/*.svg
+    python3 logo-iterations/build.py          # writes logo-iterations/<direction>/
 
-Every file comes from the symbol and wordmark definitions below, so the
-horizontal, stacked, reversed, one-color, app icon, and favicon versions of an
-iteration always match. Type is outlined with handoff/logo-iterations/tools/textpath.py.
+Each direction is data: a symbol drawn on a 100-unit grid (layers tagged
+"main" or "accent"), wordmark rules, and app-icon settings. One pipeline turns
+that into every file in the system, so lockups, colorways, icons, and the
+favicon always match. Geometry is shapely (see geo.py); type is Inter Display,
+shaped with HarfBuzz and outlined.
 """
 import math
 import os
-import re
 import sys
 
-HERE = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, os.path.join(HERE, "..", "handoff", "logo-iterations", "tools"))
-from textpath import text_path, font_metrics  # noqa: E402
+from shapely import affinity
+from shapely.geometry import LineString, Polygon
 
-BLUE = "#004278"   # UT Southwestern Blue, PMS 2945
-CYAN = "#00A9E0"   # PMS 2995, shapes only
-GRAY = "#5B6770"   # endorsement text, 5.9:1 on white
+HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+sys.path.insert(0, os.path.join(HERE, "..", "handoff", "logo-iterations", "tools"))
+from geo import *  # noqa
+from textpath import font_metrics, text_path  # noqa
+
+BLUE = "#004278"    # UT Southwestern Blue, PMS 2945
+CYAN = "#00A9E0"    # PMS 2995, shapes only
+GRAY = "#5B6770"    # endorsement text, 5.9:1 on white
 WHITE = "#FFFFFF"
 BLACK = "#000000"
+F = 100             # wordmark size in user units
+CAP = font_metrics("Inter Display SemiBold", F)["capHeight"]  # 72.75
 
 
-def f(v):
-    return ("%.2f" % v).rstrip("0").rstrip(".")
+def plus(cx, cy, arm, t, r):
+    return union(rect(cx - t / 2, cy - arm / 2, t, arm, r), rect(cx - arm / 2, cy - t / 2, arm, t, r))
 
 
-def bbox_of_path(d):
-    nums = [float(n) for n in re.findall(r"-?\d+(?:\.\d+)?", d)]
-    xs, ys = nums[0::2], nums[1::2]
-    return min(xs), min(ys), max(xs), max(ys)
+def place(g, x, y, s):
+    """Scale a 100-grid geometry by s and move its origin to (x, y)."""
+    return affinity.translate(affinity.scale(g, s, s, origin=(0, 0)), x, y)
 
 
-# --------------------------------------------------------------------------
-# Symbols. Each is drawn in a 100 × 100 box and returns SVG markup.
-#   main   – the symbol's primary color
-#   accent – the accent color (same as main in one-color versions)
-#   ground – color behind the symbol, for knocked-out details
-# --------------------------------------------------------------------------
-
-def capsule(x1, y1, x2, y2):
-    """Rounded bar (fully round ends) from (x1, y1) to (x2, y2) corners."""
-    r = min(x2 - x1, y2 - y1) / 2
-    return f'<rect x="{f(x1)}" y="{f(y1)}" width="{f(x2 - x1)}" height="{f(y2 - y1)}" rx="{f(r)}"/>'
-
-
-def plus_path(cx, cy, arm, t, r=None, reverse=False):
-    """Plus sign as one closed path (for even-odd knockouts). arm = full length, t = bar thickness."""
-    a, h = arm / 2, t / 2
-    r = h * 0.35 if r is None else r
-    # Corners of the plus outline, clockwise, starting at top-left of the top bar.
-    pts = [(-h, -a), (h, -a), (h, -h), (a, -h), (a, h), (h, h), (h, a), (-h, a), (-h, h), (-a, h), (-a, -h), (-h, -h)]
-    # Round only the 8 outer corners.
-    outer = {0, 1, 3, 4, 6, 7, 9, 10}
-    if reverse:
-        pts = pts[::-1]
-        outer = {11 - i for i in outer}
-    d = []
-    n = len(pts)
-    for i, (px, py) in enumerate(pts):
-        if i in outer and r > 0:
-            pxp, pyp = pts[i - 1]
-            pxn, pyn = pts[(i + 1) % n]
-            def towards(qx, qy):
-                dx, dy = qx - px, qy - py
-                L = math.hypot(dx, dy)
-                return px + dx / L * r, py + dy / L * r
-            s = towards(pxp, pyp)
-            e = towards(pxn, pyn)
-            d.append(("L" if d else "M") + f"{f(cx + s[0])} {f(cy + s[1])}")
-            d.append(f"Q{f(cx + px)} {f(cy + py)} {f(cx + e[0])} {f(cy + e[1])}")
-        else:
-            d.append(("L" if d else "M") + f"{f(cx + px)} {f(cy + py)}")
-    return "".join(d) + "Z"
-
-
-def rrect_path(x, y, w, h, r):
-    return (f"M{f(x + r)} {f(y)}H{f(x + w - r)}A{f(r)} {f(r)} 0 0 1 {f(x + w)} {f(y + r)}"
-            f"V{f(y + h - r)}A{f(r)} {f(r)} 0 0 1 {f(x + w - r)} {f(y + h)}H{f(x + r)}"
-            f"A{f(r)} {f(r)} 0 0 1 {f(x)} {f(y + h - r)}V{f(y + r)}A{f(r)} {f(r)} 0 0 1 {f(x + r)} {f(y)}Z")
-
-
-# 1. Open arms – a medical plus whose top arm is a head: a person welcoming you.
-def sym_open_arms(main, accent, ground, uid="", draft=False):
-    t = 27 if not draft else 22
-    c = 54 if not draft else 50
-    h = t / 2
-    head_r = h + 1 if not draft else 9
-    head_cy = c - h - 7 - head_r if not draft else c - h - 14 - head_r
-    return (f'<g fill="{main}">{capsule(3, c - h, 97, c + h)}{capsule(50 - h, c - h, 50 + h, 97)}</g>'
-            f'<circle cx="50" cy="{f(head_cy)}" r="{f(head_r)}" fill="{accent}"/>')
-
-
-# 2. Care chat – your message and your care team's reply; the plus marks it as care.
-def chat_front(draft=False):
-    if draft:
-        x, y, w, hh, r = 6, 24, 70, 58, 18
-        tail = f"M{f(x + 12)} {f(y + hh - 4)}L{f(x + 6)} {f(y + hh + 16)}L{f(x + 30)} {f(y + hh)}Z"
-    else:
-        x, y, w, hh, r = 3, 30, 72, 56, 22
-        tail = (f"M{f(x + 32)} {f(y + hh - 2)}L{f(x + 11)} {f(y + hh + 11)}"
-                f"Q{f(x + 8)} {f(y + hh + 13)} {f(x + 8)} {f(y + hh + 10)}L{f(x + 10)} {f(y + hh - 10)}Z")
-    return x, y, w, hh, r, tail
-
-
-def sym_care_chat(main, accent, ground, uid="", draft=False):
-    x, y, w, hh, r, tail = chat_front(draft)
-    cx, cy = x + w / 2, y + hh / 2
-    arm, t = (34, 12) if not draft else (26, 8)
-    front = rrect_path(x, y, w, hh, r) + tail + plus_path(cx, cy, arm, t, reverse=True)
-    # Back bubble (the reply) sits up and to the right, with its tail at bottom right.
-    bx, by, bw, bh, br = (31, 4, 66, 52, 20) if not draft else (30, 6, 64, 50, 16)
-    if draft:
-        btail = f"M{f(bx + bw - 4)} {f(by + bh - 20)}L{f(bx + bw)} {f(by + bh + 8)}L{f(bx + bw - 28)} {f(by + bh - 1)}Z"
-    else:
-        btail = (f"M{f(bx + bw - 10)} {f(by + bh - 10)}L{f(bx + bw - 8)} {f(by + bh + 10)}"
-                 f"Q{f(bx + bw - 8)} {f(by + bh + 13)} {f(bx + bw - 11)} {f(by + bh + 11)}L{f(bx + bw - 32)} {f(by + bh - 2)}Z")
-    back = rrect_path(bx, by, bw, bh, br) + btail
-    gap = 6
-    m = f"cm{uid}"
-    return (f'<defs><mask id="{m}" maskUnits="userSpaceOnUse" x="-10" y="-10" width="120" height="120">'
-            f'<rect x="-10" y="-10" width="120" height="120" fill="#fff"/>'
-            f'<path d="{rrect_path(x, y, w, hh, r)}{tail}" fill="#000" stroke="#000" stroke-width="{gap * 2}" stroke-linejoin="round"/></mask></defs>'
-            f'<path d="{back}" fill="{accent}" mask="url(#{m})"/>'
-            f'<path d="{front}" fill="{main}"/>')
-
-
-def sym_care_chat_small(main, accent, ground):
-    """Favicon version: the front bubble alone, centered, so the plus survives at 16–32 px."""
-    x, y, w, hh, r, tail = chat_front()
-    body = rrect_path(x, y, w, hh, r) + tail + plus_path(x + w / 2, y + hh / 2, 36, 13, reverse=True)
-    return f'<g transform="translate(50 50) scale(1.22) translate({f(-(x + w / 2))} {f(-(y + hh / 2 + 4))})"><path d="{body}" fill="{main}"/></g>'
-
-
-# 3. Heart path – two lines, you and your care team, meet in the middle: an M that is also a heart.
-HEART = ("M50 93C30 78 8 60 8 36C8 19 18 8 30.5 8C43 8 50 20 50 52"
-         "C50 20 57 8 69.5 8C82 8 92 19 92 36C92 60 70 78 50 93Z")
-HEART_DRAFT = ("M50 90C28 74 10 58 10 36C10 20 20 10 31 10C42 10 50 20 50 36"
-               "C50 20 58 10 69 10C80 10 90 20 90 36C90 58 72 74 50 90Z")
-
-
-def sym_heart_path(main, accent, ground, uid="", draft=False, sw=None):
-    d = HEART_DRAFT if draft else HEART
-    sw = sw or (10 if draft else 13.5)
-    m = f"hl{uid}"
-    s = f'fill="none" stroke-width="{f(sw)}" stroke-linejoin="round" stroke-linecap="round"'
-    if main == accent:
-        return f'<path d="{d}" {s} stroke="{main}"/>'
-    return (f'<defs><clipPath id="{m}l"><rect x="-10" y="-10" width="60" height="120"/></clipPath>'
-            f'<clipPath id="{m}r"><rect x="50" y="-10" width="60" height="120"/></clipPath></defs>'
-            f'<path d="{d}" {s} stroke="{main}" clip-path="url(#{m}l)"/>'
-            f'<path d="{d}" {s} stroke="{accent}" clip-path="url(#{m}r)"/>')
-
-
-# 4. Care C – a custom C that holds a plus; used in the wordmark and as the monogram.
-def c_ring(cx, cy, ro, t, gap_deg):
-    """Filled C outline: ring of outer radius ro and thickness t, open on the right,
-    with terminals cut horizontally like Inter's C."""
-    ri = ro - t
-    a = math.radians(gap_deg / 2)
-    yo, xo = ro * math.sin(a), ro * math.cos(a)
-    xi = math.sqrt(max(ri * ri - yo * yo, 0.01))
-    return (f"M{f(cx + xo)} {f(cy - yo)}A{f(ro)} {f(ro)} 0 1 0 {f(cx + xo)} {f(cy + yo)}"
-            f"L{f(cx + xi)} {f(cy + yo)}A{f(ri)} {f(ri)} 0 1 1 {f(cx + xi)} {f(cy - yo)}Z")
-
-
-def sym_care_c(main, accent, ground, uid="", draft=False):
-    if draft:
-        return (f'<path d="{c_ring(50, 50, 46, 14, 84)}" fill="{main}"/>'
-                f'<path d="{plus_path(52, 50, 30, 9)}" fill="{accent}"/>')
-    return (f'<path d="{c_ring(50, 50, 48, 19, 64)}" fill="{main}"/>'
-            f'<path d="{plus_path(50, 50, 34, 12)}" fill="{accent}"/>')
-
-
-def sym_care_c_small(main, accent, ground):
-    """Favicon version: a slightly thinner C with a larger plus."""
-    return (f'<path d="{c_ring(50, 50, 48, 16, 64)}" fill="{main}"/>'
-            f'<path d="{plus_path(50, 50, 44, 15)}" fill="{accent}"/>')
-
-
-# --------------------------------------------------------------------------
+# ======================================================================
 # Wordmarks
-# --------------------------------------------------------------------------
+# ======================================================================
 
-def wordmark(it, color, x, baseline, size, accent=None):
-    """Return (svg, width) for the MyCare wordmark of iteration `it`."""
-    font, tracking, feats = it["font"], it["tracking"], it.get("features", [])
-    if it["name"] != "care-c":
-        d, w = text_path("MyCare", font, size, tracking, x, baseline, feats)
-        return f'<path d="{d}" fill="{color}"/>', w
-    # Custom C: "My" + ring C with plus + "are"
-    accent = accent or color
-    d1, w1 = text_path("My", font, size, tracking, x, baseline, feats)
-    cap = font_metrics(font, size)["capHeight"]
-    ro = size * 1538 / 2048 / 2   # Inter C height including overshoot
-    t = size * 0.145              # Inter Display Bold round stroke
-    cx = x + w1 + size * 0.03 + ro
-    cy = baseline - cap / 2
-    sx = 0.9                      # narrow the circle to Inter's C proportions
-    cx = x + w1 + size * 0.03 + ro * sx
-    ring = c_ring(cx, cy, ro, t, 64)
-    plus = plus_path(cx, cy, (ro - t) * 1.38, size * 0.08)
-    nx = cx + ro * sx + size * 0.03
-    d2, w2 = text_path("are", font, size, tracking, nx, baseline, feats)
-    width = nx + w2 - x
-    svg = (f'<path d="{d1}{d2}" fill="{color}"/>'
-           f'<path d="{ring}" fill="{color}" transform="translate({f(cx)} 0) scale({sx} 1) translate({f(-cx)} 0)"/>'
-           f'<path d="{plus}" fill="{accent}"/>')
-    return svg, width
+def glyph_run(text, font, tracking, x=0, feats=()):
+    d, w = text_path(text, font, F, tracking, x, 0, list(feats))
+    return from_svg(d), w
 
 
-# --------------------------------------------------------------------------
-# Iterations
-# --------------------------------------------------------------------------
+def wordmark_plain(spec):
+    g, w = glyph_run("MyCare", spec["font"], spec["tracking"], 0, spec.get("features", ()))
+    if spec.get("soft"):
+        g = soften(g, *spec["soft"])
+    return {"main": g}, w
 
-ITERATIONS = [
-    dict(name="open-arms", title="Open arms", symbol=sym_open_arms,
-         font="Inter Display Bold", tracking=-12, features=["cv11"], sym_scale=1.72,
-         icon_bg=BLUE, icon_main=WHITE, icon_accent=CYAN, icon_scale=0.62),
-    dict(name="care-chat", title="Care chat", symbol=sym_care_chat,
-         font="Inter Display SemiBold", tracking=-10, features=[], sym_scale=1.55,
-         icon_bg=WHITE, icon_main=BLUE, icon_accent=CYAN, icon_scale=0.62, small=sym_care_chat_small),
-    dict(name="heart-path", title="Heart path", symbol=sym_heart_path,
-         font="Inter Display ExtraBold", tracking=-18, features=["cv11"], sym_scale=1.5,
-         icon_bg=BLUE, icon_main=WHITE, icon_accent=CYAN, icon_scale=0.62,
-         small=lambda m, a, g: sym_heart_path(m, a, g, uid="s", sw=17)),
-    dict(name="care-c", title="Care C", symbol=sym_care_c,
-         font="Inter Display Bold", tracking=-14, features=[], sym_scale=1.30,
-         icon_bg=CYAN, icon_main=WHITE, icon_accent=BLUE, icon_scale=0.56, small=sym_care_c_small),
+
+def wordmark_plus_a(spec, hole=False):
+    """MyCare with a plus-shaped counter in the single-storey a.
+    Primary: the counter holds a cyan plus. One-color: the plus is cut out."""
+    font, tr = spec["font"], spec["tracking"]
+    feats = ["cv11"]
+    myc, w1 = glyph_run("MyC", font, tr, 0, feats)
+    ax = w1 + tr / 1000 * F
+    a, wa = glyph_run("a", font, 0, ax, feats)
+    rest, w3 = glyph_run("re", font, tr, ax + wa + tr / 1000 * F, feats)
+    polys = list(a.geoms) if hasattr(a, "geoms") else [a]
+    solid = union(*[Polygon(p.exterior) for p in polys])
+    counter = diff(solid, a)
+    b = counter.bounds
+    cx, cy = (b[0] + b[2]) / 2 + spec.get("plus_dx", 0), (b[1] + b[3]) / 2
+    size = min(b[2] - b[0], b[3] - b[1])
+    arm = size * spec.get("plus_arm", 1.02)
+    t = arm * spec.get("plus_t", 0.38)
+    p = plus(cx, cy, arm, t, t * 0.24)
+    gap = spec.get("plus_gap", 3.2)
+    a_new = diff(solid, grow(p, gap))
+    body = union(myc, a_new, rest)
+    if spec.get("soft"):
+        body = soften(body, *spec["soft"])
+    width = ax + wa + tr / 1000 * F + w3
+    if hole:
+        return {"main": body}, width
+    return {"main": body, "accent": p}, width
+
+
+# ======================================================================
+# Directions
+# ======================================================================
+
+def seam_symbol(small=False, t=36, r=11, gap=3.4, k=28, draft=False):
+    if draft:
+        t, r, gap, k = 30, 6, 5, 10
+    gap = gap * (1.5 if small else 1)
+    p = round_concave(plus(50, 50, 100, t, r), 3.5)
+    h = t / 2
+    ax, ay = 50 + h, 50 - h
+    bx, by = 50 - h, 50 + h
+    curve = f"M{ax} {ay} C {ax - k} {ay}, {bx + k} {by}, {bx} {by}"
+    side = shape(f"{curve} L -30 {by} L -30 -30 L {ax} -30 Z")
+    side = union(side, rect(-30, -30, 160, ay + 30), rect(-30, -30, bx + 30, 160))
+    # extend the seam a little past each inner corner so the cut is clean
+    seam = curve_line(f"M{ax + 6} {ay} L{ax} {ay} C {ax - k} {ay}, {bx + k} {by}, {bx} {by} L{bx - 6} {by}")
+    channel = stroke(seam, gap)
+    A = round_convex(inter(p, diff(side, channel)), 1.4)
+    Bh = round_convex(diff(p, side, channel), 1.4)
+    return [(A, "main"), (Bh, "accent")]
+
+
+def ask_symbol(small=False, draft=False):
+    """A plus that speaks: a speech tail grows from the bottom arm."""
+    if draft:
+        p = plus(52, 44, 88, 30, 6)
+        tail = polygon([(37, 68), (26, 94), (50, 84)])
+        return [(union(p, tail), "main")]
+    p = plus(52, 44, 88, 35, 10.5)
+    tail = round_convex(polygon([(35.5, 69), (23, 96), (51, 83)]), 2.4 if not small else 3)
+    body = round_concave(union(p, tail), 3)
+    return [(body, "main")]
+
+
+def way_in_symbol(small=False, T=48, w=16, dot_r=8.6, draft=False):
+    """A cross-shaped plan (the classic hospital floor plan) drawn as one heavy line,
+    open at the bottom like a door, with a cyan dot – you – arriving inside."""
+    cy = 46
+    w = w * (1.12 if small else 1)
+    if draft:
+        outer = round_concave(plus(50, cy, 92, 46, 14), 5)
+        ring = diff(outer, shrink(outer, 15))
+        ring = round_convex(diff(ring, rect(50 - 8, cy + 30, 16, 40)), 2.6)
+        return [(ring, "main"), (circle(50, cy + 48, 9), "accent")]
+    outer = round_concave(plus(50, cy, 92, T, 10), 2)
+    ring = diff(outer, shrink(outer, w))
+    door = T - 2 * w
+    ring = diff(ring, rect(50 - door / 2, cy + 30, door, 40))
+    ring = round_convex(ring, 2.4)
+    return [(ring, "main"), (circle(50, cy + 10, dot_r * (1.1 if small else 1)), "accent")]
+
+
+def plus_a_symbol(small=False, draft=False):
+    """App-icon crop for the wordmark-led direction: the plus-a, large, bleeding off the tile."""
+    spec = [d for d in DIRECTIONS if d["name"] == "care-inside"][0]["wordmark"]
+    font = spec["font"]
+    a, wa = glyph_run("a", font, 0, 0, ["cv11"])
+    polys = list(a.geoms) if hasattr(a, "geoms") else [a]
+    solid = union(*[Polygon(p.exterior) for p in polys])
+    counter = diff(solid, a)
+    b = counter.bounds
+    cx, cy = (b[0] + b[2]) / 2, (b[1] + b[3]) / 2
+    size = min(b[2] - b[0], b[3] - b[1])
+    arm = size * spec.get("plus_arm", 1.02)
+    t = arm * spec.get("plus_t", 0.38)
+    p = plus(cx, cy, arm, t, t * 0.24)
+    if draft:
+        p0 = plus(cx, cy, size * 0.86, size * 0.86 * 0.36, 1.5)
+        body = soften(diff(solid, p0), *spec["soft"])
+        p = Polygon()
+    else:
+        body = diff(solid, grow(p, spec.get("plus_gap", 3.2)))
+        body = soften(body, *spec["soft"])
+    # normalise into the 100 grid: bowl centred, height 100
+    bb = solid.bounds
+    s = 100 / (bb[3] - bb[1])
+    body = affinity.translate(affinity.scale(body, s, s, origin=(0, 0)), -bb[0] * s, -bb[1] * s)
+    p = affinity.translate(affinity.scale(p, s, s, origin=(0, 0)), -bb[0] * s, -bb[1] * s)
+    return [(body, "main"), (p, "accent")]
+
+
+DIRECTIONS = [
+    dict(name="seamless", title="Seamless", symbol=seam_symbol,
+         wordmark=dict(kind="plain", font="Inter Display SemiBold", tracking=-12, features=["cv11"], soft=(2.2, 0.8)),
+         sym_h=1.42, gap=0.40,
+         icon=dict(bg=BLUE, main=WHITE, accent=CYAN, scale=0.56)),
+    dict(name="way-in", title="Way in", symbol=way_in_symbol,
+         wordmark=dict(kind="plain", font="Inter Display Medium", tracking=-8, features=["cv11"], soft=(3.0, 1.0)),
+         sym_h=1.46, gap=0.42,
+         icon=dict(bg=BLUE, main=WHITE, accent=CYAN, scale=0.56)),
+    dict(name="care-inside", title="Care inside", symbol=None, horizontal="wordmark",
+         wordmark=dict(kind="plus_a", font="Inter Display Bold", tracking=-14, soft=(2.4, 0.9),
+                       plus_arm=1.04, plus_t=0.38, plus_gap=3.0),
+         sym_h=1.42, gap=0.40,
+         icon=dict(bg=BLUE, main=WHITE, accent=CYAN, scale=0.56)),
+    dict(name="ask", title="Ask", symbol=ask_symbol,
+         wordmark=dict(kind="plain", font="Inter Display Bold", tracking=-16, features=[], soft=(2.0, 0.8)),
+         sym_h=1.40, gap=0.40,
+         icon=dict(bg=BLUE, main=WHITE, accent=WHITE, scale=0.56, dy=0.01)),
 ]
+DIRECTIONS[2]["symbol"] = plus_a_symbol
 
 
-def svg_doc(vb, body, label):
+def wordmark(d, hole=False):
+    spec = d["wordmark"]
+    if spec["kind"] == "plus_a":
+        return wordmark_plus_a(spec, hole=hole)
+    return wordmark_plain(spec)
+
+
+# ======================================================================
+# Composition
+# ======================================================================
+
+def paint(groups, colors):
+    """groups: list of (geometry, role); colors: role -> fill. Same-color shapes merge into one path."""
+    by = {}
+    for g, role in groups:
+        c = colors[role]
+        by.setdefault(c, []).append(g)
+    return "".join(f'<path d="{to_svg(union(*gs))}" fill="{c}"/>' for c, gs in by.items())
+
+
+def svg(vb, body, label):
     x, y, w, h = vb
-    return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="{f(x)} {f(y)} {f(w)} {f(h)}" role="img" aria-label="{label}">'
+    return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="{num(x)} {num(y)} {num(w)} {num(h)}" role="img" aria-label="{label}">'
             f'<title>{label}</title>{body}</svg>\n')
 
 
-def symbol_group(it, x, y, size, main, accent, ground, uid, draft=False, small=False):
-    s = size / 100
-    if small and it.get("small"):
-        inner = it["small"](main, accent, ground)
-    else:
-        inner = it["symbol"](main, accent, ground, uid=uid, draft=draft)
-    return f'<g transform="translate({f(x)} {f(y)}) scale({f(s)})">{inner}</g>'
+def bounds_of(groups):
+    xs0, ys0, xs1, ys1 = [], [], [], []
+    for g, _ in groups:
+        if g.is_empty:
+            continue
+        b = g.bounds
+        xs0.append(b[0]); ys0.append(b[1]); xs1.append(b[2]); ys1.append(b[3])
+    return min(xs0), min(ys0), max(xs1), max(ys1)
 
 
-F = 100  # wordmark font size in user units
+def lockup_horizontal(d, hole=False, endorse=False):
+    """Symbol left of the wordmark, symbol centred on the cap height."""
+    wm, ww = wordmark(d, hole)
+    groups = []
+    x0 = 0
+    if d.get("horizontal") != "wordmark":
+        H = CAP * d["sym_h"]
+        s = H / 100
+        sym = d["symbol"]()
+        for g, role in sym:
+            groups.append((place(g, 0, -CAP / 2 - H / 2, s), role))
+        x0 = H + CAP * d["gap"]
+    for role, g in wm.items():
+        groups.append((affinity.translate(g, x0, 0), "word" if role == "main" else "accent"))
+    if endorse:
+        ed, ew = text_path("UT Southwestern", "Inter Medium", F * 0.30, 0, x0 + 2, F * 0.62)
+        groups.append((from_svg(ed), "endorse"))
+    return groups
 
 
-def horizontal(it, word, main, accent, ground, uid="h", wordmark_only=False):
-    cap = font_metrics(it["font"], F)["capHeight"]
-    base = 0
-    H = cap * it["sym_scale"]
-    if wordmark_only:
-        wsvg, ww = wordmark(it, word, 0, base, F, accent)
-        body = wsvg
-        x0, x1 = -2, ww + 2
-    else:
-        sx = 0
-        sy = base - cap / 2 - H / 2
-        gap = cap * 0.42
-        wsvg, ww = wordmark(it, word, sx + H + gap, base, F, accent)
-        body = symbol_group(it, sx, sy, H, main, accent, ground, uid) + wsvg
-        x0, x1 = -2, H + gap + ww + 2
-    top = min(-cap - 3, base - cap / 2 - H / 2) - 2
-    bot = max(F * 0.235, base - cap / 2 + H / 2) + 2
-    return (x0, top, x1 - x0, bot - top), body
+def lockup_stacked(d, hole=False):
+    wm, ww = wordmark(d, hole)
+    H = CAP * d["sym_h"] * 1.5
+    s = H / 100
+    sym = d["symbol"]()
+    sb = bounds_of([(place(g, 0, 0, s), r) for g, r in sym])
+    sw = sb[2] - sb[0]
+    ed, ew = text_path("UT Southwestern", "Inter Medium", F * 0.30, 0, 0, 0)
+    width = max(ww, sw, ew)
+    groups = []
+    for g, role in sym:
+        groups.append((place(g, (width - sw) / 2 - sb[0], 0, s), role))
+    base = sb[3] + CAP * 0.55 + CAP
+    for role, g in wm.items():
+        groups.append((affinity.translate(g, (width - ww) / 2, base), "word" if role == "main" else "accent"))
+    ed, _ = text_path("UT Southwestern", "Inter Medium", F * 0.30, 0, (width - ew) / 2, base + F * 0.24 + F * 0.36)
+    groups.append((from_svg(ed), "endorse"))
+    return groups
 
 
-def stacked(it, word, main, accent, ground, endorse_color, uid="s"):
-    cap = font_metrics(it["font"], F)["capHeight"]
-    wsvg_probe, ww = wordmark(it, word, 0, 0, F, accent)
-    H = cap * it["sym_scale"] * 1.55
-    end_size = F * 0.30
-    ed, ew = text_path("UT Southwestern", "Inter Medium", end_size, 0)
-    width = max(ww, H, ew)
-    cx = width / 2
-    sy = 0
-    base = H + cap * 0.62 + cap
-    wsvg, _ = wordmark(it, word, cx - ww / 2, base, F, accent)
-    eb = base + F * 0.235 + end_size * 1.25
-    ed, _ = text_path("UT Southwestern", "Inter Medium", end_size, 0, cx - ew / 2, eb)
-    body = (symbol_group(it, cx - H / 2, sy, H, main, accent, ground, uid) + wsvg +
-            f'<path d="{ed}" fill="{endorse_color}"/>')
-    return (-4, -4, width + 8, eb + end_size * 0.3 + 6), body
+def frame(groups, pad=2):
+    x0, y0, x1, y1 = bounds_of(groups)
+    return (x0 - pad, y0 - pad, x1 - x0 + 2 * pad, y1 - y0 + 2 * pad)
 
 
-def app_icon(it, size=1024, scale=None, uid="i"):
-    scale = scale or it["icon_scale"]
-    S = size * scale
-    o = (size - S) / 2
-    dy = size * it.get("icon_dy", 0)
-    body = (f'<rect width="{size}" height="{size}" fill="{it["icon_bg"]}"/>' +
-            symbol_group(it, o, o + dy, S, it["icon_main"], it["icon_accent"], it["icon_bg"], uid))
-    return (0, 0, size, size), body
-
-
-def favicon(it, uid="f"):
-    # Rounded tile at 32 units, symbol a touch larger than on the app icon for small sizes.
-    S = 32 * min(it["icon_scale"] + 0.1, 0.72)
-    o = (32 - S) / 2
-    body = (f'<rect width="32" height="32" rx="7" fill="{it["icon_bg"]}"/>' +
-            symbol_group(it, o, o, S, it["icon_main"], it["icon_accent"], it["icon_bg"], uid, small=True))
-    return (0, 0, 32, 32), body
-
-
-def clearspace(it):
-    vb, body = horizontal(it, BLUE, BLUE, CYAN, WHITE, uid="c", wordmark_only=it["name"] == "care-c")
-    x, y, w, h = vb
-    cap = font_metrics(it["font"], F)["capHeight"]
-    m = cap
-    ox, oy, W, Hh = x - m, y - m, w + 2 * m, h + 2 * m
-    zones = "".join(
-        f'<rect x="{f(zx)}" y="{f(zy)}" width="{f(m)}" height="{f(m)}" fill="#D2EEF8"/>'
-        for zx, zy in [(ox, oy), (x + w, oy), (ox, y + h), (x + w, y + h)])
-    guides = (f'<rect x="{f(ox)}" y="{f(oy)}" width="{f(W)}" height="{f(Hh)}" fill="none" stroke="{CYAN}" stroke-width="1.5"/>'
-              f'<rect x="{f(x)}" y="{f(y)}" width="{f(w)}" height="{f(h)}" fill="none" stroke="{CYAN}" stroke-width="1.2" stroke-dasharray="5 4"/>')
-    return (ox - 8, oy - 8, W + 16, Hh + 16), f'<rect x="{f(ox - 8)}" y="{f(oy - 8)}" width="{f(W + 16)}" height="{f(Hh + 16)}" fill="#fff"/>' + zones + guides + body
-
-
-TYPE_TESTS = {
-    "open-arms": [("Inter Display SemiBold", []), ("Inter Display Bold", ["cv11"]), ("Inter Display ExtraBold", ["cv11"]), ("Inter Display Medium", [])],
-    "care-chat": [("Inter Display Medium", []), ("Inter Display SemiBold", []), ("Inter Display Bold", ["cv11"]), ("Inter Display Regular", [])],
-    "heart-path": [("Inter Display Bold", []), ("Inter Display ExtraBold", ["cv11"]), ("Inter Display Black", ["cv11"]), ("Inter Display SemiBold", ["cv11"])],
-    "care-c": [("Inter Display SemiBold", []), ("Inter Display Bold", []), ("Inter Display ExtraBold", []), ("Inter Display Black", [])],
+COLORWAYS = {
+    "primary": dict(main=BLUE, accent=CYAN, word=BLUE, endorse=GRAY),
+    "reversed": dict(main=WHITE, accent=CYAN, word=WHITE, endorse=WHITE),
+    "blue": dict(main=BLUE, accent=BLUE, word=BLUE, endorse=BLUE),
+    "black": dict(main=BLACK, accent=BLACK, word=BLACK, endorse=BLACK),
+    "white": dict(main=WHITE, accent=WHITE, word=WHITE, endorse=WHITE),
 }
 
 
-def type_tests(it):
-    """Four wordmark weights stacked; the chosen one in blue, the others in gray."""
-    rows, y, wmax = [], 0, 0
-    for font, feats in TYPE_TESTS[it["name"]]:
-        y += 100
-        chosen = font == it["font"]
-        col = BLUE if chosen else "#8A949C"
-        t = dict(it, font=font, features=feats)
-        if it["name"] == "care-c":
-            svg, w = wordmark(t, col, 0, y, F, CYAN if chosen else col)
-        else:
-            d, w = text_path("MyCare", font, F, it["tracking"], 0, y, feats)
-            svg = f'<path d="{d}" fill="{col}"/>'
-        rows.append(svg)
-        wmax = max(wmax, w)
-        y += 22
-    return (-4, 0, wmax + 8, y + 4), "".join(rows)
+def app_icon(d, size=1024, small=False):
+    ic = d["icon"]
+    sym = d["symbol"](small=small)
+    S = size * ic["scale"]
+    sb = bounds_of([(place(g, 0, 0, S / 100), r) for g, r in sym])
+    ox = (size - (sb[2] - sb[0])) / 2 - sb[0] + size * ic.get("dx", 0)
+    oy = (size - (sb[3] - sb[1])) / 2 - sb[1] + size * ic.get("dy", 0)
+    tile = rect(0, 0, size, size)
+    groups = [(place(g, ox, oy, S / 100), r) for g, r in sym]
+    groups = [(inter(g, tile), r) for g, r in groups]
+    bg = f'<rect width="{size}" height="{size}" fill="{ic["bg"]}"/>'
+    return (0, 0, size, size), bg + paint(groups, dict(main=ic["main"], accent=ic["accent"]))
 
 
-def symbol_evolution(it):
-    arrow = ('<path d="M128 50H162" stroke="#7BAFD4" stroke-width="5" stroke-linecap="round"/>'
-             '<path d="M152 39L164 50L152 61" fill="none" stroke="#7BAFD4" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>')
-    a = symbol_group(it, 0, 0, 100, BLUE, CYAN, WHITE, "a", draft=True)
-    b = symbol_group(it, 192, 0, 100, BLUE, CYAN, WHITE, "b")
-    return (-6, -6, 304, 112), a + arrow + b
+def icon_layer(d, role):
+    """One foreground layer of the 1024 app icon on a transparent canvas (for Icon Composer and Android)."""
+    ic = d["icon"]
+    sym = d["symbol"]()
+    if not any(r == role for _, r in sym):
+        return None
+    S = 1024 * ic["scale"]
+    sb = bounds_of([(place(g, 0, 0, S / 100), r) for g, r in sym])
+    ox = (1024 - (sb[2] - sb[0])) / 2 - sb[0] + 1024 * ic.get("dx", 0)
+    oy = (1024 - (sb[3] - sb[1])) / 2 - sb[1] + 1024 * ic.get("dy", 0)
+    groups = [(place(g, ox, oy, S / 100), r) for g, r in sym if r == role]
+    return (0, 0, 1024, 1024), paint(groups, dict(main=ic["main"], accent=ic["accent"]))
 
 
-def build(out_root):
-    for it in ITERATIONS:
-        d = os.path.join(out_root, it["name"])
-        os.makedirs(d, exist_ok=True)
-        name = f"MyCare logo – {it['title']}"
-        wm = it["name"] == "care-c"
-        files = {
-            "horizontal.svg": horizontal(it, BLUE, BLUE, CYAN, WHITE, wordmark_only=wm),
-            "horizontal-symbol.svg": horizontal(it, BLUE, BLUE, CYAN, WHITE) if wm else None,
-            "stacked.svg": stacked(it, BLUE, BLUE, CYAN, WHITE, GRAY),
-            "reversed.svg": horizontal(it, WHITE, WHITE, CYAN, BLUE, wordmark_only=wm),
-            "reversed-stacked.svg": stacked(it, WHITE, WHITE, CYAN, BLUE, WHITE),
-            "one-color-blue.svg": horizontal(it, BLUE, BLUE, BLUE, WHITE, wordmark_only=wm),
-            "one-color-black.svg": horizontal(it, BLACK, BLACK, BLACK, WHITE, wordmark_only=wm),
-            "symbol.svg": ((0, 0, 100, 100), it["symbol"](BLUE, CYAN, WHITE, uid="y")),
-            "symbol-draft.svg": ((0, 0, 100, 100), it["symbol"](BLUE, CYAN, WHITE, uid="d", draft=True)),
-            "app-icon.svg": app_icon(it),
-            "favicon.svg": favicon(it),
-            "clearspace.svg": clearspace(it),
-            "process-type.svg": type_tests(it),
-            "process-symbol.svg": symbol_evolution(it),
-        }
-        for fn, v in files.items():
-            if v is None:
-                continue
-            vb, body = v
-            with open(os.path.join(d, fn), "w") as fh:
-                fh.write(svg_doc(vb, body, name))
-        print("built", d)
+def favicon(d):
+    ic = d["icon"]
+    sym = d["symbol"](small=True)
+    S = 32 * min(ic["scale"] + 0.08, 0.95)
+    sb = bounds_of([(place(g, 0, 0, S / 100), r) for g, r in sym])
+    ox = (32 - (sb[2] - sb[0])) / 2 - sb[0] + 32 * ic.get("dx", 0)
+    oy = (32 - (sb[3] - sb[1])) / 2 - sb[1] + 32 * ic.get("dy", 0)
+    tile = rect(0, 0, 32, 32, 7)
+    groups = [(inter(place(g, ox, oy, S / 100), tile), r) for g, r in sym]
+    bg = f'<rect width="32" height="32" rx="7" fill="{ic["bg"]}"/>'
+    stroke_ = '<rect x=".5" y=".5" width="31" height="31" rx="6.5" fill="none" stroke="#D5DDE5"/>' if ic["bg"] == WHITE else ""
+    return (0, 0, 32, 32), bg + stroke_ + paint(groups, dict(main=ic["main"], accent=ic["accent"]))
+
+
+def monochrome_icon(d):
+    """Android 13+ themed icon layer: one-color glyph inside the 66 dp safe circle of a 108 dp canvas."""
+    sym = d["symbol"](small=True)
+    g = union(*[g for g, _ in sym])
+    c = g.centroid
+    far = max(math.hypot(x - 50, y - 50) for poly in (g.geoms if hasattr(g, "geoms") else [g]) for x, y in poly.exterior.coords)
+    s = 31 / far
+    g = place(g, 54 - 50 * s, 54 - 50 * s, s)
+    return (0, 0, 108, 108), f'<path d="{to_svg(g)}" fill="{BLACK}"/>'
+
+
+def clearspace(d):
+    groups = lockup_horizontal(d)
+    x, y, w, h = frame(groups, 0)
+    m = CAP
+    ox, oy, W, H = x - m, y - m, w + 2 * m, h + 2 * m
+    zones = "".join(f'<rect x="{num(zx)}" y="{num(zy)}" width="{num(m)}" height="{num(m)}" fill="#D2EEF8"/>'
+                    for zx, zy in [(ox, oy), (x + w, oy), (ox, y + h), (x + w, y + h)])
+    guides = (f'<rect x="{num(ox)}" y="{num(oy)}" width="{num(W)}" height="{num(H)}" fill="none" stroke="{CYAN}" stroke-width="1.5"/>'
+              f'<rect x="{num(x)}" y="{num(y)}" width="{num(w)}" height="{num(h)}" fill="none" stroke="{CYAN}" stroke-width="1.2" stroke-dasharray="5 4"/>')
+    bg = f'<rect x="{num(ox - 8)}" y="{num(oy - 8)}" width="{num(W + 16)}" height="{num(H + 16)}" fill="#fff"/>'
+    return (ox - 8, oy - 8, W + 16, H + 16), bg + zones + guides + paint(groups, COLORWAYS["primary"])
+
+
+TYPE_TESTS = {
+    "seamless": ["Inter Display Medium", "Inter Display SemiBold", "Inter Display Bold", "Inter Display ExtraBold"],
+    "way-in": ["Inter Display Regular", "Inter Display Medium", "Inter Display SemiBold", "Inter Display Bold"],
+    "care-inside": ["Inter Display Medium", "Inter Display SemiBold", "Inter Display Bold", "Inter Display ExtraBold"],
+    "ask": ["Inter Display Medium", "Inter Display SemiBold", "Inter Display Bold", "Inter Display ExtraBold"],
+}
+
+
+def process_type(d):
+    """Four weights of the wordmark; the chosen weight in blue, the others in gray."""
+    groups, y = [], 0
+    for font in TYPE_TESTS[d["name"]]:
+        y += F * 1.18
+        spec = dict(d["wordmark"], font=font)
+        dd = dict(d, wordmark=spec)
+        wm, w = wordmark(dd)
+        chosen = font == d["wordmark"]["font"]
+        for role, g in wm.items():
+            r = ("word" if role == "main" else "accent") if chosen else "muted"
+            groups.append((affinity.translate(g, 0, y), r))
+    return frame(groups, 3), paint(groups, dict(word=BLUE, accent=CYAN, muted="#8A949C"))
+
+
+def process_symbol(d):
+    """First sketch, arrow, refined symbol."""
+    a = [(place(g, 0, 0, 1), r) for g, r in d["symbol"](draft=True)]
+    b = [(place(g, 190, 0, 1), r) for g, r in d["symbol"]()]
+    ab = bounds_of(a)
+    a = [(affinity.translate(g, 0, 50 - (ab[1] + ab[3]) / 2), r) for g, r in a]
+    arrow = union(stroke(LineString([(122, 50), (160, 50)]), 5), stroke(LineString([(150, 39), (161, 50), (150, 61)]), 5))
+    groups = a + b + [(arrow, "arrow")]
+    return frame(groups, 3), paint(groups, dict(main=BLUE, accent=CYAN, arrow="#7BAFD4"))
+
+
+def build(out_root, only=None):
+    for d in DIRECTIONS:
+        if only and d["name"] not in only:
+            continue
+        out = os.path.join(out_root, d["name"])
+        os.makedirs(out, exist_ok=True)
+        label = f"MyCare logo – {d['title']}"
+        files = {}
+        H = lockup_horizontal(d)
+        files["horizontal.svg"] = (frame(H), paint(H, COLORWAYS["primary"]))
+        HE = lockup_horizontal(d, endorse=True)
+        files["horizontal-endorsed.svg"] = (frame(HE), paint(HE, COLORWAYS["primary"]))
+        ST = lockup_stacked(d)
+        files["stacked.svg"] = (frame(ST), paint(ST, COLORWAYS["primary"]))
+        files["reversed.svg"] = (frame(H), paint(H, COLORWAYS["reversed"]))
+        files["reversed-stacked.svg"] = (frame(ST), paint(ST, COLORWAYS["reversed"]))
+        HO = lockup_horizontal(d, hole=True)
+        STO = lockup_stacked(d, hole=True)
+        for cw in ("blue", "black", "white"):
+            files[f"one-color-{cw}.svg"] = (frame(HO), paint(HO, COLORWAYS[cw]))
+        files["one-color-stacked-blue.svg"] = (frame(STO), paint(STO, COLORWAYS["blue"]))
+        sym = d["symbol"]()
+        files["symbol.svg"] = (frame(sym, 1), paint(sym, COLORWAYS["primary"]))
+        files["app-icon.svg"] = app_icon(d)
+        files["favicon.svg"] = favicon(d)
+        files["icon-monochrome.svg"] = monochrome_icon(d)
+        for layer in ("main", "accent"):
+            lay = icon_layer(d, layer)
+            if lay:
+                files[f"icon-layer-{layer}.svg"] = lay
+        files["clearspace.svg"] = clearspace(d)
+        files["process-type.svg"] = process_type(d)
+        files["process-symbol.svg"] = process_symbol(d)
+        for fn, (vb, body) in files.items():
+            with open(os.path.join(out, fn), "w") as fh:
+                fh.write(svg(vb, body, label))
+        print("built", out)
 
 
 if __name__ == "__main__":
-    build(HERE)
+    build(HERE, only=sys.argv[1:] or None)
