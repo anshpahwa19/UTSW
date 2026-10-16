@@ -42,7 +42,7 @@
   --glass-blur:blur(24px) saturate(160%);
   --glass-sheen:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,0) 16px);
   --glass-rim:linear-gradient(140deg,rgba(255,255,255,.55),rgba(255,255,255,.12) 30%,rgba(255,255,255,.04) 60%,rgba(255,255,255,.30));
-  --glass-shadow:0 12px 32px rgba(0,40,80,.20),0 2px 6px rgba(0,40,80,.10),inset 0 1px 0 rgba(255,255,255,.18);
+  --glass-shadow:0 8px 20px rgba(0,40,80,.14),0 2px 4px rgba(0,40,80,.08),inset 0 1px 0 rgba(255,255,255,.18);
   --glass-spot:rgba(255,255,255,.05);
   --inner-fill:rgba(255,255,255,.08); --inner-line:rgba(255,255,255,.14);
   --noise:linear-gradient(transparent,transparent);
@@ -884,6 +884,13 @@ mark{background:rgba(0,169,224,.35);color:inherit;border-radius:4px}
 .sec-link{margin-block:calc(var(--s-8) * -1)}
 /* Home search bar: no label line – the rotating hint is the only text, so it takes the 16.0 body size */
 .sh-rot{height:24px;font-size:var(--fs-16);line-height:24px}
+/* Softer shadows on grey: the old 40px navy shadows were made for a dark background. Inside a horizontal rail
+   (MedBlog, services) the scroller clips them into a visible darker band, so keep them short and light */
+.feat{box-shadow:0 8px 16px rgba(0,40,80,.16)}
+.camp,.mc-card,.map-hero{box-shadow:0 8px 24px rgba(0,40,80,.16)}
+.alert-card{box-shadow:0 8px 24px rgba(0,40,80,.12)}
+.chip{box-shadow:0 4px 8px rgba(0,40,80,.12),inset 0 1px 0 rgba(255,255,255,.18)}
+.feat-rail .glass,.rail .glass,.feat-rail .glass-o{--glass-shadow:0 8px 16px rgba(0,40,80,.14),inset 0 1px 0 rgba(255,255,255,.18)}
 .app .eye:focus-visible{outline-color:var(--c-blue)}
 
 /* Reduce transparency – solid surfaces, no blur, no light */
