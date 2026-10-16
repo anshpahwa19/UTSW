@@ -882,6 +882,8 @@ mark{background:rgba(0,169,224,.35);color:inherit;border-radius:4px}
 .mod{gap:var(--s-12)}
 .sec-head{min-height:32px}
 .sec-link{margin-block:calc(var(--s-8) * -1)}
+/* Home search bar: no label line – the rotating hint is the only text, so it takes the 16.0 body size */
+.sh-rot{height:24px;font-size:var(--fs-16);line-height:24px}
 .app .eye:focus-visible{outline-color:var(--c-blue)}
 
 /* Reduce transparency – solid surfaces, no blur, no light */
@@ -1524,7 +1526,7 @@ R.search=function(){
 };
 function searchHero(){
  return '<button class="search-hero glass spot press a" data-act="search" aria-haspopup="dialog" aria-label="Search UTSW MyCare – providers, locations, content, and resources">'+
-  '<span class="orb c lg">'+ic("search")+'</span><span class="sh-text"><span class="sh-label">Search UTSW MyCare</span><span class="sh-rot" aria-hidden="true"><span>'+SUGGEST.all[rotI%4]+'</span></span></span>'+
+  '<span class="orb c lg">'+ic("search")+'</span><span class="sh-text"><span class="sh-rot" aria-hidden="true"><span>'+SUGGEST.all[rotI%4]+'</span></span></span>'+
   '<span class="sh-go" aria-hidden="true">'+ic("arrowR")+'</span></button>';
 }
 var TILES=[
