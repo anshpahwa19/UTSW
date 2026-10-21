@@ -828,6 +828,103 @@ mark{background:rgba(0,169,224,.35);color:inherit;border-radius:4px}
 .pc-row{display:flex;gap:var(--s-12);align-items:flex-start}
 .badges{pointer-events:none}
 
+/* =========================================================
+   ONBOARDING – four-slide tour, then the welcome choice
+   ========================================================= */
+.onb{position:absolute;inset:0;z-index:25;display:flex;flex-direction:column;padding-top:var(--s-48);transition:opacity var(--dur-slow) var(--ease-std),transform var(--dur-slow) var(--ease-out)}
+.onb.out{opacity:0;transform:scale(1.04);pointer-events:none}
+.app.onb-open .screens,.app.onb-open .dock{visibility:hidden}
+.app.onb-open .dock{transform:translateY(120%)}
+.dock{transition:transform var(--dur-slow) var(--ease-spring)}
+.onb-tour,.onb-login{flex:1;min-height:0;display:flex;flex-direction:column}
+.onb.login .onb-tour,.onb:not(.login) .onb-login{display:none}
+.onb-top{display:flex;align-items:center;justify-content:space-between;gap:var(--s-8);min-height:48px;padding:0 var(--s-16)}
+.onb-count{font-size:var(--fs-14);line-height:20px;font-weight:700;color:#FFFFFF;font-variant-numeric:tabular-nums}
+.onb-skip{min-height:48px;padding:0 var(--s-16);border:0;border-radius:var(--r-pill);background:var(--inner-fill);box-shadow:inset 0 0 0 1px var(--inner-line);color:#FFFFFF;font-weight:700;font-size:var(--fs-14)}
+.onb-track{flex:1;min-height:0;display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
+.onb-track::-webkit-scrollbar{display:none}
+.onb-slide{flex:0 0 100%;scroll-snap-align:start;scroll-snap-stop:always;display:flex;flex-direction:column;align-items:center;gap:var(--s-24);padding:var(--s-8) var(--s-24) 0;text-align:center;overflow:hidden}
+.onb-slide h2{font-size:var(--fs-28);line-height:36px;font-weight:800;letter-spacing:-.03em;text-wrap:balance}
+.onb-slide p{max-width:304px;color:#FFFFFF;text-wrap:pretty}
+.onb-txt{display:flex;flex-direction:column;gap:var(--s-8);align-items:center}
+.onb-foot{display:flex;flex-direction:column;align-items:center;gap:var(--s-12);padding:var(--s-12) var(--s-24) var(--s-40)}
+.odots{display:flex;align-items:center}
+.odot{min-width:24px;height:48px;border:0;background:none;padding:0 var(--s-4);display:grid;place-items:center}
+.odot i{display:block;width:8px;height:8px;border-radius:var(--r-pill);background:rgba(255,255,255,.45);transition:width var(--dur-slow) var(--ease-spring),background-color var(--dur-base)}
+.odot[aria-current="true"] i{width:32px;background:#FFFFFF}
+.onb-next{width:100%}
+.onb-next svg{transition:transform var(--dur-base) var(--ease-spring)}
+.onb-next:hover svg{transform:translateX(4px)}
+
+/* Illustrations – built from the app's own components */
+.oa{position:relative;width:100%;max-width:312px;height:320px;flex:none;will-change:transform}
+.pc{position:absolute}
+.onb-slide.on .pc{animation:pcin 600ms var(--ease-out) backwards;animation-delay:calc(var(--d,0) * 140ms + 120ms)}
+@keyframes pcin{from{opacity:0;transform:translateY(24px) scale(.94)}}
+.bob{animation:bob 4s var(--ease-std) infinite alternate;animation-delay:calc(var(--d,0) * -1s)}
+@keyframes bob{to{transform:translateY(-8px)}}
+.oa-search{left:0;right:0;top:0;min-height:56px;padding:0 var(--s-16);border-radius:var(--r-pill);background:#FFFFFF;color:var(--c-gray);display:flex;align-items:center;gap:var(--s-12);text-align:left;box-shadow:0 16px 40px rgba(0,10,30,.3)}
+.oa-search svg{width:24px;height:24px;color:var(--c-blue);flex:none}
+.caret{display:inline-block;width:2px;height:20px;margin-left:2px;vertical-align:-4px;background:var(--c-blue);animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.oa-card{left:0;right:0;top:128px;padding:var(--s-16);display:flex;flex-direction:column;gap:var(--s-12);text-align:left}
+.oa-card .pc-row b{display:block;font-size:var(--fs-18);line-height:24px}
+.oa-heart{position:absolute;top:var(--s-12);right:var(--s-12);width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--inner-fill);box-shadow:inset 0 0 0 1px var(--inner-line);color:#FFFFFF}
+.oa-heart svg{width:20px;height:20px}
+.onb-slide.on .oa-heart{animation:heartOn 300ms var(--ease-spring) 1.3s forwards}
+.onb-slide.on .oa-heart svg{animation:fillOn 1ms 1.3s forwards}
+@keyframes heartOn{50%{transform:scale(1.25)}to{background:#FFFFFF;color:var(--c-alert);box-shadow:none}}
+@keyframes fillOn{to{fill:currentColor}}
+.oa-tag{left:16px;top:72px;display:inline-flex;align-items:center;gap:var(--s-8);min-height:40px;padding:0 var(--s-16) 0 var(--s-12);border-radius:var(--r-pill);background:var(--c-542);color:var(--c-navy-900);font-size:var(--fs-14);font-weight:700}
+.oa-tag svg{width:16px;height:16px}
+.oa-panel{left:32px;right:32px;top:56px;padding:var(--s-16);display:flex;flex-direction:column;gap:var(--s-12);text-align:left;border-radius:var(--r-glass);background:linear-gradient(160deg,var(--c-blue),#00335F 60%,#3B3F8F 130%);box-shadow:0 24px 48px rgba(0,10,30,.45),inset 0 0 0 1px rgba(255,255,255,.2)}
+.oa-panel b{font-size:var(--fs-20);line-height:28px;font-weight:800}
+.oa-f{display:flex;flex-direction:column;gap:var(--s-4)}
+.oa-f i{display:block;width:40%;height:8px;border-radius:var(--r-pill);background:rgba(255,255,255,.5)}
+.oa-f span{display:block;height:40px;border-radius:var(--s-12);background:#FFFFFF}
+.oa-btn{display:flex;align-items:center;justify-content:center;gap:var(--s-8);height:40px;border-radius:var(--r-pill);background:#FFFFFF;color:var(--c-blue);font-weight:700;font-size:var(--fs-14)}
+.oa-btn svg{width:16px;height:16px}
+.oa-chipf{display:inline-flex;align-items:center;gap:var(--s-8);min-height:40px;padding:0 var(--s-12) 0 var(--s-4);border-radius:var(--r-pill);font-size:var(--fs-14);font-weight:700;color:#FFFFFF;white-space:nowrap}
+.oa-chipf .orb{width:32px;height:32px}
+.oa-chipf .orb svg{width:16px;height:16px}
+.oa-map{left:0;right:0;top:0;height:240px;border-radius:var(--r-glass);overflow:hidden;box-shadow:0 16px 40px rgba(0,10,30,.38),inset 0 0 0 1px rgba(255,255,255,.14)}
+.opin{position:absolute;width:32px;height:40px;margin:-40px 0 0 -16px;color:var(--c-cyan)}
+.opin svg{width:32px;height:40px;fill:currentColor;stroke:#FFFFFF;stroke-width:1.5}
+.opin.main{color:#FFFFFF}
+.opin.main svg{fill:#FFFFFF;stroke:var(--c-blue)}
+.onb-slide.on .opin{animation:drop 600ms var(--ease-spring) backwards;animation-delay:calc(var(--d,0) * 120ms + 500ms)}
+@keyframes drop{from{opacity:0;transform:translateY(-32px)}}
+.oa-row{left:16px;right:16px;bottom:8px;display:flex;align-items:center;gap:var(--s-12);padding:var(--s-12);border-radius:var(--r-inner);text-align:left}
+.oa-row .grow b{font-size:var(--fs-16)}
+.oa-row .dist{font-size:var(--fs-14);font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.oa-step{left:16px;right:16px;top:0;z-index:2;display:flex;align-items:center;gap:var(--s-12);padding:var(--s-12);border-radius:var(--r-inner);text-align:left}
+.oa-step b{font-size:var(--fs-16);line-height:24px}
+.oa-way{top:48px;height:224px}
+.rt{stroke-dasharray:1;stroke-dashoffset:0}
+.onb-slide.on .rt{animation:draw 1.6s var(--ease-out) .5s backwards}
+.oa-you{transform-box:fill-box;transform-origin:center;animation:ping 2s var(--ease-out) infinite}
+
+/* Welcome choice */
+.onb-login{padding:var(--s-8) var(--s-16) var(--s-40);gap:var(--s-24);overflow-y:auto;scrollbar-width:none}
+.onb-login::-webkit-scrollbar{display:none}
+.onb h1:focus{outline:none}
+.onb-login .logo{width:208px;height:auto;margin:var(--s-24) auto 0}
+.onb-login .hello{text-align:center;align-items:center}
+.choices{display:flex;flex-direction:column;gap:var(--s-12)}
+.choice{display:flex;align-items:center;gap:var(--s-16);width:100%;min-height:88px;padding:var(--s-16);border:0;text-align:left;color:#FFFFFF}
+.choice .grow b{font-size:var(--fs-18);line-height:24px;font-weight:800}
+.choice > svg{width:24px;height:24px;flex:none;transition:transform var(--dur-base) var(--ease-out)}
+.choice[aria-expanded="true"] > svg{transform:rotate(180deg)}
+.choice.primary{border-radius:var(--r-glass);background:#FFFFFF;color:var(--c-blue);box-shadow:0 16px 40px rgba(0,10,30,.38)}
+.choice.primary::before{display:none}
+.choice.primary .t2{color:#33506D}
+.ob-form{display:flex;flex-direction:column;gap:var(--s-16);padding:var(--s-16)}
+.ob-form .btn-primary{width:100%}
+.onb-help .txt-btn{align-self:center}
+.onb-help{display:flex;flex-direction:column;align-items:center;gap:var(--s-4);text-align:center;font-size:var(--fs-14);line-height:20px;color:#FFFFFF}
+.onb-login .anim-in > *{animation:rise var(--dur-slow) var(--ease-out) backwards}
+.onb-login .anim-in > *:nth-child(2){animation-delay:60ms}.onb-login .anim-in > *:nth-child(3){animation-delay:120ms}.onb-login .anim-in > *:nth-child(4){animation-delay:180ms}
+
 /* Reduce transparency – solid surfaces, no blur, no light */
 .app.rt{--glass-fill:var(--c-solid);--glass-fill-o:var(--c-solid-o);--glass-sheen:linear-gradient(transparent,transparent);--noise:linear-gradient(transparent,transparent);--glass-spot:transparent}
 .app.rt .glass,.app.rt .glass-o{-webkit-backdrop-filter:none;backdrop-filter:none}
@@ -891,6 +988,7 @@ mark{background:rgba(0,169,224,.35);color:inherit;border-radius:4px}
           </div>
           <div class="home-ind" aria-hidden="true"></div>
 
+          <div class="onb" id="onb" role="dialog" aria-modal="true" aria-label="Welcome to UTSW MyCare" hidden></div>
           <div class="toast glass-o" id="toast" role="status" aria-live="polite"></div>
           <div class="sr-only" id="alert-live" aria-live="assertive"></div>
           <div class="sr-only" id="care-live" aria-live="polite"></div>
@@ -904,6 +1002,14 @@ mark{background:rgba(0,169,224,.35);color:inherit;border-radius:4px}
     </div>
 
     <aside class="panel" aria-label="Prototype controls">
+      <section class="ctl">
+        <div class="ctl-h"><h2>Start-up</h2><p class="hint">The app opens with the four-slide tour, then asks how to continue. Swipe, use the dots, or tap Next.</p></div>
+        <div class="seg" role="group" aria-label="Show">
+          <button id="replay-tour">Replay the tour</button>
+          <button id="show-welcome">Show the welcome choice</button>
+        </div>
+      </section>
+
       <section class="ctl">
         <div class="ctl-h"><h2>Provider search conditions</h2><p class="hint">Force the states a guest can hit. Try a search, then switch these and tap Try again.</p></div>
         <p class="hint" id="net-l">Network</p>
@@ -975,6 +1081,7 @@ mark{background:rgba(0,169,224,.35);color:inherit;border-radius:4px}
 
       <div class="spec-card"><h3>Guest home, module by module</h3>
         <ul class="rules">
+          <li><b>Onboarding:</b> the old app’s four tour screens (Find a provider, MyChart, Find a location, Indoor wayfinding) become one swipeable tour with live illustrations built from the app’s own cards, then a welcome screen: “I’m a patient” opens sign-in in place, “Continue as guest” enters the guest home.</li>
           <li><b>Kept from the old app:</b> MedBlog stories with pause, quick links, UTSW resources (wayfinding, video visit prep), Find a provider by specialty, search history, and the city filter.</li>
           <li><b>Quick links</b> keep the old app’s four MyChart links with their exact names (Message your doctor, Get your test results, Manage your visits, Manage billing) and add Find my care and Locations. MyChart links are marked with a lock and open a sign-in explanation instead of dead-ending.</li>
           <li><b>Saved providers</b> appear on home only when the guest has saved someone.</li>
@@ -1100,6 +1207,7 @@ var P={
  parking:'<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 17V7h4a3 3 0 0 1 0 6H9"/>',
  eye:'<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
  eyeOff:'<path d="M10.6 5.1A10.4 10.4 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-2.2 3.2M6.6 6.6A17 17 0 0 0 2 12s3.6 7 10 7a9.7 9.7 0 0 0 5.4-1.6M9.9 9.9a3 3 0 0 0 4.2 4.2M2 2l20 20"/>',
+ elev:'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M12 3v18M7 10l1.5-2 1.5 2M14 14l1.5 2 1.5-2"/>',
  menu:'<path d="M4 7h16M4 12h16M4 17h16"/>',
  bell:'<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/>',
  bus:'<rect x="4" y="3" width="16" height="15" rx="3"/><path d="M4 11h16M8 18v3M16 18v3"/><circle cx="8" cy="14.5" r="1"/><circle cx="16" cy="14.5" r="1"/>',
@@ -2026,6 +2134,126 @@ function inboxOpen(id){
  if(o[0]==="alert") alertSheet(o[1]); else if(o[0]==="blog") blogSheet(+o[1]); else destSheet(o[1]);
 }
 
+/* ---------- Onboarding ---------- */
+var OB={i:0,view:"tour",open:false,obPw:false,kb:false};
+document.addEventListener("keydown",function(e){ if(e.key==="Tab"||e.key==="Enter"||e.key===" ") OB.kb=true; });
+document.addEventListener("pointerdown",function(){ OB.kb=false; });
+var SLIDES=[
+ {t:"Find a provider",b:"Search by name, specialty, or condition, and read full biographies to choose the right provider for your care."},
+ {t:"MyChart",b:"View medical information, schedule appointments, message your provider, see test results, and request refills."},
+ {t:"Find a location",b:"Find a UTSW location by specialty, ZIP code, or location type, with distance from where you are."},
+ {t:"Indoor wayfinding",b:"Step-by-step directions inside our hospitals and clinics, and between buildings across campus."}
+];
+function slideArt(i){
+ if(i===0){ var jp=PBY["jordan-sample"];
+  return '<div class="oa" aria-hidden="true">'+
+   '<div class="pc oa-search" style="--d:0">'+ic("search")+'<span>Knee pain when I run<span class="caret"></span></span></div>'+
+   '<div class="pc oa-card glass" style="--d:1"><span class="pc-row">'+pav(PBY["avery-mockford"])+'<span class="pc-txt" style="padding-inline-end:var(--s-40)"><b>Avery Mockford, M.D.</b><span class="pc-spec">Sports medicine · 2.4 mi</span></span></span>'+
+    '<span class="badges"><span class="bdg ok">'+ic("check")+'Accepting new patients</span></span><span class="oa-heart">'+ic("heart")+'</span></div>'+
+   '<div class="pc oa-tag" style="--d:3">'+ic("sparkle")+'Matched to Orthopedics</div></div>';
+ }
+ if(i===1){
+  return '<div class="oa" aria-hidden="true">'+
+   '<div class="pc oa-panel" style="--d:0"><b>Sign in</b><span class="oa-f"><i></i><span></span></span><span class="oa-f"><i></i><span></span></span><span class="oa-btn">'+ic("lock")+'Sign in</span></div>'+
+   [["msg","c","Messages","left:0;top:0",1],["flask","p","Test results","right:0;top:0",2],["cal","l","Appointments","left:0;bottom:0",3],["clip","c","Refills","right:0;bottom:0",4]].map(function(c){
+    return '<div class="pc" style="--d:'+c[4]+';'+c[3]+'"><span class="oa-chipf glass-o bob" style="--d:'+c[4]+'"><span class="orb '+c[1]+'">'+ic(c[0])+'</span>'+c[2]+'</span></div>';
+   }).join("")+'</div>';
+ }
+ if(i===2){
+  return '<div class="oa" aria-hidden="true"><div class="pc oa-map" style="--d:0">'+art("visit")+
+   [["30%","42%",1,""],["70%","22%",2,""],["82%","68%",3,""],["52%","58%",0,"main"]].map(function(p){return '<span class="opin '+p[3]+'" style="left:'+p[0]+';top:'+p[1]+';--d:'+p[2]+'"><svg viewBox="0 0 24 30"><path d="M12 29S2 19 2 11a10 10 0 0 1 20 0c0 8-10 18-10 18z"/><circle cx="12" cy="11" r="3.5" fill="'+(p[3]?'#004278':'#fff')+'" stroke="none"/></svg></span>';}).join("")+
+   '</div><div class="pc oa-row glass-o" style="--d:2"><span class="orb p">'+ic("building")+'</span><span class="grow"><b>Sample Medical Plaza</b><span class="t2">Clinics · Dallas, TX 75390</span></span><span class="dist">2.4 mi</span></div></div>';
+ }
+ return '<div class="oa" aria-hidden="true">'+
+  '<div class="pc oa-step glass-o" style="--d:0"><span class="orb c">'+ic("elev")+'</span><span class="grow"><b>Take the elevator to level 7</b><span class="t2">Then turn left</span></span></div>'+
+  '<div class="pc oa-map oa-way" style="--d:1"><svg class="art" viewBox="0 0 320 224" preserveAspectRatio="xMidYMid slice"><rect width="320" height="224" fill="#00335F"/>'+
+   '<g fill="#7BAFD4" fill-opacity=".16"><rect x="16" y="16" width="96" height="64" rx="8"/><rect x="128" y="16" width="72" height="64" rx="8"/><rect x="216" y="16" width="88" height="64" rx="8"/><rect x="16" y="128" width="72" height="80" rx="8"/><rect x="200" y="128" width="104" height="80" rx="8"/></g>'+
+   '<g fill="none" stroke="#7BAFD4" stroke-opacity=".3" stroke-width="16" stroke-linecap="round"><path d="M-8 104H328M112 96V232M184 96V232"/></g>'+
+   '<path class="rt" pathLength="1" d="M148 216V104H252V64" fill="none" stroke="#00A9E0" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>'+
+   '<circle cx="148" cy="216" r="7" fill="#fff" stroke="#00A9E0" stroke-width="3"/><circle class="oa-you" cx="252" cy="56" r="16" fill="#00A9E0" fill-opacity=".35"/><circle cx="252" cy="56" r="8" fill="#fff"/></svg></div>'+
+  '<div class="pc oa-row glass-o" style="--d:2;bottom:0"><span class="orb l">'+ic("route")+'</span><span class="grow"><b>Sample Transplant Clinic</b><span class="t2">125 ft · Arrive 4:25 p.m.</span></span></div></div>';
+}
+function renderOnb(){
+ var o=$("#onb");
+ o.innerHTML='<div class="onb-tour"><div class="onb-top"><span class="onb-count" id="ob-count" aria-hidden="true">1 of 4</span><button class="onb-skip press" data-act="ob-skip">Skip</button></div>'+
+  '<div class="onb-track" id="ob-track" aria-roledescription="carousel" aria-label="App tour">'+SLIDES.map(function(sl,i){
+   return '<section class="onb-slide'+(i===0?' on':'')+'" role="group" aria-roledescription="slide" aria-label="'+(i+1)+' of 4: '+sl.t+'"'+(i?' aria-hidden="true"':'')+'>'+slideArt(i)+'<div class="onb-txt"><h2>'+sl.t+'</h2><p>'+sl.b+'</p></div></section>';
+  }).join("")+'</div>'+
+  '<div class="onb-foot"><div class="odots" role="group" aria-label="Choose a slide">'+SLIDES.map(function(sl,i){return '<button class="odot" data-odot="'+i+'" aria-label="Slide '+(i+1)+': '+sl.t+'"'+(i===0?' aria-current="true"':'')+'><i></i></button>';}).join("")+'</div>'+
+  '<button class="btn-primary onb-next press" id="ob-next" data-act="ob-next">Next'+ic("arrowR")+'</button></div></div>'+
+  '<div class="onb-login" id="ob-login">'+
+   '<div class="grp anim-in" style="gap:var(--s-24)"><img class="logo" src="'+LOGO+'" alt="UTSW MyCare" width="208" height="54">'+
+   '<div class="hello"><h1 tabindex="-1" id="ob-h">Welcome</h1><p>How would you like to continue?</p></div>'+
+   '<div class="choices">'+
+    '<button class="choice primary press" data-act="ob-patient" aria-expanded="false" aria-controls="ob-xp"><span class="orb c lg" aria-hidden="true">'+ic("login")+'</span><span class="grow"><b>I’m a patient</b><span class="t2">Sign in for visits, messages, results, and bills.</span></span>'+ic("chevD")+'</button>'+
+    '<div class="xp" id="ob-xp" inert><div><form class="ob-form glass" id="ob-form" novalidate autocomplete="off">'+
+     '<div class="fl"><label for="ob-user">Username</label><div class="lfield" id="ob-user-w"><input id="ob-user" type="text" autocapitalize="off" spellcheck="false" autocomplete="off" aria-describedby="ob-err"></div></div>'+
+     '<div class="fl"><label for="ob-pw">Password</label><div class="lfield" id="ob-pw-w"><input id="ob-pw" type="password" autocomplete="off" aria-describedby="ob-err"><button type="button" class="eye" data-act="ob-eye" aria-pressed="false" aria-label="Show password">'+ic("eye")+'</button></div></div>'+
+     '<div id="ob-err" role="alert"></div><button class="btn-primary press" type="submit">'+ic("lock")+'Sign in</button>'+
+     '<button type="button" class="txt-btn" style="align-self:center" data-act="toast" data-ic="info" data-msg="Opening username and password help">Forgot username or password?</button>'+
+     '<button type="button" class="btn-ghost press" data-act="toast" data-ic="ext" data-msg="Opening account sign-up">Create an account</button></form></div></div>'+
+    '<button class="choice glass spot press" data-act="ob-guest"><span class="orb p lg" aria-hidden="true">'+ic("user")+'</span><span class="grow"><b>Continue as guest</b><span class="t2">Find a provider, get directions, and read health news without signing in.</span></span>'+ic("arrowR")+'</button>'+
+   '</div>'+
+   '<div class="onb-help"><span>Need help? Call 214-555-0100 (sample number).</span><button class="txt-btn" data-act="ob-tour">Take the tour again</button></div></div></div>';
+ var tr=$("#ob-track"), raf=0;
+ tr.addEventListener("scroll",function(){ cancelAnimationFrame(raf); raf=requestAnimationFrame(obScroll); },{passive:true});
+}
+function obScroll(){
+ var tr=$("#ob-track"); if(!tr) return;
+ var w=tr.clientWidth||1, x=tr.scrollLeft;
+ $$(".onb-slide",tr).forEach(function(sl,i){
+  var d=(i*w-x)/w, a=$(".oa",sl), t=$(".onb-txt",sl);
+  if(!S.rm){ a.style.transform="translateX("+(d*-64).toFixed(1)+"px) scale("+(1-Math.min(1,Math.abs(d))*.08).toFixed(3)+")"; t.style.opacity=(1-Math.min(1,Math.abs(d))*.9).toFixed(2); }
+ });
+ var i=Math.round(x/w); if(i!==OB.i) obSet(i,false);
+}
+function obSet(i,scroll){
+ i=Math.max(0,Math.min(SLIDES.length-1,i)); OB.i=i;
+ var tr=$("#ob-track");
+ $$(".onb-slide",tr).forEach(function(sl,n){
+  if(n===i){ sl.classList.remove("on"); void sl.offsetWidth; sl.classList.add("on"); sl.removeAttribute("aria-hidden"); }
+  else { sl.classList.remove("on"); sl.setAttribute("aria-hidden","true"); }
+ });
+ $$(".odot").forEach(function(b,n){ if(n===i) b.setAttribute("aria-current","true"); else b.removeAttribute("aria-current"); });
+ $("#ob-count").textContent=(i+1)+" of "+SLIDES.length;
+ $("#ob-next").innerHTML=(i===SLIDES.length-1?'Get started':'Next')+ic("arrowR");
+ if(scroll) tr.scrollTo({left:i*tr.clientWidth,behavior:S.rm?"auto":"smooth"});
+ say("Slide "+(i+1)+" of "+SLIDES.length+": "+SLIDES[i].t+". "+SLIDES[i].b);
+}
+function showOnb(view){
+ var o=$("#onb"), first=o.hidden;
+ if(first||!$("#ob-track")) renderOnb();
+ closeSheet(); if(PAGE) closePage();
+ OB.open=true; o.hidden=false; o.classList.remove("out");
+ app.classList.add("onb-open");
+ ["#screens","#dock"].forEach(function(sel){ var el=$(sel); el.inert=true; el.setAttribute("aria-hidden","true"); });
+ obView(view||"tour");
+}
+function obView(v){
+ var o=$("#onb"); OB.view=v; o.classList.toggle("login",v==="login");
+ if(v==="tour"){ var tr=$("#ob-track"); tr.scrollLeft=0; OB.i=-1; obSet(0,false); obScroll(); if(OB.kb) setTimeout(function(){ $("#ob-next").focus({preventScroll:true}); },50); }
+ else { var g=$("#ob-login .anim-in"); if(!S.rm){ g.classList.remove("anim-in"); void g.offsetWidth; g.classList.add("anim-in"); } setTimeout(function(){ $("#ob-h").focus({preventScroll:true}); },50); }
+}
+function hideOnb(){
+ var o=$("#onb"); OB.open=false; o.classList.add("out");
+ app.classList.remove("onb-open");
+ ["#screens","#dock"].forEach(function(sel){ var el=$(sel); el.inert=false; el.removeAttribute("aria-hidden"); });
+ go("home"); $("#scroller-home").scrollTop=0; renderHome(true);
+ setTimeout(function(){ o.hidden=true; },S.rm?0:300);
+ var h=$("#home .hello-home h1"); if(h){ h.setAttribute("tabindex","-1"); h.focus({preventScroll:true}); }
+}
+function obPatient(b){
+ var open=b.getAttribute("aria-expanded")!=="true", xp=$("#ob-xp");
+ b.setAttribute("aria-expanded",String(open)); xp.classList.toggle("open",open); xp.inert=!open;
+ if(open) setTimeout(function(){ $("#ob-user").focus({preventScroll:true}); var l=$("#ob-login"); l.scrollTo({top:l.scrollHeight,behavior:S.rm?"auto":"smooth"}); },S.rm?0:240);
+}
+function obSubmit(){
+ var u=$("#ob-user"), pw=$("#ob-pw"), err=$("#ob-err"), miss=[];
+ [["ob-user",u,"username"],["ob-pw",pw,"password"]].forEach(function(f){ var bad=!f[1].value.trim(); $("#"+f[0]+"-w").classList.toggle("bad",bad); if(bad){ f[1].setAttribute("aria-invalid","true"); miss.push(f[2]); } else f[1].removeAttribute("aria-invalid"); });
+ if(miss.length){ err.innerHTML='<p class="field-err">'+ic("alert")+'<span>Enter your '+miss.join(" and ")+'.</span></p>'; (u.value.trim()?pw:u).focus(); return; }
+ err.innerHTML='<p class="field-err" style="background:rgba(255,255,255,.14)">'+ic("info")+'<span>Patient sign-in isn’t part of this guest prototype. Choose Continue as guest to explore.</span></p>'; pw.value="";
+}
+
 /* ---------- Tabs ---------- */
 var TABS=[["home","home","Home"],["care","steth","Find my care"],["places","pin","Locations"],["mychart","login","MyChart"]];
 var SCREEN={home:"screen-home",care:"screen-care",places:"screen-places",saved:"screen-saved",mychart:"screen-mychart"};
@@ -2376,6 +2604,7 @@ app.addEventListener("click",function(e){
  if(d.blog!=null) return blogSheet(+d.blog);
  if(d.topic){ blogTopic=d.topic; renderPage(null); var tb=$('[data-topic="'+d.topic+'"]'); if(tb) tb.focus({preventScroll:true}); return; }
  if(d.menu) return menuGo(d.menu);
+ if(d.odot!=null) return obSet(+d.odot,true);
  if(d.inbox) return inboxOpen(d.inbox);
  if(d.dot!=null){ setStory(+d.dot); slideTo(+d.dot); return; }
  if(d.fill!=null){ var q=$("#q"); q.value=d.fill; renderResults(); q.focus(); return; }
@@ -2417,6 +2646,12 @@ app.addEventListener("click",function(e){
   case "refresh": $("#scroller-home").scrollTo({top:0}); return refresh();
   case "back": return pop();
   case "page-back": return closePage();
+  case "ob-next": if(OB.i>=SLIDES.length-1) return obView("login"); return obSet(OB.i+1,true);
+  case "ob-skip": return obView("login");
+  case "ob-tour": return obView("tour");
+  case "ob-guest": return hideOnb();
+  case "ob-patient": return obPatient(b);
+  case "ob-eye": OB.obPw=!OB.obPw; $("#ob-pw").type=OB.obPw?"text":"password"; b.setAttribute("aria-pressed",String(OB.obPw)); b.setAttribute("aria-label",OB.obPw?"Hide password":"Show password"); b.innerHTML=ic(OB.obPw?"eyeOff":"eye"); return;
   case "menu": return menuSheet();
   case "read-all": INBOX.forEach(function(x){x.unread=false;}); renderPage(null); renderHome(false); toast("All marked as read","check"); var pt=$("#page-title"); if(pt) pt.focus({preventScroll:true}); return;
   case "cq-go": return runSearch($("#cq").value);
@@ -2438,7 +2673,7 @@ app.addEventListener("click",function(e){
   case "bio": var id=top().id; C.bioOpen[id]=!C.bioOpen[id]; var bio=$("#bio"); bio.classList.toggle("clamp",!C.bioOpen[id]); b.setAttribute("aria-expanded",String(!!C.bioOpen[id])); b.textContent=C.bioOpen[id]?"Show less":"Read more"; return;
  }
 });
-app.addEventListener("submit",function(e){ if(e.target.id==="loc-form"){ e.preventDefault(); submitLoc(); } if(e.target.id==="mc-form"){ e.preventDefault(); mcSubmit(); } });
+app.addEventListener("submit",function(e){ if(e.target.id==="loc-form"){ e.preventDefault(); submitLoc(); } if(e.target.id==="mc-form"){ e.preventDefault(); mcSubmit(); } if(e.target.id==="ob-form"){ e.preventDefault(); obSubmit(); } });
 app.addEventListener("input",function(e){
  if(e.target.id==="q") renderResults();
  if(e.target.id==="cq") renderSugg();
@@ -2457,6 +2692,7 @@ app.addEventListener("keydown",function(e){
   if(e.key==="Enter"){ e.preventDefault(); if(sIdx>=0&&!l.hidden) pickSugg(sIdx); else runSearch(e.target.value); return; }
   if(e.key==="Escape"&&!l.hidden){ l.hidden=true; e.target.setAttribute("aria-expanded","false"); return; }
  }
+ if(OB.open&&OB.view==="tour"&&(e.key==="ArrowRight"||e.key==="ArrowLeft")&&!/INPUT/.test(e.target.tagName)){ e.preventDefault(); return obSet(OB.i+(e.key==="ArrowRight"?1:-1),true); }
  if(e.key==="Escape"){ if(!$("#perm").hidden) return permAnswer("denied"); if($("#sheet").classList.contains("show")) return closeSheet(); if(PAGE) return closePage(); if(S.tab==="care"&&C.stack.length>1) return pop(); }
  if(e.key==="Tab"){
   var scopeEl=!$("#perm").hidden?$("#perm"):(!$("#sheet").hidden?$("#sheet"):null); if(!scopeEl) return;
@@ -2518,5 +2754,8 @@ setSwitch("#opt-rt",S.rt); app.classList.toggle("rt",S.rt);
 setSwitch("#opt-rm",S.rm); app.classList.toggle("rm",S.rm);
 seg("al",S.alerts); seg("w",S.w); seg("net",S.net); seg("api",S.api); seg("perm",S.perm);
 renderTabs(); renderHome(true); renderCare(null); renderSaved(false); renderPlaces(); renderMods();
+showOnb("tour");
+$("#replay-tour").addEventListener("click",function(){ showOnb("tour"); });
+$("#show-welcome").addEventListener("click",function(){ showOnb("login"); });
 })();
 </script>
