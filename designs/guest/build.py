@@ -1,6 +1,6 @@
 """Build mycare-guest.html from src.html.
 
-- Inlines the MyCare horizontal logo as a data URI (the logo file itself is never edited).
+- Inlines the MyCare reversed horizontal logo and the app icon as data URIs (the logo files themselves are never edited).
 - Derives the Material Symbols subset (icon_names) from ICON_MAP plus the EXTRA_GLYPHS comment,
   and fails if any static glyph in the page is missing from that subset or if a glyph is mapped twice.
 """
@@ -24,12 +24,14 @@ missing = static - set(names)
 assert not missing, f"glyphs used in the page but missing from the subset: {sorted(missing)}"
 
 # Size of the app-only subset woff2 (ICON_MAP glyphs, all four axes) as served by Google Fonts; re-measure when the map changes.
-FONT_KB = "108"
+FONT_KB = "112"
 
 logo = base64.b64encode((here.parent.parent / "mycare-logo" / "reversed.svg").read_bytes()).decode()
+icon = base64.b64encode((here.parent.parent / "mycare-logo" / "icon.svg").read_bytes()).decode()
 out = (
     src.replace("__ICON_NAMES__", ",".join(names))
     .replace("__LOGO__", logo)
+    .replace("__ICON__", icon)
     .replace("__APP_GLYPHS__", str(len(app)))
     .replace("__FONT_KB__", FONT_KB)
 )

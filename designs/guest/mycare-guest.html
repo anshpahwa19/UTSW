@@ -3,7 +3,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..800&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=acute,apartment,arrow_back,arrow_downward,arrow_forward,arrow_upward,article,badge,calendar_add_on,calendar_month,call,chat,check_circle,chevron_left,chevron_right,close,content_copy,coronavirus,directions,directions_bus,directions_walk,domain,done_all,door_front,edit_calendar,error,event_available,expand_more,favorite,folder_open,help,history,home,inbox,info,lab_profile,library_books,local_parking,location_off,location_on,lock,login,mail,map,menu,menu_book,more_horiz,my_location,near_me,open_in_new,person_add,play_circle,privacy_tip,public,receipt_long,refresh,schedule,school,science,search,share,sms,stethoscope,swap_vert,translate,trending_up,tune,vaccines,verified,videocam,visibility,visibility_off,volunteer_activism,warning,wifi_off,workspace_premium&display=block">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=acute,apartment,arrow_back,arrow_downward,arrow_forward,arrow_upward,article,badge,calendar_add_on,calendar_month,call,chat,check_circle,chevron_left,chevron_right,close,content_copy,coronavirus,directions,directions_bus,directions_walk,domain,done_all,door_front,edit_calendar,elevator,error,event_available,expand_more,explore,favorite,folder_open,help,history,home,inbox,info,lab_profile,library_books,local_parking,location_off,location_on,lock,lock_open,login,mail,map,menu,menu_book,more_horiz,my_location,near_me,open_in_new,person_add,play_circle,privacy_tip,public,receipt_long,refresh,schedule,school,science,search,share,sms,stethoscope,swap_vert,translate,trending_up,tune,vaccines,verified,videocam,visibility,visibility_off,volunteer_activism,warning,wifi_off,workspace_premium&display=block">
 <style>
 /* Layout: presentation board – controls | 390 × 844 phone | token spec, then the flow map, coverage tables, and glyph map full width.
    App direction (inherited from designs/playful): a Blue hero holds the welcome and the global search; content rides up on a light sheet.
@@ -803,6 +803,199 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
 .blog-more{margin-top:var(--s4)!important}
 .blog-end{font-size:var(--t14); color:var(--ink-2); text-align:center; margin-top:var(--s6)!important}
 
+/* ===================== First launch: onboarding and the sign-in choice ===================== */
+/* One full-screen layer above the app. Slides share the hero's Blue art panel and a light text area;
+   each art panel is a small scene built from real MyCare components that plays once when its slide arrives. */
+.onb{position:absolute; inset:0; z-index:66; background:var(--bg); overflow:hidden}
+.onb.leaving{animation:onbOut 560ms var(--ease-in-out) forwards; pointer-events:none}
+@keyframes onbOut{to{opacity:0; transform:scale(1.06)}}
+.phone.onb-on .toast{z-index:68}
+.onb-view{position:absolute; inset:0; display:flex; flex-direction:column}
+.onb-view.enter{animation:scrIn var(--d-gentle) var(--spring-gentle) both; --dx:40px}
+.onb-view.back{animation:scrIn var(--d-gentle) var(--spring-gentle) both; --dx:-40px}
+.onb-track{position:relative; flex:1; display:flex; transition:transform var(--d-gentle) var(--spring-gentle); touch-action:pan-y; will-change:transform}
+.onb-track.drag{transition:none}
+.slide{flex:0 0 100%; min-width:0; display:flex; flex-direction:column}
+.sl-art{position:relative; flex:0 0 auto; height:56%; padding-top:96.0px; background:var(--hero-glow), var(--blue); border-radius:0 0 var(--r-xl) var(--r-xl); overflow:hidden; display:grid; place-items:center; --grad:-25}
+.sl-art .hero-art{top:56%}
+.sl-txt{padding:var(--s8) var(--s6) 0; display:grid; gap:var(--s3); align-content:start}
+.sl-txt .kick{display:inline-flex; align-items:center; gap:var(--s2)}
+.sl-txt h2{font-size:var(--t28); line-height:1.15; font-weight:700; letter-spacing:-.02em; color:var(--blue); text-wrap:balance}
+.sl-txt p{color:var(--ink-2); max-width:34ch}
+.slide.on .sl-txt > *{animation:txtIn 520ms var(--spring-snappy) both}
+.slide.on .sl-txt > :nth-child(2){animation-delay:60ms}
+.slide.on .sl-txt > :nth-child(3){animation-delay:120ms}
+@keyframes txtIn{from{opacity:0; transform:translateY(16px)}}
+.onb-skip{position:absolute; top:48.0px; right:var(--s4); z-index:3; min-height:var(--hit); padding:0 var(--s4); border:0; border-radius:var(--r-pill); background:rgba(255,255,255,.14); color:#FFFFFF; font-weight:600; font-size:var(--t14)}
+.onb-skip:active{background:rgba(255,255,255,.24)}
+.onb :focus-visible{outline:none; box-shadow:var(--focus)}
+.sl-art :focus-visible,.onb-skip:focus-visible,.lg-top :focus-visible{box-shadow:var(--focus-on-blue)}
+.onb-foot{display:flex; align-items:center; justify-content:space-between; gap:var(--s3); padding:var(--s4) var(--s6) var(--s8)}
+.onb-dots{display:flex; margin-left:calc(-1 * var(--s3))}
+.onb-dots button{width:var(--hit); height:var(--hit); border:0; background:none; display:grid; place-items:center; padding:0; border-radius:var(--r-pill)}
+.onb-dots i{display:block; width:8px; height:8px; border-radius:var(--r-pill); background:var(--line-strong); transition:width var(--d-snappy) var(--spring-snappy), background-color var(--d-base) var(--ease-out)}
+.onb-dots [aria-current="step"] i{width:24px; background:var(--blue)}
+.onb-next{min-width:136px}
+.onb-next .ms{transition:transform var(--d-snappy) var(--spring-snappy)}
+.onb-next:hover .ms{transform:translateX(4px)}
+
+/* Scene card: a white phone-like surface floating on the Blue panel */
+.va{position:relative; width:264px; max-width:calc(100% - 2 * var(--s8)); display:grid; gap:var(--s2); color:var(--ink); --grad:0}
+.v-surface{background:var(--surface); border-radius:var(--r-lg); box-shadow:0 16px 40px rgba(0,20,40,.32); padding:var(--s3)}
+.v-row{display:flex; align-items:center; gap:var(--s3); background:var(--surface); border-radius:var(--r-lg); padding:var(--s3); box-shadow:0 12px 32px rgba(0,20,40,.28)}
+.v-row .txt{display:grid; min-width:0; flex:1}
+.v-row b{font-size:14.0px; line-height:1.3; font-weight:700; color:var(--blue); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.v-row small{font-size:12.0px; line-height:1.4; color:var(--ink-2); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.v-row .pav{width:40px; height:40px; font-size:14.0px}
+.v-pill{display:inline-flex; align-items:center; gap:var(--s1); justify-self:start; padding:var(--s1) var(--s3); border-radius:var(--r-pill); background:rgba(255,255,255,.16); color:#FFFFFF; font-size:12.0px; font-weight:600; --grad:-25}
+
+/* 1 · Find my Care: typing, results rise, a heart fills */
+.v-search{display:flex; align-items:center; gap:var(--s2); height:48px; padding:0 var(--s2) 0 var(--s3); background:var(--surface); border-radius:var(--r-pill); box-shadow:0 12px 32px rgba(0,20,40,.28); font-size:14.0px; color:var(--ink)}
+.v-search > .ms{color:var(--blue)}
+.v-type{display:inline-block; overflow:hidden; white-space:nowrap; width:9ch; font-family:var(--font)}
+.v-caret{width:2px; height:18px; background:var(--blue); margin-left:-4px}
+.v-go{margin-left:auto; width:32px; height:32px; border-radius:50%; background:var(--blue); color:#FFFFFF; display:grid; place-items:center; --grad:-25}
+.v-heart{position:relative; width:24px; height:24px; color:var(--blue)}
+.v-heart .ms{position:absolute; inset:0}
+.v-heart .f1{opacity:1}
+.slide.on .v-type{animation:typeIn 900ms steps(9) both 300ms}
+.slide.on .v-caret{animation:caret 300ms steps(1) 6 both 200ms}
+.slide.on .va-find .v-row{animation:vUp 520ms var(--spring-snappy) both}
+.slide.on .va-find .v-row:nth-child(2){animation-delay:1200ms}
+.slide.on .va-find .v-row:nth-child(3){animation-delay:1320ms}
+.slide.on .v-heart .f1{animation:heartIn 420ms var(--spring-snappy) both 1900ms}
+@keyframes typeIn{from{width:0}}
+@keyframes caret{50%{opacity:0}}
+@keyframes vUp{from{opacity:0; transform:translateY(24px) scale(.96)}}
+@keyframes heartIn{from{opacity:0; transform:scale(.4)}}
+
+/* 2 · MyChart: the lock opens, then messages, results, and visits fan in */
+.va-mc{gap:var(--s2)}
+.v-lockring{justify-self:center; width:56px; height:56px; border-radius:50%; background:#FFFFFF; color:var(--blue); display:grid; place-items:center; box-shadow:0 0 0 8px rgba(255,255,255,.12); margin-bottom:var(--s2)}
+.v-lockring .ms{grid-area:1/1}
+.v-lockring .open{opacity:1}
+.v-lockring .shut{opacity:0}
+.slide.on .v-lockring{animation:ringPop 520ms var(--spring-snappy) both 150ms}
+.slide.on .v-lockring .shut{animation:shutOut 700ms var(--ease-out) both 200ms}
+.slide.on .v-lockring .open{animation:openIn 360ms var(--spring-snappy) both 760ms}
+.slide.on .va-mc .v-row{animation:fanIn 560ms var(--spring-snappy) both}
+.slide.on .va-mc .v-row:nth-of-type(2){animation-delay:900ms}
+.slide.on .va-mc .v-row:nth-of-type(3){animation-delay:1020ms}
+.slide.on .va-mc .v-row:nth-of-type(4){animation-delay:1140ms}
+@keyframes ringPop{from{opacity:0; transform:scale(.6)}}
+@keyframes shutOut{0%,60%{opacity:1}100%{opacity:0}}
+@keyframes openIn{from{opacity:0; transform:scale(.6) rotate(-12deg)}}
+@keyframes fanIn{from{opacity:0; transform:translateY(32px) rotate(-3deg)}}
+
+/* 3 · Locations: pins drop onto a map, your dot pulses, the nearest place rises */
+.va-loc{width:280px}
+.v-map{position:relative; height:184px; border-radius:var(--r-lg); overflow:hidden; background:#E6EDF3; box-shadow:0 16px 40px rgba(0,20,40,.32)}
+.v-map svg{position:absolute; inset:0; width:100%; height:100%}
+.v-pin{position:absolute; width:28px; height:28px; margin:-28px 0 0 -14px; color:var(--blue); --fill:1}
+.v-pin .ms{font-size:28px}
+.v-me{position:absolute; width:14px; height:14px; margin:-7px 0 0 -7px; border-radius:50%; background:var(--cyan); box-shadow:0 0 0 3px #FFFFFF}
+.v-me::after{content:""; position:absolute; inset:-10px; border-radius:50%; background:rgba(0,169,224,.25); opacity:0}
+.va-loc .v-row{margin:calc(-1 * var(--s8)) var(--s3) 0; position:relative}
+.slide.on .v-pin{animation:pinDrop 560ms var(--spring-snappy) both 320ms}
+.slide.on .v-pin:nth-of-type(2){animation-delay:420ms} .slide.on .v-pin:nth-of-type(3){animation-delay:520ms} .slide.on .v-pin:nth-of-type(4){animation-delay:620ms}
+.slide.on .v-me{animation:ringPop 420ms var(--spring-snappy) both 200ms}
+.slide.on .v-me::after{animation:pulse 1200ms var(--ease-out) 2 900ms}
+.slide.on .va-loc .v-row{animation:vUp 560ms var(--spring-snappy) both 1100ms}
+@keyframes pinDrop{from{opacity:0; transform:translateY(-32px)}}
+@keyframes pulse{0%{opacity:1; transform:scale(.4)}100%{opacity:0; transform:scale(1.4)}}
+
+/* 4 · Wayfinding: the route draws itself and you walk it to the elevator */
+.va-way{width:280px}
+.v-plan{position:relative; height:200px; border-radius:var(--r-lg); overflow:hidden; background:#EEF1F4; box-shadow:0 16px 40px rgba(0,20,40,.32)}
+.v-plan svg{position:absolute; inset:0}
+.v-route{fill:none; stroke:var(--blue); stroke-width:5; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:340; stroke-dashoffset:0}
+.v-walker{position:absolute; left:0; top:0; width:16px; height:16px; margin:-8px 0 0 -8px; border-radius:50%; background:var(--cyan); box-shadow:0 0 0 3px #FFFFFF, 0 2px 8px rgba(0,20,40,.3);
+  offset-path:path('M40 168 H128 V96 H232 V48'); offset-rotate:0deg; offset-distance:100%}
+.v-banner{display:flex; align-items:center; gap:var(--s3); background:#FFFFFF; border-radius:var(--r-lg); padding:var(--s2) var(--s3); box-shadow:0 12px 32px rgba(0,20,40,.28)}
+.v-banner b{font-size:14.0px; line-height:1.3; color:var(--ink)}
+.v-banner .dot{background:var(--blue); color:#FFFFFF; --grad:-25}
+.va-way .v-pill{position:absolute; right:var(--s3); bottom:var(--s3); background:var(--blue)}
+.slide.on .v-route{animation:draw 1400ms var(--ease-in-out) both 300ms}
+.slide.on .v-walker{animation:walk 1400ms var(--ease-in-out) both 300ms}
+.slide.on .v-banner{animation:dropIn 520ms var(--spring-snappy) both 1600ms}
+.slide.on .va-way .v-pill{animation:vUp 420ms var(--spring-snappy) both 1800ms}
+@keyframes draw{from{stroke-dashoffset:340}}
+@keyframes walk{from{offset-distance:0%}}
+@keyframes dropIn{from{opacity:0; transform:translateY(-16px)}}
+
+/* Splash: the app icon arrives, rings ripple out and clear, the wordmark settles on flat Blue (so the logo's own Blue tile never shows an edge), then the Blue screen
+   shrinks into slide 1's art panel so the tour starts without a cut. The logo files are used unaltered. */
+.splash{position:absolute; left:0; right:0; top:0; height:100%; z-index:5; display:grid; place-items:center; overflow:hidden; color:#FFFFFF; background:var(--blue); --grad:-25;
+  transition:height var(--d-gentle) var(--spring-gentle), border-radius var(--d-gentle) var(--spring-gentle)}
+.splash > *{grid-area:1 / 1}
+.splash.out{height:56%; border-radius:0 0 var(--r-xl) var(--r-xl)}
+.splash.out > *{opacity:0!important; transition:opacity 200ms var(--ease-out)}
+.sp-rings{width:400px; height:400px; overflow:visible}
+.sp-rings circle{fill:none; stroke:rgba(255,255,255,.12); stroke-width:2; transform-box:fill-box; transform-origin:center; opacity:0}
+.sp-glow{width:224px; height:224px; border-radius:50%; background:radial-gradient(circle, rgba(0,169,224,.42) 0, rgba(0,169,224,0) 70%); opacity:0}
+.sp-icon{width:112px; height:112px; border-radius:26px; opacity:0; box-shadow:0 16px 40px rgba(0,10,30,.45), 0 0 0 1px rgba(255,255,255,.18)}
+.sp-logo{width:232px; height:auto; transform:translateX(-8px)}
+.sp-tag{margin-top:104px; font-size:var(--t16); color:var(--on-blue-2); text-align:center; padding-inline:var(--s6)}
+.sp-dots{align-self:end; margin-bottom:96px; display:flex; gap:var(--s2)}
+.sp-dots i{width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,.7)}
+.splash.play .sp-rings circle{animation:spRing 1500ms var(--ease-out) both}
+.splash.play .sp-rings circle:nth-child(2){animation-delay:180ms}
+.splash.play .sp-rings circle:nth-child(3){animation-delay:360ms}
+.splash.play .sp-glow{animation:spGlow 1300ms var(--ease-out) both 150ms}
+.splash.play .sp-icon{animation:spIcon 1700ms var(--ease-out) both}
+.splash.play .sp-logo{animation:spUp 600ms var(--spring-snappy) both 1350ms}
+.splash.play .sp-tag{animation:spUp 520ms var(--spring-snappy) both 1600ms}
+.splash.play .sp-dots i{animation:dotHop 600ms var(--ease-in-out) infinite}
+.splash.play .sp-dots i:nth-child(2){animation-delay:100ms}
+.splash.play .sp-dots i:nth-child(3){animation-delay:200ms}
+@keyframes spRing{0%{opacity:0; transform:scale(.3)}40%{opacity:1}75%{opacity:1}100%{opacity:0; transform:scale(1.08)}}
+@keyframes spGlow{0%{opacity:0; transform:scale(.4)}50%{opacity:1; transform:scale(1.1)}100%{opacity:0; transform:none}}
+@keyframes spIcon{0%{opacity:0; transform:scale(.5)}22%{opacity:1; transform:scale(1.04)}30%{transform:none}72%{opacity:1; transform:none}100%{opacity:0; transform:scale(.82) translateY(-16px)}}
+@keyframes spUp{from{opacity:0; transform:translate(-8px, 16px)}}
+.phone.rm .splash{transition:opacity var(--d-base) var(--ease-out)}
+.phone.rm .splash.out{height:100%; border-radius:0; opacity:0}
+
+/* Sign-in choice */
+.lg-top{position:relative; flex:0 0 auto; padding:96.0px var(--s6) var(--s8); background:var(--hero-glow), var(--blue); border-radius:0 0 var(--r-xl) var(--r-xl); overflow:hidden; color:#FFFFFF; display:grid; justify-items:start; gap:var(--s4); --grad:-25}
+.lg-top .logo{display:block; width:232px; height:auto; margin-left:calc(-1 * var(--s4))}
+.lg-top h2{font-size:var(--t32); line-height:1.15; font-weight:700; letter-spacing:-.02em; text-wrap:balance; position:relative}
+.lg-top p{color:var(--on-blue-2); position:relative}
+.lg-body{flex:1; overflow-y:auto; padding:var(--s6) var(--s4) var(--s8); display:grid; gap:var(--s3); align-content:start}
+.lg-body > h3{font-size:var(--t20); line-height:1.3; font-weight:700; color:var(--blue); padding-inline:var(--s2)}
+.choice{width:100%; display:flex; align-items:center; gap:var(--s3); padding:var(--s4); border:0; border-radius:var(--r-lg); background:var(--surface); box-shadow:var(--shadow-1), 0 0 0 1px var(--line); text-align:left; color:var(--ink); transition:transform var(--d-snappy) var(--spring-snappy), background-color var(--d-fast)}
+.choice:active{transform:scale(.98); background:var(--tint); transition-duration:80ms; --fill:1}
+.choice .txt{flex:1; min-width:0; display:grid; gap:2px}
+.choice b{font-size:var(--t18); line-height:1.3; color:var(--blue)}
+.choice small{font-size:var(--t14); line-height:1.4; color:var(--ink-2)}
+.choice.primary{background:var(--blue); box-shadow:0 12px 32px -12px rgba(0,66,120,.6); --grad:-25}
+.choice.primary b{color:#FFFFFF}
+.choice.primary small{color:var(--on-blue-2)}
+.choice.primary .dot{background:#FFFFFF; color:var(--blue); --grad:0}
+.choice.primary .chev{color:#FFFFFF}
+.choice.primary:focus-visible{box-shadow:var(--focus)}
+.onb-view.enter .choice,.onb-view.enter .lg-body > h3{animation:txtIn 520ms var(--spring-snappy) both}
+.onb-view.enter .choice:nth-of-type(1){animation-delay:80ms}
+.onb-view.enter .choice:nth-of-type(2){animation-delay:140ms}
+.lg-links{display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:0 var(--s2); margin-top:var(--s2)!important; font-size:var(--t14); color:var(--ink-2)}
+.lg-links .link{margin:0}
+.lg-form{padding:96.0px var(--s4) var(--s8); overflow-y:auto; flex:1; display:grid; gap:var(--s4); align-content:start}
+.onb-view > .lg-back-btn{position:absolute; top:52.0px; left:var(--s4); z-index:2}
+.onb [tabindex="-1"]:focus-visible{box-shadow:none}
+.onb-next{white-space:nowrap}
+.slide{overflow:hidden}
+.sl-txt{flex:1; min-height:0; overflow-y:auto; scrollbar-width:none; padding-bottom:var(--s4)}
+.phone.lg .onb-foot{flex-direction:column; align-items:stretch; gap:var(--s2); padding-top:var(--s2)}
+.phone.lg .onb-dots{justify-content:center; margin:0}
+.lg-done{display:grid; gap:var(--s2); background:var(--tint); border-radius:var(--r-lg); padding:var(--s4)}
+.lg-done b{color:var(--blue)}
+.lg-done .btn{margin-top:var(--s2)}
+
+/* Reduced motion: no scenes play; every scene rests in its final frame, views cross-fade */
+.phone.rm .onb *, .phone.rm .onb *::after{animation:none!important}
+.phone.rm .onb-track{transition:none}
+.phone.rm .onb.leaving{animation:fadeOut var(--d-base) linear forwards!important}
+.phone.rm .onb-view.enter,.phone.rm .onb-view.back{animation:fadeOnly var(--d-base) var(--ease-out) both!important}
+
 /* ===================== Board: flow map and coverage ===================== */
 .wide{grid-column:1 / -1; justify-self:stretch; padding:24.0px}
 .wide > header{max-width:72ch; display:grid; gap:8.0px; margin-bottom:24.0px}
@@ -842,6 +1035,15 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
   </header>
 
   <aside class="controls panel" aria-label="Prototype controls">
+    <div class="ctl">
+      <h2 id="lbl-onb">First launch</h2>
+      <div class="seg" role="group" aria-labelledby="lbl-onb">
+        <button data-onb="splash" aria-pressed="false">Splash</button>
+        <button data-onb="replay" aria-pressed="false">Tour</button>
+        <button data-onb="skip" aria-pressed="false">Home</button>
+      </div>
+      <p class="note">The prototype opens on the animated splash, then the first-launch tour: four slides, then the choice to sign in as a patient or continue as a guest. Replay either, or skip to home.</p>
+    </div>
     <div class="ctl">
       <h2 id="lbl-alert">Emergency alerts</h2>
       <div class="seg" role="group" aria-labelledby="lbl-alert">
@@ -911,6 +1113,7 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
         <li>Open Filters, pick Spanish and Online scheduling, then sort by distance</li>
         <li>Save a provider with the heart, then find it under Saved providers</li>
         <li>Open a profile and share it, or request an appointment</li>
+        <li>Swipe through the first-launch tour, then pick Continue as guest</li>
         <li>Tap Get your test results in Quick links</li>
         <li>Open the menu (top right of home) and check the Inbox</li>
         <li>Tap MedBlog “See all,” filter by topic, and open an article</li>
@@ -1007,6 +1210,108 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
           <button data-sys="deny">Don't Allow</button>
           <p class="sys-tag">System dialog – iOS shown; Android draws its own</p>
         </div>
+
+        <section class="onb" id="onb" aria-label="Welcome to UTSW MyCare" hidden>
+          <div class="splash" id="splash" role="status" aria-label="Opening UTSW MyCare" hidden>
+            <svg class="sp-rings" viewBox="0 0 400 400" aria-hidden="true"><circle cx="200" cy="200" r="96"/><circle cx="200" cy="200" r="144"/><circle cx="200" cy="200" r="192"/></svg>
+            <span class="sp-glow" aria-hidden="true"></span>
+            <img class="sp-icon" alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDI0IDEwMjQiPjxyZWN0IHdpZHRoPSIxMDI0IiBoZWlnaHQ9IjEwMjQiIGZpbGw9IiMwMDQyNzgiLz48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLjAwIDAuMDApIHNjYWxlKDEuMDAwMDApIj48cGF0aCBkPSJNMzAwIDI5MlY1MDBBMjEyIDIxMiAwIDAgMCA3MjQgNTAwVjI5MiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjE0MCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PGNpcmNsZSBjeD0iNTEyIiBjeT0iNDY4IiByPSIxMDIiIGZpbGw9IiMwMEE5RTAiLz48L2c+PC9zdmc+">
+            <img class="sp-logo" alt="UTSW MyCare" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOTE1IDUwMiI+PHJlY3Qgd2lkdGg9IjE5MTUiIGhlaWdodD0iNTAyIiBmaWxsPSIjMDA0Mjc4Ii8+PHJlY3QgeD0iMTQ1LjUxIiB5PSIxNDUuNTEiIHdpZHRoPSIyMTAuOTkiIGhlaWdodD0iMjEwLjk5IiByeD0iNDcuNDciIGZpbGw9IiNGRkZGRkYiLz48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNDUuNTEgMTQ1LjUxKSBzY2FsZSgwLjIwNjA0KSI+PHBhdGggZD0iTTMwMCAyOTJWNTAwQTIxMiAyMTIgMCAwIDAgNzI0IDUwMFYyOTIiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwNDI3OCIgc3Ryb2tlLXdpZHRoPSIxNDAiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxjaXJjbGUgY3g9IjUxMiIgY3k9IjQ2OCIgcj0iMTAyIiBmaWxsPSIjMDBBOUUwIi8+PC9nPjxwYXRoIGQ9Ik00ODguMTIgMzI2LjFDNTI1LjEzIDMyNi4xIDU0OS4zNSAzMDQuNzEgNTQ5LjM1IDI3Mi41OFYxNzguMjVINTE1LjA3VjI2OS43NUM1MTUuMDcgMjg1LjE4IDUwNC4zMyAyOTYuMjIgNDg4LjEyIDI5Ni4yMkM0NzIgMjk2LjIyIDQ2MS4wNiAyODUuMDggNDYxLjA2IDI2OS43NVYxNzguMjVINDI2Ljc5VjI3Mi41OEM0MjYuNzkgMzA0LjcxIDQ1MC45MSAzMjYuMSA0ODguMTIgMzI2LjFaTTU1OS42MyAyMDguMTNINjAyLjVWMzIzLjc1SDYzNy42NVYyMDguMTNINjgwLjQzVjE3OC4yNUg1NTkuNjNaTTc0OC44MSAzMjYuMUM3ODYuMzEgMzI2LjEgODA4LjU4IDMwOC44MSA4MDguNTggMjc5LjUyQzgwOC41OCAyNTcuMDYgNzk0LjYyIDI0NC4yNiA3NjIuMzkgMjM3LjgyTDc0OS42IDIzNS4yOEM3MzIuOTkgMjMxLjg2IDcyNi4wNiAyMjcuNDcgNzI2LjA2IDIxOS41NkM3MjYuMDYgMjEwLjQ3IDczNS4zNCAyMDQuMTMgNzQ4LjYyIDIwNC4xM0M3NjIuNDkgMjA0LjEzIDc3MS43NiAyMTEuNTUgNzcyLjc0IDIyMy41Nkg4MDUuMjZDODA0LjM4IDE5My43NyA3ODIuOTkgMTc1LjkgNzQ4LjEzIDE3NS45QzcxMy45NSAxNzUuOSA2OTAuOSAxOTQuMTcgNjkwLjkgMjIxLjIyQzY5MC45IDI0Mi40MSA3MDUuNDYgMjU2LjQ3IDczMy44NyAyNjIuMzNMNzQ4LjgxIDI2NS4zNkM3NjYuMjkgMjY4Ljk3IDc3My44MSAyNzMuNzUgNzczLjgxIDI4Mi4wNkM3NzMuODEgMjkxLjYzIDc2My45NSAyOTcuODggNzQ5LjExIDI5Ny44OEM3MzIuMzEgMjk3Ljg4IDcyMi4wNiAyODkuNjcgNzIxLjU3IDI3NS43MUg2ODguMDdDNjg4LjA3IDMwNy44NCA3MTAuMDQgMzI2LjEgNzQ4LjgxIDMyNi4xWk04NTEuMzggMzIzLjc1SDg5MC4zNUw5MDguOSAyNTAuMjJDOTEwLjQ2IDI0NC4wNyA5MTEuOTMgMjM2Ljk0IDkxMy42OSAyMjguNDRDOTE1LjQ0IDIzNi45NCA5MTYuOTEgMjQ0LjA3IDkxOC40NyAyNTAuMjJMOTM3LjEyIDMyMy43NUg5NzUuOTlMMTAxNC44NiAxNzguMjVIOTc2Ljk3TDk2Mi41MSAyNDIuOUM5NTkuNzggMjU1LjY5IDk1Ny4yNCAyNjguMzggOTU0LjkgMjgxLjE4Qzk1Mi4zNiAyNjguMzggOTQ5LjYyIDI1NS42OSA5NDYuNjkgMjQyLjlMOTMxLjE3IDE3OC4yNUg4OTYuM0w4ODAuNzggMjQyLjlDODc3Ljc1IDI1NS43OSA4NzUuMDEgMjY4LjU4IDg3Mi40NyAyODEuMzdDODcwLjEzIDI2OC41OCA4NjcuNTkgMjU1Ljc5IDg2NC44NiAyNDIuOUw4NTAuNCAxNzguMjVIODEyLjYxWiIgZmlsbD0iI0ZGRkZGRiIvPjxwYXRoIGQ9Ik0xMDcyLjI4IDMyMy43NUgxMDkzLjY3VjI0NC40NkMxMDkzLjY3IDIzNC41OSAxMDkzLjI4IDIyMC43MyAxMDkyLjk4IDIwNy41NEMxMDk4LjI2IDIyMi41OCAxMTAzLjE0IDIzNi40NSAxMTA2LjE3IDI0NC40NkwxMTM3LjEyIDMyMy43NUgxMTU0LjlMMTE4NS41NiAyNDQuNDZDMTE4OC42OSAyMzYuMTYgMTE5My42NyAyMjEuMzEgMTE5OS4wNCAyMDUuNDlDMTE5OC43NCAyMTkuMjYgMTE5OC4zNSAyMzQuMTEgMTE5OC4zNSAyNDQuNDZWMzIzLjc1SDEyMTkuNjRWMTc4LjI1SDExODguOThMMTE1Ni44NSAyNjMuNUMxMTU0LjMxIDI3MC45MiAxMTQ5LjUzIDI4NC42OSAxMTQ2LjIxIDI5NC43NUMxMTQyLjg4IDI4NC42OSAxMTM4LjEgMjcwLjkyIDExMzUuNDYgMjYzLjVMMTEwMi44NSAxNzguMjVIMTA3Mi4yOFpNMTI0Ni4wOCAzNjQuNThIMTI1OS4xN0MxMjczLjEzIDM2NC41OCAxMjgzLjI5IDM1Ni43NiAxMjg5LjA1IDM0MS44MkwxMzM1LjkzIDIyMC42M0gxMzE0LjE1TDEyOTMuODQgMjc3LjE3QzEyOTEuMSAyODQuODkgMTI4OC40NyAyOTIuNiAxMjg1LjkzIDMwMC4zMkMxMjgzLjM5IDI5Mi42IDEyODAuODUgMjg0Ljg5IDEyNzguMTIgMjc3LjE3TDEyNTcuNTEgMjIwLjYzSDEyMzUuNDRMMTI3NS4yOCAzMjMuMDdMMTI3MC42IDMzNS4yOEMxMjY3LjQ3IDM0My42OCAxMjYzLjY2IDM0Ny4xOSAxMjU3LjIyIDM0Ny4xOUgxMjQ2LjA4Wk0xNDEzLjA1IDMyNi4xQzE0NDQuNzkgMzI2LjEgMTQ2OS40IDMwNi40NyAxNDc0LjM4IDI3NS41MUgxNDUyLjQxQzE0NDcuODIgMjk1LjI0IDE0MzIuOTcgMzA2LjI3IDE0MTMuMjUgMzA2LjI3QzEzODQuNTQgMzA2LjI3IDEzNjYuOTYgMjg0LjAxIDEzNjYuOTYgMjUxLjFDMTM2Ni45NiAyMTcuOTkgMTM4NC41NCAxOTUuNzMgMTQxMy4yNSAxOTUuNzNDMTQzMy4wNyAxOTUuNzMgMTQ0OC4wMSAyMDYuODYgMTQ1Mi4zMSAyMjYuNjhIMTQ3NC4zOEMxNDY5LjMgMTk1LjYzIDE0NDQuNzkgMTc1LjkgMTQxMy4wNSAxNzUuOUMxMzcyLjgyIDE3NS45IDEzNDUuMTggMjA2LjI3IDEzNDUuMTggMjUxLjFDMTM0NS4xOCAyOTUuNjMgMTM3Mi45MiAzMjYuMSAxNDEzLjA1IDMyNi4xWk0xNTMyLjI3IDMyNS44MUMxNTQ1Ljc0IDMyNS44MSAxNTU3LjE3IDMyMC4wNCAxNTY0LjEgMzA4LjIzSDE1NjQuNFYzMjMuNzVIMTU4NC43MVYyMjAuNjNIMTU2NC40VjIzNS40N0gxNTY0LjFDMTU1Ny41NiAyMjQuMTUgMTU0NS41NSAyMTguNTggMTUzMi4xNyAyMTguNThDMTUwNS41MSAyMTguNTggMTQ4Ny41NCAyNDAuMzYgMTQ4Ny41NCAyNzIuMTlDMTQ4Ny41NCAzMDQuMTMgMTUwNS40MSAzMjUuODEgMTUzMi4yNyAzMjUuODFaTTE1MzYuNDcgMzA4LjAzQzE1MTkuODcgMzA4LjAzIDE1MDguNDQgMjk1LjQzIDE1MDguNDQgMjcyLjE5QzE1MDguNDQgMjQ4Ljg1IDE1MTkuODcgMjM2LjI1IDE1MzYuNDcgMjM2LjI1QzE1NTQuMDQgMjM2LjI1IDE1NjUuMzcgMjUwLjUxIDE1NjUuMzcgMjcyLjE5QzE1NjUuMzcgMjkzLjg3IDE1NTQuMDQgMzA4LjAzIDE1MzYuNDcgMzA4LjAzWk0xNjA2Ljk1IDMyMy43NUgxNjI3LjU2VjI2Mi44MkMxNjI3LjU2IDI0Ni4wMiAxNjM3LjAzIDIzOC4xMSAxNjQ4LjY1IDIzOC4xMUMxNjUzLjQ0IDIzOC4xMSAxNjU3LjkzIDIzOC43OSAxNjU5LjQ5IDIzOS4wOVYyMTkuODVDMTY1Ny44MyAyMTkuNjUgMTY1NS4xIDIxOS4zNiAxNjUxLjk3IDIxOS4zNkMxNjM4Ljg4IDIxOS4zNiAxNjMwLjg4IDIyNi4xIDE2MjcuMDcgMjM3LjMzSDE2MjYuNjhWMjIwLjYzSDE2MDYuOTVaTTE3MTYuMyAzMjYuMUMxNzM5LjY0IDMyNi4xIDE3NTggMzEyLjMzIDE3NjEuODEgMjkyLjQxSDE3NDEuOTlDMTczOS4wNiAzMDIuMTcgMTczMC4wNyAzMDguOTEgMTcxNi42IDMwOC45MUMxNjk4LjUzIDMwOC45MSAxNjg4LjE4IDI5Ni4zMSAxNjg3LjQ5IDI3Ny43NkgxNzYzLjM3VjI3Mi4xOUMxNzYzLjM3IDI0MC4zNiAxNzQ0LjQzIDIxOC4yOSAxNzE1LjIzIDIxOC4yOUMxNjg3LjEgMjE4LjI5IDE2NjcuMTggMjQwLjk0IDE2NjcuMTggMjcyLjM5QzE2NjcuMTggMzAzLjU0IDE2ODUuNzQgMzI2LjEgMTcxNi4zIDMyNi4xWk0xNjg3LjY5IDI2Mi4xM0MxNjg5LjQ1IDI0NS43MyAxNjk5LjkgMjM1LjQ3IDE3MTUuNDIgMjM1LjQ3QzE3MzEuMDUgMjM1LjQ3IDE3NDEuNiAyNDUuNzMgMTc0My4yNiAyNjIuMTNaIiBmaWxsPSIjRkZGRkZGIi8+PC9zdmc+">
+            <p class="sp-tag">Care from UT Southwestern, in one app</p>
+            <span class="sp-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+          </div>
+          <div class="onb-view" id="onb-tour">
+            <button class="onb-skip" id="onb-skip">Skip</button>
+            <div class="onb-track" id="onb-track" role="group" aria-roledescription="carousel" aria-label="What you can do in MyCare">
+              <div class="slide" role="group" aria-roledescription="slide" aria-label="1 of 4" data-s="0">
+                <div class="sl-art" aria-hidden="true">
+                  <svg class="hero-art" viewBox="0 0 288 288"><circle cx="144" cy="144" r="140" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="2"/><circle cx="144" cy="144" r="100" fill="none" stroke="rgba(255,255,255,.10)" stroke-width="2"/></svg>
+                  <div class="va va-find">
+                    <div class="v-search"><span class="ms s20">search</span><span class="v-type">knee pain</span><span class="v-caret"></span><span class="v-go"><span class="ms s20">arrow_forward</span></span></div>
+                    <div class="v-row"><span class="pav">RO</span><span class="txt"><b>Riley Okafor, M.D.</b><small>Orthopaedics · 1.0 mi</small></span><span class="v-heart"><span class="ms">favorite</span><span class="ms f1">favorite</span></span></div>
+                    <div class="v-row"><span class="pav">JE</span><span class="txt"><b>Jordan Ellis, PT, DPT</b><small>Physical therapy · 1.0 mi</small></span><span class="v-heart"><span class="ms">favorite</span></span></div>
+                  </div>
+                </div>
+                <div class="sl-txt"><p class="kick">Find my Care</p><h2 id="sl-h0">Find the right doctor for you</h2><p>Search by name, specialty, or condition, and read full profiles before you choose.</p></div>
+              </div>
+              <div class="slide" role="group" aria-roledescription="slide" aria-label="2 of 4" data-s="1">
+                <div class="sl-art" aria-hidden="true">
+                  <svg class="hero-art" viewBox="0 0 288 288"><circle cx="144" cy="144" r="140" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="2"/><circle cx="144" cy="144" r="100" fill="none" stroke="rgba(255,255,255,.10)" stroke-width="2"/></svg>
+                  <div class="va va-mc">
+                    <div class="v-lockring"><span class="ms s32 shut">lock</span><span class="ms s32 open">lock_open</span></div>
+                    <div class="v-row"><span class="dot d40"><span class="ms s20">chat</span></span><span class="txt"><b>New message</b><small>Dr. Lin’s care team · 8:12 a.m.</small></span></div>
+                    <div class="v-row"><span class="dot d40"><span class="ms s20">lab_profile</span></span><span class="txt"><b>Test results are ready</b><small>Lipid panel · with notes</small></span></div>
+                    <div class="v-row"><span class="dot d40"><span class="ms s20">calendar_month</span></span><span class="txt"><b>Oct. 28, 9:30 a.m.</b><small>Tuesday · Annual checkup</small></span></div>
+                  </div>
+                </div>
+                <div class="sl-txt"><p class="kick">MyChart</p><h2 id="sl-h1">Your health, in one place</h2><p>Sign in to see visits, message your care team, get test results, and request refills.</p></div>
+              </div>
+              <div class="slide" role="group" aria-roledescription="slide" aria-label="3 of 4" data-s="2">
+                <div class="sl-art" aria-hidden="true">
+                  <svg class="hero-art" viewBox="0 0 288 288"><circle cx="144" cy="144" r="140" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="2"/><circle cx="144" cy="144" r="100" fill="none" stroke="rgba(255,255,255,.10)" stroke-width="2"/></svg>
+                  <div class="va va-loc">
+                    <div class="v-map">
+                      <svg viewBox="0 0 280 184" preserveAspectRatio="xMidYMid slice"><rect width="280" height="184" fill="#E6EDF3"/><g fill="#D6E4F0"><rect x="12" y="12" width="80" height="56" rx="8"/><rect x="108" y="12" width="64" height="56" rx="8"/><rect x="188" y="12" width="80" height="56" rx="8"/><rect x="12" y="88" width="80" height="84" rx="8"/><rect x="188" y="88" width="80" height="84" rx="8"/></g><rect x="108" y="88" width="64" height="84" rx="8" fill="#D1DDE6"/><path d="M0 78H280M100 0V184M180 0V184" stroke="#FFFFFF" stroke-width="12"/><path d="M20 184L150 0" stroke="#FFFFFF" stroke-width="6" opacity=".7"/></svg>
+                      <i class="v-pin" style="left:52px;top:44px"><span class="ms f1">location_on</span></i>
+                      <i class="v-pin" style="left:140px;top:120px"><span class="ms f1">location_on</span></i>
+                      <i class="v-pin" style="left:226px;top:40px"><span class="ms f1">location_on</span></i>
+                      <i class="v-pin" style="left:232px;top:132px"><span class="ms f1">location_on</span></i>
+                      <span class="v-me" style="left:100px;top:96px"></span>
+                    </div>
+                    <div class="v-row"><span class="dot d40 solid"><span class="ms s20">directions</span></span><span class="txt"><b>UTSW Frisco (sample)</b><small>2.1 mi · Open until 5 p.m.</small></span></div>
+                  </div>
+                </div>
+                <div class="sl-txt"><p class="kick">Locations</p><h2 id="sl-h2">Find a UTSW location near you</h2><p>Search by specialty, ZIP code, or location type, then get directions.</p></div>
+              </div>
+              <div class="slide" role="group" aria-roledescription="slide" aria-label="4 of 4" data-s="3">
+                <div class="sl-art" aria-hidden="true">
+                  <svg class="hero-art" viewBox="0 0 288 288"><circle cx="144" cy="144" r="140" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="2"/><circle cx="144" cy="144" r="100" fill="none" stroke="rgba(255,255,255,.10)" stroke-width="2"/></svg>
+                  <div class="va va-way">
+                    <div class="v-banner"><span class="dot d40"><span class="ms s20">elevator</span></span><b>Take the elevator up to Level&nbsp;7</b></div>
+                    <div class="v-plan">
+                      <svg viewBox="0 0 280 200" width="280" height="200"><rect width="280" height="200" fill="#EEF1F4"/><g fill="#D6E4F0" stroke="#FFFFFF" stroke-width="4"><rect x="8" y="8" width="104" height="72" rx="6"/><rect x="148" y="8" width="64" height="24" rx="6"/><rect x="148" y="112" width="124" height="80" rx="6"/><rect x="8" y="104" width="96" height="44" rx="6"/></g><rect x="216" y="20" width="32" height="40" rx="6" fill="#7BAFD4"/><path class="v-route" d="M40 168 H128 V96 H232 V48"/><circle cx="40" cy="168" r="6" fill="#FFFFFF" stroke="#004278" stroke-width="3"/></svg>
+                      <span class="v-walker"></span>
+                      <span class="v-pill">125 ft · 2 min</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="sl-txt"><p class="kick">Wayfinding</p><h2 id="sl-h3">Find your way, inside and out</h2><p>Turn-by-turn directions across campus and between buildings, with indoor maps.</p></div>
+              </div>
+            </div>
+            <div class="onb-foot">
+              <div class="onb-dots" role="group" aria-label="Choose a slide" id="onb-dots"></div>
+              <button class="btn btn-primary onb-next" id="onb-next"><span class="lbl">Next</span><span class="ms s20" aria-hidden="true">arrow_forward</span></button>
+            </div>
+          </div>
+          <div class="onb-view" id="onb-login" hidden>
+            <div class="lg-top">
+              <svg class="hero-art" viewBox="0 0 288 288" aria-hidden="true"><circle cx="144" cy="144" r="140" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="2"/><circle cx="144" cy="144" r="100" fill="none" stroke="rgba(255,255,255,.10)" stroke-width="2"/><circle cx="144" cy="144" r="60" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="2"/></svg>
+              <img class="logo" alt="UTSW MyCare" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOTE1IDUwMiI+PHJlY3Qgd2lkdGg9IjE5MTUiIGhlaWdodD0iNTAyIiBmaWxsPSIjMDA0Mjc4Ii8+PHJlY3QgeD0iMTQ1LjUxIiB5PSIxNDUuNTEiIHdpZHRoPSIyMTAuOTkiIGhlaWdodD0iMjEwLjk5IiByeD0iNDcuNDciIGZpbGw9IiNGRkZGRkYiLz48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNDUuNTEgMTQ1LjUxKSBzY2FsZSgwLjIwNjA0KSI+PHBhdGggZD0iTTMwMCAyOTJWNTAwQTIxMiAyMTIgMCAwIDAgNzI0IDUwMFYyOTIiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwNDI3OCIgc3Ryb2tlLXdpZHRoPSIxNDAiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxjaXJjbGUgY3g9IjUxMiIgY3k9IjQ2OCIgcj0iMTAyIiBmaWxsPSIjMDBBOUUwIi8+PC9nPjxwYXRoIGQ9Ik00ODguMTIgMzI2LjFDNTI1LjEzIDMyNi4xIDU0OS4zNSAzMDQuNzEgNTQ5LjM1IDI3Mi41OFYxNzguMjVINTE1LjA3VjI2OS43NUM1MTUuMDcgMjg1LjE4IDUwNC4zMyAyOTYuMjIgNDg4LjEyIDI5Ni4yMkM0NzIgMjk2LjIyIDQ2MS4wNiAyODUuMDggNDYxLjA2IDI2OS43NVYxNzguMjVINDI2Ljc5VjI3Mi41OEM0MjYuNzkgMzA0LjcxIDQ1MC45MSAzMjYuMSA0ODguMTIgMzI2LjFaTTU1OS42MyAyMDguMTNINjAyLjVWMzIzLjc1SDYzNy42NVYyMDguMTNINjgwLjQzVjE3OC4yNUg1NTkuNjNaTTc0OC44MSAzMjYuMUM3ODYuMzEgMzI2LjEgODA4LjU4IDMwOC44MSA4MDguNTggMjc5LjUyQzgwOC41OCAyNTcuMDYgNzk0LjYyIDI0NC4yNiA3NjIuMzkgMjM3LjgyTDc0OS42IDIzNS4yOEM3MzIuOTkgMjMxLjg2IDcyNi4wNiAyMjcuNDcgNzI2LjA2IDIxOS41NkM3MjYuMDYgMjEwLjQ3IDczNS4zNCAyMDQuMTMgNzQ4LjYyIDIwNC4xM0M3NjIuNDkgMjA0LjEzIDc3MS43NiAyMTEuNTUgNzcyLjc0IDIyMy41Nkg4MDUuMjZDODA0LjM4IDE5My43NyA3ODIuOTkgMTc1LjkgNzQ4LjEzIDE3NS45QzcxMy45NSAxNzUuOSA2OTAuOSAxOTQuMTcgNjkwLjkgMjIxLjIyQzY5MC45IDI0Mi40MSA3MDUuNDYgMjU2LjQ3IDczMy44NyAyNjIuMzNMNzQ4LjgxIDI2NS4zNkM3NjYuMjkgMjY4Ljk3IDc3My44MSAyNzMuNzUgNzczLjgxIDI4Mi4wNkM3NzMuODEgMjkxLjYzIDc2My45NSAyOTcuODggNzQ5LjExIDI5Ny44OEM3MzIuMzEgMjk3Ljg4IDcyMi4wNiAyODkuNjcgNzIxLjU3IDI3NS43MUg2ODguMDdDNjg4LjA3IDMwNy44NCA3MTAuMDQgMzI2LjEgNzQ4LjgxIDMyNi4xWk04NTEuMzggMzIzLjc1SDg5MC4zNUw5MDguOSAyNTAuMjJDOTEwLjQ2IDI0NC4wNyA5MTEuOTMgMjM2Ljk0IDkxMy42OSAyMjguNDRDOTE1LjQ0IDIzNi45NCA5MTYuOTEgMjQ0LjA3IDkxOC40NyAyNTAuMjJMOTM3LjEyIDMyMy43NUg5NzUuOTlMMTAxNC44NiAxNzguMjVIOTc2Ljk3TDk2Mi41MSAyNDIuOUM5NTkuNzggMjU1LjY5IDk1Ny4yNCAyNjguMzggOTU0LjkgMjgxLjE4Qzk1Mi4zNiAyNjguMzggOTQ5LjYyIDI1NS42OSA5NDYuNjkgMjQyLjlMOTMxLjE3IDE3OC4yNUg4OTYuM0w4ODAuNzggMjQyLjlDODc3Ljc1IDI1NS43OSA4NzUuMDEgMjY4LjU4IDg3Mi40NyAyODEuMzdDODcwLjEzIDI2OC41OCA4NjcuNTkgMjU1Ljc5IDg2NC44NiAyNDIuOUw4NTAuNCAxNzguMjVIODEyLjYxWiIgZmlsbD0iI0ZGRkZGRiIvPjxwYXRoIGQ9Ik0xMDcyLjI4IDMyMy43NUgxMDkzLjY3VjI0NC40NkMxMDkzLjY3IDIzNC41OSAxMDkzLjI4IDIyMC43MyAxMDkyLjk4IDIwNy41NEMxMDk4LjI2IDIyMi41OCAxMTAzLjE0IDIzNi40NSAxMTA2LjE3IDI0NC40NkwxMTM3LjEyIDMyMy43NUgxMTU0LjlMMTE4NS41NiAyNDQuNDZDMTE4OC42OSAyMzYuMTYgMTE5My42NyAyMjEuMzEgMTE5OS4wNCAyMDUuNDlDMTE5OC43NCAyMTkuMjYgMTE5OC4zNSAyMzQuMTEgMTE5OC4zNSAyNDQuNDZWMzIzLjc1SDEyMTkuNjRWMTc4LjI1SDExODguOThMMTE1Ni44NSAyNjMuNUMxMTU0LjMxIDI3MC45MiAxMTQ5LjUzIDI4NC42OSAxMTQ2LjIxIDI5NC43NUMxMTQyLjg4IDI4NC42OSAxMTM4LjEgMjcwLjkyIDExMzUuNDYgMjYzLjVMMTEwMi44NSAxNzguMjVIMTA3Mi4yOFpNMTI0Ni4wOCAzNjQuNThIMTI1OS4xN0MxMjczLjEzIDM2NC41OCAxMjgzLjI5IDM1Ni43NiAxMjg5LjA1IDM0MS44MkwxMzM1LjkzIDIyMC42M0gxMzE0LjE1TDEyOTMuODQgMjc3LjE3QzEyOTEuMSAyODQuODkgMTI4OC40NyAyOTIuNiAxMjg1LjkzIDMwMC4zMkMxMjgzLjM5IDI5Mi42IDEyODAuODUgMjg0Ljg5IDEyNzguMTIgMjc3LjE3TDEyNTcuNTEgMjIwLjYzSDEyMzUuNDRMMTI3NS4yOCAzMjMuMDdMMTI3MC42IDMzNS4yOEMxMjY3LjQ3IDM0My42OCAxMjYzLjY2IDM0Ny4xOSAxMjU3LjIyIDM0Ny4xOUgxMjQ2LjA4Wk0xNDEzLjA1IDMyNi4xQzE0NDQuNzkgMzI2LjEgMTQ2OS40IDMwNi40NyAxNDc0LjM4IDI3NS41MUgxNDUyLjQxQzE0NDcuODIgMjk1LjI0IDE0MzIuOTcgMzA2LjI3IDE0MTMuMjUgMzA2LjI3QzEzODQuNTQgMzA2LjI3IDEzNjYuOTYgMjg0LjAxIDEzNjYuOTYgMjUxLjFDMTM2Ni45NiAyMTcuOTkgMTM4NC41NCAxOTUuNzMgMTQxMy4yNSAxOTUuNzNDMTQzMy4wNyAxOTUuNzMgMTQ0OC4wMSAyMDYuODYgMTQ1Mi4zMSAyMjYuNjhIMTQ3NC4zOEMxNDY5LjMgMTk1LjYzIDE0NDQuNzkgMTc1LjkgMTQxMy4wNSAxNzUuOUMxMzcyLjgyIDE3NS45IDEzNDUuMTggMjA2LjI3IDEzNDUuMTggMjUxLjFDMTM0NS4xOCAyOTUuNjMgMTM3Mi45MiAzMjYuMSAxNDEzLjA1IDMyNi4xWk0xNTMyLjI3IDMyNS44MUMxNTQ1Ljc0IDMyNS44MSAxNTU3LjE3IDMyMC4wNCAxNTY0LjEgMzA4LjIzSDE1NjQuNFYzMjMuNzVIMTU4NC43MVYyMjAuNjNIMTU2NC40VjIzNS40N0gxNTY0LjFDMTU1Ny41NiAyMjQuMTUgMTU0NS41NSAyMTguNTggMTUzMi4xNyAyMTguNThDMTUwNS41MSAyMTguNTggMTQ4Ny41NCAyNDAuMzYgMTQ4Ny41NCAyNzIuMTlDMTQ4Ny41NCAzMDQuMTMgMTUwNS40MSAzMjUuODEgMTUzMi4yNyAzMjUuODFaTTE1MzYuNDcgMzA4LjAzQzE1MTkuODcgMzA4LjAzIDE1MDguNDQgMjk1LjQzIDE1MDguNDQgMjcyLjE5QzE1MDguNDQgMjQ4Ljg1IDE1MTkuODcgMjM2LjI1IDE1MzYuNDcgMjM2LjI1QzE1NTQuMDQgMjM2LjI1IDE1NjUuMzcgMjUwLjUxIDE1NjUuMzcgMjcyLjE5QzE1NjUuMzcgMjkzLjg3IDE1NTQuMDQgMzA4LjAzIDE1MzYuNDcgMzA4LjAzWk0xNjA2Ljk1IDMyMy43NUgxNjI3LjU2VjI2Mi44MkMxNjI3LjU2IDI0Ni4wMiAxNjM3LjAzIDIzOC4xMSAxNjQ4LjY1IDIzOC4xMUMxNjUzLjQ0IDIzOC4xMSAxNjU3LjkzIDIzOC43OSAxNjU5LjQ5IDIzOS4wOVYyMTkuODVDMTY1Ny44MyAyMTkuNjUgMTY1NS4xIDIxOS4zNiAxNjUxLjk3IDIxOS4zNkMxNjM4Ljg4IDIxOS4zNiAxNjMwLjg4IDIyNi4xIDE2MjcuMDcgMjM3LjMzSDE2MjYuNjhWMjIwLjYzSDE2MDYuOTVaTTE3MTYuMyAzMjYuMUMxNzM5LjY0IDMyNi4xIDE3NTggMzEyLjMzIDE3NjEuODEgMjkyLjQxSDE3NDEuOTlDMTczOS4wNiAzMDIuMTcgMTczMC4wNyAzMDguOTEgMTcxNi42IDMwOC45MUMxNjk4LjUzIDMwOC45MSAxNjg4LjE4IDI5Ni4zMSAxNjg3LjQ5IDI3Ny43NkgxNzYzLjM3VjI3Mi4xOUMxNzYzLjM3IDI0MC4zNiAxNzQ0LjQzIDIxOC4yOSAxNzE1LjIzIDIxOC4yOUMxNjg3LjEgMjE4LjI5IDE2NjcuMTggMjQwLjk0IDE2NjcuMTggMjcyLjM5QzE2NjcuMTggMzAzLjU0IDE2ODUuNzQgMzI2LjEgMTcxNi4zIDMyNi4xWk0xNjg3LjY5IDI2Mi4xM0MxNjg5LjQ1IDI0NS43MyAxNjk5LjkgMjM1LjQ3IDE3MTUuNDIgMjM1LjQ3QzE3MzEuMDUgMjM1LjQ3IDE3NDEuNiAyNDUuNzMgMTc0My4yNiAyNjIuMTNaIiBmaWxsPSIjRkZGRkZGIi8+PC9zdmc+">
+              <h2 id="lg-h" tabindex="-1">Welcome to UTSW MyCare</h2>
+              <p>Care from UT Southwestern, in one app.</p>
+            </div>
+            <div class="lg-body">
+              <h3>How would you like to continue?</h3>
+              <button class="choice primary" id="lg-patient"><span class="dot"><span class="ms" aria-hidden="true">login</span></span><span class="txt"><b>I’m a patient</b><small>Sign in with MyChart for visits, messages, test results, and bills.</small></span><span class="ms chev" aria-hidden="true">chevron_right</span></button>
+              <button class="choice" id="lg-guest"><span class="dot"><span class="ms" aria-hidden="true">explore</span></span><span class="txt"><b>Continue as guest</b><small>Find my Care, locations, and directions. No account needed.</small></span><span class="ms chev" aria-hidden="true">chevron_right</span></button>
+              <p class="lg-links">New to MyChart? <button class="link" data-toast="Opening MyChart sign-up">Create an account</button></p>
+              <p class="lg-links" style="margin-top:0!important"><button class="link" data-toast="Opening guest bill pay">Pay a bill as a guest</button></p>
+            </div>
+          </div>
+          <div class="onb-view" id="onb-form" hidden>
+            <button class="icon-btn lg-back-btn" id="lg-back" aria-label="Back to sign-in choices"><span class="ms" aria-hidden="true">arrow_back</span></button>
+            <form class="lg-form" id="lg-form" novalidate aria-labelledby="lgf-h">
+              <div class="mc-panel" style="margin:0">
+                <h2 id="lgf-h" tabindex="-1">Sign in to MyChart</h2>
+                <label class="mc-field" for="lg-user"><span>Username</span><span class="mc-in"><input id="lg-user" autocomplete="username" autocapitalize="none" spellcheck="false"></span></label>
+                <label class="mc-field" for="lg-pass"><span>Password</span><span class="mc-in"><input id="lg-pass" type="password" autocomplete="current-password"></span></label>
+                <button class="btn btn-light" id="lg-go" type="submit"><span class="lbl">Sign in</span><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span></button>
+                <button type="button" class="mc-link" data-toast="Opening username and password recovery">Forgot username or password?</button>
+              </div>
+              <div class="lg-done" id="lg-done" role="status" hidden><b>Signed-in home is the next design round</b><span>In the app, you would now see your visits, messages, and results. For now, explore as a guest.</span><button type="button" class="btn btn-primary" id="lg-asguest">Continue as guest</button></div>
+            </form>
+          </div>
+        </section>
 
         <div class="netbar" id="netbar" role="status" hidden><span class="txt">You're offline. Saved providers still work.</span><button id="net-retry">Retry</button></div>
         <div class="toast" id="toast" role="status" aria-live="polite"><span class="toast-i" id="toast-i" aria-hidden="true"><i class="tdot"></i></span><span id="toast-t"></span><button class="toast-act" id="toast-act" hidden></button></div>
@@ -1169,6 +1474,17 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
         <tr><td>Wayfinding</td><td>Map, Indoor toggle, where to go, Hospitals, Buildings, Clinics, Parking</td><td><b>Wayfinding tab</b>: map with Indoor toggle and recenter, same field and chips, indoor-map campuses</td></tr>
       </tbody>
     </table></div>
+    <h3 class="tbl-h">Old onboarding → first launch</h3>
+    <div class="cov-wrap"><table class="cov">
+      <thead><tr><th>Old slide</th><th>What it said</th><th>Now</th></tr></thead>
+      <tbody>
+        <tr><td>Find a Provider</td><td>Find a provider and read full biographies</td><td><b>Find my Care</b>: a search types “knee pain,” results rise, a heart fills</td></tr>
+        <tr><td>MyChart</td><td>Records, appointments, messages, results, refills</td><td><b>MyChart</b>: the lock opens and a message, a test result, and a visit fan in</td></tr>
+        <tr><td>Find a Location</td><td>Search by specialty, ZIP code, or location type</td><td><b>Locations</b>: pins drop on a map, your dot pulses, the nearest location rises with distance</td></tr>
+        <tr><td>Indoor Wayfinding</td><td>Indoor and outdoor navigation across campus</td><td><b>Wayfinding</b>: the route draws itself, you walk it, and “Take the elevator up to Level 7” drops in</td></tr>
+        <tr><td>Let's get started</td><td>One button into the app</td><td><b>Welcome</b>: I’m a patient (MyChart sign-in) or Continue as guest; Create an account and Pay a bill as a guest stay one tap away</td></tr>
+      </tbody>
+    </table></div>
     <h3 class="tbl-h">Requirements → prototype</h3>
     <div class="cov-wrap"><table class="cov">
       <thead><tr><th>Requirement</th><th>How it's shown</th></tr></thead>
@@ -1193,7 +1509,7 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
     <header>
       <p class="kicker">Iconography</p>
       <h2 id="gl-h">Glyph map for the guest flow</h2>
-      <p>Same family, weight, grade, and rules as the playful direction: Material Symbols Rounded, one color, outline at rest and filled when selected. 74 concepts, each with its own glyph, in a 108&nbsp;KB subset.</p>
+      <p>Same family, weight, grade, and rules as the playful direction: Material Symbols Rounded, one color, outline at rest and filled when selected. 77 concepts, each with its own glyph, in a 112&nbsp;KB subset.</p>
     </header>
     <div class="gmap-groups" id="ic-map"></div>
   </section>
@@ -1290,6 +1606,9 @@ const ICON_MAP = [
   ['show', 'visibility', 'Show password', 'MyChart sign-in', 'Controls and feedback'],
   ['hide', 'visibility_off', 'Hide password', 'MyChart sign-in', 'Controls and feedback'],
   ['done', 'check_circle', 'Done', 'Confirmations', 'Controls and feedback', 'f1'],
+  ['unlock', 'lock_open', 'Signed in', 'Onboarding MyChart scene', 'Onboarding'],
+  ['elevator', 'elevator', 'Elevator', 'Onboarding wayfinding scene, turn-by-turn steps', 'Onboarding'],
+  ['guest', 'explore', 'Continue as guest', 'Sign-in choice', 'Onboarding'],
   ['menu', 'menu', 'Menu', 'Home app bar', 'Menu'],
   ['inbox', 'inbox', 'Inbox – app notifications', 'Menu', 'Menu'],
   ['markRead', 'done_all', 'Mark all as read', 'Inbox', 'Menu'],
@@ -1764,7 +2083,7 @@ let artDark = false;
 function updateBar() {
   const top = layers[layers.length - 1];
   let light = state.tab === 0;
-  if (top) { if (top.el.id === 'article') light = artDark; else if (top.el.id === 'drawer') light = true; else if (!['sheet', 'sys'].includes(top.el.id)) light = false; }
+  if (top) { if (top.el.id === 'onb') light = $('#onb-form').hidden; else if (top.el.id === 'article') light = artDark; else if (top.el.id === 'drawer') light = true; else if (!['sheet', 'sys'].includes(top.el.id)) light = false; }
   phone.classList.toggle('bar-light', light);
 }
 function refreshInert() {
@@ -2588,6 +2907,7 @@ function renderCms() {
 }
 /* Flow map jumps */
 function jump(k) {
+  closeOnb(false);
   const scroll = () => phone.scrollIntoView({ behavior: RM() ? 'auto' : 'smooth', block: 'center' });
   if (layers.length) [...layers].reverse().forEach(l => l.close());
   if (state.tab !== (k === 'home' ? 0 : 1)) setTab(k === 'home' ? 0 : 1);
@@ -2609,9 +2929,101 @@ function renderIconMap() {
     `<li>${circle(r[0])}<span class="gm-t"><b>${r[2]}</b><code>${r[1]}</code><small>${r[3]}</small></span></li>`).join('')}</ul></section>`).join('');
 }
 
+/* ---------- First launch: onboarding tour, then the sign-in choice ---------- */
+const onb = $('#onb'), track = $('#onb-track'), slides = $$('.slide', track);
+let onbI = 0, onbTimer;
+$('#onb-dots').innerHTML = slides.map((_, i) => `<button data-dot="${i}" aria-label="Slide ${i + 1} of ${slides.length}"><i></i></button>`).join('');
+function goSlide(i) {
+  onbI = Math.max(0, Math.min(slides.length - 1, i));
+  track.style.transform = `translateX(${-onbI * 100}%)`;
+  slides.forEach((s, k) => { s.classList.remove('on'); s.toggleAttribute('inert', k !== onbI); });
+  void track.offsetWidth; slides[onbI].classList.add('on');
+  $$('#onb-dots button').forEach((d, k) => d.setAttribute('aria-current', k === onbI ? 'step' : 'false'));
+  $('#onb-next .lbl').textContent = onbI === slides.length - 1 ? 'Get started' : 'Next';
+  say(`${onbI + 1} of ${slides.length}: ${$('h2', slides[onbI]).textContent}`);
+}
+function showView(id, dir = 'enter') {
+  $$('.onb-view', onb).forEach(v => { v.hidden = v.id !== id; v.classList.remove('enter', 'back'); });
+  const v = $('#' + id); void v.offsetWidth; v.classList.add(dir);
+  updateBar();
+}
+/* Splash: plays once on launch, then hands off to slide 1 */
+const splash = $('#splash'); let spTimer;
+function playSplash() {
+  clearTimeout(spTimer);
+  splash.hidden = false; splash.classList.remove('out', 'play'); void splash.offsetWidth; splash.classList.add('play');
+  $('#onb-tour').inert = true;
+  spTimer = setTimeout(() => {
+    splash.classList.add('out');
+    spTimer = setTimeout(() => { stopSplash(); goSlide(0); }, RM() ? 240 : 440);
+  }, RM() ? 1200 : 2500);
+}
+function stopSplash() { clearTimeout(spTimer); splash.hidden = true; splash.classList.remove('out', 'play'); $('#onb-tour').inert = false; }
+function openOnb(withSplash = false) {
+  clearTimeout(onbTimer); stopSplash();
+  if (layers.length) [...layers].reverse().forEach(l => l.el !== onb && l.close());
+  onb.classList.remove('leaving'); onb.hidden = false; phone.classList.add('onb-on');
+  showView('onb-tour'); goSlide(0);
+  $('#lg-done').hidden = true; $('#lg-form').reset?.();
+  if (!layers.some(l => l.el === onb)) pushLayer(onb, () => {});
+  if (withSplash) playSplash();
+}
+function closeOnb(animate = true) {
+  stopSplash();
+  if (onb.hidden) return;
+  popLayer(onb);
+  const done = () => { onb.hidden = true; onb.classList.remove('leaving'); phone.classList.remove('onb-on'); updateBar(); };
+  if (!animate) return done();
+  onb.classList.add('leaving');
+  onbTimer = setTimeout(() => { done(); if (state.tab !== 0) setTab(0); scroller.scrollTop = 0; renderHome(); $('#greet-h')?.setAttribute('tabindex', '-1'); $('#greet-h')?.focus({ preventScroll: true }); }, RM() ? 240 : 560);
+}
+$('#onb-next').onclick = () => onbI === slides.length - 1 ? toLogin() : goSlide(onbI + 1);
+$('#onb-skip').onclick = () => toLogin();
+$('#onb-dots').onclick = e => { const d = e.target.closest('[data-dot]'); if (d) goSlide(+d.dataset.dot); };
+function toLogin(dir = 'enter') { showView('onb-login', dir); setTimeout(() => $('#lg-h').focus({ preventScroll: true }), 30); }
+$('#lg-patient').onclick = () => { showView('onb-form'); setTimeout(() => $('#lgf-h').focus({ preventScroll: true }), 30); };
+$('#lg-back').onclick = () => toLogin('back');
+$('#lg-guest').onclick = () => { closeOnb(); toast('Browsing as a guest – sign in any time from MyChart'); };
+$('#lg-asguest').onclick = () => { closeOnb(); toast('Browsing as a guest – sign in any time from MyChart'); };
+$('#lg-form').onsubmit = e => {
+  e.preventDefault(); const b = $('#lg-go');
+  if (!$('#lg-user').value.trim() || !$('#lg-pass').value) { toast('Enter your MyChart username and password'); (!$('#lg-user').value.trim() ? $('#lg-user') : $('#lg-pass')).focus(); return; }
+  b.classList.add('loading'); b.setAttribute('aria-busy', 'true'); say('Signing in');
+  setTimeout(() => { b.classList.remove('loading'); b.removeAttribute('aria-busy'); $('#lg-done').hidden = false; $('#lg-asguest').focus(); }, RM() ? 300 : 900);
+};
+onb.addEventListener('keydown', e => {
+  if ($('#onb-tour').hidden || e.target.closest('input')) return;
+  const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+  if (d) { e.preventDefault(); goSlide(onbI + d); }
+});
+/* Swipe between slides; the track follows the finger, then settles on the spring */
+(() => {
+  let x0 = 0, y0 = 0, dx = 0, on = false, lock = null, t0 = 0;
+  track.addEventListener('pointerdown', e => { if (e.target.closest('button')) return; on = true; lock = null; dx = 0; x0 = e.clientX; y0 = e.clientY; t0 = performance.now(); });
+  track.addEventListener('pointermove', e => {
+    if (!on) return;
+    const mx = e.clientX - x0, my = e.clientY - y0;
+    if (lock === null && (Math.abs(mx) > 8 || Math.abs(my) > 8)) { lock = Math.abs(mx) > Math.abs(my) ? 'x' : 'y'; if (lock === 'x') { track.setPointerCapture(e.pointerId); track.classList.add('drag'); } }
+    if (lock !== 'x') return;
+    dx = mx; const edge = (onbI === 0 && dx > 0) || (onbI === slides.length - 1 && dx < 0);
+    track.style.transform = `translateX(calc(${-onbI * 100}% + ${edge ? dx / 3 : dx}px))`;
+  });
+  const end = () => {
+    if (!on) return; on = false; if (lock !== 'x') return;
+    track.classList.remove('drag');
+    const v = Math.abs(dx) / Math.max(1, performance.now() - t0);
+    if ((Math.abs(dx) > 64 || v > .5) && !(onbI === slides.length - 1 && dx < 0)) goSlide(onbI + (dx < 0 ? 1 : -1));
+    else if (onbI === slides.length - 1 && dx < -64) toLogin();
+    else goSlide(onbI);
+  };
+  track.addEventListener('pointerup', end); track.addEventListener('pointercancel', end);
+})();
+$$('[data-onb]').forEach(b => b.onclick = () => { const k = b.dataset.onb; k === 'skip' ? closeOnb(false) : openOnb(k === 'splash'); phone.scrollIntoView({ behavior: RM() ? 'auto' : 'smooth', block: 'center' }); });
+
 /* ---------- Boot ---------- */
 applyRM(state.rm);
 renderHome(); renderFind(); renderLocs(); renderWay(); renderMc(); syncMenuDot();
+openOnb(true);
 renderCms();
 renderIconMap();
 requestAnimationFrame(moveInd);

@@ -40,6 +40,22 @@ Signed-in destinations (message your doctor, test results, manage visits, manage
 - **Share** hands the platform share sheet the public profile link only – never searches, location, or the saved list.
 - **Profile data**: name, credentials, specialty, one location, and phone are required; bio, research, and video hide when missing (Harper Singh shows this).
 
+## First launch: onboarding and the sign-in choice
+
+The prototype opens on an animated splash, then the first-launch tour (replay either from the board's First launch control).
+
+0. **Splash** (about 2.5 s, not interactive): flat UT Southwestern Blue. The app icon (`mycare-logo/icon.svg`, unaltered, 112.0 with 26.0 corners) springs in while three rings ripple out and a soft cyan glow blooms behind it; rings and glow clear as the icon lifts away, and the reversed horizontal logo (`reversed.svg`, unaltered, 232.0 wide) settles with the line "Care from UT Southwestern, in one app" and three loading dots. The background stays flat Blue so the logo's own Blue tile never shows an edge. To hand off, the splash shrinks to the 56% art panel of slide 1 with r-xl bottom corners and its content fades, so the tour starts without a cut. Reduced motion: logo and line appear still for 1.2 s, then cross-fade. Screen readers hear "Opening UTSW MyCare."
+
+1. **Four slides**, in the old app's order: Find my Care, MyChart, Locations, Wayfinding. Each has a Blue art panel (56% of the screen, r-xl bottom corners, hero rings) with a small scene built from real MyCare components, and a light text area: kicker 12.0/700, title 28.0/700 Blue, body 16.0 #5B6770.
+   - Find my Care: the search types "knee pain," two provider cards rise, a heart fills.
+   - MyChart: the lock opens; a message, a test result, and a visit fan in.
+   - Locations: pins drop on a map, your dot pulses twice, the nearest location rises with distance.
+   - Wayfinding: the route draws itself, a dot walks it, "Take the elevator up to Level 7" drops in.
+2. **Navigation**: Skip (top right, 44.0), swipe with rubber-band edges, arrow keys, 44.0 dots (current dot widens to 24.0), and Next, which reads "Get started" on the last slide. Nothing auto-advances.
+3. **Sign-in choice** (Welcome to UTSW MyCare): **I'm a patient** (Blue card, opens MyChart sign-in) or **Continue as guest** (white card, opens the guest home). Create an account and Pay a bill as a guest stay one tap away. In this round, signing in ends in a note that the signed-in home is next, with Continue as guest.
+
+Motion: each scene plays once when its slide arrives (spring-snappy rises and pops, 120–1900 ms of staggered beats); slides move on spring-gentle; leaving the tour scales the layer up 6% and fades in 560 ms while the home modules enter. Reduced motion shows every scene in its final frame and cross-fades views. Screen readers hear "2 of 4: Your health, in one place" on each slide; hidden slides are inert. With large text the footer stacks the dots above a full-width button.
+
 ## Components added (all on existing tokens)
 
 | Component | Tokens |
@@ -80,7 +96,7 @@ No new values. In use: 32.0 welcome, 28.0 page titles and provider name, 24.0 sh
 
 ## Icons
 
-74 concepts, one glyph each, Material Symbols Rounded in a 108 KB subset. New in the guest flow: `favorite`, `tune`, `swap_vert`, `near_me`, `my_location`, `location_off`, `translate`, `person_add`, `edit_calendar`, `call`, `school`, `science`, `play_circle`, `wifi_off`, `error`, `trending_up`, `domain`, `apartment`, `door_front`, `map`, `workspace_premium`, `sms`, `mail`, `more_horiz`, `visibility`, `visibility_off`, `menu`, `inbox`, `done_all`, `directions_bus`, `verified`, `menu_book`, `library_books`, `badge`, `coronavirus`, `public`, `open_in_new`. The full map renders on the board.
+77 concepts, one glyph each, Material Symbols Rounded (112 KB subset). New in the guest flow: `favorite`, `tune`, `swap_vert`, `near_me`, `my_location`, `location_off`, `translate`, `person_add`, `edit_calendar`, `call`, `school`, `science`, `play_circle`, `wifi_off`, `error`, `trending_up`, `domain`, `apartment`, `door_front`, `map`, `workspace_premium`, `sms`, `mail`, `more_horiz`, `visibility`, `visibility_off`, `menu`, `inbox`, `done_all`, `directions_bus`, `verified`, `menu_book`, `library_books`, `badge`, `coronavirus`, `public`, `open_in_new`, `lock_open`, `elevator`, `explore`. The full map renders on the board.
 
 ## Prototype controls
 
