@@ -893,6 +893,154 @@ mark{background:rgba(0,169,224,.35);color:inherit;border-radius:4px}
 .feat-rail .glass,.rail .glass,.feat-rail .glass-o{--glass-shadow:0 8px 16px rgba(0,40,80,.14),inset 0 1px 0 rgba(255,255,255,.18)}
 .app .eye:focus-visible{outline-color:var(--c-blue)}
 
+/* =========================================================
+   FIRST LAUNCH – four-slide tour, then the patient or guest choice
+   Sits inside the phone above the screens and dock (z 25), below the status bar (z 30)
+   ========================================================= */
+.onb{position:absolute;inset:0;z-index:25;display:flex;flex-direction:column;overflow:hidden;color:var(--c-on-bg);
+  background:radial-gradient(420px 320px at 50% 30%,rgba(0,66,120,.08),rgba(0,66,120,0) 70%),radial-gradient(520px 360px at 50% -80px,rgba(255,255,255,.7),rgba(255,255,255,0) 70%),linear-gradient(180deg,var(--c-bg-top) 0,var(--c-bg) 45%,var(--c-bg-bot) 100%);
+  transition:opacity var(--dur-slow) var(--ease-std),transform var(--dur-slow) var(--ease-out)}
+.onb.out{opacity:0;transform:scale(1.04);pointer-events:none}
+.app.onb-on .band,.app.onb-on .compact-row{opacity:0!important}
+.app.onb-on .home-ind{z-index:26}
+.onb-head{flex:none;display:flex;align-items:center;justify-content:space-between;gap:var(--s-8);padding:var(--s-48) var(--s-16) 0;min-height:104px}
+.onb-head .logo{width:192px;height:auto;display:block;margin-inline-start:calc(var(--s-12) * -1)}
+.onb-skip{min-height:48px;padding:0 var(--s-16);border:0;border-radius:var(--r-pill);background:#FFFFFF;box-shadow:inset 0 0 0 1px var(--c-line);color:var(--c-blue);font-size:var(--fs-14);font-weight:700;transition:opacity var(--dur-base)}
+.onb-skip[aria-hidden="true"]{opacity:0;pointer-events:none}
+.onb-panes{position:relative;flex:1;min-height:0}
+.onb-pane{position:absolute;inset:0;display:flex;flex-direction:column;transition:transform var(--dur-slow) var(--ease-out),opacity var(--dur-slow) var(--ease-std)}
+.onb-pane.away-l{transform:translateX(-24%);opacity:0;pointer-events:none}
+.onb-pane.away-r{transform:translateX(24%);opacity:0;pointer-events:none}
+
+/* Tour */
+.onb-viewport{flex:1;min-height:0;overflow:hidden;touch-action:pan-y}
+.onb-track{display:flex;height:100%;transition:transform var(--dur-slow) var(--ease-out)}
+.onb-track.dragging{transition:none}
+.onb-slide{flex:0 0 100%;min-width:0;display:flex;flex-direction:column;gap:var(--s-24);padding:0 var(--s-16)}
+.onb-txt{flex:none;display:flex;flex-direction:column;gap:var(--s-8);text-align:center;padding-inline:var(--s-8)}
+.onb-txt h2{font-size:var(--fs-28);line-height:36px;font-weight:800;letter-spacing:-.03em;text-wrap:balance;outline:0}
+.onb-txt p{font-size:var(--fs-16);line-height:24px;color:var(--c-on-bg-body);text-wrap:pretty}
+.onb-slide.on .onb-txt > *{animation:rise var(--dur-slow) var(--ease-out) backwards}
+.onb-slide.on .onb-txt p{animation-delay:60ms}
+.onb-foot{flex:none;display:flex;flex-direction:column;align-items:center;gap:var(--s-12);padding:var(--s-16) var(--s-16) var(--s-32)}
+.onb-dots{display:flex}
+.onb-dot{width:44px;height:48px;border:0;background:none;padding:0;display:grid;place-items:center}
+.onb-dot i{display:block;width:8px;height:8px;border-radius:var(--r-pill);background:#6B7783;transition:width var(--dur-slow) var(--ease-spring),background-color var(--dur-base)}
+.onb-dot[aria-current="true"] i{width:32px;background:var(--c-blue)}
+.onb-next{position:relative;overflow:hidden;width:100%;min-height:56px;border:0;border-radius:var(--r-pill);background:var(--c-blue);color:#FFFFFF;font-size:var(--fs-16);font-weight:700;display:flex;align-items:center;justify-content:center;gap:var(--s-8);box-shadow:0 8px 20px rgba(0,40,80,.22)}
+.onb-next svg{width:20px;height:20px;transition:transform var(--dur-base) var(--ease-spring)}
+.onb-next:hover svg{transform:translateX(4px)}
+.onb-next::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.18) 50%,transparent 60%);transform:translateX(-100%);animation:sweep 5s var(--ease-std) 1.2s infinite;pointer-events:none}
+
+/* Illustrations – blue glass pieces in the app's own language; aria-hidden, decorative */
+.oa{position:relative;flex:1;min-height:280px;max-height:440px;width:100%;max-width:358px;margin:0 auto}
+.oa::before{content:"";position:absolute;left:50%;top:50%;width:300px;height:300px;margin:-150px 0 0 -150px;border-radius:50%;border:1px dashed rgba(0,66,120,.18);animation:spin 60s linear infinite;pointer-events:none}
+.oa::after{content:"";position:absolute;left:50%;top:50%;width:200px;height:200px;margin:-100px 0 0 -100px;border-radius:50%;background:radial-gradient(closest-side,rgba(0,66,120,.10),rgba(0,66,120,0));pointer-events:none}
+.oi{position:absolute;z-index:1}
+.onb-slide.on .oi{animation:oi-in 520ms var(--ease-spring) backwards;animation-delay:calc(120ms + var(--d,0) * 110ms)}
+@keyframes oi-in{from{opacity:0;transform:translateY(24px) scale(.94)}}
+.onb-slide.on .oi.fl{animation:oi-in 520ms var(--ease-spring) backwards,float 5s var(--ease-std) 1.2s infinite alternate;animation-delay:calc(120ms + var(--d,0) * 110ms),calc(800ms + var(--d,0) * 300ms)}
+@keyframes float{to{transform:translateY(-8px)}}
+.oa .glass,.oa .glass-o{color:#FFFFFF;--c-text-2:#D6E4F0}
+.oa b{display:block;font-size:var(--fs-16);line-height:24px;font-weight:700}
+.oa .t2{font-size:var(--fs-14);line-height:20px}
+.o-row{display:flex;align-items:center;gap:var(--s-12);padding:var(--s-12)}
+.o-bar{display:block;height:8px;border-radius:var(--r-pill);background:rgba(255,255,255,.3)}
+.o-bar + .o-bar{margin-top:var(--s-8)}
+/* 1 – provider */
+.o-search{left:8px;right:40px;top:6%;border-radius:var(--r-pill)}
+.o-search .o-row{padding:var(--s-8)}
+.o-type{flex:1;min-width:0;font-size:var(--fs-16);font-weight:600;white-space:nowrap}
+.o-type span{display:inline-block;vertical-align:bottom;overflow:hidden}
+.onb-slide.on .o-type span{animation:typing 900ms steps(12) 500ms backwards}
+@keyframes typing{from{clip-path:inset(0 100% 0 0)}}
+.o-type i{display:inline-block;width:2px;height:20px;margin-inline-start:2px;vertical-align:-4px;background:var(--c-cyan);animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.o-go{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:#FFFFFF;color:var(--c-blue);flex:none}
+.o-go svg,.o-mini svg{width:20px;height:20px}
+.o-pcard{left:24px;right:0;top:30%}
+.o-pcard .o-row{padding:var(--s-16);align-items:flex-start}
+.o-pcard .grow{display:flex;flex-direction:column;gap:var(--s-4);padding-inline-end:var(--s-32)}
+.o-pcard .bdg{align-self:flex-start;margin-top:var(--s-4)}
+.o-heart{position:absolute;top:var(--s-12);right:var(--s-12);width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:#FFFFFF;color:var(--c-alert)}
+.o-heart svg{width:20px;height:20px;fill:currentColor}
+.onb-slide.on .o-heart{animation:pop 400ms var(--ease-spring) 1.3s backwards}
+.o-bio{left:0;right:48px;top:66%;padding:var(--s-16)}
+.o-bio .eyebrow{display:block;margin-bottom:var(--s-12)}
+/* 2 – MyChart */
+.o-lock{left:50%;top:2%;width:96px;height:96px;margin-left:-48px;border-radius:50%;display:grid;place-items:center}
+.o-lock .orb{width:72px;height:72px}
+.o-lock .orb svg{width:32px;height:32px}
+.o-lock::before,.o-lock::after{content:"";position:absolute;inset:0;border-radius:50%;box-shadow:0 0 0 2px rgba(0,66,120,.35);animation:ping 2.4s var(--ease-out) infinite}
+.o-lock::after{animation-delay:1.2s}
+.o-mc{left:24px;right:24px;top:28%;padding:var(--s-16);display:flex;flex-direction:column;gap:var(--s-8)}
+.o-mc .eyebrow{display:block}
+.o-mc h3{font-size:var(--fs-20);line-height:28px;font-weight:800;letter-spacing:-.02em;margin-bottom:var(--s-4)}
+.o-field{display:flex;align-items:center;height:40px;padding:0 var(--s-12);border-radius:var(--s-12);background:#FFFFFF;color:#5B6770;font-size:var(--fs-14)}
+.o-btn{display:flex;align-items:center;justify-content:center;gap:var(--s-8);height:40px;border-radius:var(--r-pill);background:#FFFFFF;color:var(--c-blue);font-size:var(--fs-14);font-weight:700;margin-top:var(--s-4)}
+.o-btn svg{width:16px;height:16px}
+.o-chip{width:max-content;white-space:nowrap;border-radius:var(--r-pill);display:inline-flex;align-items:center;gap:var(--s-8);padding:var(--s-4) var(--s-12) var(--s-4) var(--s-4);border-radius:var(--r-pill);font-size:var(--fs-14);line-height:20px;font-weight:700}
+.oa .o-chip{display:flex;flex-direction:row}
+.o-chip .orb{width:32px;height:32px}
+.o-chip .orb svg{width:16px;height:16px}
+.o-c1{left:0;top:6%}.o-c2{right:0;top:14%}.o-c3{left:0;bottom:0}.o-c4{right:0;bottom:6%}
+.o-mc{top:26%}
+/* 3 – location */
+.o-map{left:0;right:0;top:4%;height:66%;overflow:hidden;border-radius:var(--r-glass)}
+.o-map svg.streets{position:absolute;inset:0;width:100%;height:100%}
+.o-field.o-where{position:absolute;left:var(--s-12);right:var(--s-12);top:var(--s-12);height:48px;border-radius:var(--r-pill);gap:var(--s-8);color:var(--c-gray);font-weight:600;box-shadow:0 8px 16px rgba(0,20,44,.25)}
+.o-field.o-where svg{width:20px;height:20px;color:var(--c-blue);flex:none}
+.o-pin{position:absolute;width:40px;height:48px;margin:-48px 0 0 -20px;color:#FFFFFF}
+.o-pin svg{width:40px;height:48px;filter:drop-shadow(0 4px 8px rgba(0,20,44,.35))}
+.onb-slide.on .o-pin{animation:drop 600ms var(--ease-spring) backwards;animation-delay:calc(500ms + var(--d,0) * 160ms)}
+@keyframes drop{from{opacity:0;transform:translateY(-40px) scale(.6)}}
+.o-you{position:absolute;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;background:var(--c-cyan);box-shadow:0 0 0 4px #FFFFFF}
+.o-you::after{content:"";position:absolute;inset:-4px;border-radius:50%;background:var(--c-cyan);opacity:.5;animation:ping 2s var(--ease-out) infinite}
+.o-place{left:16px;right:16px;top:60%}
+.o-place .grow{min-width:0}
+/* 4 – wayfinding */
+.o-step{left:0;right:24px;top:0}
+.o-plan{left:16px;right:0;top:22%;height:54%;overflow:hidden;border-radius:var(--r-glass);display:grid;place-items:center}
+.o-planbox{position:relative;width:300px;height:200px}
+.o-planbox svg{position:absolute;inset:0;width:300px;height:200px;overflow:visible}
+.o-route{stroke-dasharray:1;stroke-dashoffset:0}
+.onb-slide.on .o-route{animation:draw 1600ms var(--ease-std) 600ms backwards}
+.o-walker{position:absolute;left:0;top:0;width:20px;height:20px;margin:-10px 0 0 -10px;border-radius:50%;background:#FFFFFF;box-shadow:0 0 0 4px var(--c-cyan),0 4px 12px rgba(0,20,44,.4);offset-path:path("M30 170 H110 V100 H200 V40 H262");offset-rotate:0deg;offset-distance:100%}
+.onb-slide.on .o-walker{animation:walk 1600ms var(--ease-std) 600ms backwards}
+@keyframes walk{from{offset-distance:0%}}
+.o-arrive{left:0;right:40px;top:80%}
+.o-mini{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:#FFFFFF;color:var(--c-blue);flex:none}
+
+/* Patient or guest choice */
+.onb-login{padding:0 var(--s-16) var(--s-32);gap:var(--s-24);overflow-y:auto;scrollbar-width:none}
+.onb-login::-webkit-scrollbar{display:none}
+.ol-hero{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--s-16);text-align:center;padding-top:var(--s-8)}
+.ol-icon{position:relative;width:112px;height:112px;flex:none}
+.ol-icon img{position:relative;z-index:1;width:112px;height:112px;border-radius:28px;box-shadow:0 16px 32px rgba(0,40,80,.28)}
+.ol-icon i{position:absolute;inset:-16px;border-radius:40px;box-shadow:0 0 0 2px rgba(0,66,120,.3);animation:ping 2.8s var(--ease-out) infinite}
+.ol-icon i + i{animation-delay:1.4s}
+.ol-hero h2{font-size:var(--fs-28);line-height:36px;font-weight:800;letter-spacing:-.03em;text-wrap:balance;outline:0}
+.ol-hero p{max-width:32ch;color:var(--c-on-bg-body);text-wrap:pretty}
+.onb-pane.on-now .ol-hero > *{animation:rise var(--dur-slow) var(--ease-out) backwards;animation-delay:calc(var(--d,0) * 70ms)}
+.ol-choices{flex:none;display:flex;flex-direction:column;gap:var(--s-12)}
+.ol-label{font-size:var(--fs-12);line-height:16px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--c-on-bg-2);padding-inline:var(--s-4)}
+.ol-opt{display:flex;align-items:center;gap:var(--s-12);width:100%;min-height:88px;padding:var(--s-16) var(--s-16) var(--s-16) var(--s-12);border:0;border-radius:var(--r-glass);text-align:left}
+.ol-opt .grow b{display:block;font-size:var(--fs-18);line-height:24px;font-weight:700}
+.ol-opt .grow span{display:block;font-size:var(--fs-14);line-height:20px}
+.ol-opt.patient{color:#FFFFFF}
+.ol-opt.patient .grow span{color:#D6E4F0}
+.ol-opt.guest{background:#FFFFFF;color:var(--c-blue);box-shadow:inset 0 0 0 1px var(--c-line),0 8px 20px rgba(0,40,80,.08)}
+.ol-opt.guest .grow span{color:var(--c-on-bg-2)}
+.ol-opt.guest .ol-ic{background:#EBF0F5;color:var(--c-blue);box-shadow:none}
+.ol-ic{width:48px;height:48px;flex:none}
+.ol-ic svg{width:24px;height:24px}
+.ol-go{width:20px;height:20px;flex:none}
+.onb-pane.on-now .ol-choices > *{animation:rise var(--dur-slow) var(--ease-out) backwards;animation-delay:calc(200ms + var(--d,0) * 80ms)}
+.ol-tour{align-self:center;color:var(--c-blue)}
+.ol-note{text-align:center;font-size:var(--fs-14);line-height:20px;color:var(--c-on-bg-2)}
+.onb :focus-visible{outline-color:var(--c-blue)}
+.onb .glass :focus-visible,.onb .ol-opt.patient:focus-visible{outline-color:var(--c-blue)}
+
 /* Reduce transparency – solid surfaces, no blur, no light */
 .app.rt{--glass-fill:var(--c-solid);--glass-fill-o:var(--c-solid-o);--glass-sheen:linear-gradient(transparent,transparent);--noise:linear-gradient(transparent,transparent);--glass-spot:transparent}
 .app.rt .glass,.app.rt .glass-o{-webkit-backdrop-filter:none;backdrop-filter:none}
@@ -954,6 +1102,7 @@ mark{background:rgba(0,169,224,.35);color:inherit;border-radius:4px}
           <div class="dock" id="dock">
             <nav class="tabbar glass-o" id="tabbar" aria-label="Main"></nav>
           </div>
+          <div class="onb" id="onb" hidden></div>
           <div class="home-ind" aria-hidden="true"></div>
 
           <div class="toast glass-o" id="toast" role="status" aria-live="polite"></div>
@@ -969,6 +1118,14 @@ mark{background:rgba(0,169,224,.35);color:inherit;border-radius:4px}
     </div>
 
     <aside class="panel" aria-label="Prototype controls">
+      <section class="ctl">
+        <div class="ctl-h"><h2>First launch</h2><p class="hint">The prototype opens on the four-slide tour, then asks whether to sign in as a patient or continue as a guest. Swipe, use the arrow keys, or tap Next.</p></div>
+        <div class="row">
+          <button class="txtbtn" id="onb-replay">Replay the tour</button>
+          <button class="txtbtn" id="onb-choice">Show the sign-in choice</button>
+        </div>
+      </section>
+
       <section class="ctl">
         <div class="ctl-h"><h2>Provider search conditions</h2><p class="hint">Force the states a guest can hit. Try a search, then switch these and tap Try again.</p></div>
         <p class="hint" id="net-l">Network</p>
@@ -1037,6 +1194,15 @@ mark{background:rgba(0,169,224,.35);color:inherit;border-radius:4px}
           <li><b>Location.</b> Near me asks first. If permission is denied or no fix is found, the ZIP or city field takes over with the reason in plain words.</li>
           <li><b>States.</b> Loading skeletons, no-match alternatives, a failing directory, and offline each have a message and a way forward.</li>
           <li><b>Saved providers.</b> Stored on this device for guests and readable offline. Sharing sends only the public profile link.</li>
+        </ul>
+      </div>
+
+      <div class="spec-card"><h3>First launch</h3>
+        <ul class="rules">
+          <li><b>Tour.</b> Four slides from the current app – Find a provider, MyChart, Find a location, and Indoor wayfinding – rebuilt as blue glass pieces that assemble on entry: the search types itself, map pins drop, and the indoor route draws while a dot walks it.</li>
+          <li><b>Controls.</b> Skip at any time, Next or Get started at the thumb, dots to jump, swipe, or the arrow keys. Each slide is announced as “slide 2 of 4,” and only the visible slide is reachable.</li>
+          <li><b>Sign-in choice.</b> Sign in as a patient opens the MyChart sign-in page. Continue as a guest opens the guest home. Take the tour again goes back to slide 1.</li>
+          <li><b>Motion.</b> Pieces spring in over 520 ms with 110 ms steps, then float gently. Reduce motion shows every slide fully assembled with no movement.</li>
         </ul>
       </div>
 
@@ -2370,7 +2536,7 @@ function setStory(i){
   if(n===i){ s.classList.remove("on"); void s.offsetWidth; s.classList.add("on"); s.setAttribute("aria-current","true"); } else { s.classList.remove("on"); s.removeAttribute("aria-current"); } });
 }
 function slideTo(i){ var car=$("#car"); if(!car) return; var c=car.children[i]; if(!c) return; car.scrollTo({left:c.offsetLeft-16,behavior:S.rm?"auto":"smooth"}); }
-function syncCarousel(){ var mod=$(".feat-mod"); if(!mod) return; mod.classList.toggle("paused",S.carPaused||S.rm||S.tab!=="home"||!!PAGE||app.classList.contains("modal")); }
+function syncCarousel(){ var mod=$(".feat-mod"); if(!mod) return; mod.classList.toggle("paused",S.carPaused||S.rm||S.tab!=="home"||!!PAGE||app.classList.contains("modal")||app.classList.contains("onb-on")); }
 
 /* ---------- Pull to refresh ---------- */
 function refresh(){
@@ -2578,6 +2744,125 @@ $("#mods-reset").addEventListener("click",function(){ S.layout=DEFAULT.slice(); 
 /* The phone frame itself never scrolls – focus inside a sliding sheet must not shift it */
 app.addEventListener("scroll",function(){ app.scrollTop=0; app.scrollLeft=0; });
 
+/* ---------- First launch: tour, then the patient or guest choice ---------- */
+var ONB=[
+ {k:"prov",t:"Find a provider",d:"Search in everyday words, compare providers, and read full biographies to choose who’s best for your care."},
+ {k:"mc",t:"MyChart, built in",d:"Sign in to view your health information, schedule visits, message your provider, see test results, and request refills."},
+ {k:"loc",t:"Find a location",d:"Find UT&nbsp;Southwestern clinics and hospitals by specialty, ZIP code, or location type."},
+ {k:"way",t:"Indoor wayfinding",d:"Turn-by-turn directions inside our buildings, across campus, and between buildings."}
+];
+var OB={on:false,i:0,pane:"tour",from:null};
+var PIN='<svg viewBox="0 0 40 48" aria-hidden="true"><path d="M20 47S4 30.5 4 19a16 16 0 0 1 32 0c0 11.5-16 28-16 28z" fill="var(--pc,#004278)" stroke="#fff" stroke-width="2"/><circle cx="20" cy="19" r="6" fill="#fff"/></svg>';
+function onbArt(k){
+ if(k==="prov") return '<div class="oa" aria-hidden="true">'+
+  '<div class="oi glass o-search" style="--d:0"><div class="o-row"><span class="orb c">'+ic("search")+'</span><span class="o-type"><span>heart doctor</span><i></i></span><span class="o-go">'+ic("arrowR")+'</span></div></div>'+
+  '<div class="oi fl glass o-pcard" style="--d:2"><div class="o-row"><span class="pav"><span>AM</span></span><span class="grow"><b>Avery Mockford, M.D.</b><span class="t2">Cardiology · 2.4 mi</span><span class="bdg ok">'+ic("check")+'Accepting new patients</span></span></div><span class="o-heart">'+ic("heart")+'</span></div>'+
+  '<div class="oi glass-o o-bio" style="--d:4"><span class="eyebrow">Biography</span><i class="o-bar"></i><i class="o-bar" style="width:86%"></i><i class="o-bar" style="width:62%"></i></div></div>';
+ if(k==="mc") return '<div class="oa" aria-hidden="true">'+
+  '<div class="oi o-lock" style="--d:0"><span class="orb c">'+ic("lock")+'</span></div>'+
+  '<div class="oi glass o-mc" style="--d:1"><span class="eyebrow">MyChart</span><h3>Sign in</h3><span class="o-field">Username</span><span class="o-field">Password</span><span class="o-btn">'+ic("login")+'Sign in</span></div>'+
+  '<span class="oi fl glass o-chip o-c1" style="--d:3"><span class="orb l">'+ic("msg")+'</span>Messages</span>'+
+  '<span class="oi fl glass o-chip o-c2" style="--d:4"><span class="orb p">'+ic("flask")+'</span>Test results</span>'+
+  '<span class="oi fl glass o-chip o-c3" style="--d:5"><span class="orb c">'+ic("cal")+'</span>Visits</span>'+
+  '<span class="oi fl glass o-chip o-c4" style="--d:6"><span class="orb l">'+ic("card")+'</span>Billing</span></div>';
+ if(k==="loc") return '<div class="oa" aria-hidden="true">'+
+  '<div class="oi glass-o o-map" style="--d:0"><svg class="streets" viewBox="0 0 360 300" preserveAspectRatio="xMidYMid slice"><g stroke="rgba(255,255,255,.14)" stroke-width="10" fill="none" stroke-linecap="round"><path d="M-10 120 H370M-10 220 H370M90 -10 V310M250 -10 V310"/></g><g stroke="rgba(255,255,255,.07)" stroke-width="4" fill="none"><path d="M-10 70 H370M-10 170 H370M-10 270 H370M40 -10 V310M170 -10 V310M310 -10 V310"/></g><path d="M0 300 C80 250 120 260 170 200 S280 160 360 150" stroke="rgba(0,169,224,.35)" stroke-width="18" fill="none"/></svg>'+
+   '<span class="o-field o-where">'+ic("search")+'Cardiology near 75390</span>'+
+   '<span class="o-pin" style="left:24%;top:46%;--d:0;--pc:#00A9E0">'+PIN+'</span><span class="o-pin" style="left:70%;top:40%;--d:1">'+PIN+'</span><span class="o-pin" style="left:52%;top:78%;--d:2;--pc:#8246AF">'+PIN+'</span><span class="o-you" style="left:40%;top:64%"></span></div>'+
+  '<div class="oi fl glass o-place" style="--d:3"><div class="o-row"><span class="orb l">'+ic("building")+'</span><span class="grow"><b>Clements University Hospital</b><span class="t2">1.6 mi · Open 24 hours</span></span><span class="o-mini">'+ic("nav")+'</span></div></div></div>';
+ return '<div class="oa" aria-hidden="true">'+
+  '<div class="oi glass o-step" style="--d:0"><div class="o-row"><span class="orb c lg">'+ic("up")+'</span><span class="grow"><b>Take the elevator to level 7</b><span class="t2">Then turn left at the waiting area</span></span></div></div>'+
+  '<div class="oi glass-o o-plan" style="--d:1"><div class="o-planbox"><svg viewBox="0 0 300 200"><g fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.22)" stroke-width="1.5"><rect x="4" y="4" width="84" height="76" rx="6"/><rect x="132" y="4" width="56" height="76" rx="6"/><rect x="222" y="62" width="74" height="76" rx="6"/><rect x="4" y="122" width="84" height="74" rx="6"/><rect x="132" y="122" width="56" height="74" rx="6"/><rect x="222" y="152" width="74" height="44" rx="6"/></g><rect x="236" y="14" width="52" height="40" rx="8" fill="rgba(0,169,224,.25)" stroke="#00A9E0" stroke-width="1.5"/><path class="o-route" pathLength="1" d="M30 170 H110 V100 H200 V40 H262" fill="none" stroke="#00A9E0" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="30" cy="170" r="6" fill="#fff"/></svg><span class="o-walker"></span></div></div>'+
+  '<div class="oi fl glass o-arrive" style="--d:3"><div class="o-row"><span class="orb p">'+ic("pin")+'</span><span class="grow"><b>Sample Transplant Clinic</b><span class="t2">125 ft · Arrive 4:25 p.m.</span></span></div></div></div>';
+}
+function renderOnb(){
+ var el=$("#onb");
+ el.innerHTML='<div class="onb-head"><img class="logo" src="'+LOGO+'" alt="UTSW MyCare" width="192" height="50"><button class="onb-skip press" id="onb-skip">Skip</button></div>'+
+  '<div class="onb-panes">'+
+   '<section class="onb-pane" id="onb-tour" aria-roledescription="carousel" aria-label="Welcome tour">'+
+    '<div class="onb-viewport" id="onb-vp"><div class="onb-track" id="onb-track">'+ONB.map(function(s,n){
+     return '<div class="onb-slide" role="group" aria-roledescription="slide" aria-label="'+(n+1)+' of '+ONB.length+'">'+onbArt(s.k)+'<div class="onb-txt"><h2 tabindex="-1">'+s.t+'</h2><p>'+s.d+'</p></div></div>';
+    }).join("")+'</div></div>'+
+    '<div class="onb-foot"><div class="onb-dots" role="group" aria-label="Tour slides">'+ONB.map(function(s,n){return '<button class="onb-dot" data-od="'+n+'" aria-label="Slide '+(n+1)+': '+s.t+'"><i></i></button>';}).join("")+'</div>'+
+    '<button class="onb-next press" id="onb-next"><span></span>'+ic("arrowR")+'</button></div>'+
+   '</section>'+
+   '<section class="onb-pane onb-login away-r" id="onb-login" aria-labelledby="ol-h">'+
+    '<div class="ol-hero"><span class="ol-icon" style="--d:0" aria-hidden="true"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDI0IDEwMjQiPjxyZWN0IHdpZHRoPSIxMDI0IiBoZWlnaHQ9IjEwMjQiIGZpbGw9IiMwMDQyNzgiLz48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLjAwIDAuMDApIHNjYWxlKDEuMDAwMDApIj48cGF0aCBkPSJNMzAwIDI5MlY1MDBBMjEyIDIxMiAwIDAgMCA3MjQgNTAwVjI5MiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjE0MCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PGNpcmNsZSBjeD0iNTEyIiBjeT0iNDY4IiByPSIxMDIiIGZpbGw9IiMwMEE5RTAiLz48L2c+PC9zdmc+" alt=""><i></i><i></i></span>'+
+     '<h2 id="ol-h" tabindex="-1" style="--d:1">Welcome to UTSW MyCare</h2><p style="--d:2">Find care, get directions, and keep up with your health at UT&nbsp;Southwestern.</p></div>'+
+    '<div class="ol-choices"><p class="ol-label" style="--d:0">How would you like to continue?</p>'+
+     '<button class="ol-opt patient glass spot press" id="ol-patient" style="--d:1"><span class="orb c ol-ic" aria-hidden="true">'+ic("login")+'</span><span class="grow"><b>Sign in as a patient</b><span>Use your MyChart username and password.</span></span>'+ic("chevR","ol-go")+'</button>'+
+     '<button class="ol-opt guest press" id="ol-guest" style="--d:2"><span class="orb ol-ic" aria-hidden="true">'+ic("user")+'</span><span class="grow"><b>Continue as a guest</b><span>Find care, locations, and health news without signing in.</span></span>'+ic("chevR","ol-go")+'</button>'+
+     '<button class="txt-btn ol-tour" id="ol-tour" style="--d:3">Take the tour again</button></div>'+
+   '</section>'+
+  '</div>';
+}
+function onbSet(i,focus){
+ OB.i=Math.max(0,Math.min(ONB.length-1,i));
+ $("#onb-track").style.transform="translateX("+(-OB.i*100)+"%)";
+ $$(".onb-slide",$("#onb")).forEach(function(s,n){
+  var on=n===OB.i; s.inert=!on; s.setAttribute("aria-hidden",String(!on));
+  if(on){ s.classList.remove("on"); void s.offsetWidth; s.classList.add("on"); } else s.classList.remove("on");
+ });
+ $$(".onb-dot",$("#onb")).forEach(function(d,n){ if(n===OB.i) d.setAttribute("aria-current","true"); else d.removeAttribute("aria-current"); });
+ var last=OB.i===ONB.length-1;
+ $("#onb-next span").textContent=last?"Get started":"Next";
+ $("#onb-next").setAttribute("aria-label",last?"Get started":"Next: "+ONB[OB.i+1].t);
+ say(ONB[OB.i].t+", slide "+(OB.i+1)+" of "+ONB.length);
+ if(focus) $(".onb-slide.on h2",$("#onb")).focus({preventScroll:true});
+}
+function onbPane(p){
+ OB.pane=p; var tour=$("#onb-tour"), login=$("#onb-login");
+ tour.classList.toggle("away-l",p==="login"); tour.inert=p==="login";
+ login.classList.toggle("away-r",p!=="login"); login.inert=p!=="login";
+ login.classList.toggle("on-now",p==="login");
+ var sk=$("#onb-skip"); sk.setAttribute("aria-hidden",String(p==="login")); sk.tabIndex=p==="login"?-1:0;
+ if(p==="login") setTimeout(function(){ $("#ol-h").focus({preventScroll:true}); },S.rm?0:120);
+ else onbSet(0,true);
+}
+function showOnb(pane){
+ if(!$("#onb").innerHTML) renderOnb();
+ if(!$("#sheet").hidden) closeSheet();
+ if(PAGE) closePage();
+ var el=$("#onb"); el.hidden=false; el.classList.remove("out");
+ OB.on=true; app.classList.add("onb-on");
+ ["#screens","#dock"].forEach(function(s){var x=$(s); x.setAttribute("aria-hidden","true"); x.inert=true;});
+ onbPane(pane||"tour"); if(pane==="login") onbSet(ONB.length-1,false);
+ syncCarousel();
+}
+function finishOnb(tab){
+ var el=$("#onb"); el.classList.add("out");
+ ["#screens","#dock"].forEach(function(s){var x=$(s); x.removeAttribute("aria-hidden"); x.inert=false;});
+ OB.on=false; app.classList.remove("onb-on");
+ if(S.tab!==tab) go(tab); else if(tab==="home") renderHome(true);
+ syncCarousel();
+ setTimeout(function(){ el.hidden=true; el.classList.remove("out");
+  var h=$("#"+SCREEN[tab]+" h1"); if(h){ h.setAttribute("tabindex","-1"); h.focus({preventScroll:true}); }
+ },S.rm?0:300);
+}
+$("#onb").addEventListener("click",function(e){
+ var t=e.target.closest("button"); if(!t) return;
+ if(t.id==="onb-skip") return onbPane("login");
+ if(t.id==="onb-next") return OB.i<ONB.length-1?onbSet(OB.i+1,true):onbPane("login");
+ if(t.dataset.od) return onbSet(+t.dataset.od,true);
+ if(t.id==="ol-patient") return finishOnb("mychart");
+ if(t.id==="ol-guest") return finishOnb("home");
+ if(t.id==="ol-tour") return onbPane("tour");
+});
+$("#onb").addEventListener("keydown",function(e){
+ if(OB.pane!=="tour"||e.target.closest(".ol-choices")) return;
+ if(e.key==="ArrowRight"){ e.preventDefault(); onbSet(OB.i+1,true); }
+ if(e.key==="ArrowLeft"){ e.preventDefault(); onbSet(OB.i-1,true); }
+});
+(function(){
+ var x0=null, dx=0, w=1, tr=null;
+ $("#onb").addEventListener("pointerdown",function(e){ if(OB.pane!=="tour"||!e.target.closest("#onb-vp")) return; x0=e.clientX; dx=0; tr=$("#onb-track"); w=tr.offsetWidth||1; tr.classList.add("dragging"); });
+ window.addEventListener("pointermove",function(e){ if(x0===null) return; dx=e.clientX-x0; if((OB.i===0&&dx>0)||(OB.i===ONB.length-1&&dx<0)) dx/=3; tr.style.transform="translateX(calc("+(-OB.i*100)+"% + "+dx+"px))"; });
+ window.addEventListener("pointerup",function(){ if(x0===null) return; x0=null; tr.classList.remove("dragging");
+  if(Math.abs(dx)>56) onbSet(OB.i+(dx<0?1:-1),false); else tr.style.transform="translateX("+(-OB.i*100)+"%)"; });
+})();
+$("#onb-replay").addEventListener("click",function(){ showOnb("tour"); });
+$("#onb-choice").addEventListener("click",function(){ showOnb("login"); });
+
 /* ---------- Grain ---------- */
 (function(){ try{
  var c=document.createElement("canvas"); c.width=c.height=160; var x=c.getContext("2d"), d=x.createImageData(160,160);
@@ -2590,5 +2875,6 @@ setSwitch("#opt-rt",S.rt); app.classList.toggle("rt",S.rt);
 setSwitch("#opt-rm",S.rm); app.classList.toggle("rm",S.rm);
 seg("al",S.alerts); seg("w",S.w); seg("net",S.net); seg("api",S.api); seg("perm",S.perm);
 renderTabs(); renderHome(true); renderCare(null); renderSaved(false); renderPlaces(); renderMods();
+showOnb("tour");
 })();
 </script>
