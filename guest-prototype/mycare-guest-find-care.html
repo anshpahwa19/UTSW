@@ -925,6 +925,27 @@ mark{background:rgba(0,169,224,.35);color:inherit;border-radius:4px}
 .onb-login .anim-in > *{animation:rise var(--dur-slow) var(--ease-out) backwards}
 .onb-login .anim-in > *:nth-child(2){animation-delay:60ms}.onb-login .anim-in > *:nth-child(3){animation-delay:120ms}.onb-login .anim-in > *:nth-child(4){animation-delay:180ms}
 
+/* Splash – app icon pops in with ripples, then hands over to the full logo */
+.splash{position:absolute;inset:0;z-index:26;display:grid;place-items:center;cursor:pointer;background:radial-gradient(circle at 50% 50%,var(--c-blue) 0,var(--c-blue) 176px,var(--c-navy-700) 72%,var(--c-navy-900) 100%);transition:opacity 400ms var(--ease-std),transform 400ms var(--ease-out)}
+.splash.out{opacity:0;transform:scale(1.06);pointer-events:none}
+.sp-stage{position:relative;width:256px;height:256px;display:grid;place-items:center}
+.sp-rings,.sp-icon,.sp-logo{grid-area:1/1}
+.sp-stage::before{content:"";position:absolute;inset:-32px;border-radius:50%;background:radial-gradient(closest-side,rgba(0,169,224,.35),rgba(0,169,224,0));animation:spOut 400ms var(--ease-std) 1.5s forwards}
+.sp-rings{position:relative;width:112px;height:112px;animation:spOut 400ms var(--ease-std) 1.5s forwards}
+.sp-rings i{position:absolute;inset:0;border-radius:32px;border:2px solid rgba(0,169,224,.7);animation:spRing 1.6s var(--ease-out) infinite;opacity:0}
+.sp-rings i:nth-child(2){animation-delay:.4s}.sp-rings i:nth-child(3){animation-delay:.8s}
+.sp-icon{width:112px;height:112px;border-radius:28px;box-shadow:0 24px 48px rgba(0,10,30,.5),0 0 0 1px rgba(255,255,255,.12);animation:spPop 700ms var(--ease-spring) 150ms both,spOut 400ms var(--ease-std) 1.5s forwards}
+.sp-logo{width:224px;height:auto;opacity:0;animation:spIn 600ms var(--ease-out) 1.6s forwards}
+.sp-load{position:absolute;left:50%;bottom:120px;width:96px;height:4px;margin-left:-48px;border-radius:var(--r-pill);background:rgba(255,255,255,.2);overflow:hidden}
+.sp-load i{display:block;width:40%;height:100%;border-radius:inherit;background:#FFFFFF;animation:spBar 1.1s var(--ease-std) infinite}
+@keyframes spPop{from{opacity:0;transform:scale(.4) rotate(-8deg)}}
+@keyframes spRing{0%{opacity:.9;transform:scale(1)}100%{opacity:0;transform:scale(2.2)}}
+@keyframes spOut{to{opacity:0;transform:scale(.8)}}
+@keyframes spIn{from{opacity:0;transform:translateY(12px) scale(.96)}to{opacity:1;transform:none}}
+@keyframes spBar{from{transform:translateX(-100%)}to{transform:translateX(250%)}}
+.app.rm .sp-rings,.app.rm .sp-icon{display:none}
+.app.rm .sp-logo{opacity:1}
+
 /* Reduce transparency – solid surfaces, no blur, no light */
 .app.rt{--glass-fill:var(--c-solid);--glass-fill-o:var(--c-solid-o);--glass-sheen:linear-gradient(transparent,transparent);--noise:linear-gradient(transparent,transparent);--glass-spot:transparent}
 .app.rt .glass,.app.rt .glass-o{-webkit-backdrop-filter:none;backdrop-filter:none}
@@ -988,6 +1009,7 @@ mark{background:rgba(0,169,224,.35);color:inherit;border-radius:4px}
           </div>
           <div class="home-ind" aria-hidden="true"></div>
 
+          <div class="splash" id="splash" role="status" aria-label="Loading UTSW MyCare" hidden></div>
           <div class="onb" id="onb" role="dialog" aria-modal="true" aria-label="Welcome to UTSW MyCare" hidden></div>
           <div class="toast glass-o" id="toast" role="status" aria-live="polite"></div>
           <div class="sr-only" id="alert-live" aria-live="assertive"></div>
@@ -1003,8 +1025,9 @@ mark{background:rgba(0,169,224,.35);color:inherit;border-radius:4px}
 
     <aside class="panel" aria-label="Prototype controls">
       <section class="ctl">
-        <div class="ctl-h"><h2>Start-up</h2><p class="hint">The app opens with the four-slide tour, then asks how to continue. Swipe, use the dots, or tap Next.</p></div>
+        <div class="ctl-h"><h2>Start-up</h2><p class="hint">The app opens with the splash (tap to skip), then the four-slide tour, then asks how to continue. Swipe, use the dots, or tap Next.</p></div>
         <div class="seg" role="group" aria-label="Show">
+          <button id="replay-splash">Replay from launch</button>
           <button id="replay-tour">Replay the tour</button>
           <button id="show-welcome">Show the welcome choice</button>
         </div>
@@ -1081,6 +1104,7 @@ mark{background:rgba(0,169,224,.35);color:inherit;border-radius:4px}
 
       <div class="spec-card"><h3>Guest home, module by module</h3>
         <ul class="rules">
+          <li><b>Splash:</b> the app icon pops in with cyan ripples, then hands over to the full UTSW MyCare logo (original SVGs, never redrawn) with a short loading bar – about 2.9 seconds, tap to skip, static with reduce motion.</li>
           <li><b>Onboarding:</b> the old app’s four tour screens (Find a provider, MyChart, Find a location, Indoor wayfinding) become one swipeable tour with live illustrations built from the app’s own cards, then a welcome screen: “I’m a patient” opens sign-in in place, “Continue as guest” enters the guest home.</li>
           <li><b>Kept from the old app:</b> MedBlog stories with pause, quick links, UTSW resources (wayfinding, video visit prep), Find a provider by specialty, search history, and the city filter.</li>
           <li><b>Quick links</b> keep the old app’s four MyChart links with their exact names (Message your doctor, Get your test results, Manage your visits, Manage billing) and add Find my care and Locations. MyChart links are marked with a lock and open a sign-in explanation instead of dead-ending.</li>
@@ -1154,7 +1178,7 @@ mark{background:rgba(0,169,224,.35);color:inherit;border-radius:4px}
 <script>
 (function(){
 "use strict";
-var LOGO="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOTE1IDUwMiI+PHJlY3Qgd2lkdGg9IjE5MTUiIGhlaWdodD0iNTAyIiBmaWxsPSIjMDA0Mjc4Ii8+PHJlY3QgeD0iMTQ1LjUxIiB5PSIxNDUuNTEiIHdpZHRoPSIyMTAuOTkiIGhlaWdodD0iMjEwLjk5IiByeD0iNDcuNDciIGZpbGw9IiNGRkZGRkYiLz48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNDUuNTEgMTQ1LjUxKSBzY2FsZSgwLjIwNjA0KSI+PHBhdGggZD0iTTMwMCAyOTJWNTAwQTIxMiAyMTIgMCAwIDAgNzI0IDUwMFYyOTIiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwNDI3OCIgc3Ryb2tlLXdpZHRoPSIxNDAiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxjaXJjbGUgY3g9IjUxMiIgY3k9IjQ2OCIgcj0iMTAyIiBmaWxsPSIjMDBBOUUwIi8+PC9nPjxwYXRoIGQ9Ik00ODguMTIgMzI2LjFDNTI1LjEzIDMyNi4xIDU0OS4zNSAzMDQuNzEgNTQ5LjM1IDI3Mi41OFYxNzguMjVINTE1LjA3VjI2OS43NUM1MTUuMDcgMjg1LjE4IDUwNC4zMyAyOTYuMjIgNDg4LjEyIDI5Ni4yMkM0NzIgMjk2LjIyIDQ2MS4wNiAyODUuMDggNDYxLjA2IDI2OS43NVYxNzguMjVINDI2Ljc5VjI3Mi41OEM0MjYuNzkgMzA0LjcxIDQ1MC45MSAzMjYuMSA0ODguMTIgMzI2LjFaTTU1OS42MyAyMDguMTNINjAyLjVWMzIzLjc1SDYzNy42NVYyMDguMTNINjgwLjQzVjE3OC4yNUg1NTkuNjNaTTc0OC44MSAzMjYuMUM3ODYuMzEgMzI2LjEgODA4LjU4IDMwOC44MSA4MDguNTggMjc5LjUyQzgwOC41OCAyNTcuMDYgNzk0LjYyIDI0NC4yNiA3NjIuMzkgMjM3LjgyTDc0OS42IDIzNS4yOEM3MzIuOTkgMjMxLjg2IDcyNi4wNiAyMjcuNDcgNzI2LjA2IDIxOS41NkM3MjYuMDYgMjEwLjQ3IDczNS4zNCAyMDQuMTMgNzQ4LjYyIDIwNC4xM0M3NjIuNDkgMjA0LjEzIDc3MS43NiAyMTEuNTUgNzcyLjc0IDIyMy41Nkg4MDUuMjZDODA0LjM4IDE5My43NyA3ODIuOTkgMTc1LjkgNzQ4LjEzIDE3NS45QzcxMy45NSAxNzUuOSA2OTAuOSAxOTQuMTcgNjkwLjkgMjIxLjIyQzY5MC45IDI0Mi40MSA3MDUuNDYgMjU2LjQ3IDczMy44NyAyNjIuMzNMNzQ4LjgxIDI2NS4zNkM3NjYuMjkgMjY4Ljk3IDc3My44MSAyNzMuNzUgNzczLjgxIDI4Mi4wNkM3NzMuODEgMjkxLjYzIDc2My45NSAyOTcuODggNzQ5LjExIDI5Ny44OEM3MzIuMzEgMjk3Ljg4IDcyMi4wNiAyODkuNjcgNzIxLjU3IDI3NS43MUg2ODguMDdDNjg4LjA3IDMwNy44NCA3MTAuMDQgMzI2LjEgNzQ4LjgxIDMyNi4xWk04NTEuMzggMzIzLjc1SDg5MC4zNUw5MDguOSAyNTAuMjJDOTEwLjQ2IDI0NC4wNyA5MTEuOTMgMjM2Ljk0IDkxMy42OSAyMjguNDRDOTE1LjQ0IDIzNi45NCA5MTYuOTEgMjQ0LjA3IDkxOC40NyAyNTAuMjJMOTM3LjEyIDMyMy43NUg5NzUuOTlMMTAxNC44NiAxNzguMjVIOTc2Ljk3TDk2Mi41MSAyNDIuOUM5NTkuNzggMjU1LjY5IDk1Ny4yNCAyNjguMzggOTU0LjkgMjgxLjE4Qzk1Mi4zNiAyNjguMzggOTQ5LjYyIDI1NS42OSA5NDYuNjkgMjQyLjlMOTMxLjE3IDE3OC4yNUg4OTYuM0w4ODAuNzggMjQyLjlDODc3Ljc1IDI1NS43OSA4NzUuMDEgMjY4LjU4IDg3Mi40NyAyODEuMzdDODcwLjEzIDI2OC41OCA4NjcuNTkgMjU1Ljc5IDg2NC44NiAyNDIuOUw4NTAuNCAxNzguMjVIODEyLjYxWiIgZmlsbD0iI0ZGRkZGRiIvPjxwYXRoIGQ9Ik0xMDcyLjI4IDMyMy43NUgxMDkzLjY3VjI0NC40NkMxMDkzLjY3IDIzNC41OSAxMDkzLjI4IDIyMC43MyAxMDkyLjk4IDIwNy41NEMxMDk4LjI2IDIyMi41OCAxMTAzLjE0IDIzNi40NSAxMTA2LjE3IDI0NC40NkwxMTM3LjEyIDMyMy43NUgxMTU0LjlMMTE4NS41NiAyNDQuNDZDMTE4OC42OSAyMzYuMTYgMTE5My42NyAyMjEuMzEgMTE5OS4wNCAyMDUuNDlDMTE5OC43NCAyMTkuMjYgMTE5OC4zNSAyMzQuMTEgMTE5OC4zNSAyNDQuNDZWMzIzLjc1SDEyMTkuNjRWMTc4LjI1SDExODguOThMMTE1Ni44NSAyNjMuNUMxMTU0LjMxIDI3MC45MiAxMTQ5LjUzIDI4NC42OSAxMTQ2LjIxIDI5NC43NUMxMTQyLjg4IDI4NC42OSAxMTM4LjEgMjcwLjkyIDExMzUuNDYgMjYzLjVMMTEwMi44NSAxNzguMjVIMTA3Mi4yOFpNMTI0Ni4wOCAzNjQuNThIMTI1OS4xN0MxMjczLjEzIDM2NC41OCAxMjgzLjI5IDM1Ni43NiAxMjg5LjA1IDM0MS44MkwxMzM1LjkzIDIyMC42M0gxMzE0LjE1TDEyOTMuODQgMjc3LjE3QzEyOTEuMSAyODQuODkgMTI4OC40NyAyOTIuNiAxMjg1LjkzIDMwMC4zMkMxMjgzLjM5IDI5Mi42IDEyODAuODUgMjg0Ljg5IDEyNzguMTIgMjc3LjE3TDEyNTcuNTEgMjIwLjYzSDEyMzUuNDRMMTI3NS4yOCAzMjMuMDdMMTI3MC42IDMzNS4yOEMxMjY3LjQ3IDM0My42OCAxMjYzLjY2IDM0Ny4xOSAxMjU3LjIyIDM0Ny4xOUgxMjQ2LjA4Wk0xNDEzLjA1IDMyNi4xQzE0NDQuNzkgMzI2LjEgMTQ2OS40IDMwNi40NyAxNDc0LjM4IDI3NS41MUgxNDUyLjQxQzE0NDcuODIgMjk1LjI0IDE0MzIuOTcgMzA2LjI3IDE0MTMuMjUgMzA2LjI3QzEzODQuNTQgMzA2LjI3IDEzNjYuOTYgMjg0LjAxIDEzNjYuOTYgMjUxLjFDMTM2Ni45NiAyMTcuOTkgMTM4NC41NCAxOTUuNzMgMTQxMy4yNSAxOTUuNzNDMTQzMy4wNyAxOTUuNzMgMTQ0OC4wMSAyMDYuODYgMTQ1Mi4zMSAyMjYuNjhIMTQ3NC4zOEMxNDY5LjMgMTk1LjYzIDE0NDQuNzkgMTc1LjkgMTQxMy4wNSAxNzUuOUMxMzcyLjgyIDE3NS45IDEzNDUuMTggMjA2LjI3IDEzNDUuMTggMjUxLjFDMTM0NS4xOCAyOTUuNjMgMTM3Mi45MiAzMjYuMSAxNDEzLjA1IDMyNi4xWk0xNTMyLjI3IDMyNS44MUMxNTQ1Ljc0IDMyNS44MSAxNTU3LjE3IDMyMC4wNCAxNTY0LjEgMzA4LjIzSDE1NjQuNFYzMjMuNzVIMTU4NC43MVYyMjAuNjNIMTU2NC40VjIzNS40N0gxNTY0LjFDMTU1Ny41NiAyMjQuMTUgMTU0NS41NSAyMTguNTggMTUzMi4xNyAyMTguNThDMTUwNS41MSAyMTguNTggMTQ4Ny41NCAyNDAuMzYgMTQ4Ny41NCAyNzIuMTlDMTQ4Ny41NCAzMDQuMTMgMTUwNS40MSAzMjUuODEgMTUzMi4yNyAzMjUuODFaTTE1MzYuNDcgMzA4LjAzQzE1MTkuODcgMzA4LjAzIDE1MDguNDQgMjk1LjQzIDE1MDguNDQgMjcyLjE5QzE1MDguNDQgMjQ4Ljg1IDE1MTkuODcgMjM2LjI1IDE1MzYuNDcgMjM2LjI1QzE1NTQuMDQgMjM2LjI1IDE1NjUuMzcgMjUwLjUxIDE1NjUuMzcgMjcyLjE5QzE1NjUuMzcgMjkzLjg3IDE1NTQuMDQgMzA4LjAzIDE1MzYuNDcgMzA4LjAzWk0xNjA2Ljk1IDMyMy43NUgxNjI3LjU2VjI2Mi44MkMxNjI3LjU2IDI0Ni4wMiAxNjM3LjAzIDIzOC4xMSAxNjQ4LjY1IDIzOC4xMUMxNjUzLjQ0IDIzOC4xMSAxNjU3LjkzIDIzOC43OSAxNjU5LjQ5IDIzOS4wOVYyMTkuODVDMTY1Ny44MyAyMTkuNjUgMTY1NS4xIDIxOS4zNiAxNjUxLjk3IDIxOS4zNkMxNjM4Ljg4IDIxOS4zNiAxNjMwLjg4IDIyNi4xIDE2MjcuMDcgMjM3LjMzSDE2MjYuNjhWMjIwLjYzSDE2MDYuOTVaTTE3MTYuMyAzMjYuMUMxNzM5LjY0IDMyNi4xIDE3NTggMzEyLjMzIDE3NjEuODEgMjkyLjQxSDE3NDEuOTlDMTczOS4wNiAzMDIuMTcgMTczMC4wNyAzMDguOTEgMTcxNi42IDMwOC45MUMxNjk4LjUzIDMwOC45MSAxNjg4LjE4IDI5Ni4zMSAxNjg3LjQ5IDI3Ny43NkgxNzYzLjM3VjI3Mi4xOUMxNzYzLjM3IDI0MC4zNiAxNzQ0LjQzIDIxOC4yOSAxNzE1LjIzIDIxOC4yOUMxNjg3LjEgMjE4LjI5IDE2NjcuMTggMjQwLjk0IDE2NjcuMTggMjcyLjM5QzE2NjcuMTggMzAzLjU0IDE2ODUuNzQgMzI2LjEgMTcxNi4zIDMyNi4xWk0xNjg3LjY5IDI2Mi4xM0MxNjg5LjQ1IDI0NS43MyAxNjk5LjkgMjM1LjQ3IDE3MTUuNDIgMjM1LjQ3QzE3MzEuMDUgMjM1LjQ3IDE3NDEuNiAyNDUuNzMgMTc0My4yNiAyNjIuMTNaIiBmaWxsPSIjRkZGRkZGIi8+PC9zdmc+";
+var LOGO="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOTE1IDUwMiI+PHJlY3Qgd2lkdGg9IjE5MTUiIGhlaWdodD0iNTAyIiBmaWxsPSIjMDA0Mjc4Ii8+PHJlY3QgeD0iMTQ1LjUxIiB5PSIxNDUuNTEiIHdpZHRoPSIyMTAuOTkiIGhlaWdodD0iMjEwLjk5IiByeD0iNDcuNDciIGZpbGw9IiNGRkZGRkYiLz48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNDUuNTEgMTQ1LjUxKSBzY2FsZSgwLjIwNjA0KSI+PHBhdGggZD0iTTMwMCAyOTJWNTAwQTIxMiAyMTIgMCAwIDAgNzI0IDUwMFYyOTIiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwNDI3OCIgc3Ryb2tlLXdpZHRoPSIxNDAiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxjaXJjbGUgY3g9IjUxMiIgY3k9IjQ2OCIgcj0iMTAyIiBmaWxsPSIjMDBBOUUwIi8+PC9nPjxwYXRoIGQ9Ik00ODguMTIgMzI2LjFDNTI1LjEzIDMyNi4xIDU0OS4zNSAzMDQuNzEgNTQ5LjM1IDI3Mi41OFYxNzguMjVINTE1LjA3VjI2OS43NUM1MTUuMDcgMjg1LjE4IDUwNC4zMyAyOTYuMjIgNDg4LjEyIDI5Ni4yMkM0NzIgMjk2LjIyIDQ2MS4wNiAyODUuMDggNDYxLjA2IDI2OS43NVYxNzguMjVINDI2Ljc5VjI3Mi41OEM0MjYuNzkgMzA0LjcxIDQ1MC45MSAzMjYuMSA0ODguMTIgMzI2LjFaTTU1OS42MyAyMDguMTNINjAyLjVWMzIzLjc1SDYzNy42NVYyMDguMTNINjgwLjQzVjE3OC4yNUg1NTkuNjNaTTc0OC44MSAzMjYuMUM3ODYuMzEgMzI2LjEgODA4LjU4IDMwOC44MSA4MDguNTggMjc5LjUyQzgwOC41OCAyNTcuMDYgNzk0LjYyIDI0NC4yNiA3NjIuMzkgMjM3LjgyTDc0OS42IDIzNS4yOEM3MzIuOTkgMjMxLjg2IDcyNi4wNiAyMjcuNDcgNzI2LjA2IDIxOS41NkM3MjYuMDYgMjEwLjQ3IDczNS4zNCAyMDQuMTMgNzQ4LjYyIDIwNC4xM0M3NjIuNDkgMjA0LjEzIDc3MS43NiAyMTEuNTUgNzcyLjc0IDIyMy41Nkg4MDUuMjZDODA0LjM4IDE5My43NyA3ODIuOTkgMTc1LjkgNzQ4LjEzIDE3NS45QzcxMy45NSAxNzUuOSA2OTAuOSAxOTQuMTcgNjkwLjkgMjIxLjIyQzY5MC45IDI0Mi40MSA3MDUuNDYgMjU2LjQ3IDczMy44NyAyNjIuMzNMNzQ4LjgxIDI2NS4zNkM3NjYuMjkgMjY4Ljk3IDc3My44MSAyNzMuNzUgNzczLjgxIDI4Mi4wNkM3NzMuODEgMjkxLjYzIDc2My45NSAyOTcuODggNzQ5LjExIDI5Ny44OEM3MzIuMzEgMjk3Ljg4IDcyMi4wNiAyODkuNjcgNzIxLjU3IDI3NS43MUg2ODguMDdDNjg4LjA3IDMwNy44NCA3MTAuMDQgMzI2LjEgNzQ4LjgxIDMyNi4xWk04NTEuMzggMzIzLjc1SDg5MC4zNUw5MDguOSAyNTAuMjJDOTEwLjQ2IDI0NC4wNyA5MTEuOTMgMjM2Ljk0IDkxMy42OSAyMjguNDRDOTE1LjQ0IDIzNi45NCA5MTYuOTEgMjQ0LjA3IDkxOC40NyAyNTAuMjJMOTM3LjEyIDMyMy43NUg5NzUuOTlMMTAxNC44NiAxNzguMjVIOTc2Ljk3TDk2Mi41MSAyNDIuOUM5NTkuNzggMjU1LjY5IDk1Ny4yNCAyNjguMzggOTU0LjkgMjgxLjE4Qzk1Mi4zNiAyNjguMzggOTQ5LjYyIDI1NS42OSA5NDYuNjkgMjQyLjlMOTMxLjE3IDE3OC4yNUg4OTYuM0w4ODAuNzggMjQyLjlDODc3Ljc1IDI1NS43OSA4NzUuMDEgMjY4LjU4IDg3Mi40NyAyODEuMzdDODcwLjEzIDI2OC41OCA4NjcuNTkgMjU1Ljc5IDg2NC44NiAyNDIuOUw4NTAuNCAxNzguMjVIODEyLjYxWiIgZmlsbD0iI0ZGRkZGRiIvPjxwYXRoIGQ9Ik0xMDcyLjI4IDMyMy43NUgxMDkzLjY3VjI0NC40NkMxMDkzLjY3IDIzNC41OSAxMDkzLjI4IDIyMC43MyAxMDkyLjk4IDIwNy41NEMxMDk4LjI2IDIyMi41OCAxMTAzLjE0IDIzNi40NSAxMTA2LjE3IDI0NC40NkwxMTM3LjEyIDMyMy43NUgxMTU0LjlMMTE4NS41NiAyNDQuNDZDMTE4OC42OSAyMzYuMTYgMTE5My42NyAyMjEuMzEgMTE5OS4wNCAyMDUuNDlDMTE5OC43NCAyMTkuMjYgMTE5OC4zNSAyMzQuMTEgMTE5OC4zNSAyNDQuNDZWMzIzLjc1SDEyMTkuNjRWMTc4LjI1SDExODguOThMMTE1Ni44NSAyNjMuNUMxMTU0LjMxIDI3MC45MiAxMTQ5LjUzIDI4NC42OSAxMTQ2LjIxIDI5NC43NUMxMTQyLjg4IDI4NC42OSAxMTM4LjEgMjcwLjkyIDExMzUuNDYgMjYzLjVMMTEwMi44NSAxNzguMjVIMTA3Mi4yOFpNMTI0Ni4wOCAzNjQuNThIMTI1OS4xN0MxMjczLjEzIDM2NC41OCAxMjgzLjI5IDM1Ni43NiAxMjg5LjA1IDM0MS44MkwxMzM1LjkzIDIyMC42M0gxMzE0LjE1TDEyOTMuODQgMjc3LjE3QzEyOTEuMSAyODQuODkgMTI4OC40NyAyOTIuNiAxMjg1LjkzIDMwMC4zMkMxMjgzLjM5IDI5Mi42IDEyODAuODUgMjg0Ljg5IDEyNzguMTIgMjc3LjE3TDEyNTcuNTEgMjIwLjYzSDEyMzUuNDRMMTI3NS4yOCAzMjMuMDdMMTI3MC42IDMzNS4yOEMxMjY3LjQ3IDM0My42OCAxMjYzLjY2IDM0Ny4xOSAxMjU3LjIyIDM0Ny4xOUgxMjQ2LjA4Wk0xNDEzLjA1IDMyNi4xQzE0NDQuNzkgMzI2LjEgMTQ2OS40IDMwNi40NyAxNDc0LjM4IDI3NS41MUgxNDUyLjQxQzE0NDcuODIgMjk1LjI0IDE0MzIuOTcgMzA2LjI3IDE0MTMuMjUgMzA2LjI3QzEzODQuNTQgMzA2LjI3IDEzNjYuOTYgMjg0LjAxIDEzNjYuOTYgMjUxLjFDMTM2Ni45NiAyMTcuOTkgMTM4NC41NCAxOTUuNzMgMTQxMy4yNSAxOTUuNzNDMTQzMy4wNyAxOTUuNzMgMTQ0OC4wMSAyMDYuODYgMTQ1Mi4zMSAyMjYuNjhIMTQ3NC4zOEMxNDY5LjMgMTk1LjYzIDE0NDQuNzkgMTc1LjkgMTQxMy4wNSAxNzUuOUMxMzcyLjgyIDE3NS45IDEzNDUuMTggMjA2LjI3IDEzNDUuMTggMjUxLjFDMTM0NS4xOCAyOTUuNjMgMTM3Mi45MiAzMjYuMSAxNDEzLjA1IDMyNi4xWk0xNTMyLjI3IDMyNS44MUMxNTQ1Ljc0IDMyNS44MSAxNTU3LjE3IDMyMC4wNCAxNTY0LjEgMzA4LjIzSDE1NjQuNFYzMjMuNzVIMTU4NC43MVYyMjAuNjNIMTU2NC40VjIzNS40N0gxNTY0LjFDMTU1Ny41NiAyMjQuMTUgMTU0NS41NSAyMTguNTggMTUzMi4xNyAyMTguNThDMTUwNS41MSAyMTguNTggMTQ4Ny41NCAyNDAuMzYgMTQ4Ny41NCAyNzIuMTlDMTQ4Ny41NCAzMDQuMTMgMTUwNS40MSAzMjUuODEgMTUzMi4yNyAzMjUuODFaTTE1MzYuNDcgMzA4LjAzQzE1MTkuODcgMzA4LjAzIDE1MDguNDQgMjk1LjQzIDE1MDguNDQgMjcyLjE5QzE1MDguNDQgMjQ4Ljg1IDE1MTkuODcgMjM2LjI1IDE1MzYuNDcgMjM2LjI1QzE1NTQuMDQgMjM2LjI1IDE1NjUuMzcgMjUwLjUxIDE1NjUuMzcgMjcyLjE5QzE1NjUuMzcgMjkzLjg3IDE1NTQuMDQgMzA4LjAzIDE1MzYuNDcgMzA4LjAzWk0xNjA2Ljk1IDMyMy43NUgxNjI3LjU2VjI2Mi44MkMxNjI3LjU2IDI0Ni4wMiAxNjM3LjAzIDIzOC4xMSAxNjQ4LjY1IDIzOC4xMUMxNjUzLjQ0IDIzOC4xMSAxNjU3LjkzIDIzOC43OSAxNjU5LjQ5IDIzOS4wOVYyMTkuODVDMTY1Ny44MyAyMTkuNjUgMTY1NS4xIDIxOS4zNiAxNjUxLjk3IDIxOS4zNkMxNjM4Ljg4IDIxOS4zNiAxNjMwLjg4IDIyNi4xIDE2MjcuMDcgMjM3LjMzSDE2MjYuNjhWMjIwLjYzSDE2MDYuOTVaTTE3MTYuMyAzMjYuMUMxNzM5LjY0IDMyNi4xIDE3NTggMzEyLjMzIDE3NjEuODEgMjkyLjQxSDE3NDEuOTlDMTczOS4wNiAzMDIuMTcgMTczMC4wNyAzMDguOTEgMTcxNi42IDMwOC45MUMxNjk4LjUzIDMwOC45MSAxNjg4LjE4IDI5Ni4zMSAxNjg3LjQ5IDI3Ny43NkgxNzYzLjM3VjI3Mi4xOUMxNzYzLjM3IDI0MC4zNiAxNzQ0LjQzIDIxOC4yOSAxNzE1LjIzIDIxOC4yOUMxNjg3LjEgMjE4LjI5IDE2NjcuMTggMjQwLjk0IDE2NjcuMTggMjcyLjM5QzE2NjcuMTggMzAzLjU0IDE2ODUuNzQgMzI2LjEgMTcxNi4zIDMyNi4xWk0xNjg3LjY5IDI2Mi4xM0MxNjg5LjQ1IDI0NS43MyAxNjk5LjkgMjM1LjQ3IDE3MTUuNDIgMjM1LjQ3QzE3MzEuMDUgMjM1LjQ3IDE3NDEuNiAyNDUuNzMgMTc0My4yNiAyNjIuMTNaIiBmaWxsPSIjRkZGRkZGIi8+PC9zdmc+", ICON="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDI0IDEwMjQiPjxyZWN0IHdpZHRoPSIxMDI0IiBoZWlnaHQ9IjEwMjQiIGZpbGw9IiMwMDQyNzgiLz48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLjAwIDAuMDApIHNjYWxlKDEuMDAwMDApIj48cGF0aCBkPSJNMzAwIDI5MlY1MDBBMjEyIDIxMiAwIDAgMCA3MjQgNTAwVjI5MiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjE0MCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PGNpcmNsZSBjeD0iNTEyIiBjeT0iNDY4IiByPSIxMDIiIGZpbGw9IiMwMEE5RTAiLz48L2c+PC9zdmc+";
 
 /* ---------- Icons (24 × 24, 2 px stroke) ---------- */
 var P={
@@ -2254,6 +2278,22 @@ function obSubmit(){
  err.innerHTML='<p class="field-err" style="background:rgba(255,255,255,.14)">'+ic("info")+'<span>Patient sign-in isn’t part of this guest prototype. Choose Continue as guest to explore.</span></p>'; pw.value="";
 }
 
+/* ---------- Splash ---------- */
+var splashT=null;
+function showSplash(){
+ var sp=$("#splash");
+ sp.innerHTML='<div class="sp-stage" aria-hidden="true"><span class="sp-rings"><i></i><i></i><i></i></span><img class="sp-icon" src="'+ICON+'" alt=""><img class="sp-logo" src="'+LOGO+'" alt="" width="224" height="58"></div><span class="sp-load" aria-hidden="true"><i></i></span>';
+ sp.hidden=false; sp.classList.remove("out");
+ clearTimeout(splashT); splashT=setTimeout(endSplash,S.rm?1200:2900);
+}
+function endSplash(){
+ var sp=$("#splash"); if(sp.hidden||sp.classList.contains("out")) return;
+ clearTimeout(splashT); sp.classList.add("out");
+ setTimeout(function(){ sp.hidden=true; sp.innerHTML=""; },S.rm?0:400);
+ if(OB.open&&OB.view==="tour") obSet(0,false);
+}
+$("#splash").addEventListener("click",endSplash);
+
 /* ---------- Tabs ---------- */
 var TABS=[["home","home","Home"],["care","steth","Find my care"],["places","pin","Locations"],["mychart","login","MyChart"]];
 var SCREEN={home:"screen-home",care:"screen-care",places:"screen-places",saved:"screen-saved",mychart:"screen-mychart"};
@@ -2754,7 +2794,8 @@ setSwitch("#opt-rt",S.rt); app.classList.toggle("rt",S.rt);
 setSwitch("#opt-rm",S.rm); app.classList.toggle("rm",S.rm);
 seg("al",S.alerts); seg("w",S.w); seg("net",S.net); seg("api",S.api); seg("perm",S.perm);
 renderTabs(); renderHome(true); renderCare(null); renderSaved(false); renderPlaces(); renderMods();
-showOnb("tour");
+showOnb("tour"); showSplash();
+$("#replay-splash").addEventListener("click",function(){ showOnb("tour"); showSplash(); });
 $("#replay-tour").addEventListener("click",function(){ showOnb("tour"); });
 $("#show-welcome").addEventListener("click",function(){ showOnb("login"); });
 })();
