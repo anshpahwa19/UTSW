@@ -1039,7 +1039,31 @@ mark{background:rgba(0,169,224,.35);color:inherit;border-radius:4px}
 .ol-tour{align-self:center;color:var(--c-blue)}
 .ol-note{text-align:center;font-size:var(--fs-14);line-height:20px;color:var(--c-on-bg-2)}
 .onb :focus-visible{outline-color:var(--c-blue)}
+.app .onb h2:focus-visible{outline:none}   /* headings take programmatic focus for screen readers only */
 .onb .glass :focus-visible,.onb .ol-opt.patient:focus-visible{outline-color:var(--c-blue)}
+
+/* Splash – the one moment the whole screen is UT Southwestern Blue. Icon and wordmark are the brand SVGs, animated, never redrawn */
+.splash{position:absolute;inset:0;z-index:27;display:grid;place-items:center;overflow:hidden;color:#FFFFFF;cursor:pointer;
+  background:radial-gradient(560px 640px at 50% 42%,var(--c-blue) 0,var(--c-blue) 45%,var(--c-navy-700) 100%);   /* flat #004278 behind the logo: the reversed SVG carries its own #004278 field */
+  transition:opacity 400ms var(--ease-std),transform 400ms var(--ease-out)}
+.splash.out{opacity:0;transform:scale(1.06);pointer-events:none}
+.app.splash-on .status{color:#FFFFFF}
+.app.splash-on .home-ind{z-index:28;background:rgba(255,255,255,.85)}
+.sp-stack{position:relative;display:flex;flex-direction:column;align-items:center;gap:var(--s-32);margin-top:calc(var(--s-48) * -1)}
+.sp-icon{position:relative;width:128px;height:128px}
+.sp-tile{position:relative;z-index:1;display:block;width:128px;height:128px;border-radius:32px;overflow:hidden;box-shadow:0 24px 48px rgba(0,10,30,.45),0 0 0 1px rgba(255,255,255,.16);animation:sp-in 760ms var(--ease-spring) 120ms backwards;transition:transform 400ms var(--ease-out)}
+.sp-tile img{display:block;width:128px;height:128px}
+.sp-tile::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.35) 50%,transparent 65%);transform:translateX(-110%);animation:sp-sheen 900ms var(--ease-std) 900ms both}
+@keyframes sp-in{from{opacity:0;transform:scale(.55) translateY(24px)}}
+@keyframes sp-sheen{to{transform:translateX(110%)}}
+.splash.out .sp-tile{transform:scale(1.18)}
+.sp-ring{position:absolute;left:50%;top:50%;width:128px;height:128px;margin:-64px 0 0 -64px;border-radius:50%;box-shadow:0 0 0 1.5px rgba(255,255,255,.4);opacity:0;animation:sp-ring 1800ms var(--ease-out) both;animation-delay:calc(420ms + var(--d,0) * 260ms)}
+@keyframes sp-ring{from{opacity:.9;transform:scale(.7)}to{opacity:0;transform:scale(2.6)}}
+.sp-logo{display:block;width:208px;height:auto;animation:sp-wipe 760ms var(--ease-out) 720ms backwards}
+@keyframes sp-wipe{from{clip-path:inset(0 100% 0 0);transform:translateY(8px);opacity:.4}}
+.sp-bar{position:absolute;left:50%;bottom:96px;width:96px;height:4px;margin-left:-48px;border-radius:var(--r-pill);background:rgba(255,255,255,.22);overflow:hidden}
+.sp-bar i{display:block;height:100%;border-radius:inherit;background:#FFFFFF;transform-origin:left center;animation:sp-load 2100ms var(--ease-std) 300ms both}
+@keyframes sp-load{from{transform:scaleX(0)}}
 
 /* Reduce transparency – solid surfaces, no blur, no light */
 .app.rt{--glass-fill:var(--c-solid);--glass-fill-o:var(--c-solid-o);--glass-sheen:linear-gradient(transparent,transparent);--noise:linear-gradient(transparent,transparent);--glass-spot:transparent}
@@ -1103,6 +1127,7 @@ mark{background:rgba(0,169,224,.35);color:inherit;border-radius:4px}
             <nav class="tabbar glass-o" id="tabbar" aria-label="Main"></nav>
           </div>
           <div class="onb" id="onb" hidden></div>
+          <div class="splash" id="splash" hidden></div>
           <div class="home-ind" aria-hidden="true"></div>
 
           <div class="toast glass-o" id="toast" role="status" aria-live="polite"></div>
@@ -1119,8 +1144,9 @@ mark{background:rgba(0,169,224,.35);color:inherit;border-radius:4px}
 
     <aside class="panel" aria-label="Prototype controls">
       <section class="ctl">
-        <div class="ctl-h"><h2>First launch</h2><p class="hint">The prototype opens on the four-slide tour, then asks whether to sign in as a patient or continue as a guest. Swipe, use the arrow keys, or tap Next.</p></div>
+        <div class="ctl-h"><h2>First launch</h2><p class="hint">The prototype opens on a short splash, then the four-slide tour, then asks whether to sign in as a patient or continue as a guest. Swipe, use the arrow keys, or tap Next.</p></div>
         <div class="row">
+          <button class="txtbtn" id="sp-replay">Replay from the splash</button>
           <button class="txtbtn" id="onb-replay">Replay the tour</button>
           <button class="txtbtn" id="onb-choice">Show the sign-in choice</button>
         </div>
@@ -1199,6 +1225,7 @@ mark{background:rgba(0,169,224,.35);color:inherit;border-radius:4px}
 
       <div class="spec-card"><h3>First launch</h3>
         <ul class="rules">
+          <li><b>Splash.</b> About 2.6 seconds on UT&nbsp;Southwestern Blue: the app icon springs in with three expanding rings and a light sweep, the reversed wordmark wipes in, and a progress bar fills. It lifts away into slide 1. A tap skips it, and reduce motion holds a still splash for under a second. The icon and wordmark are the brand SVGs, never redrawn.</li>
           <li><b>Tour.</b> Four slides from the current app – Find a provider, MyChart, Find a location, and Indoor wayfinding – rebuilt as blue glass pieces that assemble on entry: the search types itself, map pins drop, and the indoor route draws while a dot walks it.</li>
           <li><b>Controls.</b> Skip at any time, Next or Get started at the thumb, dots to jump, swipe, or the arrow keys. Each slide is announced as “slide 2 of 4,” and only the visible slide is reachable.</li>
           <li><b>Sign-in choice.</b> Sign in as a patient opens the MyChart sign-in page. Continue as a guest opens the guest home. Take the tour again goes back to slide 1.</li>
@@ -2863,6 +2890,26 @@ $("#onb").addEventListener("keydown",function(e){
 $("#onb-replay").addEventListener("click",function(){ showOnb("tour"); });
 $("#onb-choice").addEventListener("click",function(){ showOnb("login"); });
 
+/* ---------- Splash ---------- */
+var spT=null;
+function showSplash(){
+ showOnb("tour"); $("#onb").inert=true;
+ var el=$("#splash"); clearTimeout(spT);
+ el.innerHTML='<div class="sp-stack" role="img" aria-label="UTSW MyCare is loading">'+
+  '<span class="sp-icon" aria-hidden="true"><i class="sp-ring" style="--d:0"></i><i class="sp-ring" style="--d:1"></i><i class="sp-ring" style="--d:2"></i><span class="sp-tile"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDI0IDEwMjQiPjxyZWN0IHdpZHRoPSIxMDI0IiBoZWlnaHQ9IjEwMjQiIGZpbGw9IiMwMDQyNzgiLz48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLjAwIDAuMDApIHNjYWxlKDEuMDAwMDApIj48cGF0aCBkPSJNMzAwIDI5MlY1MDBBMjEyIDIxMiAwIDAgMCA3MjQgNTAwVjI5MiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjE0MCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PGNpcmNsZSBjeD0iNTEyIiBjeT0iNDY4IiByPSIxMDIiIGZpbGw9IiMwMEE5RTAiLz48L2c+PC9zdmc+" alt=""></span></span>'+
+  '<img class="sp-logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOTE1IDUwMiI+PHJlY3Qgd2lkdGg9IjE5MTUiIGhlaWdodD0iNTAyIiBmaWxsPSIjMDA0Mjc4Ii8+PHJlY3QgeD0iMTQ1LjUxIiB5PSIxNDUuNTEiIHdpZHRoPSIyMTAuOTkiIGhlaWdodD0iMjEwLjk5IiByeD0iNDcuNDciIGZpbGw9IiNGRkZGRkYiLz48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNDUuNTEgMTQ1LjUxKSBzY2FsZSgwLjIwNjA0KSI+PHBhdGggZD0iTTMwMCAyOTJWNTAwQTIxMiAyMTIgMCAwIDAgNzI0IDUwMFYyOTIiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwNDI3OCIgc3Ryb2tlLXdpZHRoPSIxNDAiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxjaXJjbGUgY3g9IjUxMiIgY3k9IjQ2OCIgcj0iMTAyIiBmaWxsPSIjMDBBOUUwIi8+PC9nPjxwYXRoIGQ9Ik00ODguMTIgMzI2LjFDNTI1LjEzIDMyNi4xIDU0OS4zNSAzMDQuNzEgNTQ5LjM1IDI3Mi41OFYxNzguMjVINTE1LjA3VjI2OS43NUM1MTUuMDcgMjg1LjE4IDUwNC4zMyAyOTYuMjIgNDg4LjEyIDI5Ni4yMkM0NzIgMjk2LjIyIDQ2MS4wNiAyODUuMDggNDYxLjA2IDI2OS43NVYxNzguMjVINDI2Ljc5VjI3Mi41OEM0MjYuNzkgMzA0LjcxIDQ1MC45MSAzMjYuMSA0ODguMTIgMzI2LjFaTTU1OS42MyAyMDguMTNINjAyLjVWMzIzLjc1SDYzNy42NVYyMDguMTNINjgwLjQzVjE3OC4yNUg1NTkuNjNaTTc0OC44MSAzMjYuMUM3ODYuMzEgMzI2LjEgODA4LjU4IDMwOC44MSA4MDguNTggMjc5LjUyQzgwOC41OCAyNTcuMDYgNzk0LjYyIDI0NC4yNiA3NjIuMzkgMjM3LjgyTDc0OS42IDIzNS4yOEM3MzIuOTkgMjMxLjg2IDcyNi4wNiAyMjcuNDcgNzI2LjA2IDIxOS41NkM3MjYuMDYgMjEwLjQ3IDczNS4zNCAyMDQuMTMgNzQ4LjYyIDIwNC4xM0M3NjIuNDkgMjA0LjEzIDc3MS43NiAyMTEuNTUgNzcyLjc0IDIyMy41Nkg4MDUuMjZDODA0LjM4IDE5My43NyA3ODIuOTkgMTc1LjkgNzQ4LjEzIDE3NS45QzcxMy45NSAxNzUuOSA2OTAuOSAxOTQuMTcgNjkwLjkgMjIxLjIyQzY5MC45IDI0Mi40MSA3MDUuNDYgMjU2LjQ3IDczMy44NyAyNjIuMzNMNzQ4LjgxIDI2NS4zNkM3NjYuMjkgMjY4Ljk3IDc3My44MSAyNzMuNzUgNzczLjgxIDI4Mi4wNkM3NzMuODEgMjkxLjYzIDc2My45NSAyOTcuODggNzQ5LjExIDI5Ny44OEM3MzIuMzEgMjk3Ljg4IDcyMi4wNiAyODkuNjcgNzIxLjU3IDI3NS43MUg2ODguMDdDNjg4LjA3IDMwNy44NCA3MTAuMDQgMzI2LjEgNzQ4LjgxIDMyNi4xWk04NTEuMzggMzIzLjc1SDg5MC4zNUw5MDguOSAyNTAuMjJDOTEwLjQ2IDI0NC4wNyA5MTEuOTMgMjM2Ljk0IDkxMy42OSAyMjguNDRDOTE1LjQ0IDIzNi45NCA5MTYuOTEgMjQ0LjA3IDkxOC40NyAyNTAuMjJMOTM3LjEyIDMyMy43NUg5NzUuOTlMMTAxNC44NiAxNzguMjVIOTc2Ljk3TDk2Mi41MSAyNDIuOUM5NTkuNzggMjU1LjY5IDk1Ny4yNCAyNjguMzggOTU0LjkgMjgxLjE4Qzk1Mi4zNiAyNjguMzggOTQ5LjYyIDI1NS42OSA5NDYuNjkgMjQyLjlMOTMxLjE3IDE3OC4yNUg4OTYuM0w4ODAuNzggMjQyLjlDODc3Ljc1IDI1NS43OSA4NzUuMDEgMjY4LjU4IDg3Mi40NyAyODEuMzdDODcwLjEzIDI2OC41OCA4NjcuNTkgMjU1Ljc5IDg2NC44NiAyNDIuOUw4NTAuNCAxNzguMjVIODEyLjYxWiIgZmlsbD0iI0ZGRkZGRiIvPjxwYXRoIGQ9Ik0xMDcyLjI4IDMyMy43NUgxMDkzLjY3VjI0NC40NkMxMDkzLjY3IDIzNC41OSAxMDkzLjI4IDIyMC43MyAxMDkyLjk4IDIwNy41NEMxMDk4LjI2IDIyMi41OCAxMTAzLjE0IDIzNi40NSAxMTA2LjE3IDI0NC40NkwxMTM3LjEyIDMyMy43NUgxMTU0LjlMMTE4NS41NiAyNDQuNDZDMTE4OC42OSAyMzYuMTYgMTE5My42NyAyMjEuMzEgMTE5OS4wNCAyMDUuNDlDMTE5OC43NCAyMTkuMjYgMTE5OC4zNSAyMzQuMTEgMTE5OC4zNSAyNDQuNDZWMzIzLjc1SDEyMTkuNjRWMTc4LjI1SDExODguOThMMTE1Ni44NSAyNjMuNUMxMTU0LjMxIDI3MC45MiAxMTQ5LjUzIDI4NC42OSAxMTQ2LjIxIDI5NC43NUMxMTQyLjg4IDI4NC42OSAxMTM4LjEgMjcwLjkyIDExMzUuNDYgMjYzLjVMMTEwMi44NSAxNzguMjVIMTA3Mi4yOFpNMTI0Ni4wOCAzNjQuNThIMTI1OS4xN0MxMjczLjEzIDM2NC41OCAxMjgzLjI5IDM1Ni43NiAxMjg5LjA1IDM0MS44MkwxMzM1LjkzIDIyMC42M0gxMzE0LjE1TDEyOTMuODQgMjc3LjE3QzEyOTEuMSAyODQuODkgMTI4OC40NyAyOTIuNiAxMjg1LjkzIDMwMC4zMkMxMjgzLjM5IDI5Mi42IDEyODAuODUgMjg0Ljg5IDEyNzguMTIgMjc3LjE3TDEyNTcuNTEgMjIwLjYzSDEyMzUuNDRMMTI3NS4yOCAzMjMuMDdMMTI3MC42IDMzNS4yOEMxMjY3LjQ3IDM0My42OCAxMjYzLjY2IDM0Ny4xOSAxMjU3LjIyIDM0Ny4xOUgxMjQ2LjA4Wk0xNDEzLjA1IDMyNi4xQzE0NDQuNzkgMzI2LjEgMTQ2OS40IDMwNi40NyAxNDc0LjM4IDI3NS41MUgxNDUyLjQxQzE0NDcuODIgMjk1LjI0IDE0MzIuOTcgMzA2LjI3IDE0MTMuMjUgMzA2LjI3QzEzODQuNTQgMzA2LjI3IDEzNjYuOTYgMjg0LjAxIDEzNjYuOTYgMjUxLjFDMTM2Ni45NiAyMTcuOTkgMTM4NC41NCAxOTUuNzMgMTQxMy4yNSAxOTUuNzNDMTQzMy4wNyAxOTUuNzMgMTQ0OC4wMSAyMDYuODYgMTQ1Mi4zMSAyMjYuNjhIMTQ3NC4zOEMxNDY5LjMgMTk1LjYzIDE0NDQuNzkgMTc1LjkgMTQxMy4wNSAxNzUuOUMxMzcyLjgyIDE3NS45IDEzNDUuMTggMjA2LjI3IDEzNDUuMTggMjUxLjFDMTM0NS4xOCAyOTUuNjMgMTM3Mi45MiAzMjYuMSAxNDEzLjA1IDMyNi4xWk0xNTMyLjI3IDMyNS44MUMxNTQ1Ljc0IDMyNS44MSAxNTU3LjE3IDMyMC4wNCAxNTY0LjEgMzA4LjIzSDE1NjQuNFYzMjMuNzVIMTU4NC43MVYyMjAuNjNIMTU2NC40VjIzNS40N0gxNTY0LjFDMTU1Ny41NiAyMjQuMTUgMTU0NS41NSAyMTguNTggMTUzMi4xNyAyMTguNThDMTUwNS41MSAyMTguNTggMTQ4Ny41NCAyNDAuMzYgMTQ4Ny41NCAyNzIuMTlDMTQ4Ny41NCAzMDQuMTMgMTUwNS40MSAzMjUuODEgMTUzMi4yNyAzMjUuODFaTTE1MzYuNDcgMzA4LjAzQzE1MTkuODcgMzA4LjAzIDE1MDguNDQgMjk1LjQzIDE1MDguNDQgMjcyLjE5QzE1MDguNDQgMjQ4Ljg1IDE1MTkuODcgMjM2LjI1IDE1MzYuNDcgMjM2LjI1QzE1NTQuMDQgMjM2LjI1IDE1NjUuMzcgMjUwLjUxIDE1NjUuMzcgMjcyLjE5QzE1NjUuMzcgMjkzLjg3IDE1NTQuMDQgMzA4LjAzIDE1MzYuNDcgMzA4LjAzWk0xNjA2Ljk1IDMyMy43NUgxNjI3LjU2VjI2Mi44MkMxNjI3LjU2IDI0Ni4wMiAxNjM3LjAzIDIzOC4xMSAxNjQ4LjY1IDIzOC4xMUMxNjUzLjQ0IDIzOC4xMSAxNjU3LjkzIDIzOC43OSAxNjU5LjQ5IDIzOS4wOVYyMTkuODVDMTY1Ny44MyAyMTkuNjUgMTY1NS4xIDIxOS4zNiAxNjUxLjk3IDIxOS4zNkMxNjM4Ljg4IDIxOS4zNiAxNjMwLjg4IDIyNi4xIDE2MjcuMDcgMjM3LjMzSDE2MjYuNjhWMjIwLjYzSDE2MDYuOTVaTTE3MTYuMyAzMjYuMUMxNzM5LjY0IDMyNi4xIDE3NTggMzEyLjMzIDE3NjEuODEgMjkyLjQxSDE3NDEuOTlDMTczOS4wNiAzMDIuMTcgMTczMC4wNyAzMDguOTEgMTcxNi42IDMwOC45MUMxNjk4LjUzIDMwOC45MSAxNjg4LjE4IDI5Ni4zMSAxNjg3LjQ5IDI3Ny43NkgxNzYzLjM3VjI3Mi4xOUMxNzYzLjM3IDI0MC4zNiAxNzQ0LjQzIDIxOC4yOSAxNzE1LjIzIDIxOC4yOUMxNjg3LjEgMjE4LjI5IDE2NjcuMTggMjQwLjk0IDE2NjcuMTggMjcyLjM5QzE2NjcuMTggMzAzLjU0IDE2ODUuNzQgMzI2LjEgMTcxNi4zIDMyNi4xWk0xNjg3LjY5IDI2Mi4xM0MxNjg5LjQ1IDI0NS43MyAxNjk5LjkgMjM1LjQ3IDE3MTUuNDIgMjM1LjQ3QzE3MzEuMDUgMjM1LjQ3IDE3NDEuNiAyNDUuNzMgMTc0My4yNiAyNjIuMTNaIiBmaWxsPSIjRkZGRkZGIi8+PC9zdmc+" alt="" width="208" height="55"></div><span class="sp-bar" aria-hidden="true"><i></i></span>';
+ el.hidden=false; el.classList.remove("out"); app.classList.add("splash-on");
+ spT=setTimeout(hideSplash,S.rm?900:2600);
+}
+function hideSplash(){
+ var el=$("#splash"); if(el.hidden||el.classList.contains("out")) return;
+ clearTimeout(spT); el.classList.add("out"); app.classList.remove("splash-on");
+ $("#onb").inert=false; onbSet(0,true);
+ setTimeout(function(){ el.hidden=true; el.classList.remove("out"); el.innerHTML=""; },S.rm?0:400);
+}
+$("#splash").addEventListener("click",hideSplash);
+$("#sp-replay").addEventListener("click",showSplash);
+
 /* ---------- Grain ---------- */
 (function(){ try{
  var c=document.createElement("canvas"); c.width=c.height=160; var x=c.getContext("2d"), d=x.createImageData(160,160);
@@ -2875,6 +2922,6 @@ setSwitch("#opt-rt",S.rt); app.classList.toggle("rt",S.rt);
 setSwitch("#opt-rm",S.rm); app.classList.toggle("rm",S.rm);
 seg("al",S.alerts); seg("w",S.w); seg("net",S.net); seg("api",S.api); seg("perm",S.perm);
 renderTabs(); renderHome(true); renderCare(null); renderSaved(false); renderPlaces(); renderMods();
-showOnb("tour");
+showSplash();
 })();
 </script>
