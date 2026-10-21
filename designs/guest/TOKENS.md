@@ -42,7 +42,9 @@ Signed-in destinations (message your doctor, test results, manage visits, manage
 
 ## First launch: onboarding and the sign-in choice
 
-The prototype opens on the first-launch tour (replay it from the board's First launch control).
+The prototype opens on an animated splash, then the first-launch tour (replay either from the board's First launch control).
+
+0. **Splash** (about 2.5 s, not interactive): flat UT Southwestern Blue. The app icon (`mycare-logo/icon.svg`, unaltered, 112.0 with 26.0 corners) springs in while three rings ripple out and a soft cyan glow blooms behind it; rings and glow clear as the icon lifts away, and the reversed horizontal logo (`reversed.svg`, unaltered, 232.0 wide) settles with the line "Care from UT Southwestern, in one app" and three loading dots. The background stays flat Blue so the logo's own Blue tile never shows an edge. To hand off, the splash shrinks to the 56% art panel of slide 1 with r-xl bottom corners and its content fades, so the tour starts without a cut. Reduced motion: logo and line appear still for 1.2 s, then cross-fade. Screen readers hear "Opening UTSW MyCare."
 
 1. **Four slides**, in the old app's order: Find my Care, MyChart, Locations, Wayfinding. Each has a Blue art panel (56% of the screen, r-xl bottom corners, hero rings) with a small scene built from real MyCare components, and a light text area: kicker 12.0/700, title 28.0/700 Blue, body 16.0 #5B6770.
    - Find my Care: the search types "knee pain," two provider cards rise, a heart fills.

@@ -923,6 +923,38 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
 @keyframes walk{from{offset-distance:0%}}
 @keyframes dropIn{from{opacity:0; transform:translateY(-16px)}}
 
+/* Splash: the app icon arrives, rings ripple out and clear, the wordmark settles on flat Blue (so the logo's own Blue tile never shows an edge), then the Blue screen
+   shrinks into slide 1's art panel so the tour starts without a cut. The logo files are used unaltered. */
+.splash{position:absolute; left:0; right:0; top:0; height:100%; z-index:5; display:grid; place-items:center; overflow:hidden; color:#FFFFFF; background:var(--blue); --grad:-25;
+  transition:height var(--d-gentle) var(--spring-gentle), border-radius var(--d-gentle) var(--spring-gentle)}
+.splash > *{grid-area:1 / 1}
+.splash.out{height:56%; border-radius:0 0 var(--r-xl) var(--r-xl)}
+.splash.out > *{opacity:0!important; transition:opacity 200ms var(--ease-out)}
+.sp-rings{width:400px; height:400px; overflow:visible}
+.sp-rings circle{fill:none; stroke:rgba(255,255,255,.12); stroke-width:2; transform-box:fill-box; transform-origin:center; opacity:0}
+.sp-glow{width:224px; height:224px; border-radius:50%; background:radial-gradient(circle, rgba(0,169,224,.42) 0, rgba(0,169,224,0) 70%); opacity:0}
+.sp-icon{width:112px; height:112px; border-radius:26px; opacity:0; box-shadow:0 16px 40px rgba(0,10,30,.45), 0 0 0 1px rgba(255,255,255,.18)}
+.sp-logo{width:232px; height:auto; transform:translateX(-8px)}
+.sp-tag{margin-top:104px; font-size:var(--t16); color:var(--on-blue-2); text-align:center; padding-inline:var(--s6)}
+.sp-dots{align-self:end; margin-bottom:96px; display:flex; gap:var(--s2)}
+.sp-dots i{width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,.7)}
+.splash.play .sp-rings circle{animation:spRing 1500ms var(--ease-out) both}
+.splash.play .sp-rings circle:nth-child(2){animation-delay:180ms}
+.splash.play .sp-rings circle:nth-child(3){animation-delay:360ms}
+.splash.play .sp-glow{animation:spGlow 1300ms var(--ease-out) both 150ms}
+.splash.play .sp-icon{animation:spIcon 1700ms var(--ease-out) both}
+.splash.play .sp-logo{animation:spUp 600ms var(--spring-snappy) both 1350ms}
+.splash.play .sp-tag{animation:spUp 520ms var(--spring-snappy) both 1600ms}
+.splash.play .sp-dots i{animation:dotHop 600ms var(--ease-in-out) infinite}
+.splash.play .sp-dots i:nth-child(2){animation-delay:100ms}
+.splash.play .sp-dots i:nth-child(3){animation-delay:200ms}
+@keyframes spRing{0%{opacity:0; transform:scale(.3)}40%{opacity:1}75%{opacity:1}100%{opacity:0; transform:scale(1.08)}}
+@keyframes spGlow{0%{opacity:0; transform:scale(.4)}50%{opacity:1; transform:scale(1.1)}100%{opacity:0; transform:none}}
+@keyframes spIcon{0%{opacity:0; transform:scale(.5)}22%{opacity:1; transform:scale(1.04)}30%{transform:none}72%{opacity:1; transform:none}100%{opacity:0; transform:scale(.82) translateY(-16px)}}
+@keyframes spUp{from{opacity:0; transform:translate(-8px, 16px)}}
+.phone.rm .splash{transition:opacity var(--d-base) var(--ease-out)}
+.phone.rm .splash.out{height:100%; border-radius:0; opacity:0}
+
 /* Sign-in choice */
 .lg-top{position:relative; flex:0 0 auto; padding:96.0px var(--s6) var(--s8); background:var(--hero-glow), var(--blue); border-radius:0 0 var(--r-xl) var(--r-xl); overflow:hidden; color:#FFFFFF; display:grid; justify-items:start; gap:var(--s4); --grad:-25}
 .lg-top .logo{display:block; width:232px; height:auto; margin-left:calc(-1 * var(--s4))}
@@ -1006,10 +1038,11 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
     <div class="ctl">
       <h2 id="lbl-onb">First launch</h2>
       <div class="seg" role="group" aria-labelledby="lbl-onb">
-        <button data-onb="replay" aria-pressed="false">Replay onboarding</button>
-        <button data-onb="skip" aria-pressed="false">Skip to home</button>
+        <button data-onb="splash" aria-pressed="false">Splash</button>
+        <button data-onb="replay" aria-pressed="false">Tour</button>
+        <button data-onb="skip" aria-pressed="false">Home</button>
       </div>
-      <p class="note">The prototype opens on the first-launch tour: four slides, then the choice to sign in as a patient or continue as a guest.</p>
+      <p class="note">The prototype opens on the animated splash, then the first-launch tour: four slides, then the choice to sign in as a patient or continue as a guest. Replay either, or skip to home.</p>
     </div>
     <div class="ctl">
       <h2 id="lbl-alert">Emergency alerts</h2>
@@ -1179,6 +1212,14 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
         </div>
 
         <section class="onb" id="onb" aria-label="Welcome to UTSW MyCare" hidden>
+          <div class="splash" id="splash" role="status" aria-label="Opening UTSW MyCare" hidden>
+            <svg class="sp-rings" viewBox="0 0 400 400" aria-hidden="true"><circle cx="200" cy="200" r="96"/><circle cx="200" cy="200" r="144"/><circle cx="200" cy="200" r="192"/></svg>
+            <span class="sp-glow" aria-hidden="true"></span>
+            <img class="sp-icon" alt="" src="data:image/svg+xml;base64,__ICON__">
+            <img class="sp-logo" alt="UTSW MyCare" src="data:image/svg+xml;base64,__LOGO__">
+            <p class="sp-tag">Care from UT Southwestern, in one app</p>
+            <span class="sp-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+          </div>
           <div class="onb-view" id="onb-tour">
             <button class="onb-skip" id="onb-skip">Skip</button>
             <div class="onb-track" id="onb-track" role="group" aria-roledescription="carousel" aria-label="What you can do in MyCare">
@@ -2906,15 +2947,29 @@ function showView(id, dir = 'enter') {
   const v = $('#' + id); void v.offsetWidth; v.classList.add(dir);
   updateBar();
 }
-function openOnb() {
-  clearTimeout(onbTimer);
+/* Splash: plays once on launch, then hands off to slide 1 */
+const splash = $('#splash'); let spTimer;
+function playSplash() {
+  clearTimeout(spTimer);
+  splash.hidden = false; splash.classList.remove('out', 'play'); void splash.offsetWidth; splash.classList.add('play');
+  $('#onb-tour').inert = true;
+  spTimer = setTimeout(() => {
+    splash.classList.add('out');
+    spTimer = setTimeout(() => { stopSplash(); goSlide(0); }, RM() ? 240 : 440);
+  }, RM() ? 1200 : 2500);
+}
+function stopSplash() { clearTimeout(spTimer); splash.hidden = true; splash.classList.remove('out', 'play'); $('#onb-tour').inert = false; }
+function openOnb(withSplash = false) {
+  clearTimeout(onbTimer); stopSplash();
   if (layers.length) [...layers].reverse().forEach(l => l.el !== onb && l.close());
   onb.classList.remove('leaving'); onb.hidden = false; phone.classList.add('onb-on');
   showView('onb-tour'); goSlide(0);
   $('#lg-done').hidden = true; $('#lg-form').reset?.();
   if (!layers.some(l => l.el === onb)) pushLayer(onb, () => {});
+  if (withSplash) playSplash();
 }
 function closeOnb(animate = true) {
+  stopSplash();
   if (onb.hidden) return;
   popLayer(onb);
   const done = () => { onb.hidden = true; onb.classList.remove('leaving'); phone.classList.remove('onb-on'); updateBar(); };
@@ -2963,12 +3018,12 @@ onb.addEventListener('keydown', e => {
   };
   track.addEventListener('pointerup', end); track.addEventListener('pointercancel', end);
 })();
-$$('[data-onb]').forEach(b => b.onclick = () => { b.dataset.onb === 'replay' ? openOnb() : closeOnb(false); phone.scrollIntoView({ behavior: RM() ? 'auto' : 'smooth', block: 'center' }); });
+$$('[data-onb]').forEach(b => b.onclick = () => { const k = b.dataset.onb; k === 'skip' ? closeOnb(false) : openOnb(k === 'splash'); phone.scrollIntoView({ behavior: RM() ? 'auto' : 'smooth', block: 'center' }); });
 
 /* ---------- Boot ---------- */
 applyRM(state.rm);
 renderHome(); renderFind(); renderLocs(); renderWay(); renderMc(); syncMenuDot();
-openOnb();
+openOnb(true);
 renderCms();
 renderIconMap();
 requestAnimationFrame(moveInd);
