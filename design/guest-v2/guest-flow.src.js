@@ -1090,7 +1090,7 @@ $("#cms").addEventListener("change",e=>{const c=e.target.closest("input[data-cms
 /* Jumps: set up a state from scratch */
 function reset(){
   if(!$("#sys").hidden){$("#sys").hidden=true;$("#sys").innerHTML="";$("#layer").removeAttribute("inert")}
-  const Dr=$("#drawer");Dr.hidden=true;Dr.classList.remove("open");const Ob=$("#ob");Ob.hidden=true;Ob.innerHTML="";
+  const Dr=$("#drawer");Dr.hidden=true;Dr.classList.remove("open");const Ob=$("#ob");Ob.hidden=true;Ob.innerHTML="";clearTimeout(spT);const Sp=$("#splash");Sp.hidden=true;Sp.innerHTML="";
   const L=$("#layer");L.hidden=true;L.classList.remove("open");sheetKind=null;const s=$("#search");s.hidden=true;s.classList.remove("open");setInert(false);
   S.stacks={home:[{v:"home"}],find:[{v:"find"}],locations:[{v:"locations"}],saved:[{v:"saved"}],mychart:[{v:"mychart"}]};
   S.filters=blankFilters();S.sort="relevance";S.fcText="";clearTimeout(loadT);S.loading=false;view.scrollTop=0;
@@ -1099,6 +1099,7 @@ const goTab=t=>{S.tab=t;markTab()};
 const setResults=(q,cb)=>{goTab("find");S.q=q;S.pq=parse(q);const pq=S.pq;pq.langs.forEach(l=>S.filters.langs.add(l));if(pq.gender)S.filters.gender=pq.gender;if(pq.accepting)S.filters.accepting=true;
   S.stacks.find.push({v:"results"});cb&&cb();render("fade");load()};
 const JUMPS=[
+ ["splash","Splash","App launch animation",()=>{goTab("home");render();playSplash()}],
  ["onboarding","Onboarding","Four slides, swipe or Next",()=>{goTab("home");render();openOnboarding()}],
  ["welcome","Welcome","Sign in as a patient or guest",()=>{goTab("home");render();openOnboarding("welcome")}],
  ["home","Guest home","Alerts, search, modules",()=>{goTab("home");render("fade")}],
@@ -1157,6 +1158,7 @@ function setCapture(on){
   screen.classList.toggle("capture",on);view.scrollTop=0;$("#capture-mode").setAttribute("aria-pressed",String(on));$("#capture-mode").textContent=on?"Frozen – click to resume motion":"Freeze for capture";
 }
 $("#capture-mode").addEventListener("click",()=>setCapture(!S.capture));
+$("#replay-splash").addEventListener("click",()=>{$("#jumps [data-jump=\"splash\"]").click()});
 $("#replay-ob").addEventListener("click",()=>{$("#jumps [data-jump=\"onboarding\"]").click()});
 
 /* ---------- Motion layer ---------- */
@@ -1338,6 +1340,28 @@ function rollNumber(el,from,to){
   od.animate([{transform:"none",opacity:1},{transform:`translate3d(0,${up?-100:100}%,0)`,opacity:0}],{...o,fill:"forwards"}).onfinish=()=>{if(el.contains(nw))el.textContent=to};
 }
 
+/* ---------- Splash ---------- */
+let spT=null;
+function playSplash(){
+  const Sp=$("#splash");clearTimeout(spT);
+  Sp.innerHTML=`<div class="sp-glow" aria-hidden="true"></div><span class="sp-ring" aria-hidden="true"></span><span class="sp-ring" aria-hidden="true"></span><span class="sp-ring" aria-hidden="true"></span>
+    <div class="sp-icon" aria-hidden="true"><!--APP_ICON--></div><div class="sp-word" role="img" aria-label="UTSW MyCare"><!--LOGO_REVERSED--></div>
+    <div class="sp-bar" aria-hidden="true"><i></i></div><p class="sr-only" role="status">UTSW MyCare is opening</p>`;
+  Sp.classList.remove("out");Sp.hidden=false;setInert(true);
+  /* what sits underneath when the splash lifts: onboarding on first run, otherwise the app */
+  if(!store.get("onboarded",false)&&$("#ob").hidden)openOnboarding();
+  Sp.onclick=endSplash;
+  spT=setTimeout(endSplash,rm()?700:2500);
+}
+function endSplash(){
+  const Sp=$("#splash");if(Sp.hidden||Sp.classList.contains("out"))return;clearTimeout(spT);
+  const done=()=>{Sp.hidden=true;Sp.innerHTML="";Sp.classList.remove("out");
+    if($("#ob").hidden){setInert(false);if(top().v==="home"){S.heroDone=false;render("fade",{scroll:0})}}
+    else setTimeout(()=>$(".ob-slide.on h2",$("#ob"))?.focus(),60)};
+  if(!canMove())return done();
+  Sp.classList.add("out");setTimeout(done,520);
+}
+
 /* ---------- Onboarding and welcome ---------- */
 const OB=[
  {t:"Find the right doctor",p:"Search by name, specialty, or condition, and read full profiles to choose the provider who fits your care.",scene:()=>`
@@ -1457,6 +1481,6 @@ $("#sheet-close").innerHTML=ic("close");
 $("#drawer-close").innerHTML=ic("close");
 renderTabbar();render();renderCMS();syncControls();
 if(/^#(capture|still|figma)$/.test(location.hash))setCapture(true);
-else if(!store.get("onboarded",false))openOnboarding();
+else playSplash();
 setTimeout(()=>{const l=activeAlerts();if(l.length)sayAssert(`${l[0].label} alert: ${l[0].title}`)},800);
 })();
