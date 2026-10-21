@@ -454,6 +454,94 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
 .drawer-body{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none}
 .drawer-body::-webkit-scrollbar{display:none}
 
+/* ---------- Onboarding and welcome ----------
+   A blue stage holds a drawn illustration per slide; the copy sits on the light ground below. Slides follow the finger (scroll snap), and each layer
+   moves at its own rate as you swipe. */
+.ob{position:absolute;inset:var(--status-h) 0 0 0;z-index:25;background:var(--c-bg);display:flex;flex-direction:column;overflow:hidden;isolation:isolate}
+.ob-stage{position:absolute;left:0;right:0;top:0;height:440px;background:var(--c-blue);border-radius:0 0 var(--r-24) var(--r-24);overflow:hidden;z-index:0}
+.ob-stage::before{content:"";position:absolute;inset:-30%;background:radial-gradient(36% 30% at 76% 30%,rgba(0,169,224,.34),transparent 70%),radial-gradient(30% 26% at 18% 78%,rgba(123,175,212,.2),transparent 72%);animation:aurora 22s ease-in-out infinite alternate}
+.ob-bar{position:relative;z-index:2;flex:none;height:56px;display:flex;align-items:center;justify-content:space-between;padding-inline:var(--sp-8);color:var(--c-on-blue)}
+.ob-bar .logo{width:192px}.ob-bar .logo svg{width:192px}
+.ob-skip{min-height:44px;border:0;background:transparent;color:var(--c-on-blue);font:inherit;font-size:var(--fs-16);font-weight:600;padding-inline:var(--sp-16);border-radius:var(--r-full);cursor:pointer}
+.ob-skip:hover{background:var(--c-on-blue-fill)}
+.ob-track{position:relative;z-index:1;flex:1;min-height:0;display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
+.ob-track::-webkit-scrollbar{display:none}
+.ob-slide{flex:0 0 100%;scroll-snap-align:center;scroll-snap-stop:always;display:flex;flex-direction:column;min-width:0}
+.ob-art{flex:none;height:384px;position:relative;display:grid;place-items:center}
+.ob-scene{position:relative;width:296px;height:320px;max-width:calc(100% - 32px)}
+.ob-copy{padding:var(--sp-32) var(--sp-24) 0;display:flex;flex-direction:column;align-items:center;gap:var(--sp-12);text-align:center}
+.ob-copy h2{font-size:var(--fs-28);line-height:var(--lh-28);font-weight:700;color:var(--c-blue);letter-spacing:-.01em;text-wrap:balance}
+.ob-copy p{color:var(--c-text-2);max-width:320px;text-wrap:pretty}
+.ob-foot{flex:none;position:relative;z-index:2;padding:var(--sp-16) var(--sp-24) var(--sp-40);display:flex;flex-direction:column;gap:var(--sp-24);align-items:stretch}
+.ob-dots{display:flex;justify-content:center;gap:var(--sp-8)}
+.ob-dots i{width:8px;height:8px;border-radius:var(--r-full);background:var(--c-border-strong);opacity:.45;transition:width 360ms cubic-bezier(0.32,0.72,0,1),background 200ms,opacity 200ms}
+.ob-dots i.on{width:24px;background:var(--c-blue);opacity:1}
+.ob-foot .btn{border-radius:var(--r-full)}
+.ob-next .ic{transition:transform 300ms cubic-bezier(0.32,0.72,0,1)}
+.ob-next:hover .ic{transform:translateX(4px)}
+
+/* Scene parts (drawn with HTML; brand colors and icons) */
+.sc{position:absolute;will-change:transform}
+.sc-card{background:var(--c-surface);border-radius:var(--r-16);box-shadow:0 16px 40px rgba(0,20,40,.28);color:var(--c-text)}
+.sc-pill{display:flex;align-items:center;gap:var(--sp-8);background:var(--c-surface);border-radius:var(--r-full);padding:var(--sp-12) var(--sp-16);box-shadow:0 12px 32px rgba(0,20,40,.24);font-size:var(--fs-14);line-height:var(--lh-14);font-weight:600;color:var(--c-text)}
+.sc-pill .ic{color:var(--c-blue)}
+.sc-bubble{width:48px;height:48px;border-radius:50%;background:var(--c-surface);display:grid;place-items:center;box-shadow:0 12px 28px rgba(0,20,40,.24)}
+.sc-line{height:8px;border-radius:var(--r-full);background:var(--c-skel)}
+.sc-chip{display:flex;align-items:center;gap:var(--sp-8);background:var(--c-surface);border-radius:var(--r-full);padding:var(--sp-8) var(--sp-12) var(--sp-8) var(--sp-8);font-size:var(--fs-12);line-height:var(--lh-12);font-weight:700;color:var(--c-text);box-shadow:0 10px 24px rgba(0,20,40,.22)}
+.sc-chip .well{width:32px;height:32px;border-radius:var(--r-8)}
+.sc-chip .well .ic{width:20px;height:20px}
+.sc-map{background:var(--c-tint);border-radius:var(--r-24);overflow:hidden;box-shadow:0 16px 40px rgba(0,20,40,.28);background-image:linear-gradient(var(--c-pastel) 2px,transparent 2px),linear-gradient(90deg,var(--c-pastel) 2px,transparent 2px);background-size:40px 40px}
+.sc-road{position:absolute;background:var(--c-surface)}
+.sc-pin{color:var(--c-magenta);filter:drop-shadow(0 4px 4px rgba(0,30,60,.25))}
+.sc-pin.cy{color:var(--c-blue)}
+.sc-plan{background:#F2F5F8;border-radius:var(--r-24);overflow:hidden;box-shadow:0 16px 40px rgba(0,20,40,.28)}
+.sc-room{position:absolute;background:var(--c-pastel);border-radius:var(--r-8)}
+.sc-route{position:absolute;inset:0;width:100%;height:100%}
+.sc-route path{fill:none;stroke:var(--c-cyan);stroke-width:6;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:420;stroke-dashoffset:420}
+.ob-slide.on:not(.seen) .sc-route path{animation:draw 1400ms cubic-bezier(0.32,0.72,0,1) 500ms forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.sc-elev{background:var(--c-green-ink);color:#FFFFFF;width:48px;height:48px;border-radius:50%;display:grid;place-items:center;flex:none}
+
+/* Entrance: the first slide's layers rise in on open; later slides arrive with the swipe itself.
+   Map pins drop and the route draws the first time their slide lands. */
+.ob-slide.intro.on .in{animation:obIn 760ms cubic-bezier(0.32,0.72,0,1) both;animation-delay:calc(var(--d,0) * 90ms + 80ms)}
+@keyframes obIn{from{opacity:0;translate:0 24px;scale:.94}to{opacity:1;translate:0 0;scale:1}}
+.ob-slide:not(.seen) .sc-pin{opacity:0}
+.ob-slide.on:not(.seen) .sc-pin{animation:pinDrop 640ms cubic-bezier(0.32,0.72,0,1) both;animation-delay:calc(var(--d,0) * 90ms + 120ms)}
+@keyframes pinDrop{from{opacity:0;translate:0 -40px}to{opacity:1;translate:0 0}}
+.ob-slide.seen .sc-route path{stroke-dashoffset:0}
+.ob [tabindex="-1"]:focus{outline:none}
+
+/* Welcome (sign-in choice) */
+.ob-welcome{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--c-bg);z-index:3}
+.ob-welcome .ob-stage{height:364px}
+.ob-wel-art{position:relative;z-index:1;flex:none;height:308px;display:grid;place-items:center}
+.ob-wel-icon{width:120px;height:120px;border-radius:28px;overflow:hidden;box-shadow:0 24px 48px rgba(0,10,30,.4)}
+.ob-wel-icon svg{width:100%;height:100%;display:block}
+.ob-wel-ring{position:absolute;width:200px;height:200px;border-radius:50%;box-shadow:inset 0 0 0 1px var(--c-on-blue-line)}
+.ob-wel-ring.r2{width:280px;height:280px;opacity:.6}
+.ob-wel-body{position:relative;z-index:1;flex:1;display:flex;flex-direction:column;gap:var(--sp-16);padding:var(--sp-32) var(--sp-24) var(--sp-40)}
+.ob-wel-body h2{font-size:var(--fs-28);line-height:var(--lh-28);font-weight:700;color:var(--c-blue);text-align:center;letter-spacing:-.01em;text-wrap:balance}
+.ob-wel-body>p{color:var(--c-text-2);text-align:center;text-wrap:pretty}
+.ob-choices{display:flex;flex-direction:column;gap:var(--sp-12);margin-top:auto}
+.ob-choice{display:flex;align-items:center;gap:var(--sp-16);width:100%;min-height:72px;padding:var(--sp-12) var(--sp-16);border-radius:var(--r-16);border:0;cursor:pointer;text-align:left;font:inherit}
+.ob-choice .rt{flex:1;min-width:0;display:flex;flex-direction:column;gap:var(--sp-4)}
+.ob-choice .rt b{font-size:var(--fs-16);line-height:var(--lh-16);font-weight:700}
+.ob-choice .rt span{font-size:var(--fs-14);line-height:var(--lh-14)}
+.ob-choice.primary{background:var(--c-blue);color:var(--c-on-blue);box-shadow:0 8px 20px rgba(0,40,80,.24)}
+.ob-choice.primary .rt span{color:var(--c-on-blue-2)}
+.ob-choice.primary .ob-ic{background:var(--c-on-blue-fill);color:var(--c-on-blue)}
+.ob-choice.secondary{background:var(--c-surface);color:var(--c-text);box-shadow:0 0 0 1px var(--c-border)}
+.ob-choice.secondary .rt span{color:var(--c-text-2)}
+.ob-choice.secondary .ob-ic{background:var(--c-tint);color:var(--c-blue)}
+.ob-choice.secondary:hover{box-shadow:0 0 0 2px var(--c-blue)}
+.ob-ic{width:44px;height:44px;border-radius:var(--r-12);display:grid;place-items:center;flex:none}
+.ob-choice>.ic{flex:none;transition:transform 300ms cubic-bezier(0.32,0.72,0,1)}
+.ob-choice:hover>.ic{transform:translateX(4px)}
+.ob-wel-link{align-self:center;min-height:44px;border:0;background:transparent;color:var(--c-blue);font:inherit;font-size:var(--fs-14);font-weight:600;cursor:pointer;padding-inline:var(--sp-12);border-radius:var(--r-8)}
+.ob-wel-link u{text-underline-offset:3px}
+.screen .ob .on-blue :focus-visible{outline-color:var(--c-on-blue)}
+
 /* MyChart sign-in */
 .mc-lead{color:var(--c-text-2)}
 .mc-card{position:relative;overflow:hidden;isolation:isolate;margin:0;border-radius:var(--r-24);padding:var(--sp-24) var(--sp-16);display:flex;flex-direction:column;gap:var(--sp-16);color:var(--c-on-blue);
@@ -699,7 +787,8 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
 /* Reduced motion: OS setting or prototype toggle */
 .screen.rm *,.screen.rm *::before,.screen.rm *::after{animation-duration:1ms!important;animation-delay:0ms!important;animation-iteration-count:1!important;transition-duration:1ms!important;scroll-behavior:auto!important}
 .screen.rm .skel::after,.screen.rm .toast .t-bar,.screen.rm .locating::before,.screen.rm .locating::after{display:none}
-.screen.rm .hero .aurora i{animation:none}
+.screen.rm .hero .aurora i,.screen.rm .ob-stage::before{animation:none}
+.screen.rm .sc-route path{stroke-dashoffset:0}
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:1ms!important;animation-delay:0ms!important;animation-iteration-count:1!important;transition-duration:1ms!important;scroll-behavior:auto!important}
   .skel::after,.toast .t-bar,.locating::before,.locating::after{display:none}
@@ -778,6 +867,7 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
               <div class="drawer-body" id="drawer-body"></div>
             </aside>
           </div>
+          <div class="ob" id="ob" hidden></div>
           <div class="sys-layer" id="sys" hidden></div>
         </div>
       </div>
@@ -805,6 +895,8 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
             <span class="cap-note">Stops all motion, shows every section in its final place, and lets the phone grow to the full length of the screen so the whole page can be captured. Or open the link with <code>#capture</code> at the end.</span></div>
           <div class="ctrl"><span class="lbl">Local data</span>
             <button class="page-btn" id="reset-local">Clear saved providers and recent searches</button></div>
+          <div class="ctrl"><span class="lbl">First run</span>
+            <button class="page-btn" id="replay-ob">Replay onboarding</button></div>
         </div>
       </section>
 

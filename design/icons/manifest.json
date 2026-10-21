@@ -405,6 +405,13 @@
     "support_agent": [
       "24",
       "24f"
+    ],
+    "elevator": [
+      "24",
+      "24f"
+    ],
+    "person_add": [
+      "20"
     ]
   }
 }

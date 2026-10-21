@@ -1028,6 +1028,10 @@ screen.addEventListener("click",e=>{
    case "bio":{const b=$("#bio");const open=!b.classList.contains("open");const h0=b.offsetHeight;b.classList.toggle("open",open);if(canMove())b.animate([{height:h0+"px"},{height:b.offsetHeight+"px"}],{duration:440,easing:EASE_IOS});el.setAttribute("aria-expanded",String(open));el.firstElementChild.textContent=open?"Show less":"Read more";break}
    case "mychart":if(!$("#layer").hidden)closeSheet(()=>switchTab("mychart",true));else switchTab("mychart",true);break;
    case "open-menu":openDrawer();break;
+   case "ob-next":if(obIdx>=OB.length-1)obWelcome();else obGo(obIdx+1);break;
+   case "ob-skip":obWelcome();break;
+   case "ob-guest":finishOnboarding("home");break;
+   case "ob-patient":finishOnboarding("mychart");break;
    case "close-drawer":closeDrawer();break;
    case "pw-toggle":{const i=$("#mc-pw"),on=i.type==="password";i.type=on?"text":"password";el.setAttribute("aria-pressed",String(on));el.setAttribute("aria-label",on?"Hide password":"Show password");el.innerHTML=ic(on?"visibility_off":"visibility",20);break}
    case "close-sheet":closeSheet();break;
@@ -1045,7 +1049,7 @@ screen.addEventListener("keydown",e=>{
     if(!$("#drawer").hidden){closeDrawer();e.stopPropagation();return}
     if(!$("#layer").hidden){closeSheet();e.stopPropagation()}else if(!$("#search").hidden)closeSearch();
   }
-  if(!$("#drawer").hidden)trap(e,$("#drawer .drawer"));else if(!$("#sys").hidden)trap(e,$("#sys"));else if(!$("#layer").hidden)trap(e,$("#sheet"));else if(!$("#search").hidden)trap(e,$("#search"));
+  if(!$("#ob").hidden)trap(e,$("#ob-welcome")||$("#ob"));else if(!$("#drawer").hidden)trap(e,$("#drawer .drawer"));else if(!$("#sys").hidden)trap(e,$("#sys"));else if(!$("#layer").hidden)trap(e,$("#sheet"));else if(!$("#search").hidden)trap(e,$("#search"));
 });
 
 /* ---------- Page controls ---------- */
@@ -1086,7 +1090,7 @@ $("#cms").addEventListener("change",e=>{const c=e.target.closest("input[data-cms
 /* Jumps: set up a state from scratch */
 function reset(){
   if(!$("#sys").hidden){$("#sys").hidden=true;$("#sys").innerHTML="";$("#layer").removeAttribute("inert")}
-  const Dr=$("#drawer");Dr.hidden=true;Dr.classList.remove("open");
+  const Dr=$("#drawer");Dr.hidden=true;Dr.classList.remove("open");const Ob=$("#ob");Ob.hidden=true;Ob.innerHTML="";
   const L=$("#layer");L.hidden=true;L.classList.remove("open");sheetKind=null;const s=$("#search");s.hidden=true;s.classList.remove("open");setInert(false);
   S.stacks={home:[{v:"home"}],find:[{v:"find"}],locations:[{v:"locations"}],saved:[{v:"saved"}],mychart:[{v:"mychart"}]};
   S.filters=blankFilters();S.sort="relevance";S.fcText="";clearTimeout(loadT);S.loading=false;view.scrollTop=0;
@@ -1095,6 +1099,8 @@ const goTab=t=>{S.tab=t;markTab()};
 const setResults=(q,cb)=>{goTab("find");S.q=q;S.pq=parse(q);const pq=S.pq;pq.langs.forEach(l=>S.filters.langs.add(l));if(pq.gender)S.filters.gender=pq.gender;if(pq.accepting)S.filters.accepting=true;
   S.stacks.find.push({v:"results"});cb&&cb();render("fade");load()};
 const JUMPS=[
+ ["onboarding","Onboarding","Four slides, swipe or Next",()=>{goTab("home");render();openOnboarding()}],
+ ["welcome","Welcome","Sign in as a patient or guest",()=>{goTab("home");render();openOnboarding("welcome")}],
  ["home","Guest home","Alerts, search, modules",()=>{goTab("home");render("fade")}],
  ["gsearch","Global search","Top searches and grouped results",()=>{goTab("home");render("fade");setTimeout(()=>openSearch("knee"),50)}],
  ["find","Find my care","Recent, popular, specialties",()=>{goTab("find");render("fade")}],
@@ -1135,6 +1141,7 @@ const REQ=[
  ["Provider profile","Credentials, bio, specialties, conditions, languages, locations, contact, research and media, related","profile"],
  ["Favorites","Save and remove with Undo, saved list, stored on the device","saved"],
  ["Share","Native share sheet with public link only","share"],
+ ["Onboarding and welcome (old app’s intro)","Four slides (provider, MyChart, location, wayfinding) with swipe-linked motion; welcome with Sign in as a patient or Continue as guest","onboarding"],
  ["MyChart (old app’s MyChart login)","Tab with sign-in form, show password, forgot link, create account, and guest options","mychart"],
  ["Menu (old app’s More options)","Inbox, MedBlog, patient resources, shuttle, COVID-19, about UTSW, physicians, full website, social, privacy","menu"],
  ["MedBlog see all (old app)","Latest story, topic filter, dated list with read times, show more","medblog"]
@@ -1150,6 +1157,7 @@ function setCapture(on){
   screen.classList.toggle("capture",on);view.scrollTop=0;$("#capture-mode").setAttribute("aria-pressed",String(on));$("#capture-mode").textContent=on?"Frozen – click to resume motion":"Freeze for capture";
 }
 $("#capture-mode").addEventListener("click",()=>setCapture(!S.capture));
+$("#replay-ob").addEventListener("click",()=>{$("#jumps [data-jump=\"onboarding\"]").click()});
 
 /* ---------- Motion layer ---------- */
 const canMove=()=>!rm();
@@ -1330,6 +1338,103 @@ function rollNumber(el,from,to){
   od.animate([{transform:"none",opacity:1},{transform:`translate3d(0,${up?-100:100}%,0)`,opacity:0}],{...o,fill:"forwards"}).onfinish=()=>{if(el.contains(nw))el.textContent=to};
 }
 
+/* ---------- Onboarding and welcome ---------- */
+const OB=[
+ {t:"Find the right doctor",p:"Search by name, specialty, or condition, and read full profiles to choose the provider who fits your care.",scene:()=>`
+  <div class="sc sc-pill in" data-z="1.6" style="--d:0;left:24px;top:8px;width:248px">${ic("search",20)}<span>Knee pain doctor</span></div>
+  <div class="sc sc-card in" data-z=".5" style="--d:3;left:36px;top:252px;width:224px;padding:12px;display:flex;gap:12px;align-items:center;opacity:.9"><span class="avatar av-40 a2">RS</span><span style="display:flex;flex-direction:column;gap:4px;min-width:0"><b style="font-size:14px;line-height:20px;color:var(--c-blue)">Rafael Santos, M.D.</b><span class="sc-line" style="width:96px"></span></span></div>
+  <div class="sc sc-card in" data-z="1" style="--d:1;left:12px;top:72px;width:272px;padding:16px;display:flex;flex-direction:column;gap:12px">
+    <span style="display:flex;gap:12px;align-items:center"><span class="avatar av-56 a1">AM</span><span style="display:flex;flex-direction:column;gap:4px"><b style="color:var(--c-blue)">Avery Morgan, M.D.</b><span style="font-size:14px;line-height:20px;color:var(--c-text-2)">Orthopaedic Surgery</span></span></span>
+    <span class="tags" style="padding:0"><span class="tag yes">${icf("check_circle",16)}Accepting new patients</span></span>
+    <span class="sc-line" style="width:92%"></span><span class="sc-line" style="width:64%"></span></div>
+  <div class="sc sc-bubble in" data-z="2.2" style="--d:2;left:244px;top:52px;color:var(--c-magenta)">${icf("favorite")}</div>`},
+ {t:"Your health in one place",p:"With MyChart, view test results, message your care team, schedule visits, request refills, and pay bills.",scene:()=>`
+  <div class="sc sc-card in" data-z="1" style="--d:0;left:60px;top:44px;width:176px;padding:16px;display:flex;flex-direction:column;gap:12px;align-items:stretch">
+    <span class="well well-48" style="align-self:center">${icd("lock")}</span>
+    <span class="sc-line" style="height:32px;border-radius:8px"></span><span class="sc-line" style="height:32px;border-radius:8px"></span>
+    <span style="height:32px;border-radius:999px;background:var(--c-blue)"></span></div>
+  ${[["calendar_month","Visits",0,16,1.8],["chat","Messages",168,100,2.2],["labs","Results",0,196,1.6],["credit_card","Bills",176,256,2]].map(([g,l,x,y,z],i)=>`<div class="sc sc-chip in" data-z="${z}" style="--d:${i+1};left:${x}px;top:${y}px"><span class="well">${icd(g)}</span>${l}</div>`).join("")}`},
+ {t:"Find a location near you",p:"Search UT Southwestern clinics and hospitals by specialty, ZIP code, or location type.",scene:()=>`
+  <div class="sc sc-map in" data-z=".6" style="--d:0;left:8px;top:8px;width:280px;height:232px">
+    <span class="sc-road" style="left:-10px;right:-10px;top:120px;height:16px;transform:rotate(-8deg)"></span>
+    <span class="sc-road" style="top:-10px;bottom:-10px;left:150px;width:14px;transform:rotate(12deg)"></span>
+    <span class="sc sc-pin in" style="--d:2;left:56px;top:40px">${icf("location_on",40)}</span>
+    <span class="sc sc-pin cy in" style="--d:3;left:182px;top:60px">${icf("location_on",40)}</span>
+    <span class="sc sc-pin cy in" style="--d:4;left:120px;top:150px">${icf("location_on",40)}</span></div>
+  <div class="sc sc-card in" data-z="1.6" style="--d:5;left:24px;top:212px;width:248px;padding:12px;display:flex;gap:12px;align-items:center">${well("location_on")}<span style="display:flex;flex-direction:column;gap:4px;min-width:0"><b style="font-size:14px;line-height:20px">Lakeview Primary Care</b><span style="font-size:12px;line-height:16px;color:var(--c-text-2)">2.1 mi · Open until 5 p.m.</span></span></div>`},
+ {t:"Get there, step by step",p:"Indoor directions guide you from parking to your clinic, inside our buildings and between them.",scene:()=>`
+  <div class="sc sc-plan in" data-z=".6" style="--d:0;left:8px;top:48px;width:280px;height:216px">
+    <span class="sc-room" style="left:16px;top:16px;width:96px;height:72px"></span><span class="sc-room" style="left:128px;top:16px;width:136px;height:40px"></span>
+    <span class="sc-room" style="left:176px;top:80px;width:88px;height:56px"></span><span class="sc-room" style="left:72px;top:148px;width:88px;height:52px"></span>
+    <svg class="sc-route" viewBox="0 0 280 216" aria-hidden="true"><path d="M36 196 V120 H150 V68 H236"/></svg>
+    <span style="position:absolute;left:28px;top:188px;width:16px;height:16px;border-radius:50%;background:var(--c-blue);box-shadow:0 0 0 4px rgba(0,66,120,.2)"></span>
+    <span class="sc sc-pin in" style="--d:6;left:218px;top:30px">${icf("location_on",40)}</span></div>
+  <div class="sc sc-pill in" data-z="1.8" style="--d:1;left:12px;top:0;width:272px;padding:8px 16px 8px 8px"><span class="sc-elev">${ic("elevator")}</span><span>Take the elevator to Level 7</span></div>
+  <div class="sc sc-card in" data-z="1.4" style="--d:3;left:32px;top:248px;width:232px;padding:12px 16px;display:flex;flex-direction:column;gap:4px"><b style="font-size:14px;line-height:20px;color:var(--c-blue)">Lakeview Transplant Clinic</b><span style="font-size:12px;line-height:16px;color:var(--c-text-2)">125 ft · Arrive 4:25 p.m.</span></div>`}
+];
+let obIdx=0;
+function openOnboarding(at){
+  const O=$("#ob");$$(".ghost-wrap,.flyer",screen).forEach(n=>n.remove());$("#drawer").hidden=true;$("#layer").hidden=true;
+  O.innerHTML=`<div class="ob-stage" aria-hidden="true"></div>
+   <div class="ob-bar on-blue"><span class="logo" role="img" aria-label="UTSW MyCare"><!--LOGO_REVERSED--></span><button class="ob-skip" data-action="ob-skip">Skip</button></div>
+   <div class="ob-track" id="ob-track" role="region" aria-roledescription="carousel" aria-label="About UTSW MyCare" tabindex="0">
+     ${OB.map((o,i)=>`<section class="ob-slide" role="group" aria-roledescription="slide" aria-label="${i+1} of ${OB.length}"><div class="ob-art" aria-hidden="true"><div class="ob-scene">${o.scene()}</div></div><div class="ob-copy"><h2>${o.t}</h2><p>${o.p}</p></div></section>`).join("")}
+   </div>
+   <div class="ob-foot"><div class="ob-dots" aria-hidden="true">${OB.map(()=>`<i></i>`).join("")}</div>
+     <button class="btn btn-primary btn-block ob-next" data-action="ob-next"><span>Next</span>${ic("arrow_forward",20)}</button></div>`;
+  O.hidden=false;O.style.opacity="";O.style.transform="";setInert(true);obIdx=-1;
+  const tr=$("#ob-track");tr.addEventListener("scroll",obScroll,{passive:true});
+  tr.addEventListener("keydown",e=>{if(e.key==="ArrowRight"){e.preventDefault();obGo(obIdx+1)}else if(e.key==="ArrowLeft"){e.preventDefault();obGo(obIdx-1)}});
+  $(".ob-slide",O).classList.add("intro");obSet(0);obScroll();
+  if(at==="welcome")obWelcome(true);else setTimeout(()=>$(".ob-slide.on h2",O)?.setAttribute("tabindex","-1")||$(".ob-slide.on h2",O)?.focus(),60);
+}
+function obSet(i){
+  if(i===obIdx)return;obIdx=i;const sl=$$(".ob-slide",$("#ob"));
+  sl.forEach((x,k)=>{if(k===i){x.classList.add("on");if(!x.classList.contains("seen"))setTimeout(()=>{if(x.classList.contains("on"))x.classList.add("seen")},1900)}else x.classList.remove("on")});
+  $$(".ob-dots i",$("#ob")).forEach((d,k)=>d.classList.toggle("on",k===i));
+  const last=i===OB.length-1,b=$(".ob-next",$("#ob"));if(b)b.innerHTML=`<span>${last?"Get started":"Next"}</span>${ic("arrow_forward",20)}`;
+  sayPolite(`${OB[i].t}. Slide ${i+1} of ${OB.length}.`);
+}
+let obRaf=0;
+function obScroll(){cancelAnimationFrame(obRaf);obRaf=requestAnimationFrame(()=>{
+  const tr=$("#ob-track");if(!tr)return;const w=tr.clientWidth||1,x=tr.scrollLeft,move=canMove();
+  $$(".ob-slide",tr).forEach((sl,i)=>{const off=(sl.offsetLeft-x)/w;
+    $$(".sc[data-z]",sl).forEach(el=>{el.style.transform=move?`translate3d(${(off*+el.dataset.z*56).toFixed(1)}px,0,0)`:""});
+    const c=$(".ob-copy",sl);c.style.opacity=move?Math.max(0,1-Math.abs(off)*1.4).toFixed(3):"";c.style.transform=move?`translate3d(${(off*48).toFixed(1)}px,0,0)`:"";});
+  obSet(Math.max(0,Math.min(OB.length-1,Math.round(x/w))));
+})}
+function obGo(i){const tr=$("#ob-track");if(!tr)return;i=Math.max(0,Math.min(OB.length-1,i));tr.scrollTo({left:i*tr.clientWidth,behavior:rm()?"auto":"smooth"})}
+function obWelcome(instant){
+  const O=$("#ob");let W=$("#ob-welcome");
+  if(!W){O.insertAdjacentHTML("beforeend",`<div class="ob-welcome" id="ob-welcome" role="region" aria-labelledby="ob-wel-h">
+    <div class="ob-stage" aria-hidden="true"></div>
+    <div class="ob-bar on-blue"><span class="logo" role="img" aria-label="UTSW MyCare"><!--LOGO_REVERSED--></span></div>
+    <div class="ob-wel-art" aria-hidden="true"><span class="ob-wel-ring r2"></span><span class="ob-wel-ring"></span><span class="ob-wel-icon"><!--APP_ICON--></span></div>
+    <div class="ob-wel-body"><h2 id="ob-wel-h" tabindex="-1">Welcome to UTSW MyCare</h2>
+      <p>Sign in to see your care, or continue as a guest to find doctors, locations, and health information.</p>
+      <div class="ob-choices">
+        <button class="ob-choice primary press" data-action="ob-patient"><span class="ob-ic">${ic("lock")}</span><span class="rt"><b>Sign in as a patient</b><span>Use your MyChart account</span></span>${ic("chevron_right")}</button>
+        <button class="ob-choice secondary press" data-action="ob-guest"><span class="ob-ic">${ic("person")}</span><span class="rt"><b>Continue as guest</b><span>No account needed</span></span>${ic("chevron_right")}</button>
+      </div>
+      <button class="ob-wel-link" data-action="toast" data-kind="go" data-msg="Opens MyChart sign-up">New to MyChart? <u>Create an account</u></button>
+    </div></div>`);W=$("#ob-welcome");}
+  $$(".ob-bar,.ob-track,.ob-foot",O).forEach(e=>{if(!e.closest("#ob-welcome"))e.setAttribute("inert","")});
+  if(canMove()&&!instant){
+    W.animate([{opacity:0,transform:"translate3d(0,48px,0)"},{opacity:1,transform:"none"}],{duration:560,easing:EASE_IOS});
+    $(".ob-wel-icon",W).animate([{opacity:0,transform:"scale(.6) rotate(-8deg)"},{opacity:1,transform:"none"}],{duration:760,delay:120,easing:EASE_IOS,fill:"backwards"});
+    $$(".ob-wel-ring",W).forEach((r,i)=>r.animate([{opacity:0,transform:"scale(.5)"},{opacity:i?.6:1,transform:"none"}],{duration:900,delay:200+i*120,easing:EASE_IOS,fill:"backwards"}));
+    stagger($$(".ob-wel-body>*,.ob-choice",W),260,70,8);
+  }
+  sayPolite("Welcome to UTSW MyCare");setTimeout(()=>$("#ob-wel-h")?.focus(),instant||rm()?0:120);
+}
+function finishOnboarding(dest){
+  store.set("onboarded",true);const O=$("#ob");
+  const done=()=>{O.hidden=true;O.innerHTML="";setInert(false);S.tab=dest;S.stacks[dest].splice(1);markTab();S.heroDone=false;render("fade",{scroll:0});
+    if(dest==="mychart")setTimeout(()=>$("#mc-user")?.focus(),rm()?0:300);};
+  if(!canMove())return done();
+  O.animate([{opacity:1,transform:"none"},{opacity:0,transform:"scale(1.04)"}],{duration:420,easing:EASE_IOS,fill:"forwards"}).onfinish=done;
+}
+
 /* ---------- Menu drawer ---------- */
 let drawerFocus=null;
 function openDrawer(){
@@ -1352,5 +1457,6 @@ $("#sheet-close").innerHTML=ic("close");
 $("#drawer-close").innerHTML=ic("close");
 renderTabbar();render();renderCMS();syncControls();
 if(/^#(capture|still|figma)$/.test(location.hash))setCapture(true);
+else if(!store.get("onboarded",false))openOnboarding();
 setTimeout(()=>{const l=activeAlerts();if(l.length)sayAssert(`${l[0].label} alert: ${l[0].title}`)},800);
 })();
