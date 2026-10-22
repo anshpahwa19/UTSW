@@ -56,6 +56,29 @@ The prototype opens on an animated splash, then the first-launch tour (replay ei
 
 Motion: each scene plays once when its slide arrives (spring-snappy rises and pops, 120–1900 ms of staggered beats); slides move on spring-gentle; leaving the tour scales the layer up 6% and fades in 560 ms while the home modules enter. Reduced motion shows every scene in its final frame and cross-fades views. Screen readers hear "2 of 4: Your health, in one place" on each slide; hidden slides are inert. With large text the footer stacks the dots above a full-width button.
 
+## Dark mode
+
+Menu → **Appearance** offers Light, Dark, and System (the default, which follows the phone's setting and updates live). The choice is saved on the device. The board's App appearance control is the same setting.
+
+Only tokens change. Blue has three roles so each can do its job in both themes:
+
+| Role | Token | Light | Dark | Used for |
+|---|---|---|---|---|
+| Brand surface | `--brand` | #004278 | #004278 | App bar, hero, splash, onboarding art, drawer header, campaign, toast, MyChart panel. Never changes, so the logo's own Blue tile never shows an edge |
+| Control fill | `--ctl` | #004278 | #2D6CA6 | Primary buttons, solid circles, selected chips, switches, unread dots. White on dark fill 5.5:1 |
+| Accent | `--blue` | #004278 | #8CC0EA | Headings, links, names, icons. 7.0–9.4:1 on dark surfaces |
+
+| Token | Light | Dark | Contrast in dark |
+|---|---|---|---|
+| `--bg` / `--surface` / `--tint` / `--tint-2` | #F7F8FA / #FFFFFF / #EBF0F5 / #D1DDE6 | #0D1620 / #16222E / #1F3042 / #2A4157 | |
+| `--ink` | #333333 | #E6EDF3 | 11.4–15.4:1 |
+| `--ink-2` | #5B6770 | #A6B4C0 | 6.4–8.6:1 |
+| `--line` / `--line-strong` | #D5DDE5 / #808B96 | #2B3C4D / #7D8E9E | field outlines 4.8:1 |
+| `--alert-ink` (error text) | #B0003A | #FF8AA8 | 7.3:1 |
+| Maps (`--map-bg`, `--map-block`, `--map-road`) | #E6EDF3, #D6E4F0, #FFFFFF | #132130, #1C2F42, #2E4760 | pins use the accent |
+
+The emergency alert keeps its #B0003A banner with white text (7.2:1) in both themes. Illustrations dim slightly (brightness 86%) in dark. Switching themes cross-fades colors over 320 ms; with reduced motion it switches instantly. Every text element on every screen was checked against AA (4.5:1, or 3:1 for large text) in both themes.
+
 ## Components added (all on existing tokens)
 
 | Component | Tokens |
@@ -96,7 +119,7 @@ No new values. In use: 32.0 welcome, 28.0 page titles and provider name, 24.0 sh
 
 ## Icons
 
-77 concepts, one glyph each, Material Symbols Rounded (112 KB subset). New in the guest flow: `favorite`, `tune`, `swap_vert`, `near_me`, `my_location`, `location_off`, `translate`, `person_add`, `edit_calendar`, `call`, `school`, `science`, `play_circle`, `wifi_off`, `error`, `trending_up`, `domain`, `apartment`, `door_front`, `map`, `workspace_premium`, `sms`, `mail`, `more_horiz`, `visibility`, `visibility_off`, `menu`, `inbox`, `done_all`, `directions_bus`, `verified`, `menu_book`, `library_books`, `badge`, `coronavirus`, `public`, `open_in_new`, `lock_open`, `elevator`, `explore`. The full map renders on the board.
+80 concepts, one glyph each, Material Symbols Rounded (116 KB subset). New in the guest flow: `favorite`, `tune`, `swap_vert`, `near_me`, `my_location`, `location_off`, `translate`, `person_add`, `edit_calendar`, `call`, `school`, `science`, `play_circle`, `wifi_off`, `error`, `trending_up`, `domain`, `apartment`, `door_front`, `map`, `workspace_premium`, `sms`, `mail`, `more_horiz`, `visibility`, `visibility_off`, `menu`, `inbox`, `done_all`, `directions_bus`, `verified`, `menu_book`, `library_books`, `badge`, `coronavirus`, `public`, `open_in_new`, `lock_open`, `elevator`, `explore`, `contrast`, `light_mode`, `dark_mode`. The full map renders on the board.
 
 ## Prototype controls
 
