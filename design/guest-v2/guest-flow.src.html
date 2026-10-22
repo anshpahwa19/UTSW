@@ -491,7 +491,7 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
 .ob-skip:hover{background:var(--c-on-blue-fill)}
 .ob-track{position:relative;z-index:1;flex:1;min-height:0;display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
 .ob-track::-webkit-scrollbar{display:none}
-.ob-slide{flex:0 0 100%;scroll-snap-align:center;scroll-snap-stop:always;display:flex;flex-direction:column;min-width:0}
+.ob-slide{flex:0 0 100%;scroll-snap-align:center;scroll-snap-stop:always;display:flex;flex-direction:column;min-width:0;overflow:clip}
 .ob-art{flex:none;height:384px;position:relative;display:grid;place-items:center}
 .ob-scene{position:relative;width:296px;height:320px;max-width:calc(100% - 32px)}
 .ob-copy{padding:var(--sp-32) var(--sp-24) 0;display:flex;flex-direction:column;align-items:center;gap:var(--sp-12);text-align:center}
@@ -897,7 +897,7 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
           <div class="sys-layer" id="sys" hidden></div>
         </div>
       </div>
-      <p class="stage-note">Tap or click anything. Scroll slowly to see the scroll-linked motion. The location prompt and share sheet are simulated system UI. Saved providers are stored in this browser only.</p>
+      <p class="stage-note">Tap or click anything. Scroll slowly to see the scroll-linked motion. The location prompt and share sheet are simulated system UI. Saved providers are stored in this browser only. Each load starts with the splash and onboarding.</p>
     </div>
 
     <div class="side">

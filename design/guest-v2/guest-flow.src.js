@@ -1349,7 +1349,8 @@ function playSplash(){
     <div class="sp-bar" aria-hidden="true"><i></i></div><p class="sr-only" role="status">UTSW MyCare is opening</p>`;
   Sp.classList.remove("out");Sp.hidden=false;setInert(true);
   /* what sits underneath when the splash lifts: onboarding on first run, otherwise the app */
-  if(!store.get("onboarded",false)&&$("#ob").hidden)openOnboarding();
+  /* every launch of the prototype runs the full first-run flow so reviewers can always walk it */
+  if($("#ob").hidden)openOnboarding();
   Sp.onclick=endSplash;
   spT=setTimeout(endSplash,rm()?700:2500);
 }
