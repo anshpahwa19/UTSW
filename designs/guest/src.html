@@ -109,6 +109,7 @@ html:not(.ms-ready) .ms{color:transparent!important}
 .ctl h2,.spec h2{font-size:14.0px; text-transform:uppercase; letter-spacing:.06em; color:var(--bd-muted); margin:0 0 8.0px}
 .seg{display:flex; background:var(--bd-chip); border-radius:999px; padding:4.0px; gap:4.0px}
 .seg button{flex:1; min-height:40px; border:0; background:transparent; border-radius:999px; font-size:14.0px; font-weight:600; cursor:pointer; color:var(--bd-ink)}
+.seg button:disabled{opacity:.45; cursor:default}
 .seg button[aria-pressed="true"]{background:var(--bd-panel); color:var(--bd-accent); box-shadow:0 1px 3px rgba(0,0,0,.15)}
 .seg button:focus-visible,.cms button:focus-visible,.cms input:focus-visible,.sx-toggle:focus-visible{outline:3px solid var(--bd-accent); outline-offset:2px}
 .cms{list-style:none; margin:0; padding:0; display:grid; gap:4.0px}
@@ -1041,6 +1042,51 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
 .appear-note{font-size:var(--t14); color:var(--ink-2); padding:var(--s2) var(--s6) 0}
 .phone.rm .appear button:active{transform:none}
 
+/* ===================== Personalise My Homepage (common or personalised home) ===================== */
+/* The switch card sits at the top of the light sheet in both modes; modules below it follow the mode. Tokens only, so dark mode follows. */
+.content{gap:var(--s6)}
+.mods{display:grid; grid-template-columns:minmax(0,1fr); gap:var(--s8)}
+.pz{margin-inline:var(--s4); background:var(--surface); border-radius:var(--r-lg); box-shadow:var(--shadow-1), 0 0 0 1px var(--line)}
+.pz-sw{min-height:64px; padding:var(--s3) var(--s4); border-radius:var(--r-lg)}
+.pz-t{font-weight:600; line-height:1.35}
+.pz-sw .dot{transition:background-color var(--d-base) var(--ease-out), color var(--d-base) var(--ease-out)}
+.pz.on .pz-sw .dot{background:var(--ctl); color:#FFFFFF; --fill:1; --grad:-25}
+.pz-links{display:flex; flex-wrap:wrap; gap:0 var(--s2); padding:0 var(--s2) var(--s1); border-top:1px solid var(--line)}
+.pz-links:empty{display:none}
+.pz-links .link{margin-right:0}
+.pz-why{display:flex; gap:var(--s2); align-items:flex-start; margin:calc(-1 * var(--s1)) var(--s4) var(--s3); font-size:var(--t14); line-height:1.4; color:var(--ink-2)}
+.pz-why .ms{color:var(--blue); margin-top:2px}
+.visits{list-style:none; margin:0; padding:0 var(--s4); display:grid; gap:var(--s3)}
+.visit{background:var(--surface); border-radius:var(--r-lg); box-shadow:var(--shadow-1), 0 0 0 1px var(--line); padding:var(--s4); display:grid; gap:var(--s3)}
+.visit-top{display:flex; gap:var(--s3); align-items:center}
+.visit-top > div{display:grid; gap:2px; min-width:0}
+.datebox.next{background:var(--ctl); color:#FFFFFF}
+.visit-when{font-size:var(--t16); font-weight:700; line-height:1.35; color:var(--ink)}
+.visit-type{font-size:var(--t14); line-height:1.4; color:var(--ink-2)}
+.visit-pv{width:100%; min-height:var(--hit); border:0; border-radius:var(--r-md); background:var(--bg); display:flex; align-items:center; gap:var(--s3); padding:var(--s2) var(--s3); text-align:left; color:var(--ink); transition:background-color var(--d-fast) var(--ease-out)}
+.visit-pv:active{background:var(--tint)}
+.visit-pv .txt{flex:1; min-width:0; display:grid}
+.visit-pv .rt{font-size:var(--t16); font-weight:600; line-height:1.35; color:var(--blue)}
+.visit-pv .rs{font-size:var(--t14); line-height:1.4; color:var(--ink-2)}
+.visit-pv .chev{color:var(--ink-2)}
+.visit-loc{display:flex; gap:var(--s1); align-items:flex-start; font-size:var(--t14); line-height:1.4; color:var(--ink-2)}
+.visit-loc .ms{color:var(--blue); margin-top:1px}
+.visit-loc b{color:var(--ink); font-weight:600}
+.visit-acts{display:flex; flex-wrap:wrap; gap:var(--s2)}
+.visit-acts .btn{min-height:var(--hit); padding:0 var(--s4); font-size:var(--t14)}
+.st-panel.pz-panel{margin:0 var(--s4)}
+.st-panel h3{font-size:var(--t20); line-height:1.3; font-weight:700; color:var(--blue); margin-top:var(--s2); text-wrap:balance}
+.pz-end{margin-inline:var(--s4); padding:var(--s4); border-radius:var(--r-lg); background:var(--tint); display:grid; justify-items:center; gap:var(--s3); text-align:center}
+.pz-end p{font-size:var(--t14); color:var(--ink)}
+/* Explanation sheet: what changes and which signals it uses */
+.pz-sh{font-size:var(--t16); font-weight:700; line-height:1.35; color:var(--ink); margin-top:var(--s6)}
+.pz-sig{list-style:none; margin:var(--s3) 0 0; padding:0; display:grid; gap:var(--s4)}
+.pz-sig li{display:flex; gap:var(--s3); align-items:flex-start}
+.pz-sig .txt{display:grid; gap:2px; justify-items:start; font-size:var(--t14); line-height:1.4; color:var(--ink-2)}
+.pz-sig b{font-size:var(--t16); color:var(--ink)}
+.pz-sig .tag{margin-top:var(--s1)}
+.phone.rm .pz-sw .dot{transition:none}
+
 /* ===================== Board: flow map and coverage ===================== */
 .wide{grid-column:1 / -1; justify-self:stretch; padding:24.0px}
 .wide > header{max-width:72ch; display:grid; gap:8.0px; margin-bottom:24.0px}
@@ -1088,6 +1134,41 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
         <button data-onb="skip" aria-pressed="false">Home</button>
       </div>
       <p class="note">The prototype opens on the animated splash, then the first-launch tour: four slides, then the choice to sign in as a patient or continue as a guest. Replay either, or skip to home.</p>
+    </div>
+    <div class="ctl">
+      <h2 id="lbl-pz">Homepage mode</h2>
+      <div class="seg" role="group" aria-labelledby="lbl-pz">
+        <button data-pzmode="off" aria-pressed="true">Common</button>
+        <button data-pzmode="on" aria-pressed="false">Personalised</button>
+      </div>
+      <p class="note">Same as the “Personalise My Homepage” switch at the top of home. Saved on this device, so it survives a reload. The first time you turn it on in the app, it explains what it uses first.</p>
+    </div>
+    <div class="ctl">
+      <h2 id="lbl-pzd">Personalisation data</h2>
+      <div class="seg" role="group" aria-labelledby="lbl-pzd">
+        <button data-pzdata="patient" aria-pressed="true">Sample patient</button>
+        <button data-pzdata="guest" aria-pressed="false">Guest only</button>
+      </div>
+      <p class="note">Sample patient: Jordan Rivera (fictional), with visits from MyChart and a home ZIP code of 75034. Guest only: what's on this device – location, searches, saved providers, and Quick links use; visits show a MyChart sign-in prompt.</p>
+    </div>
+    <div class="ctl">
+      <h2 id="lbl-need">Care need (sample patient)</h2>
+      <div class="seg" role="group" aria-labelledby="lbl-need">
+        <button data-need="knee" aria-pressed="true">Knee</button>
+        <button data-need="heart" aria-pressed="false">Heart</button>
+        <button data-need="skin" aria-pressed="false">Skin</button>
+      </div>
+      <p class="note">Changes the sample patient's visit history, so visits, providers, and articles follow it.</p>
+    </div>
+    <div class="ctl">
+      <h2 id="lbl-bloc">Location</h2>
+      <div class="seg" role="group" aria-labelledby="lbl-bloc">
+        <button data-bloc="" aria-pressed="true">None</button>
+        <button data-bloc="Dallas" aria-pressed="false">Dallas</button>
+        <button data-bloc="Irving" aria-pressed="false">Irving</button>
+        <button data-bloc="Frisco" aria-pressed="false">Frisco</button>
+      </div>
+      <p class="note">Same as choosing a city in the app. With none set, the sample patient's home ZIP code is used.</p>
     </div>
     <div class="ctl">
       <h2 id="lbl-alert">Emergency alerts</h2>
@@ -1157,11 +1238,14 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
     <div class="ctl">
       <h2 id="lbl-cms">Guest home modules (CMS)</h2>
       <ul class="cms" id="cms" aria-labelledby="lbl-cms"></ul>
-      <p class="note">The header – alert, welcome, and search – is fixed. Content below follows the CMS order and visibility, with no app release.</p>
+      <p class="note">The header – alert, welcome, and search – is fixed. Content below follows the CMS order and visibility, with no app release. On the personalised homepage, visits, nearby places, Quick links, providers, and MedBlog come first; the rest keeps this order, and hidden modules stay hidden.</p>
     </div>
     <div class="ctl">
       <h2>Try this</h2>
       <ul class="hints">
+        <li>Turn on “Personalise My Homepage” at the top of home, then switch Care need to Heart</li>
+        <li>Set Personalisation data to Guest only, search “skin doc,” save a provider, and go back to home</li>
+        <li>Tap Get your test results a few times, then turn personalisation off and on again</li>
         <li>Tap “Knee pain doctor near Frisco” under the home search</li>
         <li>Type “skin doc” or “dermatolgy” in search and watch the suggestions</li>
         <li>Open Filters, pick Spanish and Online scheduling, then sort by distance</li>
@@ -1197,7 +1281,13 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
                   <svg class="hero-art" viewBox="0 0 288 288" aria-hidden="true"><circle cx="144" cy="144" r="140" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="2"/><circle cx="144" cy="144" r="100" fill="none" stroke="rgba(255,255,255,.10)" stroke-width="2"/><circle cx="144" cy="144" r="60" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="2"/></svg>
                   <div id="hero-mods" style="display:contents"></div>
                 </div>
-                <div class="content" id="modules"></div>
+                <div class="content" id="content">
+                  <section class="pz" id="pz" aria-label="Homepage mode">
+                    <button class="sw-row pz-sw" id="pz-sw" role="switch" aria-checked="false" aria-labelledby="pz-t" aria-describedby="pz-st"><span class="dot d40" aria-hidden="true"><span class="ms s20" aria-hidden="true">dashboard_customize</span></span><span class="txt"><span class="pz-t" id="pz-t">Personalise My Homepage</span><small id="pz-st">Showing the common homepage</small></span><span class="track" aria-hidden="true"></span></button>
+                    <div class="pz-links" id="pz-links"></div>
+                  </section>
+                  <div class="mods" id="modules"></div>
+                </div>
               </div>
             </div>
           </section>
@@ -1396,6 +1486,10 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
         <tr><td>MedBlog list</td><td>96.0 thumbnails, r-md · 16.0/700 Blue titles · 14.0 dates · topic chips · hairlines between rows · Show more</td></tr>
         <tr><td>Dark mode</td><td>Menu → Appearance: Light, Dark, System (default; follows the phone). Brand surfaces stay #004278; page #0D1620, cards #16222E; text #E6EDF3 and #A6B4C0; Blue text and icons #8CC0EA; control Blue #2D6CA6 with white 5.5:1</td></tr>
         <tr><td>Toast with action</td><td>Same Blue toast; Undo is a 44.0 white-on-Blue pill (the only toast that takes focus)</td></tr>
+        <tr><td>Personalise switch card</td><td>Top of the light sheet in both modes · r-lg surface, shadow-1 + hairline · 64.0 row: 40.0 dot (tint off, control Blue on), “Personalise My Homepage” 16.0/600, status 14.0 #5B6770, standard 52.0 × 32.0 switch · when on, a hairline and two 44.0 links: How personalisation works, Back to the common homepage</td></tr>
+        <tr><td>Because line</td><td>Under each personalised section head · 16.0 info glyph in Blue + 14.0 #5B6770 (“Because you saw orthopaedics in the last 6 months”)</td></tr>
+        <tr><td>Visit card</td><td>r-lg, s4 · 48.0 date box (control Blue for the next visit, tint after) · 16.0/700 date and time · 14.0 visit type · provider row on page color, 44.0+ · location 14.0 · two 44.0 tonal buttons · “From MyChart” tag in the section head</td></tr>
+        <tr><td>Mode change</td><td>Leaving modules fade up 160 ms; kept modules and Quick links tiles slide to their new place on spring-snappy; new modules enter on the 40 ms stagger · reduced motion cross-fades</td></tr>
       </tbody>
     </table></div>
 
@@ -1491,6 +1585,18 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
         </ol>
       </article>
       <article>
+        <h3>Common and personalised homepage</h3>
+        <p>“Personalise My Homepage” sits at the top of the light sheet. Off (the default), everyone sees the common homepage, unchanged. On, the home leads with what's yours, in this order, and each section says why:</p>
+        <ol>
+          <li><b>Your next visits</b> (from MyChart): date, time, provider, location, distance, directions. Guests see a sign-in prompt here.</li>
+          <li><b>Near you</b>: the three closest hospitals and clinics to your location, or to your home ZIP code in MyChart; places with a visit say so.</li>
+          <li><b>Your quick links</b>: the same six links, ordered by use on this device (the sample patient starts with MyChart history).</li>
+          <li><b>Providers for you</b>: saved providers and providers for your care need – from visit history, or for guests from searches and saved providers.</li>
+          <li><b>MedBlog</b> with articles for your care need first; then the remaining CMS modules in their usual order.</li>
+        </ol>
+        <p>The first turn-on explains the four signals (location, appointment history, preferred services, care needs), where each comes from, and that the choice stays on this device. “Back to the common homepage” is on the switch card and at the end of the page.</p>
+      </article>
+      <article>
         <h3>Rules the flow keeps</h3>
         <ol>
           <li>Search stays the hero: the same field, top searches, and overlay as the playful home; provider search is its Providers scope.</li>
@@ -1546,6 +1652,9 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
       <thead><tr><th>Requirement</th><th>How it's shown</th></tr></thead>
       <tbody>
         <tr><td>Home layout</td><td>Guest composition; CMS order and visibility in the controls</td></tr>
+        <tr><td>Common or personalised homepage</td><td>“Personalise My Homepage” switch on home and Homepage mode on the board; off shows the common homepage; on is saved on the device and survives a reload</td></tr>
+        <tr><td>Personalisation signals</td><td>Location (Location control or the in-app sheet), appointment history (sample patient, Care need control), preferred services (Quick links use), care needs (visit history, or guest searches and saved providers)</td></tr>
+        <tr><td>Transparency and control</td><td>First-run explanation with Turn on and Not now; a because line on every personalised section; How personalisation works; Back to the common homepage on the card, at the end of the page, and Undo</td></tr>
         <tr><td>Emergency alert</td><td>Collapsed, expanded, full details sheet, two alerts with priority; announced to screen readers</td></tr>
         <tr><td>Search and quick access</td><td>Hero search, top searches, six Quick links routing to Find my Care, Locations, or sign-in</td></tr>
         <tr><td>Featured and services</td><td>MedBlog, UTSW resources, flu campaign, announcements with dates</td></tr>
@@ -1577,7 +1686,7 @@ const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const phone = $('#phone');
 const sysRM = matchMedia('(prefers-reduced-motion: reduce)');
-const state = { alerts: 1, rm: sysRM.matches, alertOpen: false, alertsAll: false, tab: 0, feat: 0, greetOn: true, fluCal: false, updated: 'Updated 9:41 a.m.', perm: 'ask', res: 'live', net: 'online', locType: '' };
+const state = { alerts: 1, rm: sysRM.matches, alertOpen: false, alertsAll: false, tab: 0, feat: 0, greetOn: true, fluCal: false, updated: 'Updated 9:41 a.m.', perm: 'ask', res: 'live', net: 'online', locType: '', pzData: 'patient', need: 'knee' };
 const RM = () => state.rm;
 
 /* Keep times, abbreviated dates, and “UT Southwestern” from breaking across lines (style guide) */
@@ -1632,7 +1741,7 @@ const ICON_MAP = [
   ['indoor', 'map', 'Indoor maps', 'Wayfinding', 'Find my Care'],
   ['messages', 'chat', 'Message your doctor', 'Quick links', 'MyChart destinations'],
   ['results', 'lab_profile', 'Test results', 'Quick links', 'MyChart destinations'],
-  ['visits', 'calendar_month', 'Manage your visits', 'Quick links', 'MyChart destinations'],
+  ['visits', 'calendar_month', 'Manage your visits', 'Quick links, upcoming visits, appointment history', 'MyChart destinations'],
   ['bill', 'receipt_long', 'Billing', 'Quick links, Pay as a guest', 'MyChart destinations'],
   ['lock', 'lock', 'Needs sign-in', 'Quick links and sign-in prompts', 'MyChart destinations'],
   ['urgent', 'acute', 'Urgent care', 'Urgent care tile, virtual urgent care', 'Content and services'],
@@ -1678,7 +1787,10 @@ const ICON_MAP = [
   ['physicianRes', 'badge', 'Physician resources', 'Menu', 'Menu'],
   ['covid', 'coronavirus', 'COVID-19 resources', 'Menu – literal COVID-19 content only', 'Menu'],
   ['website', 'public', 'Full website', 'Menu', 'Menu'],
-  ['external', 'open_in_new', 'Opens in the browser', 'External menu links', 'Menu']
+  ['external', 'open_in_new', 'Opens in the browser', 'External menu links', 'Menu'],
+  ['personalise', 'dashboard_customize', 'Personalise My Homepage', 'Home switch, explanation sheet', 'Personalised home'],
+  ['used', 'apps', 'Most-used services', 'Explanation sheet', 'Personalised home'],
+  ['careNeed', 'healing', 'Care needs', 'Explanation sheet', 'Personalised home']
 ];
 const ICONS = Object.fromEntries(ICON_MAP.map(r => [r[0], r]));
 const ico = (key, size = 24, cls = '') => {
@@ -1696,7 +1808,10 @@ const store = (() => { try { return JSON.parse(localStorage.getItem(KEY)) || {};
 const favs = new Set(store.fav || []);
 let recent = store.recent || ['Primary care'];
 let theme = ['light', 'dark', 'system'].includes(store.theme) ? store.theme : 'system';
-const persist = () => { try { localStorage.setItem(KEY, JSON.stringify({ fav: [...favs], recent, theme })); } catch (e) {} };
+/* Homepage mode (common or personalised), whether the explanation was seen, and Quick links use – this device only */
+let pz = store.pz === true, pzSeen = store.pzSeen === true;
+const usage = store.usage && typeof store.usage === 'object' ? store.usage : {};
+const persist = () => { try { localStorage.setItem(KEY, JSON.stringify({ fav: [...favs], recent, theme, pz, pzSeen, usage })); } catch (e) {} };
 
 /* ---------- Sample data (fictional) ---------- */
 const ALERTS = [
@@ -1952,10 +2067,56 @@ const INDEX = [
   ['Resources', 'Virtual urgent care', 'Video visits, 7 a.m. to 11 p.m.', 'video', 'vuc']
 ];
 
+/* ---------- Personalised homepage: signals and sample profile (fictional) ----------
+   Appointment history needs MyChart, so the prototype uses a clearly labeled sample patient, Jordan Rivera.
+   "Guest only" uses just what is on this device: location, recent searches, saved providers, and Quick links use. */
+const PATIENT = { first: 'Jordan', name: 'Jordan Rivera', home: { label: '75034', sub: 'Frisco, TX 75034', xy: CITIES.Frisco, home: true } };
+const NEEDS = {
+  knee: { seen: 'orthopaedics', specs: ['Orthopaedics', 'Sports Medicine', 'Allied Health – Physical Therapy'], kicks: ['Bones and joints'], provs: ['okafor', 'ellis', 'kowalski'], q: 'Knee pain',
+    visits: [{ pv: 'okafor', loc: 'fr', m: 'Oct.', d: '21', t: '9:30 a.m.', type: 'Follow-up visit – knee' }, { pv: 'ellis', loc: 'fr', m: 'Oct.', d: '28', t: '4:15 p.m.', type: 'Physical therapy' }] },
+  heart: { seen: 'cardiology', specs: ['Cardiology', 'Allied Health – Nutrition'], kicks: ['Heart'], provs: ['nguyen', 'singh', 'adeyemi'], q: 'Cardiology',
+    visits: [{ pv: 'nguyen', loc: 'rp', m: 'Oct.', d: '22', t: '10 a.m.', type: 'Heart rhythm check' }, { pv: 'singh', loc: 'cuh', m: 'Nov.', d: '5', t: '1:30 p.m.', type: 'Nutrition visit' }] },
+  skin: { seen: 'dermatology', specs: ['Dermatology'], kicks: ['Skin'], provs: ['patel', 'herrera'], q: 'Dermatology',
+    visits: [{ pv: 'patel', loc: 'fr', m: 'Nov.', d: '4', t: '8:45 a.m.', type: 'Skin check' }] }
+};
+/* The sample patient's Quick links use; taps on this device add to it */
+const SEED_USE = { visits: 9, res: 6, msg: 4, find: 3, loc: 2, bill: 1 };
+const isPatient = () => state.pzData === 'patient';
+const pzVisitList = () => isPatient() ? NEEDS[state.need].visits : [];
+const pzLoc = () => S.loc || (isPatient() ? PATIENT.home : null);
+const dFrom = (xy, l = pzLoc()) => l ? Math.hypot(xy[0] - l.xy[0], xy[1] - l.xy[1]) : null;
+const placeName = l => l.gps ? 'you' : l.sub.split(',')[0];
+const useOf = k => (usage[k] || 0) + (isPatient() ? SEED_USE[k] || 0 : 0);
+/* Guests: the newest search or saved provider that points to a care need */
+function guestNeed() {
+  const hit = specs => Object.keys(NEEDS).find(k => specs.some(s => NEEDS[k].specs.includes(s)));
+  for (const q of recent) { const it = interpret(q); if (!it.terms.length) continue; const k = hit(PROVIDERS.filter(p => matchProvider(p, it)).flatMap(p => p.specs)); if (k) return { k, why: `you searched for “${esc(q)}”` }; }
+  for (const id of [...favs].reverse()) { const p = PV[id]; const k = p && hit(p.specs); if (k) return { k, why: `you saved ${drName(p)}` }; }
+  return null;
+}
+const careNeed = () => isPatient() ? { k: state.need, why: `you saw ${NEEDS[state.need].seen} in the last 6 months` } : guestNeed();
+const why = t => `<p class="pz-why">${ico('info', 16)}<span>${t}</span></p>`;
+function pzArticles() {
+  const cn = careNeed(), ks = cn ? NEEDS[cn.k].kicks : [];
+  return FEATURED.map((f, i) => i).sort((a, b) => ks.includes(FEATURED[b].kick) - ks.includes(FEATURED[a].kick) || a - b).slice(0, 4);
+}
+function pzStatus() {
+  if (!pz) return 'Showing the common homepage';
+  const l = pzLoc(), v = pzVisitList().length;
+  return ['Personalised for you', l ? `Near ${placeName(l)}` : 'No location set', v ? `${v} upcoming visit${v > 1 ? 's' : ''}` : ''].filter(Boolean).join(' · ');
+}
+
 /* ---------- CMS composition: fixed header, then configurable guest modules ---------- */
 const MOD_LABELS = { alerts: 'Emergency alert banner', greeting: 'Welcome', search: 'Search and top searches', signin: 'MyChart sign-in prompt', tiles: 'Quick links', featured: 'MedBlog (featured)', services: 'UTSW resources', campaign: 'Campaign banner', news: 'Announcements' };
 const HEAD = ['alerts', 'greeting', 'search'];
 const cfg = ['tiles', 'signin', 'featured', 'services', 'campaign', 'news'].map(id => ({ id, on: true }));
+/* Personalised: visits, nearby places, most-used Quick links, providers, and care-need articles come first; the rest keeps the CMS order and visibility */
+function homeMods() {
+  const on = cfg.filter(m => m.on).map(m => m.id);
+  if (!pz) return on;
+  const lead = ['pzVisits', 'pzNear', 'tiles', 'pzProv', 'featured'].filter(id => id.startsWith('pz') || on.includes(id));
+  return [...lead, ...on.filter(id => !lead.includes(id)), 'pzEnd'];
+}
 
 const R = {
   alerts() {
@@ -1982,7 +2143,7 @@ const R = {
   },
   greeting() {
     return `<section class="greet" aria-labelledby="greet-h">
-      <div class="greet-top"><p class="eyebrow">Welcome to UT Southwestern</p><button class="upd-chip" id="btn-refresh" data-refresh aria-label="Refresh home, ${state.updated.toLowerCase()}"><span class="pill">${ico('refresh', 16)}<span class="upd-time">${state.updated}</span></span></button></div>
+      <div class="greet-top"><p class="eyebrow">${pz && isPatient() ? `Welcome back, ${PATIENT.first}` : 'Welcome to UT Southwestern'}</p><button class="upd-chip" id="btn-refresh" data-refresh aria-label="Refresh home, ${state.updated.toLowerCase()}"><span class="pill">${ico('refresh', 16)}<span class="upd-time">${state.updated}</span></span></button></div>
       <h1 id="greet-h"><span class="fade-up">How can we help today?</span></h1>
       <p class="sub">Find a doctor, get directions, and check urgent care wait times – no account needed.</p>
     </section>`;
@@ -2006,18 +2167,24 @@ const R = {
     </section>`;
   },
   tiles() {
-    const open = t => `<button class="qa-tile" data-tile="${t.k}">${circle(t.ic, 48, 'solid')}<span class="qa-txt"><span class="qa-lbl">${t.lbl}</span></span></button>`;
-    const locked = t => `<button class="qa-tile lockd" data-locked="${t.k}" aria-label="${t.lbl}. Needs MyChart sign-in">${circle(t.ic, 48)}<span class="qa-txt"><span class="qa-lbl">${t.lbl}</span></span><span class="qa-lock">${ico('lock', 16)}</span></button>`;
+    const open = t => `<button class="qa-tile" data-tile="${t.k}" data-flip="t-${t.k}">${circle(t.ic, 48, 'solid')}<span class="qa-txt"><span class="qa-lbl">${t.lbl}</span></span></button>`;
+    const locked = t => `<button class="qa-tile lockd" data-locked="${t.k}" data-flip="t-${t.k}" aria-label="${t.lbl}. Needs MyChart sign-in">${circle(t.ic, 48)}<span class="qa-txt"><span class="qa-lbl">${t.lbl}</span></span><span class="qa-lock">${ico('lock', 16)}</span></button>`;
+    let list = [...LOCKED, ...TILES];
+    if (pz) list = list.map((t, i) => [t, i]).sort((a, b) => useOf(b[0].k) - useOf(a[0].k) || a[1] - b[1]).map(x => x[0]);
+    const used = pz && useOf(list[0].k) > 0;
     return `<section aria-labelledby="qa-h">
-      <div class="sec-head"><h2 id="qa-h">Quick links</h2></div>
-      <div class="qa">${LOCKED.map(locked).join('')}${TILES.map(open).join('')}</div>
+      <div class="sec-head"><h2 id="qa-h">${pz ? 'Your quick links' : 'Quick links'}</h2></div>
+      ${pz ? why(used ? `Ordered by what you use most – ${list[0].lbl} first` : 'Ordered by what you use most on this device. Links you tap move up next time.') : ''}
+      <div class="qa">${list.map(t => LOCKED.includes(t) ? locked(t) : open(t)).join('')}</div>
     </section>`;
   },
   featured() {
+    const cn = pz && careNeed();
     return `<section aria-labelledby="feat-h">
       <div class="sec-head"><h2 id="feat-h">MedBlog</h2><button class="link" data-page="blog" aria-label="See all MedBlog articles">See all</button></div>
-      <div class="car" id="car" role="group" aria-roledescription="carousel" aria-label="Latest MedBlog articles">${FEATURED.slice(0, 4).map((f, i) => `
-        <button class="feat" data-feat="${i}" aria-roledescription="slide" aria-label="${f.kick}: ${f.title}. ${f.meta}. ${i + 1} of 4">
+      ${cn ? why(`Because ${cn.why} – ${NEEDS[cn.k].kicks[0].toLowerCase()} articles first`) : ''}
+      <div class="car" id="car" role="group" aria-roledescription="carousel" aria-label="${cn ? 'MedBlog articles for your care needs' : 'Latest MedBlog articles'}">${(pz ? pzArticles() : [0, 1, 2, 3]).map((fi, i) => [FEATURED[fi], fi, i]).map(([f, fi, i]) => `
+        <button class="feat" data-feat="${fi}" aria-roledescription="slide" aria-label="${f.kick}: ${f.title}. ${f.meta}. ${i + 1} of 4">
           <span class="feat-art">${artSVG(f.m)}</span>
           <span class="feat-body"><span class="kick">${f.kick}</span><span class="feat-title">${f.title}</span><span class="feat-meta">${f.meta}</span></span>
         </button>`).join('')}
@@ -2058,26 +2225,94 @@ const R = {
       <div class="sec-head"><h2 id="ann-h">Announcements</h2><button class="link" data-page="news">See all</button></div>
       <ul class="group">${ANN.map(annRow).join('')}</ul>
     </section>`;
+  },
+  pzVisits() {
+    const v = pzVisitList();
+    if (!isPatient()) return `<section aria-labelledby="pv-h">
+      <div class="sec-head"><h2 id="pv-h">Your next visits</h2></div>
+      ${why('Visits come from MyChart, so they need sign-in')}
+      <div class="st-panel pz-panel">${circle('visits', 56)}<h3>See your visits here</h3><p>Sign in to MyChart and your next visit comes first, with directions.</p><button class="btn btn-primary" data-tab="4">Sign in to MyChart</button></div>
+    </section>`;
+    return `<section aria-labelledby="pv-h">
+      <div class="sec-head"><h2 id="pv-h">Your next visits</h2><span class="tag">From MyChart</span></div>
+      ${why(`Because you have ${v.length} visit${v.length > 1 ? 's' : ''} in the next 30 days`)}
+      <ul class="visits">${v.map(visitCard).join('')}</ul>
+    </section>`;
+  },
+  pzNear() {
+    const l = pzLoc();
+    if (!l) return `<section aria-labelledby="pn-h">
+      <div class="sec-head"><h2 id="pn-h">Near you</h2></div>
+      ${why('Add a location and the closest UT Southwestern places come first')}
+      <ul class="group">${row({ ic: 'nearMe', title: 'Add your ZIP code or city', sub: 'Or use your current location', attrs: 'data-loc-open' })}</ul>
+    </section>`;
+    const at = {}; pzVisitList().forEach(v => { at[v.loc] = at[v.loc] || v; });
+    const list = Object.entries(LOCS).filter(([, L]) => L.type === 'clinic' || L.type === 'hospital').map(([k, L]) => [k, L, dFrom(L.xy, l)]).sort((a, b) => a[2] - b[2]).slice(0, 3);
+    return `<section aria-labelledby="pn-h">
+      <div class="sec-head"><h2 id="pn-h">Near ${placeName(l)}</h2><button class="link" data-tab="2" aria-label="See all locations">See all</button></div>
+      ${why(l.home ? 'Because your home ZIP code in MyChart is 75034. Set a location to change it' : l.gps ? 'Because you shared your current location' : `Because you chose ${placeName(l)} as your location`)}
+      <ul class="group">${list.map(([k, L, d]) => row({ ic: LOC_TYPES.find(t => t[0] === L.type)[2], title: L.n, sub: `${fmtMi(d)} · ${L.hours.split(/[;·]/)[0].trim()}${at[k] ? ` · Your visit ${at[k].m} ${at[k].d}` : ''}`, attrs: `data-page="l:${k}"` })).join('')}</ul>
+    </section>`;
+  },
+  pzProv() {
+    const cn = careNeed(), n = cn && NEEDS[cn.k];
+    const saved = [...favs].filter(id => PV[id]).reverse();
+    const fit = id => n && PV[id].specs.some(s => n.specs.includes(s));
+    const ids = [...new Set([...saved.filter(fit), ...(n ? n.provs : []), ...saved])].slice(0, 3);
+    if (!ids.length) return '';
+    const parts = [cn && cn.why, saved.length && !(cn && cn.why.startsWith('you saved')) ? `you saved ${drName(PV[saved[0]])}${saved.length > 1 ? ` and ${saved.length - 1} more` : ''}` : ''].filter(Boolean);
+    return `<section aria-labelledby="pp-h">
+      <div class="sec-head"><h2 id="pp-h">Providers for you</h2>${n ? `<button class="link" data-q="${n.q}" data-scope="Providers" aria-label="See all ${n.q.toLowerCase()} providers">See all</button>` : '<button class="link" data-page="saved">Saved</button>'}</div>
+      ${why(`Because ${parts.join(' and ')}`)}
+      <ul class="pcards">${ids.map((id, i) => pcard(PV[id], i)).join('')}</ul>
+    </section>`;
+  },
+  pzEnd() {
+    return `<section class="pz-end" aria-label="About this homepage">
+      <p>You’re seeing your personalised homepage. The common homepage is one tap away.</p>
+      <button class="btn btn-secondary" data-pz-off>Back to the common homepage</button>
+    </section>`;
   }
 };
+function visitCard(v, i) {
+  const p = PV[v.pv], L = LOCS[v.loc], d = dFrom(L.xy);
+  return `<li><article class="visit" aria-labelledby="vt-${i}">
+    <div class="visit-top"><span class="datebox${i ? '' : ' next'}" aria-hidden="true"><span class="m">${v.m}</span><span class="d">${v.d}</span></span>
+      <div><h3 class="visit-when" id="vt-${i}"><span class="vh">${i ? 'Visit' : 'Next visit'}: </span>${v.m} ${v.d}, ${v.t}</h3><p class="visit-type">${v.type}</p></div></div>
+    <button class="visit-pv" data-pv="${p.id}"><span class="pav sm" aria-hidden="true">${ini(p)}</span><span class="txt"><span class="rt">${fullName(p)}</span><span class="rs">${p.specs[0]}</span></span>${ico('next', 20, 'chev')}</button>
+    <p class="visit-loc">${ico('place', 16)}<span><b>${L.n}</b>${d != null ? ` · ${fmtMi(d)}` : ''}<br>${L.addr}</span></p>
+    <div class="visit-acts"><button class="btn btn-tonal" data-toast="Opening directions to ${L.s} in Maps">${ico('directions', 20)}Directions</button><button class="btn btn-tonal" data-call>${ico('call', 20)}Call the clinic</button></div>
+  </article></li>`;
+}
 function annRow(a) { return row({ lead: `<span class="datebox" aria-hidden="true"><span class="m">${a.m}</span><span class="d">${a.d}</span></span>`, title: a.t, sub: a.s, attrs: `data-page="${a.k}" aria-label="${a.m} ${a.d}: ${a.t}"` }); }
 
 const spring = () => getComputedStyle(document.documentElement).getPropertyValue('--spring-snappy').trim() || 'ease-out';
 const heroEl = $('#hero-mods'), modulesEl = $('#modules'), homeInner = $('#home-inner');
+/* With flip, modules that stay slide to their new place (FLIP) and new ones enter on the stagger; Quick links tiles also slide when their order changes */
 function renderHome({ animate = true, flip = false } = {}) {
-  let first;
-  if (flip && !RM()) { first = {}; $$('.mod', modulesEl).forEach(m => first[m.dataset.m] = m.getBoundingClientRect().top); }
+  let first, tiles;
+  const rel = e => { const r = e.getBoundingClientRect(), m = e.closest('.mod').getBoundingClientRect(); return [r.left - m.left, r.top - m.top]; };
+  if (flip && !RM()) {
+    first = {}; $$('.mod', modulesEl).forEach(m => first[m.dataset.m] = m.getBoundingClientRect().top);
+    tiles = {}; $$('[data-flip]', modulesEl).forEach(e => tiles[e.dataset.flip] = rel(e));
+  }
   let i = 0;
   const wrapMod = id => { const html = R[id](); return html ? `<div class="mod" data-m="${id}" style="--i:${i++}">${html}</div>` : ''; };
   heroEl.innerHTML = HEAD.filter(id => id !== 'greeting' || state.greetOn).map(wrapMod).join('');
-  modulesEl.innerHTML = cfg.filter(m => m.on).map(m => wrapMod(m.id)).join('');
-  if (!animate || flip) $$('.mod', homeInner).forEach(m => m.style.animation = 'none');
+  modulesEl.innerHTML = homeMods().map(wrapMod).join('');
+  if (!animate || flip) $$('.mod', homeInner).forEach(m => { if (!(animate && first && m.parentElement === modulesEl && first[m.dataset.m] == null)) m.style.animation = 'none'; });
   if (first) $$('.mod', modulesEl).forEach(m => {
     const was = first[m.dataset.m]; if (was == null) return;
     const dy = was - m.getBoundingClientRect().top; if (!dy) return;
     m.animate([{ transform: `translateY(${dy}px)` }, { transform: 'none' }], { duration: 360, easing: spring() });
   });
+  if (tiles) $$('[data-flip]', modulesEl).forEach(e => {
+    const was = tiles[e.dataset.flip]; if (!was) return;
+    const now = rel(e), dx = was[0] - now[0], dy = was[1] - now[1]; if (!dx && !dy) return;
+    e.animate([{ transform: `translate(${dx}px, ${dy}px)` }, { transform: 'none' }], { duration: 400, easing: spring() });
+  });
   wireHome();
+  syncPz();
   nbsp(homeInner);
 }
 function refreshTilesMod() { const m = $('.mod[data-m="tiles"]', modulesEl); if (!m) return; m.innerHTML = R.tiles(); m.style.animation = 'none'; $$('.qa-tile', m).forEach(initTile); nbsp(m); }
@@ -2106,6 +2341,7 @@ function initTile(t) {
   ['pointerup', 'pointercancel', 'pointerleave'].forEach(ev => t.addEventListener(ev, up));
   t.addEventListener('click', () => {
     const k = t.dataset.tile, lk = t.dataset.locked;
+    usage[k || lk] = (usage[k || lk] || 0) + 1; persist();
     setTimeout(() => {
       if (lk) return openLockedSheet(lk, t);
       if (k === 'find') return openSearch('Providers', '', t);
@@ -2535,6 +2771,56 @@ function openShare(o, from) {
     <p class="callout">${ico('info', 20)}<span><b>Only the public link is shared</b>Your searches, location, and saved list never go with it.</span></p>
     <p class="meta" style="margin-top:var(--s3)">The phone draws its own share sheet; this shows what MyCare hands to it.</p>`, from);
 }
+/* ---------- Personalise My Homepage: switch, explanation, and the animated change of modules ---------- */
+let pzLinks = null, pzT;
+function syncPz() {
+  $('#pz-sw').setAttribute('aria-checked', pz);
+  $('#pz').classList.toggle('on', pz);
+  $('#pz-st').textContent = nbText(pzStatus());
+  if (pzLinks !== pz) {
+    pzLinks = pz;
+    $('#pz-links').innerHTML = pz ? `<button class="link" data-pz-info>How personalisation works</button><button class="link" data-pz-off>Back to the common homepage</button>` : '';
+  }
+  pressSeg('[data-pzmode]', 'pzmode', pz ? 'on' : 'off');
+}
+/* Modules leaving the page fade up and out, then the new composition renders: kept modules slide, new ones enter on the stagger. Reduced motion cross-fades. */
+function recompose() {
+  clearTimeout(pzT);
+  const next = new Set(homeMods());
+  const leaving = $$('.mod', modulesEl).filter(m => !next.has(m.dataset.m));
+  const go = () => renderHome({ animate: true, flip: !RM() });
+  if (RM() || !leaving.length || $('#scr-home').hidden) return go();
+  leaving.forEach((m, k) => { m.style.animation = ''; m.style.setProperty('--i', k); m.classList.add('out'); });
+  pzT = setTimeout(go, 200);
+}
+function setPz(on, quiet) {
+  if (on === pz) return;
+  pz = on; persist(); recompose();
+  if (quiet) return;
+  if (on) { toast('Homepage personalised for you', true); say('Personalised homepage. Your next visits, places near you, and your most-used links come first.'); }
+  else { toast('Showing the common homepage', false, { label: 'Undo', fn: () => { setPz(true, true); say('Personalised homepage'); } }); say('Common homepage'); }
+}
+function pzSwitch() { if (pz) return setPz(false); if (!pzSeen) return openPzSheet($('#pz-sw'), true); setPz(true); }
+function openPzSheet(from, ask) {
+  const SIG = [
+    ['place', 'Location', 'Your current location, or the ZIP code or city you choose, so the closest places come first.', 'On this device'],
+    ['visits', 'Appointment history', 'Your upcoming and recent visits, so your next visit is at the top with directions.', 'From MyChart'],
+    ['used', 'Preferred services', 'The Quick links and services you use most move up.', 'On this device'],
+    ['careNeed', 'Care needs', 'Specialties you’ve seen or searched for suggest providers and MedBlog articles.', 'From MyChart and this device']
+  ];
+  const btns = ask || !pz
+    ? `<button class="btn btn-primary" data-pz-on>Turn on</button><button class="btn btn-secondary" style="margin-top:var(--s3)" ${ask ? 'data-pz-later' : 'data-pz-keep'}>Not now</button>`
+    : `<button class="btn btn-primary" data-pz-keep>Keep it on</button><button class="btn btn-secondary" style="margin-top:var(--s3)" data-pz-off>Back to the common homepage</button>`;
+  openSheet(`<h2 id="sheet-h" tabindex="-1">${ask ? 'Personalise your homepage?' : 'How personalisation works'}</h2>
+    <p>Put what matters to you first: your next visit, places near you, the services you use most, and providers and articles for your care needs. Everything else stays where it is, below.</p>
+    <h3 class="pz-sh">What it uses</h3>
+    <ul class="pz-sig">${SIG.map(([ic, t, d, src]) => `<li>${circle(ic, 40)}<span class="txt"><b>${t}</b><span>${d}</span><span class="tag">${src}</span></span></li>`).join('')}</ul>
+    <p class="callout">${ico('privacy', 20)}<span><b>Your choice stays on this device</b>Nothing new is shared or sent. Turn it off any time to go back to the common homepage that everyone sees.</span></p>
+    <p class="meta">Prototype: visits and history belong to a fictional sample patient, Jordan Rivera. In the app they need MyChart sign-in.</p>
+    ${btns}`, from);
+}
+$('#pz-sw').onclick = pzSwitch;
+
 function shareProvider(id, from) { const p = PV[id]; openShare({ lead: `<span class="pav sm" aria-hidden="true">${ini(p)}</span>`, title: `${fullName(p)} – ${p.specs[0]}`, url: `utswmed.org/doctors/${slug(p)}` }, from); }
 
 /* ---------- Location: permission, near me, ZIP or city ---------- */
@@ -2564,6 +2850,8 @@ function nearMe(done) {
 function setLoc(l) {
   S.loc = l; if (!l && S.sort === 'dist') S.sort = 'rel'; if (!l) S.f.dist = 0;
   renderFind(); renderLocs(); if (!so.hidden) renderSearch();
+  pressSeg('[data-bloc]', 'bloc', !l ? '' : !l.gps && CITIES[l.label] ? l.label : '-');
+  if (pz) recompose();
 }
 const locLabel = () => S.loc ? S.loc.label : 'Set location';
 function locSheetHTML(notice) {
@@ -2811,6 +3099,7 @@ function setTab(i) {
   const prev = state.tab; state.tab = i;
   tabs.forEach((b, j) => { b.setAttribute('aria-selected', j === i); b.tabIndex = j === i ? 0 : -1; });
   screens[prev].hidden = true;
+  if (i === 0 && pz) renderHome({ animate: false });
   const s = screens[i]; s.hidden = false; s.classList.remove('enter-l', 'enter-r'); void s.offsetWidth; s.classList.add(i > prev ? 'enter-r' : 'enter-l');
   moveInd(); updateBar();
 }
@@ -2889,6 +3178,10 @@ phone.addEventListener('click', e => {
   const c = sel => t.closest(sel);
   let b;
   if ((b = c('[data-theme-opt]'))) { setTheme(b.dataset.themeOpt); return; }
+  if ((b = c('[data-pz-on]'))) { pzSeen = true; closeSheet(true); setPz(true); $('#pz-sw').focus(); return; }
+  if ((b = c('[data-pz-later],[data-pz-keep]'))) { closeSheet(); return; }
+  if ((b = c('[data-pz-off]'))) { if (!sheet.hidden) closeSheet(true); setPz(false); $('#pz-sw').focus(); return; }
+  if ((b = c('[data-pz-info]'))) { openPzSheet(b, false); return; }
   if ((b = c('[data-dr]'))) { const k = b.dataset.dr; closeDrawer(true); openPage(k, $('#btn-menu')); return; }
   if ((b = c('[data-ext]'))) { toast(`Opening ${b.dataset.ext} in the browser`); return; }
   if ((b = c('[data-open-menu]'))) { if (state.tab !== 0) setTab(0); openDrawer($('#btn-menu')); return; }
@@ -3014,6 +3307,12 @@ function jump(k) {
   }, RM() ? 0 : 300);
 }
 $$('[data-jump]').forEach(b => b.onclick = () => jump(b.dataset.jump));
+/* Personalisation controls: they mirror the in-app switch and stand in for its signals */
+const toHome = () => { closeOnb(false); if (layers.length) [...layers].reverse().forEach(l => l.close()); if (state.tab !== 0) setTab(0); };
+$$('[data-pzmode]').forEach(b => b.onclick = () => { toHome(); const on = b.dataset.pzmode === 'on'; if (on) pzSeen = true; setPz(on); });
+$$('[data-pzdata]').forEach(b => b.onclick = () => { state.pzData = b.dataset.pzdata; pressSeg('[data-pzdata]', 'pzdata', state.pzData); $$('[data-need]').forEach(n => n.disabled = !isPatient()); toHome(); recompose(); });
+$$('[data-need]').forEach(b => b.onclick = () => { state.need = b.dataset.need; pressSeg('[data-need]', 'need', state.need); toHome(); recompose(); });
+$$('[data-bloc]').forEach(b => b.onclick = () => { const c = b.dataset.bloc; toHome(); setLoc(c ? { label: c, sub: `${c}, TX`, xy: CITIES[c] } : null); });
 
 /* ---------- Glyph map ---------- */
 function renderIconMap() {

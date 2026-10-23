@@ -56,6 +56,40 @@ The prototype opens on an animated splash, then the first-launch tour (replay ei
 
 Motion: each scene plays once when its slide arrives (spring-snappy rises and pops, 120–1900 ms of staggered beats); slides move on spring-gentle; leaving the tour scales the layer up 6% and fades in 560 ms while the home modules enter. Reduced motion shows every scene in its final frame and cross-fades views. Screen readers hear "2 of 4: Your health, in one place" on each slide; hidden slides are inert. With large text the footer stacks the dots above a full-width button.
 
+## Personalised homepage
+
+The home has two modes. A **“Personalise My Homepage”** switch sits at the top of the light sheet, just under the Blue hero, in both modes (`role="switch"`, named by its label, described by its status line).
+
+- **Off (default): the common homepage.** Every module, order, and word is the same as before; only the switch card is added above Quick links. Status: “Showing the common homepage.”
+- **On: the personalised homepage.** Status: “Personalised for you · Near Frisco · 2 upcoming visits.” The hero greeting becomes “Welcome back, Jordan” for the sample patient; the alert, welcome headline, and search stay fixed.
+
+**What comes first, in order** (each section starts with a “because” line saying why it's there):
+
+1. **Your next visits** – from MyChart (tagged “From MyChart”): date box (control Blue for the next one), date and time in AP style, visit type, provider (opens the profile), location with distance and address, Directions and Call the clinic. Guests see a MyChart sign-in prompt in this slot.
+2. **Near [place]** – the three closest hospitals and clinics to the current location (Locations state: near me, ZIP, or city). With none set, the sample patient's home ZIP code in MyChart (75034) is used; guests get “Add your ZIP code or city.” A place with an upcoming visit says “Your visit Oct. 21.”
+3. **Your quick links** – the same six tiles and names, ordered by use: the sample patient's MyChart history plus taps on this device (stored on the device). The order changes on the next render, never under the finger.
+4. **Providers for you** – saved providers that fit the care need, then providers for the care need, then other saved providers (three at most), as standard provider cards with the heart.
+5. **MedBlog** – articles for the care need first.
+6. The remaining CMS modules in their CMS order (hidden modules stay hidden), then an end card with **Back to the common homepage**.
+
+**Care need** comes from visit history for the sample patient (“Because you saw orthopaedics in the last 6 months”). For guests it comes from this device only: the newest search that maps to a need (“Because you searched for ‘skin doc’”), else the newest saved provider. Needs in the prototype: knee and joints (Orthopaedics, Sports Medicine, Physical Therapy), heart (Cardiology, Nutrition), and skin (Dermatology).
+
+**Sample data.** Appointment history needs MyChart, which this guest round doesn't sign in to. The prototype uses a clearly labeled fictional sample patient, **Jordan Rivera**, for visits and history; the board's *Personalisation data* control switches to **Guest only**, which uses just the on-device signals and shows the sign-in prompt for visits.
+
+**Transparency and control.** The first time someone turns it on, a sheet explains what changes and the four signals – location (on this device), appointment history (from MyChart), preferred services (on this device), care needs (from MyChart and this device) – and that the choice stays on the device, with **Turn on** and **Not now**; the switch stays off until Turn on. When on, the switch card adds two 44.0 links, **How personalisation works** and **Back to the common homepage**. Turning off shows a toast with Undo. The mode is saved on the device (`mycare-guest-v1`: `pz`, `pzSeen`, `usage`) and survives a reload.
+
+**Motion.** Modules that leave fade up (160 ms); kept modules and the Quick links tiles slide to their new places (FLIP, spring-snappy); new modules enter on the 40 ms stagger. Reduced motion cross-fades. Focus stays on the switch, and screen readers hear “Personalised homepage …” or “Common homepage.”
+
+| Component | Tokens |
+|---|---|
+| Switch card | r-lg surface, shadow-1 + hairline, s4 inset; 64.0 row with a 40.0 dot (tint off; control Blue and filled glyph on), label 16.0/600, status 14.0 `--ink-2`, standard switch; links row under a hairline |
+| Because line | 16.0 `info` glyph in `--blue`, 14.0 `--ink-2` text, s4 inset, under the section head |
+| Visit card | r-lg, s4; 48.0 date box; 16.0/700 date and time; 14.0 type; provider row on `--bg`, r-md, 48.0 initials; 14.0 location; 44.0 tonal buttons |
+| End card | r-lg on `--tint`, 14.0 `--ink`, secondary button |
+| Explanation sheet | Standard sheet; 16.0/700 “What it uses”; 40.0 dots; source as a tag; privacy callout |
+
+Spelling: the switch label is exactly “Personalise My Homepage,” as requested, and the related copy follows its spelling. The rest of the app is US English, so the release copy should settle on one.
+
 ## Dark mode
 
 Menu → **Appearance** offers Light, Dark, and System (the default, which follows the phone's setting and updates live). The choice is saved on the device. The board's App appearance control is the same setting.
@@ -119,8 +153,8 @@ No new values. In use: 32.0 welcome, 28.0 page titles and provider name, 24.0 sh
 
 ## Icons
 
-80 concepts, one glyph each, Material Symbols Rounded (116 KB subset). New in the guest flow: `favorite`, `tune`, `swap_vert`, `near_me`, `my_location`, `location_off`, `translate`, `person_add`, `edit_calendar`, `call`, `school`, `science`, `play_circle`, `wifi_off`, `error`, `trending_up`, `domain`, `apartment`, `door_front`, `map`, `workspace_premium`, `sms`, `mail`, `more_horiz`, `visibility`, `visibility_off`, `menu`, `inbox`, `done_all`, `directions_bus`, `verified`, `menu_book`, `library_books`, `badge`, `coronavirus`, `public`, `open_in_new`, `lock_open`, `elevator`, `explore`, `contrast`, `light_mode`, `dark_mode`. The full map renders on the board.
+83 concepts, one glyph each, Material Symbols Rounded (121 KB subset). New in the guest flow: `favorite`, `tune`, `swap_vert`, `near_me`, `my_location`, `location_off`, `translate`, `person_add`, `edit_calendar`, `call`, `school`, `science`, `play_circle`, `wifi_off`, `error`, `trending_up`, `domain`, `apartment`, `door_front`, `map`, `workspace_premium`, `sms`, `mail`, `more_horiz`, `visibility`, `visibility_off`, `menu`, `inbox`, `done_all`, `directions_bus`, `verified`, `menu_book`, `library_books`, `badge`, `coronavirus`, `public`, `open_in_new`, `lock_open`, `elevator`, `explore`, `contrast`, `light_mode`, `dark_mode`; for the personalised homepage, `dashboard_customize` (Personalise My Homepage), `apps` (most-used services), and `healing` (care needs). The full map renders on the board.
 
 ## Prototype controls
 
-Emergency alerts (none, one, two) · Location permission (ask, allowed, denied, no fix) · Provider results (live, loading, error, none) · Network (online, offline) · Phone width (390, 360) · Text size (default, large) · Motion (full, reduced) · Guest home module order and visibility (CMS). Flow map buttons jump to each step.
+Homepage mode (common, personalised) · Personalisation data (sample patient, guest only) · Care need (knee, heart, skin) · Location (none, Dallas, Irving, Frisco) · Emergency alerts (none, one, two) · Location permission (ask, allowed, denied, no fix) · Provider results (live, loading, error, none) · Network (online, offline) · Phone width (390, 360) · Text size (default, large) · Motion (full, reduced) · Guest home module order and visibility (CMS). Flow map buttons jump to each step.
