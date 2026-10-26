@@ -3,7 +3,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..800&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=accessible,acute,apartment,arrow_back,arrow_forward,article,assistant_navigation,calendar_add_on,calendar_month,call,chat,check,check_circle,chevron_left,chevron_right,close,content_copy,contrast,dark_mode,directions,directions_bus,directions_car,directions_walk,diversity_3,domain,door_front,door_open,elevator,event_available,expand_more,hail,handshake,help,home,how_to_reg,info,lab_profile,layers,light_mode,local_atm,local_parking,local_pharmacy,location_off,location_on,location_searching,lock,login,map,menu,menu_book,more_vert,my_location,navigation,near_me,notifications,nutrition,open_in_new,pause_circle,pin_drop,privacy_tip,psychology,public,receipt_long,refresh,restaurant,schedule,school,search,self_improvement,spa,stethoscope,support_agent,translate,vaccines,verified,videocam,visibility,visibility_off,volunteer_activism,warning,wc,wifi,workspace_premium&display=block">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=accessible,acute,apartment,arrow_back,arrow_forward,article,assistant_navigation,calendar_add_on,calendar_month,chat,check,check_circle,chevron_left,chevron_right,close,content_copy,contrast,dark_mode,directions,directions_bus,directions_car,directions_walk,diversity_3,domain,door_front,door_open,elevator,event_available,expand_more,hail,handshake,help,home,how_to_reg,info,lab_profile,layers,light_mode,local_atm,local_parking,local_pharmacy,location_off,location_on,location_searching,lock,login,map,menu,menu_book,more_vert,my_location,navigation,near_me,nutrition,open_in_new,pause_circle,pin_drop,privacy_tip,psychology,public,receipt_long,restaurant,schedule,school,search,self_improvement,spa,stethoscope,support_agent,translate,vaccines,verified,videocam,visibility,visibility_off,volunteer_activism,warning,wc,wifi,workspace_premium&display=block">
 <style>
 /* Layout: presentation board – controls | 390 × 844 phone | token spec, then the context model, flow map, permission states, privacy, integrations, and glyph map full width.
    Design system copied from designs/guest/src.html (the reference app, unchanged): Blue hero with the global search, content on a light sheet.
@@ -851,16 +851,10 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
 .appear-note{font-size:var(--t14); color:var(--ink-2); padding:var(--s2) var(--s6) 0}
 .phone.rm .appear button:active{transform:none}
 
-/* ===================== From the guest flow: section helpers, visit and explanation lists ===================== */
+/* ===================== From the guest flow: section helpers ===================== */
 .mods{display:grid; grid-template-columns:minmax(0,1fr); gap:var(--s8)}
 .pz-why{display:flex; gap:var(--s2); align-items:flex-start; margin:calc(-1 * var(--s1)) var(--s4) var(--s3); font-size:var(--t14); line-height:1.4; color:var(--ink-2)}
 .pz-why .ms{color:var(--blue); margin-top:2px}
-.pz-sh{font-size:var(--t16); font-weight:700; line-height:1.35; color:var(--ink); margin-top:var(--s6)}
-.pz-sig{list-style:none; margin:var(--s3) 0 0; padding:0; display:grid; gap:var(--s4)}
-.pz-sig li{display:flex; gap:var(--s3); align-items:flex-start}
-.pz-sig .txt{display:grid; gap:2px; justify-items:start; font-size:var(--t14); line-height:1.4; color:var(--ink-2)}
-.pz-sig b{font-size:var(--t16); color:var(--ink)}
-.pz-sig .tag{margin-top:var(--s1)}
 /* ===================== Board: flow map and coverage ===================== */
 .wide{grid-column:1 / -1; justify-self:stretch; padding:24.0px}
 .wide > header{max-width:72ch; display:grid; gap:8.0px; margin-bottom:24.0px}
@@ -892,131 +886,164 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
 .wide h3.tbl-h{font-size:16.0px; margin:0 0 8.0px}
 
 /* ===================== Location-aware home: the context layer ===================== */
-/* One homepage. The context layer is the first module on the light sheet: a quiet row when away, a context card on
-   campus. Module priorities below it follow the context; every common module stays on the page. Tokens only. */
-.ctx{margin-inline:var(--s4); background:var(--surface); border-radius:var(--r-lg); box-shadow:var(--shadow-2), 0 0 0 1px var(--line); overflow:hidden}
-.ctx-hd{display:flex; gap:var(--s3); align-items:flex-start; padding:var(--s4) var(--s2) var(--s3) var(--s4)}
-.ctx-hd > .txt{flex:1; min-width:0; display:grid; gap:var(--s1)}
-.ctx-k{display:flex; flex-wrap:wrap; align-items:center; gap:var(--s1) var(--s2); font-size:var(--t12); font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--blue)}
-.ctx-hd h2{font-size:var(--t20); line-height:1.3; font-weight:700; color:var(--ink); letter-spacing:-.01em; text-wrap:balance}
-.ctx-hd .sub{font-size:var(--t14); line-height:1.4; color:var(--ink-2)}
-.ctx-more{box-shadow:none; background:transparent; margin-top:calc(-1 * var(--s2))}
-.ctx-bd{padding:0 var(--s4) var(--s4); display:grid; gap:var(--s4)}
-.ctx-bd.swap{animation:calmIn var(--d-base) var(--ease-out) both}
-.ctx-ft{display:flex; flex-wrap:wrap; gap:0 var(--s2); padding:0 var(--s2) var(--s1); border-top:1px solid var(--line)}
-.ctx-ft .link{margin-right:0}
-.ctx-acts{display:flex; flex-wrap:wrap; gap:var(--s2)}
-.ctx-acts .btn{flex:1 1 auto; min-height:var(--hit-lg)}
-.ctx-q{font-size:var(--t16); font-weight:600; color:var(--ink)}
-.ctx-bd .chips{padding:0}
-.ctx-bd .group{margin:0; box-shadow:0 0 0 1px var(--line)}
-.ctx-bd .group .row{min-height:56px}
-/* “Live” dot: location-based content is on. A ring pulses twice on arrival; reduced motion keeps it still. */
-.live-dot{position:relative; width:8px; height:8px; border-radius:50%; background:var(--cyan); flex:none; box-shadow:0 0 0 3px rgba(0,169,224,.25)}
-.live-dot::after{content:""; position:absolute; inset:-6px; border-radius:50%; background:rgba(0,169,224,.3); opacity:0; animation:pulse 1200ms var(--ease-out) 2 300ms}
-.phone.rm .live-dot::after{animation:none}
-.ctx-tag{display:inline-flex; align-items:center; gap:var(--s1); font-size:var(--t12); font-weight:600; letter-spacing:0; text-transform:none; color:var(--ink-2); background:var(--bg); box-shadow:inset 0 0 0 1px var(--line); padding:2px var(--s2); border-radius:var(--r-pill)}
+/* One homepage. The context card is the first module on the light sheet; module priorities below it follow the context.
+   Visual first: a live map strip, a three-step tracker, a floor stack. Copy is one line wherever it can be. Tokens only. */
+.ctx{margin-inline:var(--s4); background:var(--surface); border-radius:var(--r-xl); box-shadow:var(--shadow-2), 0 0 0 1px var(--line); overflow:hidden}
 .mod[data-m^="ctx:"]:not(.out){animation-name:ctxIn; animation-duration:var(--d-gentle); animation-timing-function:var(--spring-gentle)}
-@keyframes ctxIn{from{opacity:0; transform:translateY(-8px) scale(.98)}}
+@keyframes ctxIn{from{opacity:0; transform:translateY(24px) scale(.97)}}
 .phone.rm .mod[data-m^="ctx:"]:not(.out){animation-name:fadeOnly}
 
-/* Today's visit inside the card (sample patient, from MyChart) */
-.appt{display:grid; grid-template-columns:auto minmax(0,1fr); gap:var(--s3); align-items:center; padding:var(--s3); border-radius:var(--r-md); background:var(--bg); box-shadow:inset 0 0 0 1px var(--line)}
-.timebox{min-width:var(--dot56); height:var(--dot56); padding:0 var(--s1); border-radius:var(--r-md); background:var(--ctl); color:#FFFFFF; display:grid; place-content:center; text-align:center; line-height:1.1}
-.timebox .m{font-size:var(--t18); font-weight:700}
-.timebox .d{font-size:var(--t12); font-weight:700}
-.appt .txt{display:grid; gap:2px; min-width:0}
-.appt b{font-size:var(--t16); line-height:1.35; color:var(--ink)}
-.appt small{font-size:var(--t14); line-height:1.4; color:var(--ink-2)}
-.appt .tag{justify-self:start; margin-top:var(--s1)}
-.appt-acts{grid-column:1 / -1; display:flex; flex-wrap:wrap; gap:0 var(--s2); margin:calc(-1 * var(--s1)) 0 calc(-1 * var(--s2))}
-.appt-acts .link{margin-right:0}
-.mc-note{display:inline-flex; align-items:center; gap:var(--s1)}
+/* Map strip: the car drives to the garage, or you pulse at the door */
+.ctx-map{position:relative; height:120px; background:var(--map-bg); overflow:hidden}
+.ctx-map svg,.intro-art svg{position:absolute; inset:0; width:100%; height:100%}
+.map-tag{position:absolute; right:var(--s3); top:var(--s3); font-size:var(--t12); font-weight:600; line-height:1.4; color:var(--ink-2); background:var(--surface); padding:2px var(--s2); border-radius:var(--r-pill); box-shadow:var(--shadow-1)}
+.m-sign{fill:var(--ctl)}
+.m-sign-t{fill:#FFFFFF; font:700 16.0px var(--font)}
+.m-car{fill:var(--ctl); stroke:#FFFFFF; stroke-width:3}
+.m-walk{fill:none; stroke:var(--blue); stroke-width:4; stroke-linecap:round; stroke-dasharray:0 9}
+.strip-route{fill:none; stroke:var(--blue); stroke-width:6; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:1; animation:drawIn 1000ms var(--ease-in-out) both 150ms}
+@keyframes drawIn{from{stroke-dashoffset:1}}
+.door-pulse{fill:rgba(0,169,224,.35); transform-box:fill-box; transform-origin:center; opacity:0; animation:doorPulse 1600ms var(--ease-out) 3 300ms}
+@keyframes doorPulse{0%{opacity:.9; transform:scale(.4)}100%{opacity:0; transform:scale(2.4)}}
 
-/* Arrival steps: park, enter, go to. Numbered because the order is real. */
-.steps{list-style:none; margin:0; padding:0; display:grid}
-.step{position:relative; display:grid; grid-template-columns:32px minmax(0,1fr); gap:var(--s3); padding-bottom:var(--s3)}
-.step:last-child{padding-bottom:0}
-.step::before{content:""; position:absolute; left:15px; top:36px; bottom:4px; width:2px; border-radius:1px; background:var(--line)}
-.step:last-child::before{display:none}
-.step-n{width:32px; height:32px; border-radius:50%; display:grid; place-items:center; background:var(--tint); color:var(--blue); font-size:var(--t14); font-weight:700}
-.step.now .step-n{background:var(--ctl); color:#FFFFFF; --grad:-25}
-.step.done .step-n{background:var(--tint); color:var(--blue)}
-.step .txt{display:grid; gap:2px; min-width:0; padding-top:var(--s1)}
-.step .k{font-size:var(--t12); font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--blue)}
-.step b{font-size:var(--t16); font-weight:600; line-height:1.35; color:var(--ink)}
-.step small{font-size:var(--t14); line-height:1.4; color:var(--ink-2)}
-.step.done b{color:var(--ink-2)}
-.step .now-tag{justify-self:start; margin-top:var(--s1)}
+/* Header: place, one status line, options */
+.ctx-hd{display:flex; align-items:center; gap:var(--s3); padding:var(--s4) var(--s2) 0 var(--s4)}
+.ctx-hd .txt{flex:1; min-width:0; display:grid; gap:2px}
+.ctx-hd h2{font-size:var(--t18); line-height:1.3; font-weight:700; color:var(--ink); letter-spacing:-.01em; text-wrap:balance}
+.ctx-st{display:flex; align-items:center; gap:var(--s2); font-size:var(--t14); line-height:1.4; color:var(--ink-2)}
+.ctx-st .ms{color:var(--blue)}
+.ctx-more{flex:none; box-shadow:none; background:transparent}
+.ctx-bd{padding:var(--s4); display:grid; gap:var(--s4)}
+.live-dot{position:relative; width:8px; height:8px; border-radius:50%; background:var(--cyan); flex:none; box-shadow:0 0 0 3px rgba(0,169,224,.25)}
+.live-dot::after{content:""; position:absolute; inset:-6px; border-radius:50%; background:rgba(0,169,224,.3); opacity:0; animation:pulse 1200ms var(--ease-out) 2 300ms}
+@keyframes pulse{0%{opacity:1; transform:scale(.4)}100%{opacity:0; transform:scale(1.4)}}
 
-/* Parking availability: a meter plus the number in words, never the bar alone */
-.meter{display:block; height:8px; border-radius:var(--r-pill); background:var(--tint-2); overflow:hidden; margin-top:var(--s2)}
-.meter i{display:block; height:100%; border-radius:var(--r-pill); background:var(--ctl)}
+/* Three-step tracker: Park → Enter → Floor; the fill grows when you move on */
+.stepper{position:relative}
+.stepper ol{list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); position:relative}
+.stepper .st-track{position:absolute; left:16.67%; right:16.67%; top:18px; height:4px; border-radius:2px; background:var(--tint-2)}
+.stepper .fill{position:absolute; left:0; top:0; bottom:0; border-radius:2px; background:var(--ctl)}
+.stepper li{display:grid; justify-items:center; gap:var(--s1); text-align:center; min-width:0}
+.sn{width:40px; height:40px; border-radius:50%; display:grid; place-items:center; background:var(--surface); color:var(--blue); box-shadow:inset 0 0 0 2px var(--tint-2); position:relative}
+.stepper .done .sn,.stepper .now .sn{background:var(--ctl); color:#FFFFFF; box-shadow:none; --grad:-25}
+.stepper .now .sn{box-shadow:0 0 0 6px rgba(0,169,224,.28); animation:nowPop 520ms var(--spring-snappy) both 300ms}
+@keyframes nowPop{from{transform:scale(.6)}}
+.sl{font-size:var(--t12); font-weight:600; line-height:1.3; color:var(--ink-2)}
+.ss{font-size:var(--t12); line-height:1.3; color:var(--ink-2); margin-top:-2px}
+.stepper .now .sl{color:var(--ink); font-weight:700}
+.ctx-next{display:grid; gap:var(--s2); padding:var(--s3); border-radius:var(--r-md); background:var(--bg); font-size:var(--t14); line-height:1.4; color:var(--ink-2)}
+.ctx-next b{color:var(--ink); font-weight:600}
+.meter{display:block; height:8px; border-radius:var(--r-pill); background:var(--tint-2); overflow:hidden}
+.meter i{display:block; height:100%; border-radius:var(--r-pill); background:var(--ctl); animation:growX 900ms var(--ease-out) both 400ms; transform-origin:left}
+@keyframes growX{from{transform:scaleX(0)}}
+.ctx-acts{display:flex; gap:var(--s2)}
+.ctx-acts .btn{min-height:var(--hit-lg); padding:0 var(--s4)}
+.ctx-acts .btn-primary{flex:1}
+.ctx .chips{padding:0}
+.ctx-q{font-size:var(--t14); font-weight:600; color:var(--ink)}
 
-/* Where you are inside: floor chip and the remaining route */
-.floor{display:inline-flex; align-items:center; gap:var(--s1); justify-self:start; min-height:32px; padding:0 var(--s3) 0 var(--s2); border-radius:var(--r-pill); background:var(--tint); color:var(--blue); font-size:var(--t14); font-weight:700}
-.dest{display:grid; grid-template-columns:auto minmax(0,1fr); gap:var(--s3); align-items:center; padding:var(--s3); border-radius:var(--r-md); background:var(--bg); box-shadow:inset 0 0 0 1px var(--line)}
-.dest .txt{display:grid; gap:2px; min-width:0}
-.dest b{font-size:var(--t16); line-height:1.35; color:var(--ink)}
-.dest small{font-size:var(--t14); line-height:1.4; color:var(--ink-2)}
-.arrived{display:flex; gap:var(--s3); align-items:flex-start; padding:var(--s3); border-radius:var(--r-md); background:var(--tint); font-size:var(--t14); color:var(--ink)}
-.arrived > .ms{color:var(--blue); margin-top:2px}
-.arrived b{display:block; font-size:var(--t16); color:var(--blue)}
+/* Inside: a floor stack with you and your destination */
+.inside{position:relative; display:grid; grid-template-columns:auto minmax(0,1fr); gap:var(--s4); align-items:center; padding:var(--s4) var(--s4) var(--s4) var(--s3); border-radius:var(--r-lg); background:var(--bg)}
+.flr{position:relative; display:grid; grid-template-rows:repeat(7, 12px); gap:4px; width:84px; padding:0 20px 0 20px}
+.flr i{display:block; border-radius:4px; background:var(--tint-2)}
+.flr i.dst{background:var(--ctl)}
+.flr-me{position:absolute; left:2px; width:12px; height:12px; border-radius:50%; background:var(--cyan); box-shadow:0 0 0 3px var(--surface)}
+.flr-pin{position:absolute; right:0; color:var(--blue); --fill:1}
+.inside .big{font-size:var(--t28); line-height:1.15; font-weight:700; color:var(--blue); letter-spacing:-.02em}
+.inside .sm{font-size:var(--t14); line-height:1.4; color:var(--ink-2); margin-top:var(--s1)}
+.inside .map-tag{top:var(--s2); right:var(--s2)}
 
-/* Quiet rows: the away state, paused, location off. One line, one action. */
-.ctx-slim{margin-inline:var(--s4); display:flex; align-items:center; gap:var(--s3); padding:var(--s2) var(--s2) var(--s2) var(--s3); border-radius:var(--r-lg); background:var(--surface); box-shadow:var(--shadow-1), 0 0 0 1px var(--line)}
-.ctx-slim .txt{flex:1; min-width:0; display:grid; font-size:var(--t14); line-height:1.4; color:var(--ink-2)}
+/* Which building? Two big tiles */
+.bld{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:var(--s2)}
+.bld-t{min-height:112px; border:0; border-radius:var(--r-lg); background:var(--bg); box-shadow:inset 0 0 0 1px var(--line); padding:var(--s3); display:flex; flex-direction:column; align-items:flex-start; gap:var(--s2); text-align:left; color:var(--ink); font-size:var(--t14); font-weight:600; line-height:1.3; transition:transform var(--d-snappy) var(--spring-snappy), background-color var(--d-fast)}
+.bld-t small{font-size:var(--t12); font-weight:700; color:var(--blue)}
+.bld-t:active{transform:scale(.97); background:var(--tint); transition-duration:80ms}
+.ctx-links{display:flex; flex-wrap:wrap; gap:0 var(--s2); margin:calc(-1 * var(--s2)) 0}
+.ctx-links .link{margin-right:0}
+
+/* Quiet row: away, paused, location off */
+.ctx-slim{margin-inline:var(--s4); display:grid; grid-template-columns:auto minmax(0,1fr) auto; column-gap:var(--s3); row-gap:var(--s3); align-items:center; padding:var(--s3) var(--s2) var(--s3) var(--s3); border-radius:var(--r-lg); background:var(--surface); box-shadow:var(--shadow-1), 0 0 0 1px var(--line)}
+.ctx-slim .txt{display:grid; font-size:var(--t14); line-height:1.4; color:var(--ink-2)}
 .ctx-slim b{font-size:var(--t16); font-weight:600; line-height:1.35; color:var(--ink)}
-.ctx-slim{flex-wrap:wrap; align-items:flex-start; padding:var(--s3) var(--s3) var(--s2)}
-.ctx-slim .acts{display:flex; flex-wrap:wrap; gap:var(--s2); flex:1 0 100%; padding-left:calc(var(--dot40) + var(--s3))}
+.ctx-slim .x{box-shadow:none; background:transparent; color:var(--ink-2); align-self:start; margin-top:calc(-1 * var(--s1))}
+.ctx-slim .acts{grid-column:2 / -1; display:flex; gap:var(--s2)}
 .btn-sm{min-height:var(--hit); padding:0 var(--s4); border:0; border-radius:var(--r-pill); background:var(--tint); color:var(--blue); font-weight:600; font-size:var(--t14); display:inline-flex; align-items:center; justify-content:center; gap:var(--s1); white-space:nowrap; transition:transform var(--d-snappy) var(--spring-snappy), background-color var(--d-fast)}
 .btn-sm:active{transform:scale(.95); background:var(--tint-2); transition-duration:80ms}
 .btn-sm.solid{background:var(--ctl); color:#FFFFFF; --grad:-25}
-.btn-sm.plain{background:none; color:var(--ink-2)}
-.phone.rm .btn-sm:active{transform:none}
+.ctx-slim .dot .ms{animation:none}
+.ctx-slim.ask .dot{background:var(--ctl); color:#FFFFFF; --grad:-25}
 
-/* Hero: the place replaces the welcome line while location content is on */
+/* Hero in context: the place pill, and the rings ping once on arrival */
 .here-pill{min-height:var(--hit); border:0; background:none; padding:0; color:#FFFFFF; display:inline-flex; align-items:center; max-width:100%}
-.here-pill .pill{display:inline-flex; align-items:center; gap:var(--s2); min-height:32px; padding:var(--s1) var(--s3); border-radius:var(--r-pill); background:rgba(255,255,255,.12); box-shadow:inset 0 0 0 1px rgba(255,255,255,.2); font-size:var(--t14); font-weight:600; text-align:left; line-height:1.3}
-.here-pill .ms{color:var(--on-blue-2)}
+.here-pill .pill{display:inline-flex; align-items:center; gap:var(--s2); min-height:32px; padding:var(--s1) var(--s3); border-radius:var(--r-pill); background:rgba(255,255,255,.12); box-shadow:inset 0 0 0 1px rgba(255,255,255,.2); font-size:var(--t14); font-weight:600; line-height:1.3; text-align:left; animation:chipPop 420ms var(--spring-snappy) both}
 .here-pill:active .pill{background:rgba(255,255,255,.22)}
+.hero-art circle{transform-box:fill-box; transform-origin:center}
+.hero-art.ping circle{animation:ringPing 1400ms var(--ease-out) both}
+.hero-art.ping circle:nth-child(2){animation-delay:140ms}
+.hero-art.ping circle:nth-child(3){animation-delay:280ms}
+@keyframes ringPing{0%{opacity:0; transform:scale(.55)}45%{opacity:1}}
 
-/* Amenities: six tiles, distance from where you are */
-.amen{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:var(--s2); padding-inline:var(--s4)}
-.am-tile{min-height:104px; border:0; border-radius:var(--r-lg); background:var(--surface); box-shadow:var(--shadow-1), 0 0 0 1px var(--line); padding:var(--s3); display:flex; flex-direction:column; align-items:flex-start; gap:var(--s2); text-align:left; color:var(--ink); transition:transform var(--d-snappy) var(--spring-snappy), background-color var(--d-fast)}
-.am-tile:active{transform:scale(.96); background:var(--tint); transition-duration:90ms; --fill:1}
-.am-tile .txt{display:grid; gap:2px; min-width:0}
-.am-lbl{font-size:var(--t14); font-weight:600; line-height:1.3}
-.am-meta{font-size:var(--t12); font-weight:600; line-height:1.3; color:var(--ink-2)}
-.am-tile.here .am-meta{color:var(--blue)}
-.phone.rm .am-tile:active{transform:none}
-.src-note{display:flex; gap:var(--s2); align-items:flex-start; padding:var(--s3) var(--s4) 0; font-size:var(--t12); font-weight:600; line-height:1.4; color:var(--ink-2)}
-.src-note .ms{color:var(--blue)}
+/* Island: arrival notice drops from the top, then lifts away – never covers the card */
+.island{position:absolute; top:8px; left:50%; z-index:72; display:flex; align-items:center; gap:var(--s2); max-width:calc(100% - 96px); min-height:40px; padding:var(--s1) var(--s4) var(--s1) var(--s1); border-radius:var(--r-pill); background:var(--inverse); color:var(--on-inverse); font-size:var(--t14); font-weight:600; white-space:nowrap; box-shadow:var(--shadow-2); transform:translate(-50%, -64px) scale(.6); opacity:0; pointer-events:none; transition:transform var(--d-gentle) var(--spring-snappy), opacity var(--d-fast) var(--ease-out)}
+.island.show{transform:translate(-50%, 0); opacity:1}
+.island span:last-child{overflow:hidden; text-overflow:ellipsis}
+.island .ii{width:32px; height:32px; border-radius:50%; display:grid; place-items:center; flex:none; background:var(--cyan); color:#00243F; --fill:1}
+.phone.rm .island{transition:opacity var(--d-base) var(--ease-out); transform:translate(-50%, 0)}
 
-/* Lock screen (system-drawn, simulated): no visit details before sign-in */
+/* Icon tiles: nearby places and support, one tap each */
+.nbs{display:flex; gap:var(--s1); overflow-x:auto; padding:var(--s1) var(--s4) var(--s2); scrollbar-width:none; scroll-snap-type:x mandatory; scroll-padding-inline:var(--s4)}
+.nbs::-webkit-scrollbar{display:none}
+.nb{flex:0 0 auto; width:80px; min-height:var(--hit); scroll-snap-align:start; border:0; background:none; padding:var(--s1) 0; display:grid; justify-items:center; align-content:start; gap:2px; text-align:center; color:var(--ink); border-radius:var(--r-md); transition:transform var(--d-snappy) var(--spring-snappy)}
+.nb .dot{margin-bottom:var(--s1)}
+.nbl{font-size:var(--t12); font-weight:600; line-height:1.3}
+.nbm{font-size:var(--t12); line-height:1.3; color:var(--ink-2)}
+.nb.here .nbm{color:var(--blue); font-weight:600}
+.nb:active{transform:scale(.94); transition-duration:80ms}
+.nb:active .dot{background:var(--ctl); color:#FFFFFF; --grad:-25}
+.mod .nb{animation:modIn 380ms var(--spring-snappy) both; animation-delay:calc(var(--j, 0) * 40ms + 160ms)}
+.nbs.static{padding:0; overflow:visible; justify-content:space-around; margin-top:var(--s4)}
+.val{font-size:var(--t14); font-weight:600; color:var(--blue); white-space:nowrap}
+.val.muted{color:var(--ink-2)}
+.row .tag{flex:none}
+
+/* Re-renders that don't change the context stay still */
+.calm .strip-route,.calm .door-pulse,.calm .meter i,.calm .stepper .now .sn,.calm .here-pill .pill,.calm .nb,.calm .live-dot::after{animation:none!important}
+.phone.rm .strip-route,.phone.rm .door-pulse,.phone.rm .meter i,.phone.rm .stepper .now .sn,.phone.rm .here-pill .pill,.phone.rm .hero-art.ping circle,.phone.rm .live-dot::after{animation:none}
+.phone.rm .door-pulse{opacity:.5; transform:scale(1.4)}
+.phone.rm .mod .nb{animation:fadeOnly var(--d-base) var(--ease-out) both; animation-delay:0ms}
+.phone.rm .bld-t:active,.phone.rm .nb:active,.phone.rm .btn-sm:active{transform:none}
+
+/* Sheets */
+.intro-art{position:relative; height:136px; margin-top:var(--s4); border-radius:var(--r-lg); overflow:hidden; background:var(--map-bg); box-shadow:inset 0 0 0 1px var(--line)}
+.sig{list-style:none; margin:var(--s4) 0 0; padding:0; display:grid; gap:var(--s3)}
+.sig li{display:flex; align-items:center; gap:var(--s3)}
+.sig b{flex:1; min-width:0; font-size:var(--t16); font-weight:600; line-height:1.35; color:var(--ink)}
+.sheet .callout{align-items:center}
+
+/* Lock screen (system-drawn, simulated): the notice names the place only */
 .lockscr{position:absolute; inset:0; z-index:66; display:flex; flex-direction:column; align-items:center; padding:96.0px var(--s4) var(--s8); color:#FFFFFF; background:var(--hero-glow), var(--brand); --grad:-25; animation:calmIn var(--d-base) var(--ease-out) both}
 .lk-time{font-size:64.0px; line-height:1; font-weight:600; letter-spacing:-.02em}
 .lk-date{font-size:var(--t18); font-weight:600; margin-top:var(--s2); color:var(--on-blue-2)}
 .lk-note{width:100%; margin-top:var(--s12); border:0; display:grid; grid-template-columns:auto minmax(0,1fr); gap:var(--s3); text-align:left; padding:var(--s3); border-radius:var(--r-lg); background:var(--surface); color:var(--ink); box-shadow:var(--shadow-2); --grad:0; animation:dropIn var(--d-gentle) var(--spring-snappy) both 300ms}
+@keyframes dropIn{from{opacity:0; transform:translateY(-16px)}}
 .lk-note img{width:40px; height:40px; border-radius:var(--r-sm)}
 .lk-note .txt{display:grid; gap:2px; min-width:0}
 .lk-note .hd{display:flex; justify-content:space-between; gap:var(--s2); font-size:var(--t14); font-weight:700}
 .lk-note .hd small{font-size:var(--t12); font-weight:600; color:var(--ink-2)}
 .lk-note p{font-size:var(--t14); line-height:1.4}
-.lk-cap{margin-top:auto; font-size:var(--t14); color:var(--on-blue-2); text-align:center; max-width:32ch}
+.lk-cap{margin-top:auto; font-size:var(--t14); color:var(--on-blue-2); text-align:center}
 .lockscr :focus-visible{box-shadow:var(--focus-on-blue)}
 .phone.rm .lk-note{animation:fadeOnly var(--d-base) var(--ease-out) both}
 
-/* System location dialog: iOS shows a Precise switch on its map */
+/* System location dialog: iOS shows a Precise switch */
 .sys-prec{display:flex; align-items:center; justify-content:space-between; gap:var(--s2); margin-top:var(--s3); font-size:var(--t14); font-weight:600; color:var(--ink)}
-.sys button.sys-sw{width:auto; min-height:var(--hit); border:0; padding:0 var(--s1); display:inline-flex; align-items:center; gap:var(--s2); background:none; color:var(--ink); font-size:var(--t14); font-weight:600}
-.sys-sw .track{width:52px}
+.sys button.sys-sw{width:auto; min-height:var(--hit); border:0; padding:0 var(--s1); display:inline-flex; align-items:center; background:none}
 
-/* Directions page: route map and steps (simulated) */
+/* Directions page */
+.route-sum{margin-top:var(--s2)!important; font-size:var(--t14); color:var(--ink-2)}
 .route-map{position:relative; height:240px; margin:var(--s4) calc(-1 * var(--s2)) 0; border-radius:var(--r-lg); overflow:hidden; background:var(--map-bg); box-shadow:0 0 0 1px var(--line)}
 .route-map svg{position:absolute; inset:0; width:100%; height:100%}
-.route-map .way-cap{left:var(--s3); bottom:var(--s3)}
-.rt-path{fill:none; stroke:var(--blue); stroke-width:6; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:6 0}
+.rt-path{fill:none; stroke:var(--blue); stroke-width:6; stroke-linecap:round; stroke-linejoin:round}
 .rt-draw{stroke-dasharray:var(--len); stroke-dashoffset:var(--len); animation:draw2 900ms var(--ease-in-out) both 200ms}
 @keyframes draw2{to{stroke-dashoffset:0}}
 .phone.rm .rt-draw{animation:none; stroke-dashoffset:0}
@@ -1026,158 +1053,108 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
 .m-me{fill:var(--cyan); stroke:#FFFFFF; stroke-width:3}
 .m-halo{fill:rgba(0,169,224,.25)}
 .floors{display:flex; gap:var(--s2); margin-top:var(--s3)}
-.page-body .steps{margin-top:var(--s4)}
-.page-body .ctx-tag{margin-top:var(--s2)}
-.route-sum{display:flex; flex-wrap:wrap; gap:var(--s1) var(--s3); margin-top:var(--s2); font-size:var(--t14); color:var(--ink-2)}
-.route-sum b{color:var(--ink)}
+.rsteps{list-style:none; margin:var(--s4) 0 0; padding:0; display:grid; gap:var(--s2)}
+.rsteps li{display:grid; grid-template-columns:32px minmax(0,1fr); gap:var(--s3); align-items:start}
+.rs-n{width:32px; height:32px; border-radius:50%; display:grid; place-items:center; background:var(--tint); color:var(--blue)}
+.rsteps .done .rs-n,.rsteps .now .rs-n{background:var(--ctl); color:#FFFFFF; --grad:-25}
+.rsteps .now .rs-n{box-shadow:0 0 0 6px rgba(0,169,224,.28)}
+.rsteps .t{display:grid; padding-top:4px; min-width:0}
+.rsteps b{font-size:var(--t16); font-weight:600; line-height:1.35; color:var(--ink)}
+.rsteps .done b{font-weight:500; color:var(--ink-2)}
+.rsteps small{font-size:var(--t14); line-height:1.4; color:var(--ink-2)}
+.rsteps .link{justify-self:start; margin-left:calc(-1 * var(--s2))}
 
-/* Board: segmented controls that wrap to two columns, and the docs */
-.seg.grid{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); border-radius:20px}
-.seg.three{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); border-radius:20px}
-.board-btn{width:100%; min-height:44px; border:1px solid var(--bd-line); border-radius:999px; background:var(--bd-chip); color:var(--bd-accent); font-weight:600; font-size:14.0px; cursor:pointer; margin-top:8.0px}
-.board-btn:focus-visible{outline:3px solid var(--bd-accent); outline-offset:2px}
-.board-btn[aria-pressed="true"]{background:var(--bd-accent); color:var(--bd-panel)}
-.now-line{font-size:14.0px; margin:8.0px 0 0; padding:8.0px 12.0px; border-radius:12.0px; background:var(--bd-chip); color:var(--bd-ink)}
-.now-line b{color:var(--bd-accent)}
-.states{display:grid; gap:12.0px; grid-template-columns:repeat(auto-fit, minmax(min(100%, 200px), 1fr)); align-items:stretch}
-.st-node{border:1px solid var(--bd-line); border-radius:16.0px; padding:12.0px 16.0px; display:grid; gap:4.0px; align-content:start; position:relative}
-.st-node h3{font-size:16.0px; margin:0; line-height:1.3}
-.st-node p{font-size:14.0px; color:var(--bd-muted); margin:0}
-.st-node .go-to{margin-top:8.0px}
-.st-node .k{font-size:12.0px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--bd-accent)}
-.flowline{display:flex; flex-wrap:wrap; align-items:center; gap:8.0px; margin:0 0 16.0px; font-size:14.0px; font-weight:600}
+/* Board: the journey timeline is the main control */
+.seg.grid{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); border-radius:24px}
+.ctl-h{display:flex; align-items:center; justify-content:space-between; gap:8.0px; margin-bottom:8.0px}
+.ctl-h h2{margin:0}
+.play{min-height:40px; padding:0 16.0px; border:0; border-radius:999px; background:var(--bd-accent); color:var(--bd-panel); font-weight:700; font-size:14.0px; cursor:pointer}
+.play:focus-visible,.jb:focus-visible,.zone button:focus-visible,.board-btn:focus-visible{outline:3px solid var(--bd-accent); outline-offset:2px}
+.jr{list-style:none; margin:0; padding:0; display:grid; gap:4.0px; position:relative}
+.jr::before{content:""; position:absolute; left:27px; top:28px; bottom:28px; width:2px; background:var(--bd-line)}
+.jb{width:100%; display:grid; grid-template-columns:40px minmax(0,1fr); gap:12.0px; align-items:center; padding:8.0px; border:0; border-radius:12.0px; background:none; text-align:left; color:var(--bd-ink); cursor:pointer; position:relative}
+.jd{width:40px; height:40px; border-radius:50%; display:grid; place-items:center; background:var(--bd-panel); color:var(--bd-accent); box-shadow:inset 0 0 0 2px var(--bd-line); transition:background-color 240ms, color 240ms}
+.jb[aria-pressed="true"]{background:var(--bd-chip)}
+.jb[aria-pressed="true"] .jd{background:var(--bd-accent); color:var(--bd-panel); box-shadow:none; --fill:1}
+.jb b{display:block; font-size:16.0px; line-height:1.3}
+.jb small{display:block; font-size:14.0px; line-height:1.4; color:var(--bd-muted)}
+.zone{display:flex; gap:4.0px; padding:0 0 4.0px 60px}
+.zone button{min-height:40px; padding:0 12.0px; border:1px solid var(--bd-line); border-radius:999px; background:var(--bd-panel); color:var(--bd-ink); font-weight:600; font-size:14.0px; cursor:pointer}
+.zone button[aria-pressed="true"]{background:var(--bd-accent); border-color:var(--bd-accent); color:var(--bd-panel)}
+.board-btn{width:100%; min-height:44px; border:1px solid var(--bd-line); border-radius:999px; background:var(--bd-chip); color:var(--bd-accent); font-weight:600; font-size:14.0px; cursor:pointer}
+.btn-pair{display:grid; grid-template-columns:1fr 1fr; gap:8.0px}
+.disp{display:grid; gap:8.0px}
+.disp > div{display:grid; grid-template-columns:72px minmax(0,1fr); align-items:center; gap:8.0px; font-size:14.0px; color:var(--bd-muted)}
+.now-line{margin:0; font-size:14.0px; color:var(--bd-muted); text-align:center}
+.now-line b{color:var(--bd-ink)}
+.jcards{display:grid; gap:16.0px; grid-template-columns:repeat(auto-fit, minmax(min(100%, 200px), 1fr))}
+.jcard{border:1px solid var(--bd-line); border-radius:16.0px; padding:16.0px; display:grid; gap:8.0px; align-content:start}
+.jcard .jd{background:var(--bd-chip); box-shadow:none}
+.jcard h3{font-size:16.0px; line-height:1.3; margin:4.0px 0 0}
+.chiplist{display:flex; flex-wrap:wrap; gap:4.0px; list-style:none; margin:0; padding:0}
+.chiplist li{font-size:12.0px; font-weight:600; padding:4.0px 8.0px; border-radius:999px; background:var(--bd-chip); color:var(--bd-ink)}
+.jcard .go-to{justify-self:start; margin-top:4.0px; min-height:40px; padding:0 16.0px; border:1px solid var(--bd-line); border-radius:999px; background:var(--bd-chip); color:var(--bd-accent); font-weight:600; font-size:14.0px; cursor:pointer}
+.jcard .go-to:focus-visible{outline:3px solid var(--bd-accent); outline-offset:2px}
+.flowline{display:flex; flex-wrap:wrap; align-items:center; gap:8.0px; margin:24.0px 0 0; font-size:14.0px; font-weight:600}
 .flowline span{padding:4.0px 12.0px; border-radius:999px; background:var(--bd-chip); color:var(--bd-ink)}
+.flowline span.out{background:var(--bd-accent); color:var(--bd-panel)}
 .flowline i{font-style:normal; color:var(--bd-muted)}
-.wide .note2{font-size:14.0px; color:var(--bd-muted); margin:16.0px 0 0; max-width:80ch}
-.wide ul.plain{margin:0; padding-left:20.0px; display:grid; gap:8.0px; font-size:14.0px; color:var(--bd-muted)}
-.wide ul.plain b{color:var(--bd-ink)}
-.cols2{display:grid; gap:16.0px; grid-template-columns:repeat(auto-fit, minmax(min(100%, 360px), 1fr))}
-.cols2 article{border:1px solid var(--bd-line); border-radius:16.0px; padding:16.0px; display:grid; gap:8.0px; align-content:start}
-.cols2 h3{font-size:16.0px; margin:0}
-@keyframes pulse{0%{opacity:1; transform:scale(.4)}100%{opacity:0; transform:scale(1.4)}}
-@keyframes dropIn{from{opacity:0; transform:translateY(-16px)}}
+.mini{display:grid; gap:12.0px; grid-template-columns:repeat(auto-fit, minmax(min(100%, 200px), 1fr))}
+.mini article{border:1px solid var(--bd-line); border-radius:16.0px; padding:12.0px 16.0px; display:grid; gap:4.0px; align-content:start}
+.mini h3{font-size:16.0px; margin:0}
+.mini p{font-size:14.0px; color:var(--bd-muted); margin:0}
 </style>
 
 <div class="board">
   <header class="board-head">
     <h1>UTSW MyCare – location-aware home</h1>
-    <p>An interactive prototype of one MyCare homepage that adapts to where the patient is: away from campus, arriving at Clements University Hospital, at the entrance, inside by floor, at Simmons Cancer Center, and when location is unavailable. Location is simulated with the controls on the left. Every person, visit, floor, suite, entrance, and parking detail is fictional sample data.</p>
-    <nav class="jump" aria-label="On this page"><a href="#model">Context model</a><a href="#flow">Flow map</a><a href="#perm">Permission and fallbacks</a><a href="#privacy">Privacy</a><a href="#integrations">Real integrations</a><a href="#tokens">Token spec</a><a href="#glyphs">Glyph map</a></nav>
+    <p>One homepage that adapts to where the patient is. Pick a step in the journey and watch the home change. Location is simulated; every visit, floor, and parking detail is sample data.</p>
+    <nav class="jump" aria-label="On this page"><a href="#how">How it works</a><a href="#perm">Permission</a><a href="#privacy">Privacy</a><a href="#integrations">Real integrations</a><a href="#tokens">Tokens</a><a href="#glyphs">Glyphs</a></nav>
   </header>
 
   <aside class="controls panel" aria-label="Prototype controls">
     <div class="ctl">
-      <h2 id="lbl-sim">Simulated location</h2>
-      <div class="seg grid" role="group" aria-labelledby="lbl-sim">
-        <button data-sim="away" aria-pressed="true">Away</button>
-        <button data-sim="arriving" aria-pressed="false">Arriving</button>
-        <button data-sim="entrance" aria-pressed="false">Entrance</button>
-        <button data-sim="inside" aria-pressed="false">Inside</button>
-        <button data-sim="cancer" aria-pressed="false">Cancer center</button>
-        <button data-sim="nofix" aria-pressed="false">Unavailable</button>
-      </div>
-      <p class="note">Where the phone really is. Arriving, Entrance, and Inside are at Clements University Hospital; Unavailable means the phone can't get a location fix.</p>
+      <div class="ctl-h"><h2>Journey</h2><button class="play" id="walk" aria-pressed="false">Play</button></div>
+      <ol class="jr" aria-label="Where the phone is">
+        <li><button class="jb" data-sim="away" aria-pressed="true"><span class="jd"><span class="ms s20" aria-hidden="true">home</span></span><span><b>Away</b><small>Common homepage</small></span></button></li>
+        <li><button class="jb" data-sim="arriving" aria-pressed="false"><span class="jd"><span class="ms s20" aria-hidden="true">directions_car</span></span><span><b>Arriving</b><small>Parking and entrance</small></span></button></li>
+        <li><button class="jb" data-sim="entrance" aria-pressed="false"><span class="jd"><span class="ms s20" aria-hidden="true">door_open</span></span><span><b>At the entrance</b><small>Next step, check-in</small></span></button></li>
+        <li><button class="jb" data-sim="inside" aria-pressed="false"><span class="jd"><span class="ms s20" aria-hidden="true">layers</span></span><span><b>Inside</b><small>Your floor and what's nearby</small></span></button>
+          <div class="zone" id="zone" role="group" aria-label="Floor" hidden><button data-zone="f1" aria-pressed="true">Floor 1</button><button data-zone="f2" aria-pressed="false">Floor 2</button><button data-zone="f7" aria-pressed="false">Floor 7</button></div></li>
+        <li><button class="jb" data-sim="cancer" aria-pressed="false"><span class="jd"><span class="ms s20" aria-hidden="true">apartment</span></span><span><b>Cancer center</b><small>Visit and support</small></span></button></li>
+      </ol>
     </div>
     <div class="ctl">
-      <h2 id="lbl-zone">Inside: floor</h2>
-      <div class="seg three" role="group" aria-labelledby="lbl-zone">
-        <button data-zone="f1" aria-pressed="true">Floor 1</button>
-        <button data-zone="f2" aria-pressed="false">Floor 2</button>
-        <button data-zone="f7" aria-pressed="false">Floor 7</button>
-      </div>
-      <p class="note">Floor 1 is the main lobby, Floor 2 has imaging, and Floor 7 has the sample patient's clinic.</p>
-    </div>
-    <div class="ctl">
-      <h2 id="lbl-perm">Location permission</h2>
-      <div class="seg" role="group" aria-labelledby="lbl-perm">
-        <button data-perm="ask" aria-pressed="true">Ask</button>
+      <h2 id="lbl-perm">Location access</h2>
+      <div class="seg grid" role="group" aria-labelledby="lbl-perm">
+        <button data-perm="ask" aria-pressed="true">Not asked</button>
         <button data-perm="granted" aria-pressed="false">Allowed</button>
         <button data-perm="denied" aria-pressed="false">Denied</button>
-        <button data-perm="nofix" aria-pressed="false">No fix</button>
+        <button data-perm="nofix" aria-pressed="false">No signal</button>
       </div>
-      <p class="note">Ask: MyCare hasn't asked yet, so it can't know where you are. It asks only when you choose to turn on arrival help.</p>
+      <p class="note">Starts at Not asked – tap Turn on in the app. A journey step allows it for you.</p>
     </div>
     <div class="ctl">
       <h2 id="lbl-acc">Accuracy</h2>
-      <div class="seg" role="group" aria-labelledby="lbl-acc">
-        <button data-acc="precise" aria-pressed="true">Precise</button>
-        <button data-acc="approx" aria-pressed="false">Approximate</button>
-      </div>
-      <p class="note">Approximate location knows you're near the Dallas campus, not which building, so the home asks.</p>
+      <div class="seg" role="group" aria-labelledby="lbl-acc"><button data-acc="precise" aria-pressed="true">Precise</button><button data-acc="approx" aria-pressed="false">Approximate</button></div>
     </div>
     <div class="ctl">
       <h2 id="lbl-auth">MyChart</h2>
-      <div class="seg" role="group" aria-labelledby="lbl-auth">
-        <button data-auth="patient" aria-pressed="true">Signed in</button>
-        <button data-auth="guest" aria-pressed="false">Guest</button>
-      </div>
-      <p class="note">Signed in: Jordan Rivera (fictional) with two sample visits today – 10:30 a.m. at Clements and 2 p.m. at Simmons. Guests choose where they're going instead.</p>
-    </div>
-    <div class="ctl">
-      <h2 id="lbl-geo">Location-aware home</h2>
-      <div class="seg" role="group" aria-labelledby="lbl-geo">
-        <button data-geo="on" aria-pressed="true">On</button>
-        <button data-geo="off" aria-pressed="false">Off</button>
-      </div>
-      <p class="note">Same as Menu → Location and your home in the app.</p>
+      <div class="seg" role="group" aria-labelledby="lbl-auth"><button data-auth="patient" aria-pressed="true">Signed in</button><button data-auth="guest" aria-pressed="false">Guest</button></div>
     </div>
     <div class="ctl">
       <h2>Demos</h2>
-      <button class="board-btn" id="walk" aria-pressed="false">Walk through a visit</button>
-      <button class="board-btn" id="lock-demo">Arrive with the phone locked</button>
-      <button class="board-btn" id="reset">Reset the prototype</button>
-      <p class="note">The walk-through allows precise location, then moves from away to arriving, the entrance, Floor 1, Floor 7, and back home, about four seconds a step. Any control stops it.</p>
-      <p class="now-line" id="now-line" aria-live="polite"></p>
+      <div class="btn-pair"><button class="board-btn" id="lock-demo">Locked phone</button><button class="board-btn" id="reset">Reset</button></div>
     </div>
     <div class="ctl">
-      <h2 id="lbl-alert">Emergency alert</h2>
-      <div class="seg" role="group" aria-labelledby="lbl-alert">
-        <button data-alerts="0" aria-pressed="false">None</button>
-        <button data-alerts="1" aria-pressed="true">One</button>
+      <h2>Display</h2>
+      <div class="disp">
+        <div><span id="lbl-w">Width</span><div class="seg" role="group" aria-labelledby="lbl-w"><button data-w="390" aria-pressed="true">390</button><button data-w="360" aria-pressed="false">360</button></div></div>
+        <div><span id="lbl-ts">Text</span><div class="seg" role="group" aria-labelledby="lbl-ts"><button data-ts="1" aria-pressed="true">Default</button><button data-ts="1.25" aria-pressed="false">Large</button></div></div>
+        <div><span id="lbl-th">Theme</span><div class="seg" role="group" aria-labelledby="lbl-th"><button data-apptheme="light" aria-pressed="false">Light</button><button data-apptheme="dark" aria-pressed="false">Dark</button><button data-apptheme="system" aria-pressed="true">Auto</button></div></div>
+        <div><span id="lbl-m">Motion</span><div class="seg" role="group" aria-labelledby="lbl-m"><button data-rm="0" aria-pressed="true">Full</button><button data-rm="1" aria-pressed="false">Reduced</button></div></div>
+        <div><span id="lbl-alert">Alert</span><div class="seg" role="group" aria-labelledby="lbl-alert"><button data-alerts="0" aria-pressed="true">Off</button><button data-alerts="1" aria-pressed="false">On</button></div></div>
       </div>
-    </div>
-    <div class="ctl">
-      <h2 id="lbl-w">Phone width</h2>
-      <div class="seg" role="group" aria-labelledby="lbl-w">
-        <button data-w="390" aria-pressed="true">390 pt</button>
-        <button data-w="360" aria-pressed="false">360 pt</button>
-      </div>
-    </div>
-    <div class="ctl">
-      <h2 id="lbl-ts">Text size</h2>
-      <div class="seg" role="group" aria-labelledby="lbl-ts">
-        <button data-ts="1" aria-pressed="true">Default</button>
-        <button data-ts="1.25" aria-pressed="false">Large</button>
-      </div>
-    </div>
-    <div class="ctl">
-      <h2 id="lbl-th">App appearance</h2>
-      <div class="seg" role="group" aria-labelledby="lbl-th">
-        <button data-apptheme="light" aria-pressed="false">Light</button>
-        <button data-apptheme="dark" aria-pressed="false">Dark</button>
-        <button data-apptheme="system" aria-pressed="true">System</button>
-      </div>
-    </div>
-    <div class="ctl">
-      <h2 id="lbl-m">Motion</h2>
-      <div class="seg" role="group" aria-labelledby="lbl-m">
-        <button data-rm="0" aria-pressed="true">Full</button>
-        <button data-rm="1" aria-pressed="false">Reduced</button>
-      </div>
-    </div>
-    <div class="ctl">
-      <h2>Try this</h2>
-      <ul class="hints">
-        <li>Set Simulated location to Arriving, then tap Turn on in the row at the top of home</li>
-        <li>Allow location, then step through Entrance and Inside, and switch floors</li>
-        <li>Tap Start directions, then switch to Floor 7 on the board</li>
-        <li>On the context card, tap Not here? and choose another place</li>
-        <li>Tap the three dots on the card and choose Show the common homepage</li>
-        <li>Switch MyChart to Guest and pick where you're going</li>
-        <li>Set Accuracy to Approximate while Inside</li>
-        <li>Set Location permission to Denied or No fix and use the fallbacks</li>
-        <li>Try Arrive with the phone locked</li>
-      </ul>
     </div>
   </aside>
 
@@ -1185,6 +1162,7 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
     <div class="device">
       <div class="phone bar-light" id="phone" lang="en">
         <div class="statusbar" aria-hidden="true"><span>9:41</span><span class="sb-r"><i></i><i></i></span></div>
+        <div class="island" id="island" aria-hidden="true"><span class="ii" id="island-i"></span><span id="island-t"></span></div>
         <div class="screens">
           <section class="screen" id="scr-home" aria-label="Home">
             <div class="scroller home" id="scroller">
@@ -1200,9 +1178,7 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
                   <svg class="hero-art" viewBox="0 0 288 288" aria-hidden="true"><circle cx="144" cy="144" r="140" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="2"/><circle cx="144" cy="144" r="100" fill="none" stroke="rgba(255,255,255,.10)" stroke-width="2"/><circle cx="144" cy="144" r="60" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="2"/></svg>
                   <div id="hero-mods" style="display:contents"></div>
                 </div>
-                <div class="content" id="content">
-                  <div class="mods" id="modules"></div>
-                </div>
+                <div class="content" id="content"><div class="mods" id="modules"></div></div>
               </div>
             </div>
           </section>
@@ -1241,7 +1217,7 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
 
         <div class="dr-bd" id="dr-bd" hidden></div>
         <div class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="dr-h" hidden>
-          <div class="dr-hd"><div><h2 id="dr-h" tabindex="-1">More</h2><p>UT Southwestern resources and settings</p></div><button class="icon-btn ghost" id="dr-x" aria-label="Close menu"><span class="ms" aria-hidden="true">close</span></button></div>
+          <div class="dr-hd"><div><h2 id="dr-h" tabindex="-1">More</h2><p>Resources and settings</p></div><button class="icon-btn ghost" id="dr-x" aria-label="Close menu"><span class="ms" aria-hidden="true">close</span></button></div>
           <div class="dr-body" id="dr-body"></div>
         </div>
 
@@ -1256,21 +1232,21 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
         <div class="sys" id="sys" role="alertdialog" aria-modal="true" aria-labelledby="sys-h" aria-describedby="sys-p" hidden>
           <div class="sys-txt">
             <h2 id="sys-h">Allow “MyCare” to use your location?</h2>
-            <p id="sys-p">MyCare uses your location to show parking, entrances, and directions when you're at a UT Southwestern campus.</p>
+            <p id="sys-p">MyCare uses your location to show parking and directions at UT Southwestern campuses.</p>
             <span class="sys-mini" aria-hidden="true"><svg viewBox="0 0 240 72" width="100%" height="72" preserveAspectRatio="xMidYMid slice"><rect width="240" height="72" class="m-bg"/><path d="M0 36H240M80 0V72M160 0V72" class="m-road" stroke-width="10"/><circle cx="120" cy="36" r="16" fill="rgba(0,169,224,.25)"/><circle cx="120" cy="36" r="7" fill="#00A9E0" stroke="#FFFFFF" stroke-width="3"/></svg></span>
             <div class="sys-prec" id="sys-prec"><span>Precise</span><button class="sys-sw sw-row" id="sys-precise" role="switch" aria-checked="true" aria-label="Precise location"><span class="track" aria-hidden="true"></span></button></div>
           </div>
           <button data-sys="once">Allow Once</button>
           <button data-sys="always">Allow While Using App</button>
           <button data-sys="deny">Don't Allow</button>
-          <p class="sys-tag">System dialog – iOS shown; Android draws its own</p>
+          <p class="sys-tag">System dialog – iOS shown</p>
         </div>
 
         <div class="lockscr" id="lockscr" role="dialog" aria-modal="true" aria-label="Lock screen (simulated)" hidden>
           <p class="lk-time" aria-hidden="true">9:41</p>
           <p class="lk-date">Monday, Oct. 26</p>
-          <button class="lk-note" id="lk-note"><img alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDI0IDEwMjQiPjxyZWN0IHdpZHRoPSIxMDI0IiBoZWlnaHQ9IjEwMjQiIGZpbGw9IiMwMDQyNzgiLz48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLjAwIDAuMDApIHNjYWxlKDEuMDAwMDApIj48cGF0aCBkPSJNMzAwIDI5MlY1MDBBMjEyIDIxMiAwIDAgMCA3MjQgNTAwVjI5MiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjE0MCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PGNpcmNsZSBjeD0iNTEyIiBjeT0iNDY4IiByPSIxMDIiIGZpbGw9IiMwMEE5RTAiLz48L2c+PC9zdmc+"><span class="txt"><span class="hd">UTSW MyCare<small>now</small></span><p>You're near Clements University Hospital. Open MyCare for parking and directions.</p></span></button>
-          <p class="lk-cap">Simulated lock screen. The notice names only the place – visit details stay inside the app, after sign-in. Tap it to open MyCare.</p>
+          <button class="lk-note" id="lk-note"><img alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDI0IDEwMjQiPjxyZWN0IHdpZHRoPSIxMDI0IiBoZWlnaHQ9IjEwMjQiIGZpbGw9IiMwMDQyNzgiLz48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLjAwIDAuMDApIHNjYWxlKDEuMDAwMDApIj48cGF0aCBkPSJNMzAwIDI5MlY1MDBBMjEyIDIxMiAwIDAgMCA3MjQgNTAwVjI5MiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjE0MCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PGNpcmNsZSBjeD0iNTEyIiBjeT0iNDY4IiByPSIxMDIiIGZpbGw9IiMwMEE5RTAiLz48L2c+PC9zdmc+"><span class="txt"><span class="hd">UTSW MyCare<small>now</small></span><p>You're near Clements University Hospital. Open for parking and directions.</p></span></button>
+          <p class="lk-cap">Simulated lock screen · place only, no visit details</p>
         </div>
 
         <div class="toast" id="toast" role="status" aria-live="polite"><span class="toast-i" id="toast-i" aria-hidden="true"><i class="tdot"></i></span><span id="toast-t"></span><button class="toast-act" id="toast-act" hidden></button></div>
@@ -1278,180 +1254,86 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
         <div class="vh" id="live" aria-live="polite" aria-atomic="true"></div>
       </div>
     </div>
-    <p class="caption" id="cap">390 × 844 pt · simulated location · fictional sample data</p>
+    <p class="now-line" id="now-line" aria-live="polite"></p>
   </div>
 
   <section class="spec panel" id="tokens" aria-label="Token spec">
-    <h2>What's new for the location-aware home</h2>
-    <p>Everything inherits the guest flow's tokens (<code>designs/guest/</code>). New components use the same scales and roles; nothing below adds a size, color, or curve, so dark mode follows.</p>
+    <h2>New components</h2>
+    <p>All on the guest flow's tokens – no new sizes, colors, or curves, so dark mode follows.</p>
     <div class="tbl"><table>
       <thead><tr><th>Component</th><th>Tokens</th></tr></thead>
       <tbody>
-        <tr><td>Context card</td><td>First module on the light sheet · surface, r-lg, shadow-2 + 1.0 line · header s4: 12.0/700 uppercase kicker in --blue with the cyan live dot and a sample tag, 20.0/700 --ink title, 14.0 --ink-2 subline, 44.0 options button · body s4 with s4 gaps · footer hairline with two 44.0 links: Not here? and Why am I seeing this?</td></tr>
-        <tr><td>Live dot</td><td>8.0 cyan circle with a 3.0 ring at 25% · shape only, always next to words · a ring pulses twice on arrival; still with reduced motion</td></tr>
-        <tr><td>Visit strip</td><td>--bg fill, r-md, inset line · 56.0 time box in --ctl with white 18.0/700 time and 12.0/700 a.m. · 16.0/700 type, 14.0 --ink-2 meta · “From MyChart” tag · 44.0 links that say “Opens in MyChart”</td></tr>
-        <tr><td>Arrival steps</td><td>Numbered because the order is real · 32.0 circles (tint, --ctl for the current step, check when done) joined by a 2.0 --line rail · 12.0/700 kicker, 16.0/600 title, 14.0 meta · s3 between steps</td></tr>
-        <tr><td>Parking meter</td><td>8.0 pill on --tint-2, --ctl fill · the count is always written out (“About 120 spaces open”)</td></tr>
-        <tr><td>Floor chip</td><td>32.0 pill on tint, 14.0/700 --blue with the layers glyph</td></tr>
-        <tr><td>Quiet row</td><td>Away, paused, and location-off states · surface, r-lg, shadow-1 · 16.0/600 line and 14.0 --ink-2 subline · 44.0 tonal pill (solid --ctl for the one primary action)</td></tr>
-        <tr><td>Place pill</td><td>Replaces the welcome line on Blue while location content is on · 32.0 pill, white 12% fill and 20% ring, 14.0/600 white, live dot · opens Location options</td></tr>
-        <tr><td>Amenity tiles</td><td>Three across, 104.0 high, r-lg, shadow-1 · 40.0 dot, 14.0/600 label, 12.0/600 --ink-2 distance (“140 ft · this floor”), --blue when on this floor</td></tr>
-        <tr><td>Route map</td><td>240.0 high, r-lg, map tokens · route 6.0 --blue line drawn in 900 ms · you-are-here 7.0 cyan dot with a white ring · labels 12.0/600 --ink on --map-bg · floor chips under it</td></tr>
-        <tr><td>Lock screen</td><td>System-drawn, simulated · Blue with the hero glow · 64.0/600 clock (platform size) · notification on surface, 40.0 app icon (unaltered), 14.0/700 title, 14.0 body that names the place only</td></tr>
-        <tr><td>Precise switch</td><td>In the system dialog · the standard 52.0 × 32.0 switch</td></tr>
-        <tr><td>Transition</td><td>Leaving modules fade up 160 ms · the context card enters on spring-gentle (8.0 rise, 98% scale) · kept modules slide on spring-snappy · floor changes cross-fade the card body in 240 ms · reduced motion cross-fades everything</td></tr>
+        <tr><td>Context card</td><td>r-xl surface, shadow-2 · map strip 120.0 · 18.0/700 place, 14.0 status with live dot · s4 body</td></tr>
+        <tr><td>Map strip</td><td>Map tokens · route 6.0 --blue, draws in 1000 ms · car --ctl with white ring · door pulse cyan ×3</td></tr>
+        <tr><td>Step tracker</td><td>40.0 circles (--ctl when done or now, cyan 6.0 halo on now) · 4.0 track --tint-2, fill --ctl grows on spring-snappy · 12.0 labels</td></tr>
+        <tr><td>Floor stack</td><td>7 bars 12.0 high, 4.0 gap, r 4.0 · destination --ctl with a pin · you: 12.0 cyan dot, slides between floors in 900 ms</td></tr>
+        <tr><td>Icon tiles</td><td>80.0 wide · 48.0 dot · 12.0/600 label, 12.0 distance (--blue on this floor) · stagger 40 ms</td></tr>
+        <tr><td>Island</td><td>--inverse pill, 40.0 high, 32.0 cyan icon · drops in on spring-snappy, lifts after 2.8 s</td></tr>
+        <tr><td>Quiet row</td><td>r-lg surface, shadow-1 · 16.0/600 line, 14.0 sub · one 44.0 pill</td></tr>
+        <tr><td>Hero ping</td><td>The three hero rings scale from 55% and fade in, 140 ms apart, when a context starts</td></tr>
       </tbody>
     </table></div>
-
-    <h2>Type, spacing, color, motion</h2>
-    <p>Type 12.0–32.0, even sizes only (64.0 only on the simulated lock-screen clock, which the phone draws). Spacing 4.0–48.0. Radii 8.0, 12.0, 16.0, 24.0, pill. Targets 44.0 minimum, 48.0 for primary buttons.</p>
-    <div class="tbl"><table>
-      <tbody>
-        <tr><td><span class="sw" style="background:#004278"></span>Blue #004278</td><td>Hero, place pill ground, time box and current step (control Blue #2D6CA6 in dark) · white on Blue 10.24:1</td></tr>
-        <tr><td><span class="sw" style="background:#EBF0F5"></span>Tint #EBF0F5</td><td>Step circles, floor chip, quiet-row pills · Blue on tint 8.93:1</td></tr>
-        <tr><td><span class="sw" style="background:#00A9E0"></span>Cyan #00A9E0</td><td>Shapes only – live dot, you-are-here dot</td></tr>
-        <tr><td><span class="sw" style="background:#5B6770"></span>#5B6770</td><td>Distances, sublines, sample tags · 5.46:1 on #F7F8FA</td></tr>
-      </tbody>
-    </table></div>
+    <h2>Reduced motion</h2>
+    <p>Everything cross-fades. The car rests at the garage, the door pulse and rings stay still, the floor dot jumps.</p>
     <p>Full spec: <code>designs/geo/TOKENS.md</code>.</p>
   </section>
 
-  <section class="wide panel" id="model" aria-labelledby="model-h">
+  <section class="wide panel" id="how" aria-labelledby="how-h">
     <header>
-      <p class="kicker">Context model</p>
-      <h2 id="model-h">One homepage, a context layer on top</h2>
-      <p>MyCare works out a context from a few signals, then puts that context first. Search, Quick links, the tabs, the menu, and every common module stay on the page in every state – they only move down.</p>
+      <p class="kicker">How it works</p>
+      <h2 id="how-h">The home re-composes at each step</h2>
+      <p>The context card sits on top; what matters here moves up. Search, Quick links, and every other module stay.</p>
     </header>
-    <div class="cov-wrap"><table class="cov">
-      <thead><tr><th>Context</th><th>Signals</th><th>What the home shows first</th><th>Hero and search</th></tr></thead>
-      <tbody>
-        <tr><td>Away</td><td>No location, or a location away from campus; or the feature is off</td><td><b>Nothing new.</b> The common homepage, with one quiet row: Turn on (not asked yet), I'm at a campus (allowed), or Choose a campus (denied or off)</td><td>Welcome line, common top searches</td></tr>
-        <tr><td>Arriving</td><td>Precise location within about a mile of Clements, not yet on foot; today's visit from MyChart (signed in)</td><td><b>Context card:</b> today's visit, then Park → Enter → Go to with garage availability, the best entrance, floor and suite; Start directions. <b>Parking</b> module next</td><td>Place pill; “You're almost here”; top searches Parking, Main entrance, Valet, Accessible parking</td></tr>
-        <tr><td>At the entrance</td><td>Precise location at the main entrance geofence</td><td><b>Context card:</b> the next step (elevator and floor), Start indoor directions, Check in (opens in MyChart), Save where you parked. <b>Good to know here</b> next</td><td>“You've arrived”; top searches Restrooms, Café, Pharmacy, Elevators</td></tr>
-        <tr><td>Inside, by floor</td><td>Indoor positioning: building and floor (zone)</td><td><b>Context card:</b> your floor, the rest of the route, or “You've arrived” on the clinic's floor with Check in. Then <b>Nearby</b> amenities, <b>Departments</b> by floor, <b>Hospital resources</b></td><td>“Find your way inside”; search lists this building's places first</td></tr>
-        <tr><td>Cancer center</td><td>Precise location at Simmons Cancer Center; today's visit there (signed in)</td><td><b>Context card:</b> today's visit, Park → Enter → Go to. Then <b>Support services</b>, <b>Patient education</b>, and <b>Nearby</b> amenities, all approved cancer center content</td><td>“You've arrived”; top searches Support groups, Nutrition, Café, Parking</td></tr>
-        <tr><td>Near campus (approximate)</td><td>Approximate location only</td><td><b>Context card:</b> which building are you at? (your visit's building marked), Use precise location</td><td>Place pill reads Dallas campus</td></tr>
-        <tr><td>Location unavailable</td><td>Allowed, but no fix</td><td><b>Fallback card:</b> I'm at Clements or Simmons, Another UTSW location, Enter a ZIP code or city, Try again. Everything else works without location</td><td>Welcome line</td></tr>
-        <tr><td>You chose</td><td>Manual pick (always available, no permission needed)</td><td>Same as the chosen context, labelled “You chose this location” with Change and Clear</td><td>Same as chosen</td></tr>
-        <tr><td>Paused</td><td>Show the common homepage, or Not here?, for this place today</td><td>Common homepage with a quiet row: paused here · Show again</td><td>Welcome line</td></tr>
-      </tbody>
-    </table></div>
-    <p class="note2">Precedence: a manual choice wins; then the feature setting (off means common); then permission (ask or denied mean common, with a row that offers a way in); then the fix (none means the fallback card); then accuracy (approximate means “which building?”); then the place and floor. Pausing applies to one place for the rest of the day; leaving the place clears it.</p>
-  </section>
-
-  <section class="wide panel" id="flow" aria-labelledby="flow-h">
-    <header>
-      <p class="kicker">Flow map</p>
-      <h2 id="flow-h">Location transitions</h2>
-      <p>The patient's journey, left to right. Each step re-composes the same homepage; buttons move the prototype there with precise location allowed.</p>
-    </header>
-    <p class="flowline" aria-label="Journey"><span>Away</span><i aria-hidden="true">→</i><span>Arriving</span><i aria-hidden="true">→</i><span>Entrance</span><i aria-hidden="true">→</i><span>Inside · Floor 1</span><i aria-hidden="true">→</i><span>Inside · Floor 7</span><i aria-hidden="true">→</i><span>Away</span></p>
-    <div class="states">
-      <article class="st-node"><p class="k">1 · Away</p><h3>Common homepage</h3><p>Unchanged, plus one quiet row. Location is never asked for on launch.</p><button class="go-to" data-jump="away">Show away</button></article>
-      <article class="st-node"><p class="k">2 · Arriving</p><h3>Re-composes for arrival</h3><p>Leaving modules fade, the card rises in, a toast says why with Hide. Parking moves up.</p><button class="go-to" data-jump="arriving">Show arriving</button></article>
-      <article class="st-node"><p class="k">3 · Entrance</p><h3>Next step and check-in</h3><p>Steps 1 and 2 tick off. Check in hands off to MyChart.</p><button class="go-to" data-jump="entrance">Show entrance</button></article>
-      <article class="st-node"><p class="k">4 · Inside</p><h3>Floor by floor</h3><p>Floor changes cross-fade the card; amenities re-sort by distance. Arriving on the clinic's floor says so.</p><button class="go-to" data-jump="inside">Show inside</button></article>
-      <article class="st-node"><p class="k">5 · Cancer center</p><h3>Simmons content</h3><p>The visit there, directions, support services, and education.</p><button class="go-to" data-jump="cancer">Show cancer center</button></article>
-      <article class="st-node"><p class="k">6 · Leaving</p><h3>Back to common</h3><p>The card leaves, modules settle back to the CMS order, and a toast offers the saved parking spot.</p><button class="go-to" data-jump="leave">Show leaving</button></article>
+    <div class="jcards">
+      <article class="jcard"><span class="jd"><span class="ms s20" aria-hidden="true">home</span></span><h3>Away</h3><ul class="chiplist"><li>Common homepage</li><li>Turn on row</li></ul><button class="go-to" data-jump="away">Show</button></article>
+      <article class="jcard"><span class="jd"><span class="ms s20" aria-hidden="true">directions_car</span></span><h3>Arriving</h3><ul class="chiplist"><li>Visit time</li><li>Park → Enter → Floor</li><li>Parking</li></ul><button class="go-to" data-jump="arriving">Show</button></article>
+      <article class="jcard"><span class="jd"><span class="ms s20" aria-hidden="true">door_open</span></span><h3>At the entrance</h3><ul class="chiplist"><li>Next step</li><li>Check in in MyChart</li><li>Nearby</li></ul><button class="go-to" data-jump="entrance">Show</button></article>
+      <article class="jcard"><span class="jd"><span class="ms s20" aria-hidden="true">layers</span></span><h3>Inside</h3><ul class="chiplist"><li>Floor stack</li><li>Arrived</li><li>Departments</li></ul><button class="go-to" data-jump="inside">Show</button></article>
+      <article class="jcard"><span class="jd"><span class="ms s20" aria-hidden="true">apartment</span></span><h3>Cancer center</h3><ul class="chiplist"><li>Visit</li><li>Support</li><li>Learn</li></ul><button class="go-to" data-jump="cancer">Show</button></article>
     </div>
-    <div class="cols2" style="margin-top:24.0px">
-      <article>
-        <h3>How a transition behaves</h3>
-        <ul class="plain">
-          <li><b>Gentle:</b> MyCare waits for a steady reading (about 30 seconds in a real build) before re-composing, so driving past campus doesn't flip the home.</li>
-          <li><b>Announced once:</b> a short toast and a polite screen-reader message (“Arriving at Clements University Hospital. Parking and directions are at the top.”), with Hide.</li>
-          <li><b>Never mid-task:</b> if a sheet, search, or page is open, the home re-composes underneath and the toast waits.</li>
-          <li><b>Floors are quiet:</b> a floor change updates the card in place, without a toast.</li>
-          <li><b>Leaving</b> returns to the common homepage and clears any pause for that place.</li>
-        </ul>
-      </article>
-      <article>
-        <h3>Manual access, always</h3>
-        <ul class="plain">
-          <li><b>I'm at…</b> – pick Clements (then where: on the way, entrance, or a floor) or Simmons. Works with location denied or off.</li>
-          <li><b>Not here?</b> – correct a wrong place: pick the right one, or say you're not at a campus (pauses it here).</li>
-          <li><b>Show the common homepage</b> – pauses this place for today, with Undo.</li>
-          <li><b>Location and your home</b> (menu) – turn the feature off, manage arrival notices, see what's used.</li>
-        </ul>
-      </article>
-    </div>
+    <p class="flowline" aria-label="What the home uses"><span>Location</span><i aria-hidden="true">+</i><span>Floor</span><i aria-hidden="true">+</i><span>Today's visit (MyChart)</span><i aria-hidden="true">+</i><span>Building info</span><i aria-hidden="true">→</i><span class="out">Context card</span></p>
   </section>
 
   <section class="wide panel" id="perm" aria-labelledby="perm-h">
-    <header>
-      <p class="kicker">Permission and fallbacks</p>
-      <h2 id="perm-h">Ask only when it helps, and always leave a way in</h2>
-    </header>
-    <div class="cov-wrap"><table class="cov">
-      <thead><tr><th>State</th><th>What the patient sees</th><th>Way forward</th></tr></thead>
-      <tbody>
-        <tr><td>Not asked</td><td>Quiet row: “Get help when you arrive” – with today's visit named when signed in</td><td><b>Turn on</b> → an explanation sheet first (what you get, what's used, what isn't) → the system dialog. <b>Choose a campus</b> skips location entirely. <b>Not now</b> hides the row this session</td></tr>
-        <tr><td>Allowed, precise</td><td>Full context: building, entrance, floor</td><td>Options: Not here?, Show the common homepage, Location settings</td></tr>
-        <tr><td>Allowed, approximate</td><td>“You're near the Dallas campus” – which building?</td><td>Pick a building, or Use precise location (the system's one-time precise prompt)</td></tr>
-        <tr><td>Denied</td><td>Quiet row: “Location is off for MyCare”</td><td><b>Choose where you are</b> (manual), or Open Settings from Location settings. Nothing is blocked</td></tr>
-        <tr><td>No fix</td><td>Fallback card: “We can't find your location right now”</td><td>I'm at Clements or Simmons, Another UTSW location, Enter a ZIP code or city, Try again</td></tr>
-        <tr><td>Feature off</td><td>Common homepage with “Choose a campus”</td><td>Turn on again in Location and your home</td></tr>
-      </tbody>
-    </table></div>
+    <header><p class="kicker">Permission and fallbacks</p><h2 id="perm-h">Never asked on launch, always a way in</h2></header>
+    <div class="mini">
+      <article><h3>Not asked</h3><p>A Turn on row. MyCare explains, then the system asks.</p></article>
+      <article><h3>Allowed</h3><p>Full context. Not here? and Show common homepage in options.</p></article>
+      <article><h3>Approximate</h3><p>“Which building?” with two big choices.</p></article>
+      <article><h3>Denied</h3><p>Choose where you are – no location needed.</p></article>
+      <article><h3>No signal</h3><p>Pick a building, another location, or a ZIP code.</p></article>
+    </div>
   </section>
 
   <section class="wide panel" id="privacy" aria-labelledby="priv-h">
-    <header>
-      <p class="kicker">Privacy and trust</p>
-      <h2 id="priv-h">Show what's on, say why, keep it on the phone</h2>
-      <p>Design intent for this prototype. UTSW privacy, compliance, and Epic teams set the final policy before anything ships.</p>
-    </header>
-    <div class="cols2">
-      <article>
-        <h3>In the experience</h3>
-        <ul class="plain">
-          <li><b>Explain first:</b> a MyCare sheet explains the value and the limits before the system dialog appears. Never on launch.</li>
-          <li><b>Visible when active:</b> the live dot and place pill on the hero, and “Simulated location · Precise” (or “You chose this location”) on the card.</li>
-          <li><b>Why am I seeing this?</b> on every context card lists the signals used and where each comes from.</li>
-          <li><b>Correctable:</b> Not here? on every card; Show the common homepage on every card's options.</li>
-          <li><b>Lock screen:</b> an arrival notice names the place only. Visit type, provider, and time stay in the app, behind sign-in.</li>
-        </ul>
-      </article>
-      <article>
-        <h3>Data handling (to confirm)</h3>
-        <ul class="plain">
-          <li>Location is read only while MyCare is open (“While Using App”); no background tracking in this phase.</li>
-          <li>Location decides the home on the device. It isn't stored, sent to the care team, or added to the medical record.</li>
-          <li>Visit details come from MyChart through the Epic integration and show only after sign-in.</li>
-          <li>Pauses, Not here?, and the feature setting stay on the device.</li>
-          <li>Approximate location is fully supported – it just asks which building.</li>
-        </ul>
-      </article>
+    <header><p class="kicker">Privacy</p><h2 id="priv-h">Visible, explained, on the phone</h2><p>Design intent – UTSW privacy and Epic teams confirm.</p></header>
+    <div class="mini">
+      <article><h3>Visible</h3><p>Live dot and place pill whenever location changes the home.</p></article>
+      <article><h3>Explained</h3><p>Why you see this lists each signal and its source.</p></article>
+      <article><h3>On the phone</h3><p>Read only while open. Not stored or sent to the care team.</p></article>
+      <article><h3>Lock screen</h3><p>Names the place only. Visit details stay behind sign-in.</p></article>
+      <article><h3>Epic stays Epic</h3><p>Visit details and check-in open in MyChart.</p></article>
     </div>
   </section>
 
   <section class="wide panel" id="integrations" aria-labelledby="int-h">
-    <header>
-      <p class="kicker">Real integrations</p>
-      <h2 id="int-h">What this prototype simulates, and what a real build needs</h2>
-      <p>Nothing here assumes GPS geofencing, indoor positioning, or Epic modules already exist. Each is labelled as prototype behavior in the app.</p>
-    </header>
+    <header><p class="kicker">Real integrations</p><h2 id="int-h">Simulated here, needed for real</h2></header>
     <div class="cov-wrap"><table class="cov">
-      <thead><tr><th>Capability</th><th>In this prototype</th><th>Real system required</th></tr></thead>
+      <thead><tr><th>Capability</th><th>Real system</th></tr></thead>
       <tbody>
-        <tr><td>Arrival and campus detection</td><td>Board control “Simulated location”</td><td>iOS Core Location and Android Fused Location with region monitoring (geofences) around each campus, garage, and entrance; debouncing and dwell time; campus polygons managed in the CMS</td></tr>
-        <tr><td>Indoor position and floor</td><td>Board control “Inside: floor”</td><td>An indoor positioning system (BLE beacons or Wi-Fi RTT) with a wayfinding vendor SDK, floor detection, and maintained floor plans; graceful fallback to building-level only</td></tr>
-        <tr><td>Today's visit, check-in</td><td>Fictional sample patient; “Opens in MyChart” toasts</td><td>Epic MyChart integration (SDK or approved APIs) for upcoming visits and department; eCheck-in, visit details, messages, results, and bill pay stay in Epic's modules – MyCare only hands off</td></tr>
-        <tr><td>Destination: building, floor, suite</td><td>Sample mapping from department to suite</td><td>A department-to-location directory (Epic department records mapped to buildings, floors, suites, and the best entrance), owned by facilities</td></tr>
-        <tr><td>Parking availability and rates</td><td>Static sample counts</td><td>A parking system feed (garage occupancy sensors or the operator's API), rates from the CMS; hide the meter when the feed is stale</td></tr>
-        <tr><td>Amenities, hours, resources</td><td>Sample data</td><td>CMS content per building and floor with hours and publication rules; cancer center content approved by its own editors</td></tr>
-        <tr><td>Arrival notification</td><td>Simulated lock screen</td><td>Local notification triggered by a geofence, with copy approved by privacy; user setting in the app</td></tr>
-        <tr><td>Precise vs approximate</td><td>Board control “Accuracy”</td><td>iOS reduced accuracy and temporary full-accuracy request; Android coarse vs fine permission</td></tr>
+        <tr><td>Arrival and campus</td><td>Geofences around campuses, garages, and entrances (Core Location, Fused Location), with dwell time</td></tr>
+        <tr><td>Floor and indoor route</td><td>Indoor positioning (BLE or Wi-Fi RTT) and a wayfinding SDK with floor plans</td></tr>
+        <tr><td>Today's visit, check-in</td><td>Epic MyChart integration; MyCare only hands off</td></tr>
+        <tr><td>Floor, suite, entrance</td><td>Department directory mapped to buildings</td></tr>
+        <tr><td>Parking spaces</td><td>Garage occupancy feed</td></tr>
+        <tr><td>Amenities, support</td><td>CMS content per building, approved by each center</td></tr>
+        <tr><td>Arrival notice</td><td>Geofence-triggered local notification</td></tr>
       </tbody>
     </table></div>
   </section>
 
   <section class="wide panel" id="glyphs" aria-labelledby="gl-h">
-    <header>
-      <p class="kicker">Iconography</p>
-      <h2 id="gl-h">Glyph map for the location-aware home</h2>
-      <p>Same family and rules as the guest flow: Material Symbols Rounded, one color, one glyph per concept, outline at rest and filled when selected. 83 concepts in a 129&nbsp;KB subset.</p>
-    </header>
+    <header><p class="kicker">Iconography</p><h2 id="gl-h">Glyph map</h2><p>Material Symbols Rounded, one glyph per concept. 80 concepts, 125&nbsp;KB subset.</p></header>
     <div class="gmap-groups" id="ic-map"></div>
   </section>
 </div>
@@ -1463,12 +1345,12 @@ const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const phone = $('#phone');
 const sysRM = matchMedia('(prefers-reduced-motion: reduce)');
 /* sim: where the phone really is (board). perm and fix: what the phone lets MyCare know. geoOn: the in-app setting. */
-const state = { alerts: 1, rm: sysRM.matches, alertOpen: false, tab: 0, feat: 0, fluCal: false, sim: 'away', zone: 'f1', perm: 'ask', fix: true, acc: 'precise', auth: 'patient', geoOn: true, notif: true, locType: '' };
+const state = { alerts: 0, rm: sysRM.matches, alertOpen: false, tab: 0, feat: 0, fluCal: false, sim: 'away', zone: 'f1', perm: 'ask', fix: true, acc: 'precise', auth: 'patient', geoOn: true, notif: true, locType: '' };
 const RM = () => state.rm;
 let manual = null;      // { id, zone } – the patient's own choice; always wins
 let paused = null;      // { pk, why } – common homepage at this place for today
 let dest = {};          // guest's chosen destination per place
-let offerHidden = false, parked = false, routeView = null, pendingToast = null;
+let offerHidden = false, routeView = null, pendingToast = null;
 
 /* Keep times, abbreviated dates, and “UT Southwestern” from breaking across lines (style guide) */
 const NB = [[/(\d) (a\.m\.|p\.m\.|mi\b|ft\b|min\b)/g, '$1 $2'], [/\b(Jan|Feb|Aug|Sept|Oct|Nov|Dec)\. (\d)/g, '$1. $2'], [/UT Southwestern/g, 'UT Southwestern'], [/Dr\. (\w)/g, 'Dr. $1'], [/(Floor|Suite|Level|Elevator) (\w)/g, '$1 $2']];
@@ -1505,7 +1387,6 @@ const ICON_MAP = [
   ['pick', 'pin_drop', 'Choose where you are', 'I’m at… sheet, manual context', 'Location-aware home'],
   ['options', 'more_vert', 'Location options', 'Context card', 'Location-aware home'],
   ['pause', 'pause_circle', 'Common homepage here (paused)', 'Options, paused row', 'Location-aware home'],
-  ['notify', 'notifications', 'Arrival notice', 'Location settings', 'Location-aware home'],
   ['hospital', 'domain', 'Hospitals', 'Context card, Locations', 'Places'],
   ['building', 'apartment', 'Buildings and centers', 'Context card, Locations', 'Places'],
   ['clinic', 'door_front', 'Clinics and departments', 'Locations, departments', 'Places'],
@@ -1515,7 +1396,7 @@ const ICON_MAP = [
   ['entrance', 'door_open', 'Entrance', 'Steps', 'Places'],
   ['elevator', 'elevator', 'Elevator', 'Steps, route', 'Places'],
   ['floor', 'layers', 'Floor', 'Floor chip', 'Places'],
-  ['car', 'directions_car', 'Where you parked', 'Entrance card, leaving toast', 'Places'],
+  ['car', 'directions_car', 'Arriving', 'Journey, arrival notice', 'Places'],
   ['navigate', 'navigation', 'Start directions', 'Context card, Wayfinding', 'Wayfinding'],
   ['directions', 'directions', 'Directions in your map app', 'Steps, location pages', 'Wayfinding'],
   ['indoor', 'map', 'Indoor maps', 'Wayfinding', 'Wayfinding'],
@@ -1564,8 +1445,6 @@ const ICON_MAP = [
   ['close', 'close', 'Close or clear', 'Search, sheets', 'Controls and feedback'],
   ['external', 'open_in_new', 'Opens in MyChart or the browser', 'Hand-off links', 'Controls and feedback'],
   ['copy', 'content_copy', 'Copy', 'Phone numbers', 'Controls and feedback'],
-  ['call', 'call', 'Call', 'Pages', 'Controls and feedback'],
-  ['refresh', 'refresh', 'Try again', 'Fallback card', 'Controls and feedback'],
   ['info', 'info', 'Information and why', 'Notes, Why am I seeing this?', 'Controls and feedback'],
   ['show', 'visibility', 'Show password', 'MyChart sign-in', 'Controls and feedback'],
   ['hide', 'visibility_off', 'Hide password', 'MyChart sign-in', 'Controls and feedback'],
@@ -1593,19 +1472,19 @@ const persist = () => { try { localStorage.setItem(KEY, JSON.stringify({ theme }
 /* ---------- Places (real building names; everything inside them is sample data) ---------- */
 const PLACES = {
   cuh: {
-    full: 'William P. Clements Jr. University Hospital', short: 'Clements University Hospital', pill: 'Clements University Hospital', ic: 'hospital', away: 'About 0.8 mi away',
+    full: 'William P. Clements Jr. University Hospital', short: 'Clements University Hospital', nick: 'Clements', pill: 'Clements University Hospital', ic: 'hospital', away: 'About 0.8 mi away',
     ent: { t: 'Main entrance', s: 'East drive, closest to Elevator B' }, elev: 'Elevator B', walk: 'Take the Level 2 walkway into the hospital',
     park: [
-      { k: 'gA', ic: 'parking', t: 'Garage A', s: 'Closest to the main entrance · $5 a day for patients', open: 120, cap: 600 },
-      { k: 'val', ic: 'valet', t: 'Valet at the main entrance', s: '$10 · 6 a.m. to 9 p.m.' },
-      { k: 'acc', ic: 'accessible', t: 'Accessible parking', s: 'Garage A, Level 1, next to the elevators' }
+      { k: 'gA', ic: 'parking', t: 'Garage A', val: '120 open', s: 'Closest to the main entrance · $5 a day for patients', open: 120, cap: 600 },
+      { k: 'val', ic: 'valet', t: 'Valet', val: '$10', s: '$10 · 6 a.m. to 9 p.m.' },
+      { k: 'acc', ic: 'accessible', t: 'Accessible parking', val: 'Level 1', s: 'Garage A, Level 1, next to the elevators' }
     ],
     depts: [
-      { k: 'admit', t: 'Admitting', floor: 1, suite: 'Suite 1100', room: 'a' },
-      { k: 'lab', t: 'Lab and blood draw', floor: 1, suite: 'Suite 1300', room: 'b' },
-      { k: 'imaging', t: 'Imaging', floor: 2, suite: 'Suite 2100', room: 'a' },
-      { k: 'heart', t: 'Heart and vascular clinic', floor: 7, suite: 'Suite 7200', room: 'a' },
-      { k: 'hearttest', t: 'Heart testing', floor: 7, suite: 'Suite 7400', room: 'b' }
+      { k: 'admit', t: 'Admitting', short: 'Admitting', floor: 1, suite: 'Suite 1100', room: 'a' },
+      { k: 'lab', t: 'Lab and blood draw', short: 'Lab', floor: 1, suite: 'Suite 1300', room: 'b' },
+      { k: 'imaging', t: 'Imaging', short: 'Imaging', floor: 2, suite: 'Suite 2100', room: 'a' },
+      { k: 'heart', t: 'Heart and vascular clinic', short: 'Heart clinic', floor: 7, suite: 'Suite 7200', room: 'a' },
+      { k: 'hearttest', t: 'Heart testing', short: 'Heart testing', floor: 7, suite: 'Suite 7400', room: 'b' }
     ],
     amen: [
       { k: 'cafe', ic: 'food', t: 'Café', floor: 1, ft: 140, where: 'Floor 1, east wing', hours: '6 a.m. to 8 p.m.', room: 'e' },
@@ -1613,22 +1492,22 @@ const PLACES = {
       { k: 'wc', ic: 'restroom', t: 'Restrooms', every: true, ft: 60, where: 'Every floor, next to the elevators', hours: 'Open 24 hours', room: 'c' },
       { k: 'chapel', ic: 'chapel', t: 'Chapel', floor: 2, ft: 180, where: 'Floor 2, west wing · open to all faiths', hours: 'Open 24 hours', room: 'e' },
       { k: 'atm', ic: 'atm', t: 'ATM', floor: 1, ft: 80, where: 'Floor 1, main lobby', hours: 'Open 24 hours', room: 'b' },
-      { k: 'desk', ic: 'infoDesk', t: 'Information desk', floor: 1, ft: 40, where: 'Floor 1, main lobby · interpreters on request', hours: '6 a.m. to 9 p.m.', room: 'd' }
+      { k: 'desk', ic: 'infoDesk', t: 'Info desk', floor: 1, ft: 40, where: 'Floor 1, main lobby · interpreters on request', hours: '6 a.m. to 9 p.m.', room: 'd' }
     ],
     visit: { tm: '10:30', ap: 'a.m.', time: '10:30 a.m.', type: 'Follow-up visit', pv: 'Taylor Brooks, M.D.', dept: 'heart' }
   },
   scc: {
-    full: 'Harold C. Simmons Comprehensive Cancer Center', short: 'Simmons Cancer Center', pill: 'Simmons Cancer Center', ic: 'building', away: 'About 0.6 mi away',
+    full: 'Harold C. Simmons Comprehensive Cancer Center', short: 'Simmons Cancer Center', nick: 'Simmons', pill: 'Simmons Cancer Center', ic: 'building', away: 'About 0.6 mi away',
     ent: { t: 'Simmons main entrance', s: 'Floor 1, next to the garage walkway' }, elev: 'Elevator A', walk: 'Follow the covered walkway to the entrance',
     park: [
-      { k: 'gS', ic: 'parking', t: 'Simmons garage', s: 'Free with validation at check-in', open: 64, cap: 300 },
-      { k: 'valS', ic: 'valet', t: 'Valet at the Simmons entrance', s: 'Free for patients in treatment · 7 a.m. to 6 p.m.' },
-      { k: 'accS', ic: 'accessible', t: 'Accessible parking', s: 'Simmons garage, Level 1, by the walkway' }
+      { k: 'gS', ic: 'parking', t: 'Simmons garage', val: '64 open', s: 'Free with validation at check-in', open: 64, cap: 300 },
+      { k: 'valS', ic: 'valet', t: 'Valet', val: 'Free', s: 'Free for patients in treatment · 7 a.m. to 6 p.m.' },
+      { k: 'accS', ic: 'accessible', t: 'Accessible parking', val: 'Level 1', s: 'Simmons garage, Level 1, by the walkway' }
     ],
     depts: [
-      { k: 'onc', t: 'Medical oncology clinic', floor: 4, suite: 'Suite 4100', room: 'a' },
-      { k: 'rad', t: 'Radiation oncology', floor: 1, suite: 'Suite 1500', room: 'd' },
-      { k: 'prc', t: 'Patient and family resource center', floor: 2, suite: 'Suite 2200', room: 'b' }
+      { k: 'onc', t: 'Medical oncology clinic', short: 'Oncology', floor: 4, suite: 'Suite 4100', room: 'a' },
+      { k: 'rad', t: 'Radiation oncology', short: 'Radiation', floor: 1, suite: 'Suite 1500', room: 'd' },
+      { k: 'prc', t: 'Patient and family resource center', short: 'Resource center', floor: 2, suite: 'Suite 2200', room: 'b' }
     ],
     amen: [
       { k: 'cafeS', ic: 'food', t: 'Café', floor: 1, ft: 100, where: 'Floor 1, atrium', hours: '7 a.m. to 4 p.m.', room: 'e' },
@@ -1636,7 +1515,7 @@ const PLACES = {
       { k: 'lib', ic: 'guide', t: 'Resource library', floor: 2, ft: 120, where: 'Floor 2, in the patient and family resource center', hours: 'Weekdays, 8 a.m. to 5 p.m.', room: 'b' },
       { k: 'quiet', ic: 'chapel', t: 'Quiet room', floor: 2, ft: 160, where: 'Floor 2, east side', hours: 'Open during clinic hours', room: 'e' },
       { k: 'atmS', ic: 'atm', t: 'ATM', floor: 1, ft: 70, where: 'Floor 1, atrium', hours: 'Open during clinic hours', room: 'b' },
-      { k: 'deskS', ic: 'infoDesk', t: 'Information desk', floor: 1, ft: 30, where: 'Floor 1, atrium · interpreters on request', hours: '7 a.m. to 6 p.m.', room: 'd' }
+      { k: 'deskS', ic: 'infoDesk', t: 'Info desk', floor: 1, ft: 30, where: 'Floor 1, atrium · interpreters on request', hours: '7 a.m. to 6 p.m.', room: 'd' }
     ],
     visit: { tm: '2', ap: 'p.m.', time: '2 p.m.', type: 'Medical oncology visit', pv: 'Casey Moreno, M.D.', dept: 'onc' }
   }
@@ -1672,7 +1551,7 @@ const LOCKED = [
   { k: 'visits', lbl: 'Manage Your Visits', ic: 'visits', why: 'manage your visits', what: 'See upcoming visits, check in early, and cancel or reschedule.' },
   { k: 'bill', lbl: 'Manage Billing', ic: 'bill', why: 'manage billing', what: 'View statements, pay online, and set up a payment plan.' }
 ];
-const TOP = { common: ['Primary care', 'Urgent care wait times', 'Parking', 'Flu shots'], arriving: ['Parking', 'Main entrance', 'Valet', 'Accessible parking'], inside: ['Restrooms', 'Café', 'Pharmacy', 'Elevators', 'Information desk'], cancer: ['Support groups', 'Nutrition', 'Café', 'Parking'] };
+const TOP = { common: ['Primary care', 'Urgent care wait times', 'Parking', 'Flu shots'], arriving: ['Parking', 'Main entrance', 'Valet', 'Accessible parking'], inside: ['Restrooms', 'Café', 'Pharmacy', 'Elevators'], cancer: ['Support groups', 'Nutrition', 'Café', 'Parking'] };
 const ART = {
   a: { dark: true, svg: '<rect width="304" height="144" fill="#004278"/><circle cx="268" cy="8" r="120" fill="#336893"/><path d="M160 -12v72a56 56 0 0 0 112 0v-72" fill="none" stroke="#7BAFD4" stroke-width="20" stroke-linecap="round"/><circle cx="216" cy="64" r="12" fill="#00A9E0"/><circle cx="56" cy="112" r="40" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="2"/>' },
   b: { dark: false, svg: '<rect width="304" height="144" fill="#D6E4F0"/><circle cx="212" cy="72" r="52" fill="#004278"/><circle cx="236" cy="56" r="44" fill="#D6E4F0"/><g fill="#336893"><circle cx="72" cy="40" r="3"/><circle cx="104" cy="88" r="2"/><circle cx="56" cy="104" r="2"/><circle cx="132" cy="36" r="2"/></g><circle cx="168" cy="100" r="8" fill="#00A9E0"/>' },
@@ -1703,23 +1582,15 @@ const ANN = [
   { k: 'ann2', m: 'Oct.', d: '6', t: 'New visitor hours start Nov. 1', s: 'Two visitors at a time, 8 a.m. to 8 p.m.' }
 ];
 const HOSP_RES = [
-  { k: 'visitors', t: 'Visitor guide and hours', s: 'Badges, visiting hours, and rules', ic: 'time' },
-  { k: 'wifi', t: 'Guest Wi-Fi', s: 'Free, no password needed', ic: 'wifi' },
-  { k: 'interp', t: 'Interpreter services', s: 'Free, in person or by video', ic: 'language' },
-  { k: 'relations', t: 'Patient relations', s: 'Questions or concerns about your care', ic: 'help' },
-  { k: 'shuttle', t: 'Campus shuttle', s: 'Every 15 minutes between buildings', ic: 'shuttle' }
+  { k: 'visitors', t: 'Visitor hours', ic: 'time' }, { k: 'wifi', t: 'Guest Wi-Fi', ic: 'wifi' },
+  { k: 'interp', t: 'Interpreters', ic: 'language' }, { k: 'shuttle', t: 'Campus shuttle', ic: 'shuttle' }
 ];
 const SUPPORT = [
-  { k: 'navigators', t: 'Patient navigators', s: 'One person to help you through treatment', ic: 'navigator' },
-  { k: 'social', t: 'Social work and counseling', s: 'Emotional, practical, and financial support', ic: 'counsel' },
-  { k: 'nutrition', t: 'Nutrition', s: 'Eating well during and after treatment', ic: 'nutrition' },
-  { k: 'integrative', t: 'Integrative medicine', s: 'Massage, acupuncture, and mind-body classes', ic: 'integrative' },
-  { k: 'groups', t: 'Support groups', s: 'For patients, survivors, and caregivers', ic: 'groups' }
+  { k: 'navigators', t: 'Navigators', ic: 'navigator' }, { k: 'social', t: 'Counseling', ic: 'counsel' }, { k: 'nutrition', t: 'Nutrition', ic: 'nutrition' },
+  { k: 'integrative', t: 'Wellness', ic: 'integrative' }, { k: 'groups', t: 'Groups', ic: 'groups' }
 ];
 const EDUCATION = [
-  { k: 'prep', t: 'Preparing for treatment', s: 'What to bring and what to expect', ic: 'education' },
-  { k: 'sidefx', t: 'Managing side effects', s: 'When to call your care team', ic: 'article' },
-  { k: 'caregivers', t: 'A guide for caregivers', s: 'How to help, and how to get help', ic: 'caregiver' }
+  { k: 'prep', t: 'Preparing for treatment', ic: 'education' }, { k: 'sidefx', t: 'Managing side effects', ic: 'article' }, { k: 'caregivers', t: 'For caregivers', ic: 'caregiver' }
 ];
 const PAGES = {
   rank: { kick: 'UTSW resources', title: 'Nationally recognized care', body: ['UT Southwestern specialties are ranked each year by national publications.', 'Rankings in the live app come from the CMS and carry their source and year.'], cta: 'See rankings', done: 'Opening rankings' },
@@ -1775,15 +1646,17 @@ const target = pk => { const k = isPatient() ? PLACES[pk].visit.dept : dest[pk];
 const placeLabel = c => { const pk = placeOf(c); if (!pk) return c.id === 'approx' ? 'Near the Dallas campus' : ''; return c.id === 'inside' ? `${PLACES[pk].pill} · Floor ${zoneFloor(c)}` : PLACES[pk].pill; };
 
 /* ---------- Home modules ---------- */
-const LEAD = { arriving: ['parking'], entrance: ['amenities', 'hres'], inside: ['amenities', 'depts', 'hres'], cancer: ['support', 'education', 'amenities'] };
+const LEAD = { arriving: ['parking'], entrance: ['nearby', 'hres'], inside: ['nearby', 'depts'], cancer: ['support', 'education', 'nearby'] };
 function homeMods() {
   const c = ctx(), on = showsCtx(c);
   const common = ['tiles', ...(isPatient() ? [] : ['signin']), 'featured', 'services', 'campaign', 'news'];
-  const ctxMod = !on && c.src === 'ask' && offerHidden ? [] : [`ctx:${variantOf(c)}`];
-  return [...ctxMod, ...(on ? LEAD[c.id] || [] : []), ...common];
+  return [`ctx:${variantOf(c)}`, ...(on ? LEAD[c.id] || [] : []), ...common];
 }
-const HERO_H = { arriving: 'You’re almost here', entrance: 'You’ve arrived', inside: 'Find your way inside', cancer: 'You’ve arrived', approx: 'Which building are you at?' };
+const HERO_H = { arriving: 'Almost there', entrance: 'Welcome', inside: 'You’re inside', cancer: 'Welcome', approx: 'Which building?' };
 let lastH = '';
+const tiles = (list, attr) => `<div class="nbs">${list.map((x, j) => `<button class="nb${x.here ? ' here' : ''}" style="--j:${j}" ${attr(x)}>${circle(x.ic, 48)}<span class="nbl">${x.t}</span>${x.m ? `<span class="nbm">${x.m}</span>` : ''}</button>`).join('')}</div>`;
+const head = (id, t, extra = '') => `<div class="sec-head"><h2 id="${id}">${t}</h2>${extra}</div>`;
+const sample = '<span class="tag muted">Sample</span>';
 const R = {
   alerts() {
     if (!state.alerts) return '';
@@ -1798,71 +1671,54 @@ const R = {
   },
   greeting() {
     const c = ctx(), on = showsCtx(c), lbl = on ? placeLabel(c) : '';
-    const top = lbl ? `<button class="here-pill" data-ctx-opts aria-haspopup="dialog" aria-label="${c.src === 'manual' ? 'You chose' : 'Location on'}: ${lbl}. Location options"><span class="pill"><i class="live-dot" aria-hidden="true"></i><span>${lbl}</span></span></button>`
+    const top = lbl ? `<button class="here-pill" data-ctx-opts aria-haspopup="dialog" aria-label="${c.src === 'manual' ? 'You chose' : 'You’re at'}: ${lbl}. Location options"><span class="pill"><i class="live-dot" aria-hidden="true"></i><span>${lbl}</span></span></button>`
       : `<p class="eyebrow">${isPatient() ? 'Welcome back, Jordan' : 'Welcome to UT Southwestern'}</p>`;
     const h = (on && HERO_H[c.id]) || 'How can we help today?';
     const anim = h !== lastH; lastH = h;
     return `<section class="greet" aria-labelledby="greet-h">
       <div class="greet-top">${top}</div>
       <h1 id="greet-h"><span class="${anim ? 'fade-up' : ''}">${h}</span></h1>
-      ${on ? '' : `<p class="sub">${isPatient() ? 'Find care, get directions, and open MyChart, all in one place.' : 'Find a doctor, get directions, and check urgent care wait times – no account needed.'}</p>`}
+      ${on ? '' : `<p class="sub">${isPatient() ? 'Find care, get directions, and open MyChart.' : 'Find a doctor, get directions, and more – no account needed.'}</p>`}
     </section>`;
   },
   search() {
     const c = ctx(), on = showsCtx(c), pk = on ? placeOf(c) : null;
     const top = !on ? TOP.common : c.id === 'arriving' ? TOP.arriving : c.id === 'cancer' ? TOP.cancer : pk ? TOP.inside : TOP.common;
-    const ph = pk === 'scc' ? 'Search this center, doctors, and more' : pk && c.id !== 'arriving' ? 'Search this hospital, doctors, and more' : 'Search doctors, care, and places';
+    const ph = pk === 'scc' ? 'Search this center' : pk && c.id !== 'arriving' ? 'Search this hospital' : 'Search doctors, care, and places';
     return `<section aria-label="Search">
       <button class="search-field" data-open-search aria-haspopup="dialog">${ico('search')}<span>${ph}</span><span class="go" aria-hidden="true">${ico('go', 20)}</span></button>
-      <div class="ts-row" role="group" aria-label="${pk ? `Top searches at ${PLACES[pk].short}` : 'Top searches'}"><span class="ts-k" aria-hidden="true">${pk ? 'Here' : 'Top'}</span>${top.map(t => `<button class="chip glass" data-q="${t}">${t}</button>`).join('')}</div>
+      <div class="ts-row" role="group" aria-label="${pk ? 'Top searches here' : 'Top searches'}"><span class="ts-k" aria-hidden="true">${pk ? 'Here' : 'Top'}</span>${top.map(t => `<button class="chip glass" data-q="${t}">${t}</button>`).join('')}</div>
     </section>`;
   },
   ctx() { return ctxHTML(ctx()); },
   parking() {
-    const c = ctx(), pk = placeOf(c), P = PLACES[pk];
-    return `<section aria-labelledby="pk-h">
-      <div class="sec-head"><h2 id="pk-h">Parking at ${P.short.split(' ')[0]}</h2><span class="tag muted">Sample data</span></div>
-      <ul class="group">${P.park.map(p => row({ ic: p.ic, title: p.t, sub: `${p.s}${p.open ? `<br>About ${p.open} of ${p.cap} spaces open<span class="meter" aria-hidden="true"><i style="width:${Math.round(p.open / p.cap * 100)}%"></i></span>` : ''}`, attrs: `data-maps="${p.t}"` })).join('')}</ul>
-    </section>`;
+    const P = PLACES[placeOf(ctx())];
+    return `<section aria-labelledby="pk-h">${head('pk-h', 'Parking', sample)}
+      <ul class="group">${P.park.map(p => row({ ic: p.ic, title: p.t, attrs: `data-maps="${p.t}"`, trail: `<span class="val">${p.val}</span>` })).join('')}</ul></section>`;
   },
-  amenities() {
-    const c = ctx(), pk = placeOf(c), P = PLACES[pk], zf = zoneFloor(c);
+  nearby() {
+    const c = ctx(), pk = placeOf(c), zf = zoneFloor(c);
     const here = a => a.every || a.floor === zf;
-    const list = [...P.amen].sort((a, b) => (here(b) - here(a)) || (here(a) ? a.ft - b.ft : Math.abs(a.floor - zf) - Math.abs(b.floor - zf)));
-    return `<section aria-labelledby="am-h">
-      <div class="sec-head"><h2 id="am-h">Nearby</h2><span class="sub">From Floor ${zf}</span></div>
-      <div class="amen">${list.map(a => `<button class="am-tile${here(a) ? ' here' : ''}" data-page="am:${pk}:${a.k}">${circle(a.ic, 40)}<span class="txt"><span class="am-lbl">${a.t}</span><span class="am-meta">${here(a) ? `${a.ft} ft · this floor` : `Floor ${a.floor}`}</span></span></button>`).join('')}</div>
-      <p class="src-note">${ico('info', 16)}<span>Sample places and distances. A real build uses UTSW floor plans and indoor positioning.</span></p>
-    </section>`;
+    const list = [...PLACES[pk].amen].sort((a, b) => (here(b) - here(a)) || (here(a) ? a.ft - b.ft : Math.abs(a.floor - zf) - Math.abs(b.floor - zf)));
+    return `<section aria-labelledby="am-h">${head('am-h', 'Nearby', sample)}
+      ${tiles(list.map(a => ({ ...a, here: here(a), m: here(a) ? `${a.ft} ft` : `Floor ${a.floor}` })), a => `data-page="am:${pk}:${a.k}" aria-label="${a.t}, ${here(a) ? `${a.ft} feet, this floor` : `Floor ${a.floor}`}"`)}</section>`;
   },
   depts() {
     const c = ctx(), pk = placeOf(c), zf = zoneFloor(c), t = target(pk);
     const list = [...PLACES[pk].depts].sort((a, b) => (b.floor === zf) - (a.floor === zf) || a.floor - b.floor);
-    return `<section aria-labelledby="dp-h">
-      <div class="sec-head"><h2 id="dp-h">Departments in this building</h2></div>
-      <ul class="group">${list.map(d => row({ ic: 'clinic', title: d.t, sub: `Floor ${d.floor} · ${d.suite}${d.floor === zf ? ' · this floor' : ''}${t && t.k === d.k ? ` · ${isPatient() ? 'your visit' : 'where you’re going'}` : ''}`, attrs: `data-page="dp:${pk}:${d.k}"` })).join('')}</ul>
-      <p class="src-note">${ico('info', 16)}<span>Sample floors and suites.</span></p>
-    </section>`;
+    return `<section aria-labelledby="dp-h">${head('dp-h', 'In this building', sample)}
+      <ul class="group">${list.map(d => row({ ic: 'clinic', title: d.t, attrs: `data-page="dp:${pk}:${d.k}"`, trail: `${t && t.k === d.k ? '<span class="tag">You’re going</span>' : ''}<span class="val muted">Floor ${d.floor}</span>` })).join('')}</ul></section>`;
   },
   hres() {
-    const c = ctx(), pk = placeOf(c);
-    return `<section aria-labelledby="hr-h">
-      <div class="sec-head"><h2 id="hr-h">Good to know here</h2></div>
-      <ul class="group">${HOSP_RES.map(r => row({ ic: r.ic, title: r.t, sub: r.s, attrs: `data-page="${r.k}"` })).join('')}</ul>
-    </section>`;
+    return `<section aria-labelledby="hr-h">${head('hr-h', 'Good to know')}
+      <ul class="group">${HOSP_RES.map(r => row({ ic: r.ic, title: r.t, attrs: `data-page="${r.k}"` })).join('')}</ul></section>`;
   },
   support() {
-    return `<section aria-labelledby="su-h">
-      <div class="sec-head"><h2 id="su-h">Support services</h2><span class="tag muted">Approved content</span></div>
-      <ul class="group">${SUPPORT.map(r => row({ ic: r.ic, title: r.t, sub: r.s, attrs: `data-page="${r.k}"` })).join('')}</ul>
-    </section>`;
+    return `<section aria-labelledby="su-h">${head('su-h', 'Support for you')}${tiles(SUPPORT, s => `data-page="${s.k}"`)}</section>`;
   },
   education() {
-    return `<section aria-labelledby="ed-h">
-      <div class="sec-head"><h2 id="ed-h">Patient education</h2></div>
-      <ul class="group">${EDUCATION.map(r => row({ ic: r.ic, title: r.t, sub: r.s, attrs: `data-page="${r.k}"` })).join('')}</ul>
-      <p class="src-note">${ico('info', 16)}<span>Sample titles. The live app shows only content approved by the cancer center.</span></p>
-    </section>`;
+    return `<section aria-labelledby="ed-h">${head('ed-h', 'Learn')}
+      <ul class="group">${EDUCATION.map(r => row({ ic: r.ic, title: r.t, attrs: `data-page="${r.k}"` })).join('')}</ul></section>`;
   },
   signin() {
     return `<section class="locked" aria-labelledby="locked-h">
@@ -1877,14 +1733,12 @@ const R = {
   tiles() {
     const open = t => `<button class="qa-tile" data-tile="${t.k}">${circle(t.ic, 48, 'solid')}<span class="qa-txt"><span class="qa-lbl">${t.lbl}</span></span></button>`;
     const mc = t => isPatient()
-      ? `<button class="qa-tile" data-mychart="${t.lbl}" aria-label="${t.lbl}. Opens in MyChart">${circle(t.ic, 48, 'solid')}<span class="qa-txt"><span class="qa-lbl">${t.lbl}</span></span><span class="qa-lock">${ico('external', 16)}</span></button>`
+      ? `<button class="qa-tile" data-mychart="${t.lbl}" aria-label="${t.lbl}. Opens in MyChart">${circle(t.ic, 48, 'solid')}<span class="qa-txt"><span class="qa-lbl">${t.lbl}</span></span></button>`
       : `<button class="qa-tile lockd" data-locked="${t.k}" aria-label="${t.lbl}. Needs MyChart sign-in">${circle(t.ic, 48)}<span class="qa-txt"><span class="qa-lbl">${t.lbl}</span></span><span class="qa-lock">${ico('lock', 16)}</span></button>`;
-    return `<section aria-labelledby="qa-h"><div class="sec-head"><h2 id="qa-h">Quick links</h2></div>
-      <div class="qa">${[...LOCKED.map(mc), ...TILES.map(open)].join('')}</div></section>`;
+    return `<section aria-labelledby="qa-h">${head('qa-h', 'Quick links')}<div class="qa">${[...LOCKED.map(mc), ...TILES.map(open)].join('')}</div></section>`;
   },
   featured() {
-    return `<section aria-labelledby="feat-h">
-      <div class="sec-head"><h2 id="feat-h">MedBlog</h2></div>
+    return `<section aria-labelledby="feat-h">${head('feat-h', 'MedBlog')}
       <div class="car" id="car" role="group" aria-roledescription="carousel" aria-label="Latest MedBlog articles">${FEATURED.map((f, i) => `
         <button class="feat" data-feat="${i}" aria-roledescription="slide" aria-label="${f.kick}: ${f.title}. ${f.meta}. ${i + 1} of ${FEATURED.length}">
           <span class="feat-art">${artSVG(f.m)}</span>
@@ -1895,7 +1749,7 @@ const R = {
     </section>`;
   },
   services() {
-    return `<section aria-labelledby="svc-h"><div class="sec-head"><h2 id="svc-h">UTSW resources</h2></div>
+    return `<section aria-labelledby="svc-h">${head('svc-h', 'UTSW resources')}
       <ul class="group">${RESOURCES.map(s => row({ ic: s.ic, title: s.t, sub: s.s, attrs: s.k === 'wayres' ? 'data-tab="3"' : `data-page="${s.k}"` })).join('')}</ul></section>`;
   },
   campaign() {
@@ -1910,116 +1764,95 @@ const R = {
     </section>`;
   },
   news() {
-    return `<section aria-labelledby="ann-h"><div class="sec-head"><h2 id="ann-h">Announcements</h2></div>
+    return `<section aria-labelledby="ann-h">${head('ann-h', 'Announcements')}
       <ul class="group">${ANN.map(a => row({ lead: `<span class="datebox" aria-hidden="true"><span class="m">${a.m}</span><span class="d">${a.d}</span></span>`, title: a.t, sub: a.s, attrs: `data-page="${a.k}" aria-label="${a.m} ${a.d}: ${a.t}"` })).join('')}</ul></section>`;
   }
 };
 
-/* ---------- The context card ---------- */
-function ctxHead(c, ic, title, sub) {
-  const k = c.src === 'manual' ? `${ico('pick', 16)}You chose this location`
-    : c.id === 'unavailable' ? `${ico('locOff', 16)}Location unavailable`
-    : `<i class="live-dot" aria-hidden="true"></i>Location on · ${c.id === 'approx' ? 'Approximate' : c.id === 'inside' ? 'Indoor' : 'Precise'}<span class="ctx-tag">Simulated</span>`;
-  return `<div class="ctx-hd">${circle(ic, 40, 'solid')}<div class="txt"><p class="ctx-k">${k}</p><h2 id="ctx-h" tabindex="-1">${title}</h2>${sub ? `<p class="sub">${sub}</p>` : ''}</div>
-    <button class="icon-btn ctx-more" data-ctx-opts aria-haspopup="dialog" aria-label="Location options">${ico('options')}</button></div>`;
+/* ---------- The context card: map strip, header, one visual, one action ---------- */
+/* Map strip, drawn in map tokens. drive: the car follows the route into the garage. door: you pulse at the entrance. */
+const ROUTE = 'M8 108 H112 V56 H128';
+function stripSVG(pk, mode, anim) {
+  const car = mode !== 'drive' ? '' : anim && !RM()
+    ? `<circle r="8" class="m-car"><animateMotion dur="1.8s" fill="freeze" calcMode="spline" keyPoints="0;0.85" keyTimes="0;1" keySplines=".4 0 .2 1" path="${ROUTE}"/></circle>`
+    : '<circle cx="112" cy="80" r="8" class="m-car"/>';
+  const me = mode === 'door' ? `${anim ? '<circle cx="240" cy="56" r="10" class="door-pulse"/>' : ''}<circle cx="240" cy="56" r="16" class="m-halo"/><circle cx="240" cy="56" r="7" class="m-me"/>` : '';
+  const sign = (x, y, l) => `<rect x="${x}" y="${y}" width="28" height="28" rx="6" class="m-sign"/><text x="${x + 14}" y="${y + 20}" text-anchor="middle" class="m-sign-t">${l}</text>`;
+  return `<svg viewBox="0 0 358 128" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="358" height="136" class="m-bg"/>
+    <g class="m-block"><rect x="8" y="8" width="88" height="84" rx="8"/><rect x="128" y="124" width="98" height="40" rx="8"/><rect x="240" y="120" width="110" height="40" rx="8"/><rect x="-20" y="124" width="116" height="40" rx="8"/></g>
+    <path d="M0 108H358M112 0V136M226 0V136" class="m-road" stroke-width="12"/>
+    <rect x="128" y="20" width="84" height="72" rx="8" class="m-block2"/><rect x="240" y="8" width="110" height="88" rx="8" class="m-block2"/>
+    ${sign(156, 42, 'P')}${pk === 'cuh' ? sign(281, 38, 'H') : ''}
+    <path d="${ROUTE}" class="${anim ? 'strip-route' : 'rt-path'}" pathLength="1"/><path d="M212 56 H240" class="m-walk"/>
+    ${mode === 'door' ? '' : `<g class="m-pin"><path d="M240 70c-9 0-14-6-14-13a14 14 0 0 1 28 0c0 7-5 13-14 13z"/></g><circle cx="240" cy="55" r="5" fill="#FFFFFF"/>`}
+    ${car}${me}</svg>`;
 }
-function ctxFoot(c) {
-  const a = c.src === 'manual' ? `<button class="link" data-picker>Change</button><button class="link" data-clear-manual>Clear</button>` : c.id === 'unavailable' ? '' : `<button class="link" data-not-here>Not here?</button>`;
-  return `<div class="ctx-ft">${a}<button class="link" data-why aria-haspopup="dialog">Why am I seeing this?</button></div>`;
+const mapStrip = (pk, mode) => `<div class="ctx-map">${stripSVG(pk, mode, !calmRender)}<span class="map-tag">Simulated</span></div>`;
+function ctxHead(c, ic, title, st) {
+  return `<div class="ctx-hd">${circle(ic, 40, 'solid')}<div class="txt"><h2 id="ctx-h" tabindex="-1">${title}</h2>
+    <p class="ctx-st">${c.src === 'manual' ? ico('pick', 16) : c.id === 'unavailable' ? ico('locOff', 16) : '<i class="live-dot" aria-hidden="true"></i>'}<span>${c.src === 'manual' ? `You chose · ${st}` : st}</span></p></div>
+    <button class="icon-btn ctx-more" data-ctx-opts aria-haspopup="dialog" aria-label="Location options, including Not here?">${ico('options')}</button></div>`;
 }
-function visitStrip(pk) {
-  const v = PLACES[pk].visit, d = deptOf(pk, v.dept);
-  return `<div class="appt"><span class="timebox" aria-hidden="true"><span class="m">${v.tm}</span><span class="d">${v.ap}</span></span>
-    <div class="txt"><b><span class="vh">Today’s visit: </span>Today, ${v.time}</b><small>${v.type} · ${d.t} · ${v.pv} (sample)</small><span class="tag">From MyChart</span></div>
-    <div class="appt-acts"><button class="link" data-mychart="visit details">Open visit in MyChart ${ico('external', 16)}</button></div></div>`;
+/* Park → Enter → Floor. n is the current step; the fill animates from the last step (see afterRender). */
+function stepper(pk, n) {
+  const t = target(pk), P = PLACES[pk], g = P.park[0];
+  const items = [['parking', 'Park', n ? '' : `${g.open} open`], ['entrance', 'Enter', n === 1 ? 'You’re here' : ''], ['elevator', t ? `Floor ${t.floor}` : 'Go to', t && t.floor > 1 ? P.elev : '']];
+  return `<div class="stepper" data-p="${n / 2}" data-k="${pk}"><span class="st-track" aria-hidden="true"><span class="fill" style="width:${n * 50}%"></span></span>
+    <ol aria-label="Arrival steps">${items.map(([ic, l, sub], i) => `<li class="${i < n ? 'done' : i === n ? 'now' : ''}"><span class="sn" aria-hidden="true">${ico(i < n ? 'stepDone' : ic, 20)}</span><span class="sl">${l}<span class="vh">${i < n ? ', done' : i === n ? ', now' : ''}</span></span>${sub ? `<span class="ss">${sub}</span>` : ''}</li>`).join('')}</ol></div>`;
 }
-function destPicker(pk) {
-  return `<div><p class="ctx-q" id="dp-q">Where are you going?</p><ul class="chips" role="group" aria-labelledby="dp-q" style="margin-top:var(--s2)">${PLACES[pk].depts.slice(0, 4).map(d => `<li><button class="chip" data-dest="${pk}:${d.k}" aria-pressed="${dest[pk] === d.k}">${d.t}</button></li>`).join('')}</ul></div>`;
+function destChips(pk) {
+  return `<div class="ctx-next"><span class="ctx-q" id="dq-${pk}">Where are you going?</span><ul class="chips" role="group" aria-labelledby="dq-${pk}">${PLACES[pk].depts.slice(0, 4).map(d => `<li><button class="chip" data-dest="${pk}:${d.k}">${d.short}</button></li>`).join('')}</ul></div>`;
 }
-/* Park → Enter → Go to; n is the current step */
-function cardSteps(pk, n) {
-  const P = PLACES[pk], t = target(pk), g = P.park[0];
-  const st = [
-    { k: 'Park', ic: 'parking', t: g.t, s: g.open ? `About ${g.open} spaces open · ${g.s.split(' · ').pop()}` : g.s },
-    { k: 'Enter', ic: 'entrance', t: P.ent.t, s: n === 1 ? 'You’re here' : P.ent.s },
-    { k: 'Go to', ic: 'elevator', t: t ? `Floor ${t.floor}, ${t.suite}` : 'Choose where you’re going', s: t ? `${t.t}${t.floor > 1 ? ` · ${P.elev}` : ''}` : 'Pick a department above' }
-  ];
-  return `<ol class="steps" aria-label="Arrival steps">${st.map((s, i) => `<li class="step${i < n ? ' done' : i === n ? ' now' : ''}"><span class="step-n" aria-hidden="true">${i < n ? ico('stepDone', 20) : i + 1}</span>
-    <span class="txt"><span class="k">${s.k}<span class="vh">${i < n ? ', done' : i === n ? ', current step' : ''}</span></span><b>${s.t}</b><small>${s.s}</small></span></li>`).join('')}</ol>
-    <p class="src-note" style="padding:0">${ico('info', 16)}<span>Sample garage, entrance, floor, and suite.</span></p>`;
-}
-const checkRow = pk => isPatient() ? row({ ic: 'checkin', title: `Check in for your ${PLACES[pk].visit.time} visit`, sub: 'Opens in MyChart', attrs: 'data-mychart="eCheck-in"', ext: true }) : '';
+const mcBtn = (label, what) => isPatient() ? `<button class="btn btn-tonal" data-mychart="${what}" aria-label="${label}, opens in MyChart">${label}${ico('external', 20)}</button>` : '';
+const bldTiles = () => `<div class="bld">${['cuh', 'scc'].map(k => `<button class="bld-t" data-pick="${k}">${circle(PLACES[k].ic, 40, 'solid')}<span>${PLACES[k].short}</span>${isPatient() ? `<small>Visit ${PLACES[k].visit.time}</small>` : ''}</button>`).join('')}</div>`;
 function ctxHTML(c) {
-  const on = showsCtx(c), pk = placeOf(c);
-  if (!on) return slimHTML(c);
-  const P = pk && PLACES[pk], t = pk && target(pk);
-  let ic = pk ? P.ic : c.id === 'approx' ? 'approx' : 'locOff', title, sub = '', body = '';
-  if (c.id === 'arriving') {
-    title = P.full; sub = `Arriving${c.src === 'manual' ? '' : ` · ${P.away} (sample)`}`;
-    body = `${isPatient() ? visitStrip(pk) : !t ? destPicker(pk) : ''}${cardSteps(pk, 0)}
-      <div class="ctx-acts"><button class="btn btn-primary" data-route ${!t ? 'disabled' : ''}>${ico('navigate', 20)}Start directions</button><button class="btn btn-tonal" data-parking>Parking options</button></div>
-      ${!isPatient() && t ? `<button class="link" data-dest-change="${pk}" style="justify-self:start">Change where I’m going</button>` : ''}`;
-  } else if (c.id === 'entrance') {
-    title = P.full; sub = `You’re at the ${P.ent.t.toLowerCase()} (sample)`;
-    body = `${!isPatient() && !t ? destPicker(pk) : ''}${cardSteps(pk, 1)}
-      <div class="ctx-acts"><button class="btn btn-primary" data-route ${!t ? 'disabled' : ''}>${ico('navigate', 20)}Start indoor directions</button></div>
-      <ul class="group">${checkRow(pk)}${row({ ic: 'car', title: parked ? 'Parked: Garage A, Level 3' : 'Save where you parked', sub: parked ? 'Saved on this phone · sample' : 'Find your car when you leave', attrs: 'data-park-save' })}</ul>`;
+  if (!showsCtx(c)) return slimHTML(c);
+  const pk = placeOf(c), P = pk && PLACES[pk], t = pk && target(pk), v = pk && P.visit;
+  let strip = '', ic = pk ? P.ic : c.id === 'approx' ? 'approx' : 'locOff', title, st, body;
+  const visitSt = pre => isPatient() ? `${pre}${pre ? ' · ' : ''}Visit at ${v.time}` : pre || 'Here now';
+  if (c.id === 'arriving' || c.id === 'entrance' || c.id === 'cancer') {
+    const n = c.id === 'arriving' ? 0 : 1;
+    strip = mapStrip(pk, n ? 'door' : 'drive');
+    title = P.short;
+    st = c.id === 'entrance' ? 'At the entrance' : visitSt(c.id === 'arriving' ? 'Arriving' : '');
+    const next = !t ? destChips(pk) : '';
+    body = `${stepper(pk, n)}${next}<div class="ctx-acts"><button class="btn btn-primary" data-route ${t ? '' : 'disabled'}>${ico('navigate', 20)}Directions</button>${n ? mcBtn('Check in', 'eCheck-in') : mcBtn('Visit', 'visit details')}</div>`;
   } else if (c.id === 'inside') {
-    const zf = zoneFloor(c), z = ZONES[c.zone || 'f1'];
-    title = P.full; sub = `Inside · ${z.t} (sample)`;
-    const here = t && t.floor === zf;
-    body = `<span class="floor">${ico('floor', 20)}Floor ${zf}</span>
-      ${!t ? (isPatient() ? '' : destPicker(pk)) : here
-        ? `<div class="arrived" role="status">${ico('done', 20)}<span><b>You’ve arrived on Floor ${zf}</b>${t.suite}, ${t.t}, is about 100 ft ahead on your left (sample). ${isPatient() ? 'Check in at the front desk or in MyChart.' : 'Check in at the front desk.'}</span></div>`
-        : `<div class="dest">${circle('elevator', 40)}<span class="txt"><b>${t.t}</b><small>Floor ${t.floor}, ${t.suite} · take ${P.elev} ${t.floor > zf ? 'up' : 'down'} to Floor ${t.floor}, about 3 min</small></span></div>
-          <div class="ctx-acts"><button class="btn btn-primary" data-route>${ico('navigate', 20)}Resume directions</button></div>`}
-      ${isPatient() ? `<ul class="group">${checkRow(pk)}</ul>` : ''}`;
-  } else if (c.id === 'cancer') {
-    title = P.full; sub = `You’re at the ${P.ent.t.toLowerCase().replace('simmons ', '')} (sample)`;
-    body = `${isPatient() ? visitStrip(pk) : !t ? destPicker(pk) : ''}${cardSteps(pk, 1)}
-      <div class="ctx-acts"><button class="btn btn-primary" data-route ${!t ? 'disabled' : ''}>${ico('navigate', 20)}Start directions</button><button class="btn btn-tonal" data-parking>Parking</button></div>
-      ${isPatient() ? `<ul class="group">${checkRow(pk)}</ul>` : ''}`;
+    const zf = zoneFloor(c), here = t && t.floor === zf;
+    title = P.short; st = visitSt(`Floor ${zf}`);
+    const stack = `<div class="flr" aria-hidden="true">${[7, 6, 5, 4, 3, 2, 1].map(f => `<i class="${t && t.floor === f ? 'dst' : ''}"></i>`).join('')}<span class="flr-me" data-f="${zf}" style="top:${(7 - zf) * 16}px"></span>${t ? `<span class="flr-pin" style="top:${(7 - t.floor) * 16 - 2}px">${ico('place', 16)}</span>` : ''}</div>`;
+    body = `<div class="inside">${stack}<div><p class="big">${here ? 'You’ve arrived' : `Floor ${zf}`}</p><p class="sm">${!t ? 'Main lobby' : here ? `${t.suite} is ahead on your left` : `${t.short} is on Floor ${t.floor}`}</p></div><span class="map-tag">Simulated</span></div>
+      ${!t ? destChips(pk) : ''}
+      ${t && !here ? `<div class="ctx-acts"><button class="btn btn-primary" data-route>${ico('navigate', 20)}Resume directions</button></div>` : here && isPatient() ? `<div class="ctx-acts"><button class="btn btn-primary" data-mychart="eCheck-in" aria-label="Check in, opens in MyChart">${ico('checkin', 20)}Check in${ico('external', 20)}</button></div>` : ''}`;
   } else if (c.id === 'approx') {
-    title = 'You’re near the UT Southwestern Dallas campus'; sub = 'Your location is approximate, so MyCare can’t tell which building you’re in.';
-    body = `<ul class="group">${['cuh', 'scc'].map(k => row({ ic: PLACES[k].ic, title: PLACES[k].short, sub: isPatient() ? `Your ${PLACES[k].visit.time} visit is here` : PLACES[k].full, attrs: `data-pick="${k}"` })).join('')}${row({ ic: 'place', title: 'Somewhere else on campus', sub: 'See all locations', attrs: 'data-tab="2"' })}</ul>
-      <div class="ctx-acts"><button class="btn btn-tonal" data-precise>${ico('myLoc', 20)}Use precise location</button></div>`;
-  } else if (c.id === 'unavailable') {
-    title = 'We can’t find your location right now'; sub = 'Check that Location Services are on, or tell us where you are. Everything else on this page works without location.';
-    body = `<ul class="group">${row({ ic: 'hospital', title: `I’m at ${PLACES.cuh.short}`, attrs: 'data-pick="cuh"' })}${row({ ic: 'building', title: `I’m at ${PLACES.scc.short}`, attrs: 'data-pick="scc"' })}${row({ ic: 'place', title: 'Another UTSW location', sub: 'Directions and parking on each location’s page', attrs: 'data-tab="2"' })}${row({ ic: 'nearMe', title: 'Enter a ZIP code or city', sub: typedLoc ? `Now: ${esc(typedLoc.sub)}` : 'For distances to UTSW locations', attrs: 'data-loc-open' })}</ul>
-      <div class="ctx-acts"><button class="btn btn-tonal" data-retry-loc>${ico('refresh', 20)}Try again</button></div>`;
+    title = 'Near the Dallas campus'; st = 'Approximate location';
+    body = `${bldTiles()}<div class="ctx-links"><button class="link" data-precise>Use precise location</button><button class="link" data-tab="2">Other location</button></div>`;
+  } else {
+    title = 'We can’t find you'; st = 'No location signal';
+    body = `${bldTiles()}<div class="ctx-links"><button class="link" data-retry-loc>Try again</button><button class="link" data-tab="2">Other location</button><button class="link" data-loc-open>ZIP or city</button></div>`;
   }
-  return `<section class="ctx" aria-labelledby="ctx-h">${ctxHead(c, ic, title, sub)}<div class="ctx-bd">${body}</div>${ctxFoot(c)}</section>`;
+  return `<section class="ctx" aria-labelledby="ctx-h">${strip}${ctxHead(c, ic, title, st)}<div class="ctx-bd">${body}</div></section>`;
 }
 function slimHTML(c) {
-  let ic, b, s, acts;
-  if (pausedHere(c)) {
-    const pk = placeOf(c);
-    ic = 'pause'; b = pk ? `Common homepage at ${PLACES[pk].short}` : 'Common homepage for now';
-    s = paused.why === 'nothere' ? 'You said you’re not here. We’ll check again on your next visit.' : 'Paused for today.';
-    acts = `<button class="btn-sm" data-unpause>Show again</button>`;
-  } else if (c.src === 'ask') {
-    ic = 'nearMe';
-    b = isPatient() ? `Visit today at ${PLACES.cuh.short}` : 'Visiting a UTSW campus?';
-    s = isPatient() ? `${PLACES.cuh.visit.time} · get parking, the best entrance, and directions when you arrive` : 'Get parking, the best entrance, and directions when you arrive';
-    acts = `<button class="btn-sm solid" data-geo-intro>Turn on</button><button class="btn-sm plain" data-offer-hide>Not now</button>`;
-  } else if (c.src === 'denied') {
-    ic = 'locOff'; b = 'Location is off for MyCare'; s = 'At a UTSW campus? Choose where you are for parking and directions.';
-    acts = `<button class="btn-sm" data-picker>Choose</button>`;
-  } else if (c.src === 'off') {
-    ic = 'locOff'; b = 'Location-aware home is off'; s = 'Choose a campus to see its parking and directions.';
-    acts = `<button class="btn-sm" data-picker>Choose</button>`;
-  } else {
-    ic = 'place'; b = 'Location-aware home is on'; s = 'When you arrive at a UTSW campus, parking and directions show up here.';
-    acts = `<button class="btn-sm" data-picker>I’m at a campus</button>`;
+  const one = (ic, b, s, btn) => `<section class="ctx-slim" aria-label="Location">${circle(ic, 40)}<span class="txt"><b>${b}</b>${s ? `<span>${s}</span>` : ''}</span>${btn}</section>`;
+  if (pausedHere(c)) { const pk = placeOf(c); return one('pause', pk ? `Paused at ${PLACES[pk].nick}` : 'Location help paused', 'Common homepage for today', '<button class="btn-sm" data-unpause>Show</button>'); }
+  if (c.src === 'ask') {
+    if (offerHidden) return '';
+    return `<section class="ctx-slim ask" aria-label="Location">${circle('nearMe', 40)}<span class="txt"><b>${isPatient() ? `Visit today, ${PLACES.cuh.visit.time}` : 'Visiting UTSW today?'}</b><span>Get parking and directions when you arrive</span></span>
+      <button class="icon-btn x" data-offer-hide aria-label="Not now">${ico('close', 20)}</button><span class="acts"><button class="btn-sm solid" data-geo-intro>Turn on</button></span></section>`;
   }
-  return `<section class="ctx-slim" aria-label="Location-aware home">${circle(ic, 40)}<span class="txt"><b>${b}</b><span>${s}</span></span><span class="acts">${acts}</span></section>`;
+  if (c.src === 'denied') return one('locOff', 'Location is off', 'Choose where you are instead', '<button class="btn-sm" data-picker>Choose</button>');
+  if (c.src === 'off') return one('locOff', 'Location help is off', '', '<button class="btn-sm" data-picker>Choose</button>');
+  return '';
 }
 
 /* ---------- Render the home; with flip, kept modules slide and new ones enter on the stagger ---------- */
 const spring = () => getComputedStyle(document.documentElement).getPropertyValue('--spring-snappy').trim() || 'ease-out';
 const heroEl = $('#hero-mods'), modulesEl = $('#modules'), homeInner = $('#home-inner');
+let calmRender = false;
 function renderHome({ animate = true, flip = false } = {}) {
   let first;
+  calmRender = !animate; homeInner.classList.toggle('calm', !animate);
   if (flip && !RM()) { first = {}; $$('.mod', modulesEl).forEach(m => first[m.dataset.m] = m.getBoundingClientRect().top); }
   let i = 0;
   const wrapMod = id => { const html = R[id.split(':')[0]](); return html ? `<div class="mod" data-m="${id}" style="--i:${i++}">${html}</div>` : ''; };
@@ -2031,8 +1864,24 @@ function renderHome({ animate = true, flip = false } = {}) {
     const dy = was - m.getBoundingClientRect().top; if (!dy) return;
     m.animate([{ transform: `translateY(${dy}px)` }, { transform: 'none' }], { duration: 360, easing: spring() });
   });
-  wireHome();
+  wireHome(); afterRender();
   nbsp(homeInner);
+}
+/* Motion that carries meaning across re-renders: the step fill grows from the last step, the floor dot slides from the last floor */
+let lastStep = null, lastFloor = null;
+function afterRender() {
+  const st = $('.stepper', modulesEl);
+  if (st) {
+    const p = +st.dataset.p, k = st.dataset.k;
+    if (!RM() && lastStep && lastStep.k === k && lastStep.p !== p) $('.fill', st).animate([{ width: `${lastStep.p * 100}%` }, { width: `${p * 100}%` }], { duration: 800, delay: 250, easing: spring(), fill: 'backwards' });
+    lastStep = { k, p };
+  }
+  const me = $('.flr-me', modulesEl);
+  if (me) {
+    const f = +me.dataset.f;
+    if (!RM() && lastFloor && lastFloor !== f) me.animate([{ top: `${(7 - lastFloor) * 16}px` }, { top: `${(7 - f) * 16}px` }], { duration: 900, easing: spring() });
+    lastFloor = f;
+  } else lastFloor = null;
 }
 let rcT;
 function recompose() {
@@ -2071,48 +1920,56 @@ function initCarousel() {
 let lastCtx = null, lastVar = '', lastKey = '';
 function update({ announce = false } = {}) {
   const c = ctx(), v = variantOf(c);
-  const key = JSON.stringify([c, v, state.auth, dest, parked, state.alerts, typedLoc && typedLoc.label]);
+  const key = JSON.stringify([c, v, state.auth, dest, state.alerts, typedLoc && typedLoc.label]);
   if (key !== lastKey) {
     if (!lastVar) renderHome();
-    else if (v !== lastVar) recompose();
-    else { renderHome({ animate: false }); const bd = $('.ctx-bd', modulesEl); if (bd && lastVar && !RM()) bd.classList.add('swap'); }
+    else if (v !== lastVar) { recompose(); if (showsCtx(c)) ping(); }
+    else renderHome({ animate: false });
     if (announce) announceChange(lastCtx, c);
   }
   lastCtx = c; lastVar = v; lastKey = key;
   renderLocs(); renderWay(); renderMc(); syncAuth(); syncBoard();
   if (!page.hidden && pageHist.length) { const k = pageHist[pageHist.length - 1]; if (k.startsWith('route') || k === 'settings') openPage(k, null, true, true); }
 }
+function ping() { if (RM()) return; const a = $('.hero-art'); a.classList.remove('ping'); void a.getBoundingClientRect(); a.classList.add('ping'); }
+/* Arrival notices drop from the top as an island, so they never cover the card; screen readers hear the full sentence */
+let islT;
+function island(msg, ic = 'place') {
+  const el = $('#island');
+  $('#island-i').innerHTML = ico(ic, 20); $('#island-t').textContent = nbText(msg);
+  el.classList.remove('show'); void el.offsetWidth; el.classList.add('show');
+  clearTimeout(islT); islT = setTimeout(() => el.classList.remove('show'), 2800);
+}
 function announceChange(p, c) {
   if (!p) return;
-  const pv = variantOf(p), cv = variantOf(c), pk = placeOf(c);
+  const pv = variantOf(p), cv = variantOf(c), pk = placeOf(c), P = pk && PLACES[pk];
   if (pv === cv) {
-    if (c.id === 'inside' && p.zone !== c.zone) { const t = target(pk), zf = zoneFloor(c); say(`Floor ${zf}.${t && t.floor === zf ? ` You’ve arrived. ${t.t} is ahead on your left.` : ''}`); }
+    if (c.id === 'inside' && p.zone !== c.zone) { const t = target(pk), zf = zoneFloor(c), here = t && t.floor === zf; island(here ? 'You’ve arrived' : `Floor ${zf}`, here ? 'done' : 'floor'); say(`Floor ${zf}.${here ? ` You’ve arrived. ${t.suite} is ahead on your left.` : ''}`); }
     return;
   }
-  const P = pk && PLACES[pk];
-  let msg = '', act = null;
   if (showsCtx(c)) {
-    msg = { arriving: `Arriving at ${P && P.short} – parking and directions are at the top`, entrance: `You’re at the main entrance of ${P && P.short}`, inside: `You’re inside ${P && P.short}, Floor ${zoneFloor(c)}`,
-      cancer: `Welcome to ${P && P.short} – ${isPatient() ? 'your visit and directions' : 'directions and support services'} are at the top`, approx: 'You’re near the Dallas campus – choose your building', unavailable: 'We can’t find your location – choose where you are' }[c.id];
-    if (c.id !== 'unavailable') act = { label: 'Hide', fn: () => pauseHere('today') };
-  } else if (p && showsCtx(p) && placeOf(p) && c.src === 'gps') {
-    msg = `You’ve left ${PLACES[placeOf(p)].short} – back to the common homepage`;
-    if (parked) act = { label: 'Your car', fn: openCarSheet };
-  } else if (c.src === 'nofix' || (p.id === 'unavailable' && c.id === 'away')) msg = '';
-  if (!msg) return;
-  say(msg.replace(' – ', '. '));
-  if (layers.length) pendingToast = [msg, false, act]; else toast(msg, false, act);
+    const [short, ic, long] = {
+      arriving: [`Arriving at ${P && P.nick}`, 'car', `Arriving at ${P && P.short}. Parking and directions are at the top.`],
+      entrance: ['At the main entrance', 'entrance', `You’re at the main entrance of ${P && P.short}.`],
+      inside: [`Inside · Floor ${zoneFloor(c)}`, 'floor', `You’re inside ${P && P.short}, Floor ${zoneFloor(c)}.`],
+      cancer: [`Welcome to ${P && P.nick}`, 'building', `Welcome to ${P && P.short}. Your visit and support are at the top.`],
+      approx: ['Near the Dallas campus', 'approx', 'You’re near the Dallas campus. Choose your building.'],
+      unavailable: ['No location signal', 'locOff', 'We can’t find your location. Choose where you are.']
+    }[c.id];
+    island(short, ic); say(long);
+  } else if (showsCtx(p) && placeOf(p) && c.src === 'gps') {
+    island(`Left ${PLACES[placeOf(p)].nick}`, 'home'); say(`You’ve left ${PLACES[placeOf(p)].short}. Back to the common homepage.`);
+  }
 }
 function pauseHere(why) {
   const c = ctx(); paused = { pk: pauseKey(c), why };
   update();
-  const pk = placeOf(c);
-  toast(why === 'nothere' ? 'Showing the common homepage' : `Showing the common homepage${pk ? ` at ${PLACES[pk].short.split(' ')[0]}` : ''} today`, false, { label: 'Undo', fn: () => { paused = null; update(); say('Location content is back'); } });
+  toast('Showing the common homepage', false, { label: 'Undo', fn: () => { paused = null; update(); say('Location help is back'); } });
   say('Common homepage');
 }
-function setManual(m, msg) {
+function setManual(m) {
   manual = m; paused = null; update();
-  if (msg !== false) { toast(msg || `Showing ${placeLabel(ctx())}`, true); say(`You chose ${placeLabel(ctx())}`); }
+  island(placeLabel(ctx()), 'pick'); say(`You chose ${placeLabel(ctx())}`);
 }
 
 /* ---------- Layers (search, article, page, sheet, system dialog, lock screen): inert background, Escape closes the top one ---------- */
@@ -2215,7 +2072,7 @@ function pageHTML(key) {
     const k = key.slice(2), l = LOCS[k];
     return `<p class="kick">${LOC_TYPES.find(t => t[0] === l.type)[1].replace(/s$/, '')}</p><h1 id="page-h" tabindex="-1">${l.n}</h1>${pageP(l.addr)}${pageP(l.hours)}
       <button class="btn btn-primary" data-maps="${l.n}">${ico('directions', 20)}Directions</button>
-      ${l.here ? `<button class="btn btn-secondary" data-pick="${k}">${ico('pick', 20)}I’m here now</button><p class="meta" style="margin-top:var(--s3);color:var(--ink-2);font-size:var(--t14)">Shows this building’s parking, entrances, and services on your home, without using location.</p>` : ''}`;
+      ${l.here ? `<button class="btn btn-secondary" data-pick="${k}">${ico('pick', 20)}I’m here now</button>` : ''}`;
   }
   if (key.startsWith('pv:')) {
     const p = PROVIDERS.find(x => x.id === key.slice(3));
@@ -2271,12 +2128,12 @@ function routeTarget(spec, pk) {
 function routeSteps(pk, t, zf) {
   const P = PLACES[pk], g = P.park[0], floor = t.floor || zf;
   const st = [
-    { k: 'Drive', ic: 'directions', t: `Drive to ${g.t}`, s: 'Opens your map app (sample route)' },
-    { k: 'Park', ic: 'parking', t: `Park in ${g.t}`, s: P.walk },
-    { k: 'Enter', ic: 'entrance', t: P.ent.t, s: P.ent.s }
+    { ic: 'directions', t: `Drive to ${g.t}`, s: '' , drive: true },
+    { ic: 'parking', t: `Park in ${g.t}`, s: P.walk },
+    { ic: 'entrance', t: P.ent.t, s: P.ent.s }
   ];
-  if (floor !== 1) st.push({ k: 'Elevator', ic: 'elevator', t: `Take ${P.elev} to Floor ${floor}`, s: zf !== 1 && zf !== floor ? `You’re on Floor ${zf} – go ${floor > zf ? 'up' : 'down'} to Floor ${floor}` : 'The elevators are past the information desk, on your right' });
-  st.push({ k: 'Arrive', ic: 'done', t: t.suite ? `${t.suite} – ${t.t}` : t.t, s: t.every ? 'Next to the elevators on this floor' : t.where || 'About 100 ft ahead, on your left' });
+  if (floor !== 1) st.push({ ic: 'elevator', k: 'Elevator', t: `${P.elev} to Floor ${floor}`, s: zf !== 1 && zf !== floor ? `Go ${floor > zf ? 'up' : 'down'} from Floor ${zf}` : 'Past the information desk, on your right' });
+  st.push({ ic: 'place', t: t.suite || t.t, s: t.every ? 'Next to the elevators' : 'Ahead on your left' });
   return st;
 }
 function routeNow(c, steps, t) {
@@ -2330,18 +2187,17 @@ function routeMap(pk, t, c, view) {
 }
 function routeHTML(spec) {
   const c0 = ctx(), pk = (spec && spec.split(':')[1]) || placeOf(c0) || 'cuh', c = placeOf(c0) === pk ? c0 : { id: 'away' }, P = PLACES[pk], t = routeTarget(spec, pk);
-  if (!t) return `<p class="kick">Directions</p><h1 id="page-h" tabindex="-1">Where are you going?</h1><p>Choose a department at ${P.short} and MyCare shows the way from where you are.</p>${destPicker(pk)}`;
+  if (!t) return `<p class="kick">Directions</p><h1 id="page-h" tabindex="-1">Where are you going?</h1>${destChips(pk)}`;
   const zf = zoneFloor(c), floor = t.floor || zf, steps = routeSteps(pk, t, zf), now = routeNow(c, steps, t);
   const m = routeMap(pk, t, c, routeView);
   const views = [['out', 'Outside'], ['1', 'Floor 1'], ...(floor !== 1 ? [[String(floor), `Floor ${floor}`]] : [])];
   const cur = routeView || (c.id === 'arriving' || !placeOf(c) ? 'out' : String(c.id === 'inside' ? zf : 1));
-  return `<p class="kick">Directions · simulated route</p><h1 id="page-h" tabindex="-1">To ${t.t}</h1>
-    <p class="route-sum"><span><b>${P.short}</b></span><span>${t.floor ? `Floor ${t.floor}` : 'This floor'}${t.suite ? `, ${t.suite}` : ''}</span><span>About ${now >= 3 ? 2 : now === 2 ? 4 : 9} min</span></p>
-    <div class="route-map">${m.svg}<span class="way-cap">${m.cap}</span></div>
+  return `<p class="kick">Directions</p><h1 id="page-h" tabindex="-1">${t.t}</h1>
+    <p class="route-sum">${P.nick} · ${t.floor ? `Floor ${t.floor}` : 'This floor'}${t.suite ? ` · ${t.suite}` : ''} · about ${now >= 3 ? 2 : now === 2 ? 4 : 9} min</p>
+    <div class="route-map">${m.svg}<span class="map-tag">Simulated</span></div>
     <div class="chips floors" role="group" aria-label="Show on map">${views.map(([k, l]) => `<button class="chip${cur === k ? ' sel' : ''}" data-floor="${k}" aria-pressed="${cur === k}">${l}</button>`).join('')}</div>
-    <ol class="steps" aria-label="Steps">${steps.map((s, i) => `<li class="step${i < now ? ' done' : i === now ? ' now' : ''}"><span class="step-n" aria-hidden="true">${i < now ? ico('stepDone', 20) : i + 1}</span>
-      <span class="txt"><span class="k">${s.k}<span class="vh">${i < now ? ', done' : i === now ? ', current step' : ''}</span></span><b>${s.t}</b><small>${s.s}</small>${i === now && s.k === 'Drive' ? `<button class="link" data-maps="${P.park[0].t}" style="justify-self:start">Open in your map app ${ico('external', 16)}</button>` : ''}</span></li>`).join('')}</ol>
-    <p class="callout">${ico('info', 20)}<span><b>Prototype route</b>The step that’s current follows the simulated location. A real build needs indoor positioning and UTSW floor plans.</span></p>`;
+    <ol class="rsteps" aria-label="Steps">${steps.map((s, i) => `<li class="${i < now ? 'done' : i === now ? 'now' : ''}"><span class="rs-n" aria-hidden="true">${ico(i < now ? 'stepDone' : s.ic, 20)}</span>
+      <span class="t"><b>${s.t}<span class="vh">${i < now ? ', done' : i === now ? ', now' : ''}</span></b>${i === now ? (s.drive ? `<button class="link" data-maps="${P.park[0].t}">Open in your map app ${ico('external', 16)}</button>` : s.s ? `<small>${s.s}</small>` : '') : ''}</span></li>`).join('')}</ol>`;
 }
 
 /* ---------- Appearance ---------- */
@@ -2367,7 +2223,7 @@ $$('[data-apptheme]').forEach(b => b.onclick = () => setTheme(b.dataset.apptheme
 /* ---------- Menu drawer ---------- */
 const drawer = $('#drawer'), drBd = $('#dr-bd'); let drFrom = null, drTimer;
 function drawerHTML() {
-  return `<ul class="group" style="margin-top:var(--s2)">${row({ ic: 'place', title: 'Location and your home', sub: state.geoOn ? 'On · parking and directions at UTSW campuses' : 'Off', attrs: 'data-dr="settings"' })}${row({ ic: 'shuttle', title: 'Campus shuttle', sub: 'Routes and times', attrs: 'data-dr="shuttle"' })}</ul>
+  return `<ul class="group" style="margin-top:var(--s2)">${row({ ic: 'place', title: 'Location', sub: state.geoOn ? 'Help when you arrive · on' : 'Off', attrs: 'data-dr="settings"' })}${row({ ic: 'shuttle', title: 'Campus shuttle', sub: 'Routes and times', attrs: 'data-dr="shuttle"' })}</ul>
     <p class="ts-label">About UT Southwestern</p>
     <ul class="group">${row({ ic: 'why', title: 'Why UT Southwestern', attrs: 'data-dr="why"' })}${row({ ic: 'guide', title: 'Patient resource guide', attrs: 'data-dr="guide"' })}${row({ ic: 'website', title: 'Visit the full website', sub: 'utswmed.org', attrs: 'data-ext="utswmed.org"', ext: true })}</ul>
     <p class="ts-label" id="ap-h">Appearance</p>
@@ -2447,76 +2303,51 @@ function openLockedSheet(k, from) {
 }
 /* Options from the card's three dots or the place pill */
 function openOptions(from) {
-  const c = ctx(), on = showsCtx(c), lbl = placeLabel(c);
-  openSheet(`<h2 id="sheet-h" tabindex="-1">Location options</h2>
-    <p class="meta">${on ? `${c.src === 'manual' ? 'You chose' : 'Showing'}: ${lbl || 'location help'}` : 'Showing the common homepage'}</p>
-    <ul class="group">${row({ ic: 'pick', title: c.src === 'manual' ? 'Change where I am' : 'Not here? Choose where you are', attrs: 'data-picker' })}
-      ${on ? row({ ic: 'pause', title: 'Show the common homepage', sub: 'For the rest of today at this place', attrs: 'data-pause' }) : ''}
-      ${c.src === 'manual' ? row({ ic: 'close', title: 'Clear my choice', sub: state.perm === 'granted' ? 'Use my location again' : 'Back to the common homepage', attrs: 'data-clear-manual' }) : ''}
+  const c = ctx(), on = showsCtx(c);
+  openSheet(`<h2 id="sheet-h" tabindex="-1">${on ? placeLabel(c) || 'Location' : 'Location'}</h2>
+    <ul class="group">${row({ ic: 'pick', title: c.src === 'manual' ? 'Change where I am' : 'Not here?', attrs: 'data-picker' })}
+      ${on ? row({ ic: 'pause', title: 'Show the common homepage', attrs: 'data-pause' }) : ''}
+      ${c.src === 'manual' ? row({ ic: 'close', title: 'Clear my choice', attrs: 'data-clear-manual' }) : ''}
       ${row({ ic: 'info', title: 'Why am I seeing this?', attrs: 'data-why' })}
-      ${row({ ic: 'place', title: 'Location and your home', sub: 'Settings', attrs: 'data-page="settings"' })}</ul>`, from);
+      ${row({ ic: 'place', title: 'Location settings', attrs: 'data-page="settings"' })}</ul>`, from);
 }
-/* I'm at… (manual), also the Not here? correction */
-function openPicker(from, notHere) {
-  const c = ctx(), pk = placeOf(c);
-  const visit = k => isPatient() ? ` · your ${PLACES[k].visit.time} visit` : '';
-  openSheet(`<h2 id="sheet-h" tabindex="-1">${notHere && pk ? `Not at ${PLACES[pk].short}?` : 'Where are you?'}</h2>
-    <p>Pick a place and your home shows its parking, entrances, and services. No location needed – change it any time.</p>
-    <ul class="group">${['cuh', 'scc'].map(k => row({ ic: PLACES[k].ic, title: PLACES[k].short, sub: `${PLACES[k].full}${visit(k)}`, attrs: `data-pick="${k}"` })).join('')}
-      ${row({ ic: 'place', title: 'Another UTSW location', sub: 'Directions and parking on each location’s page', attrs: 'data-tab="2"' })}
-      ${row({ ic: 'close', title: 'I’m not at a UTSW campus', sub: 'Show the common homepage', attrs: 'data-not-campus' })}</ul>
-    <p class="or">or</p>
-    <ul class="group">${row({ ic: 'nearMe', title: 'Enter a ZIP code or city', sub: 'Sorts UTSW locations by distance', attrs: 'data-loc-open' })}
+/* I'm at… – also the Not here? correction. Works without location. */
+function openPicker(from) {
+  openSheet(`<h2 id="sheet-h" tabindex="-1">Where are you?</h2>
+    <div style="margin-top:var(--s4)">${bldTiles()}</div>
+    <ul class="group">${row({ ic: 'place', title: 'Another UTSW location', attrs: 'data-tab="2"' })}${row({ ic: 'close', title: 'Not at a UTSW campus', attrs: 'data-not-campus' })}${row({ ic: 'nearMe', title: 'Enter a ZIP code or city', attrs: 'data-loc-open' })}
       ${manual && state.perm === 'granted' ? row({ ic: 'myLoc', title: 'Use my location instead', attrs: 'data-clear-manual' }) : ''}</ul>`, from);
 }
 function openWherePicker(from) {
-  const P = PLACES.cuh, opts = [['arriving', '', 'On my way or parking'], ['entrance', '', 'At the main entrance'], ['inside', 'f1', 'Inside – Floor 1, main lobby'], ['inside', 'f2', 'Inside – Floor 2'], ['inside', 'f7', 'Inside – Floor 7']];
-  openSheet(`<h2 id="sheet-h" tabindex="-1">Where are you at ${P.short}?</h2>
-    <p>So the home can show the right next step.</p>
+  const opts = [['arriving', '', 'On my way'], ['entrance', '', 'At the main entrance'], ['inside', 'f1', 'Floor 1'], ['inside', 'f2', 'Floor 2'], ['inside', 'f7', 'Floor 7']];
+  openSheet(`<h2 id="sheet-h" tabindex="-1">Where at ${PLACES.cuh.nick}?</h2>
     <ul class="rd-list" role="radiogroup" aria-labelledby="sheet-h">${opts.map(([id, z, l]) => `<li><button class="rd-row" role="radio" aria-checked="${!!manual && manual.id === id && (manual.zone || '') === z}" data-where="${id}:${z}"><span class="radio" aria-hidden="true"></span><span class="txt">${l}</span></button></li>`).join('')}</ul>
-    <button class="btn btn-secondary" data-picker>Back</button>`, from);
+    <button class="btn btn-tonal" data-picker>Back</button>`, from);
 }
-/* Before the system dialog: what location is for, and what it isn't */
+/* Before the system dialog: show what it's for, in pictures */
 function openGeoIntro(from) {
-  openSheet(`<h2 id="sheet-h" tabindex="-1">Get help when you arrive</h2>
-    <p>When you’re at a UT Southwestern campus, MyCare can put what you need first.</p>
-    <ul class="pz-sig">
-      <li>${circle('parking', 40)}<span class="txt"><b>Parking and the best entrance</b><span>Open spaces, rates, and the door closest to where you’re going.</span></span></li>
-      <li>${circle('navigate', 40)}<span class="txt"><b>Directions inside</b><span>Step by step to your floor and suite.</span></span></li>
-      <li>${circle('food', 40)}<span class="txt"><b>What’s nearby</b><span>Restrooms, food, pharmacy, and services in the building.</span></span></li>
-    </ul>
-    <p class="callout">${ico('privacy', 20)}<span><b>Your location stays on this phone</b>MyCare checks it only while the app is open, to choose what the home shows. It isn’t saved, sent to your care team, or added to your record.</span></p>
-    <p class="meta">Design intent for this prototype – UTSW privacy and Epic teams confirm the final policy.</p>
+  openSheet(`<h2 id="sheet-h" tabindex="-1">Help when you arrive</h2>
+    <div class="intro-art">${stripSVG('cuh', 'drive', true)}</div>
+    <div class="nbs static">${[['parking', 'Parking'], ['entrance', 'Best entrance'], ['navigate', 'Directions']].map(([ic, t]) => `<span class="nb" style="--j:0">${circle(ic, 48)}<span class="nbl">${t}</span></span>`).join('')}</div>
+    <p class="callout">${ico('privacy', 20)}<span>Your location stays on this phone, only while MyCare is open.</span></p>
     <button class="btn btn-primary" data-geo-continue>Continue</button>
-    <button class="btn btn-secondary" style="margin-top:var(--s3)" data-picker>Choose a campus instead</button>
-    <button class="btn btn-tonal" style="margin-top:var(--s3)" data-sheet-close>Not now</button>`, from);
+    <button class="btn btn-tonal" style="margin-top:var(--s3)" data-sheet-close>Not now</button>
+    <p style="text-align:center;margin-top:var(--s2)"><button class="link" data-picker>Choose a campus instead</button></p>`, from);
 }
 function openWhy(from) {
   const c = ctx(), pk = placeOf(c), on = showsCtx(c);
-  const sig = [];
-  if (c.src === 'manual') sig.push(['pick', 'Your choice', `You chose ${placeLabel(c)}. Location isn’t used.`, 'On this device']);
-  else if (c.id === 'unavailable') sig.push(['locOff', 'Location', 'Location is allowed, but your phone can’t find where you are right now.', 'Simulated in this prototype']);
-  else if (on) sig.push(['place', 'Location', `Your phone’s ${c.id === 'approx' ? 'approximate' : c.id === 'inside' ? 'indoor' : 'precise'} location shows ${c.id === 'approx' ? 'you’re near the Dallas campus' : c.id === 'inside' ? `you’re on Floor ${zoneFloor(c)}` : c.id === 'arriving' ? 'you’re arriving' : 'you’re at the entrance'}.`, 'Simulated in this prototype']);
-  else sig.push(['place', 'Location', state.perm === 'granted' && state.geoOn ? 'You’re not at a UTSW campus, so you see the common homepage.' : 'Location isn’t on for MyCare, so you see the common homepage.', 'On this device']);
-  if (pk && isPatient()) sig.push(['visits', 'Your visit today', `Your ${PLACES[pk].visit.time} visit is at this ${pk === 'scc' ? 'center' : 'hospital'}.`, 'From MyChart · sample patient']);
-  if (pk) sig.push(['indoor', 'Building information', 'Parking, entrances, floors, and services for this building.', 'From UTSW · sample data']);
-  openSheet(`<h2 id="sheet-h" tabindex="-1">Why you’re seeing this</h2>
-    <p>${on ? 'MyCare moved this to the top of your home because of:' : 'What MyCare is using right now:'}</p>
-    <ul class="pz-sig">${sig.map(([ic, t, d, src]) => `<li>${circle(ic, 40)}<span class="txt"><b>${t}</b><span>${d}</span><span class="tag">${src}</span></span></li>`).join('')}</ul>
-    <p class="callout">${ico('privacy', 20)}<span><b>Your location stays on this phone</b>It’s read only while MyCare is open. It isn’t saved, shared with your care team, or used for anything else.</span></p>
-    ${on ? `<button class="btn btn-primary" data-sheet-close>Keep showing</button><button class="btn btn-secondary" style="margin-top:var(--s3)" data-pause>Show the common homepage</button>` : ''}
-    <button class="btn btn-tonal" style="margin-top:var(--s3)" data-page="settings">Location settings</button>`, from);
+  const sig = [c.src === 'manual' ? ['pick', 'You chose this place', 'On this phone'] : c.id === 'unavailable' ? ['locOff', 'No location signal', 'Simulated'] : ['place', on ? 'Your location' : 'Location not in use', on ? 'Simulated' : 'On this phone']];
+  if (pk && isPatient()) sig.push(['visits', `Your ${PLACES[pk].visit.time} visit here`, 'MyChart']);
+  if (pk) sig.push(['indoor', 'Building info', 'Sample data']);
+  openSheet(`<h2 id="sheet-h" tabindex="-1">Why you see this</h2>
+    <ul class="sig">${sig.map(([ic, t, src]) => `<li>${circle(ic, 40)}<b>${t}</b><span class="tag">${src}</span></li>`).join('')}</ul>
+    <p class="callout">${ico('privacy', 20)}<span>Location is read only while MyCare is open. It isn’t saved or shared.</span></p>
+    ${on ? `<button class="btn btn-primary" data-sheet-close>Keep showing</button><button class="btn btn-secondary" style="margin-top:var(--s3)" data-pause>Show the common homepage</button>` : ''}`, from);
 }
 function openParking(from) {
-  const pk = placeOf(ctx()) || 'cuh', P = PLACES[pk];
-  openSheet(`<h2 id="sheet-h" tabindex="-1">Parking at ${P.short}</h2><p class="meta">Sample rates and availability</p>
-    <ul class="group">${P.park.map(p => row({ ic: p.ic, title: p.t, sub: `${p.s}${p.open ? `<br>About ${p.open} of ${p.cap} spaces open` : ''}`, attrs: `data-maps="${p.t}"` })).join('')}</ul>
-    <p class="callout">${ico('info', 20)}<span><b>Real availability needs a parking feed</b>Garage counts here are sample numbers.</span></p>`, from);
-}
-function openCarSheet(from) {
-  openSheet(`<h2 id="sheet-h" tabindex="-1">Your car</h2><p>Garage A, Level 3, near the walkway (sample). Saved on this phone.</p>
-    <button class="btn btn-primary" data-maps="your car">${ico('car', 20)}Directions to your car</button>
-    <button class="btn btn-secondary" style="margin-top:var(--s3)" data-park-clear>Forget this spot</button>`, from);
+  const P = PLACES[placeOf(ctx()) || 'cuh'];
+  openSheet(`<h2 id="sheet-h" tabindex="-1">Parking</h2><p class="meta">${P.short} · sample</p>
+    <ul class="group">${P.park.map(p => row({ ic: p.ic, title: p.t, attrs: `data-maps="${p.t}"`, trail: `<span class="val">${p.val}</span>` })).join('')}</ul>`, from);
 }
 
 /* ---------- Permission: explanation first, then the system dialog ---------- */
@@ -2535,11 +2366,11 @@ function askPermission(mode = 'ask') {
 $('#sys-precise').onclick = e => { sysPrecise = !sysPrecise; e.currentTarget.setAttribute('aria-checked', sysPrecise); };
 function answerSys(a) {
   sys.hidden = true; sysBd.hidden = true; popLayer(sys);
-  if (sysMode === 'precise') { if (a !== 'deny') { state.acc = 'precise'; update({ announce: true }); } else toast('Keeping approximate location – choose your building instead'); return; }
-  if (a === 'deny') { state.perm = 'denied'; update(); toast('Location stays off – you can choose where you are any time'); return; }
+  if (sysMode === 'precise') { if (a !== 'deny') { state.acc = 'precise'; update({ announce: true }); } else toast('Keeping approximate location'); return; }
+  if (a === 'deny') { state.perm = 'denied'; update(); toast('Location stays off – choose a place any time'); return; }
   state.perm = 'granted'; state.acc = sysPrecise ? 'precise' : 'approx'; manual = null;
   update({ announce: true });
-  if (!showsCtx(ctx())) toast('Location is on – help appears when you arrive at a UTSW campus', true);
+  if (!showsCtx(ctx())) toast('Location on – help appears when you arrive', true);
 }
 $$('[data-sys]').forEach(b => b.onclick = () => answerSys(b.dataset.sys));
 
@@ -2572,16 +2403,16 @@ function openLocSheet(from) {
 
 /* ---------- Location settings page ---------- */
 function settingsHTML() {
-  const permTxt = state.perm === 'granted' ? `While using the app · ${state.acc === 'precise' ? 'Precise' : 'Approximate'}${state.fix ? '' : ' · no fix right now'}` : state.perm === 'denied' ? 'Not allowed – change it in Settings' : 'Not asked yet';
-  return `<p class="kick">Settings</p><h1 id="page-h" tabindex="-1">Location and your home</h1>
+  const permTxt = state.perm === 'granted' ? `While using the app · ${state.acc === 'precise' ? 'Precise' : 'Approximate'}` : state.perm === 'denied' ? 'Off' : 'Not asked yet';
+  return `<p class="kick">Settings</p><h1 id="page-h" tabindex="-1">Location</h1>
     <ul class="rd-list" style="margin-top:var(--s4)">
-      <li><button class="sw-row" role="switch" data-st="geo" aria-checked="${state.geoOn}"><span class="txt"><span>Adapt my home to where I am</span><small>Parking, entrances, directions, and services when you’re at a UTSW campus</small></span><span class="track" aria-hidden="true"></span></button></li>
-      <li><button class="sw-row" role="switch" data-st="notif" aria-checked="${state.notif}"><span class="txt"><span>Arrival notice</span><small>A short notice when you arrive. It names the place only – never visit details.</small></span><span class="track" aria-hidden="true"></span></button></li>
+      <li><button class="sw-row" role="switch" data-st="geo" aria-checked="${state.geoOn}"><span class="txt"><span>Adapt my home to where I am</span><small>At UTSW campuses</small></span><span class="track" aria-hidden="true"></span></button></li>
+      <li><button class="sw-row" role="switch" data-st="notif" aria-checked="${state.notif}"><span class="txt"><span>Arrival notice</span><small>Names the place only</small></span><span class="track" aria-hidden="true"></span></button></li>
     </ul>
     <ul class="group">${row({ ic: state.perm === 'granted' ? 'myLoc' : 'locOff', title: 'Location access', sub: permTxt, attrs: state.perm === 'ask' ? 'data-geo-intro' : 'data-toast="Opening Settings, then MyCare, then Location"', ext: state.perm !== 'ask' })}
-      ${row({ ic: 'pick', title: 'Choose where you are', sub: manual ? `Now: ${placeLabel(ctx())}` : 'Works without location', attrs: 'data-picker' })}
-      ${paused ? row({ ic: 'pause', title: 'Paused today', sub: paused.pk === 'cuh' || paused.pk === 'scc' ? PLACES[paused.pk].short : 'Location content', attrs: 'data-unpause', trail: '<span class="btn-sm" aria-hidden="true">Show again</span>' }) : ''}</ul>
-    <p class="callout">${ico('privacy', 20)}<span><b>What MyCare does with location</b>It reads your location only while the app is open, decides the home on this phone, and doesn’t save or share it. Visit details come from MyChart after sign-in.</span></p>`;
+      ${row({ ic: 'pick', title: 'Choose where you are', sub: manual ? placeLabel(ctx()) : '', attrs: 'data-picker' })}
+      ${paused ? row({ ic: 'pause', title: 'Paused today', attrs: 'data-unpause', trail: '<span class="val">Show</span>' }) : ''}</ul>
+    <p class="callout">${ico('privacy', 20)}<span>Read only while MyCare is open. Never saved or shared.</span></p>`;
 }
 
 /* ---------- Search (one overlay; places in this building come first on campus) ---------- */
@@ -2599,7 +2430,7 @@ function searchIndex() {
     ['Resources', 'Pay a bill as a guest', 'No sign-in needed', 'bill', 'guestpay'],
     ['Resources', 'Financial assistance', 'Applications and eligibility', 'aid', 'aid'],
     ['Resources', 'Parking at Clements', 'Garage A, valet, and accessible parking (sample)', 'parking', 'park'],
-    ...(pk === 'scc' || !pk ? SUPPORT.map(s => ['Resources', s.t, `Simmons Cancer Center · ${s.s}`, s.ic, s.k]) : [])];
+    ...(pk === 'scc' || !pk ? SUPPORT.map(s => ['Resources', PAGES[s.k].title, 'Simmons Cancer Center', s.ic, s.k]) : [])];
 }
 function openSearch(q = '', from) {
   soFrom = from || document.activeElement;
@@ -2749,8 +2580,7 @@ phone.addEventListener('click', e => {
   if ((b = c('[data-sheet-close]'))) { closeSheet(); return; }
   if ((b = c('[data-ctx-opts]'))) { openOptions(b); return; }
   if ((b = c('[data-why]'))) { openWhy(b); return; }
-  if ((b = c('[data-not-here]'))) { openPicker(b, true); return; }
-  if ((b = c('[data-picker]'))) { openPicker(b.closest('#sheet') ? sheetReturn : b, false); return; }
+    if ((b = c('[data-picker]'))) { openPicker(b.closest('#sheet') ? sheetReturn : b); return; }
   if ((b = c('[data-pick]'))) {
     const k = b.dataset.pick;
     if (k === 'cuh') { if (!page.hidden) closePage(); openWherePicker(b.closest('#sheet') ? sheetReturn : b); return; }
@@ -2760,18 +2590,14 @@ phone.addEventListener('click', e => {
   if ((b = c('[data-not-campus]'))) { closeSheet(true); manual = null; const cc = ctx(); if (cc.id !== 'away') { paused = { pk: pauseKey(cc), why: 'nothere' }; } update(); toast('Showing the common homepage', false, cc.id !== 'away' ? { label: 'Undo', fn: () => { paused = null; update(); } } : null); say('Common homepage'); return; }
   if ((b = c('[data-clear-manual]'))) { closeSheet(true); manual = null; update(); toast(state.perm === 'granted' ? 'Using your location again' : 'Back to the common homepage'); return; }
   if ((b = c('[data-pause]'))) { closeSheet(true); pauseHere('today'); return; }
-  if ((b = c('[data-unpause]'))) { paused = null; update(); if (!page.hidden) openPage('settings', null, true, true); toast('Location content is back', true); return; }
+  if ((b = c('[data-unpause]'))) { paused = null; update(); if (!page.hidden) openPage('settings', null, true, true); toast('Location help is back', true); return; }
   if ((b = c('[data-geo-intro]'))) { openGeoIntro(b.closest('#page') ? b : b); return; }
   if ((b = c('[data-geo-continue]'))) { closeSheet(true); askPermission('ask'); return; }
-  if ((b = c('[data-offer-hide]'))) { offerHidden = true; update(); toast('Hidden for now – find it under Menu, then Location and your home'); return; }
+  if ((b = c('[data-offer-hide]'))) { offerHidden = true; update(); toast('Hidden – find it in Menu, then Location'); return; }
   if ((b = c('[data-precise]'))) { askPermission('precise'); return; }
   if ((b = c('[data-retry-loc]'))) { say('Trying to find your location'); b.disabled = true; setTimeout(() => { if (!state.fix) { b.disabled = false; toast('Still can’t find your location – choose where you are'); } else update({ announce: true }); }, RM() ? 200 : 900); return; }
-  if ((b = c('[data-dest]'))) { const [pk, k] = b.dataset.dest.split(':'); dest[pk] = k; if (!page.hidden && !pageHist.at(-1).startsWith('route')) closePage(); update(); toast(`Going to ${deptOf(pk, k).t}`, true); return; }
-  if ((b = c('[data-dest-change]'))) { delete dest[b.dataset.destChange]; update(); $('[data-dest]')?.focus(); return; }
+  if ((b = c('[data-dest]'))) { const [pk, k] = b.dataset.dest.split(':'); dest[pk] = k; if (!page.hidden && !pageHist.at(-1).startsWith('route')) closePage(); update(); island(`Going to ${deptOf(pk, k).short}`, 'navigate'); return; }
   if ((b = c('[data-route]'))) { if (!sheet.hidden) closeSheet(true); routeView = null; const s = b.dataset.route; if (!page.hidden) { pageHist.push(s ? `route:${s}` : 'route'); openPage(pageHist.at(-1), null, true); } else openPage(s ? `route:${s}` : 'route', b); return; }
-  if ((b = c('[data-parking]'))) { openParking(b); return; }
-  if ((b = c('[data-park-save]'))) { parked = !parked; update(); toast(parked ? 'Saved: Garage A, Level 3 (sample)' : 'Parking spot cleared', parked, parked ? { label: 'Undo', fn: () => { parked = false; update(); } } : null); $('[data-park-save]')?.focus(); return; }
-  if ((b = c('[data-park-clear]'))) { parked = false; closeSheet(); update(); toast('Parking spot cleared'); return; }
   if ((b = c('[data-maps]'))) { toast(`Opening directions to ${b.dataset.maps} in your map app (prototype)`); return; }
   if ((b = c('[data-mychart]'))) { toast(`Opening ${b.dataset.mychart} in MyChart (prototype)`); return; }
   if ((b = c('[data-signout]'))) { setAuth('guest'); toast('Signed out'); return; }
@@ -2797,7 +2623,7 @@ phone.addEventListener('click', e => {
 const lockscr = $('#lockscr');
 function openLock() {
   stopWalk(); closeAll();
-  state.perm = 'granted'; state.fix = true; state.acc = 'precise'; state.geoOn = true; manual = null; paused = null; state.notif = true;
+  Object.assign(state, { perm: 'granted', fix: true, acc: 'precise', geoOn: true, notif: true }); manual = null; paused = null;
   if (state.tab !== 0) setTab(0);
   lockscr.hidden = false; pushLayer(lockscr, openFromLock);
   state.sim = 'arriving'; update();
@@ -2806,7 +2632,7 @@ function openLock() {
 }
 function openFromLock() {
   lockscr.hidden = true; popLayer(lockscr); $('#scroller').scrollTop = 0;
-  toast('Opened from your arrival notice – parking and directions are at the top', false, { label: 'Hide', fn: () => pauseHere('today') });
+  renderHome(); ping(); island(`Arriving at ${PLACES.cuh.nick}`, 'car');
   say('Arriving at Clements University Hospital. Parking and directions are at the top.');
   setTimeout(() => $('#ctx-h')?.focus({ preventScroll: true }), 100);
 }
@@ -2816,19 +2642,21 @@ $('#lock-demo').onclick = openLock;
 /* ---------- Board controls ---------- */
 const pressSeg = (sel, attr, val) => $$(sel).forEach(b => b.setAttribute('aria-pressed', b.dataset[attr] === String(val)));
 function closeAll() { if (layers.length) [...layers].reverse().forEach(l => l.el.id !== 'lockscr' && l.close()); }
+const SHOWS = { away: 'Common homepage', arriving: 'Arrival card', entrance: 'Entrance card', inside: 'Floor card', cancer: 'Cancer center card', approx: 'Which building?', unavailable: 'No-signal fallback' };
 function syncBoard() {
-  pressSeg('[data-sim]', 'sim', state.fix ? state.sim : 'nofix');
-  pressSeg('[data-zone]', 'zone', state.sim === 'inside' ? state.zone : '-');
+  pressSeg('[data-sim]', 'sim', state.sim);
+  pressSeg('[data-zone]', 'zone', state.zone);
+  $('#zone').hidden = state.sim !== 'inside';
   pressSeg('[data-perm]', 'perm', state.perm === 'granted' && !state.fix ? 'nofix' : state.perm);
   pressSeg('[data-acc]', 'acc', state.acc);
   pressSeg('[data-auth]', 'auth', state.auth);
-  pressSeg('[data-geo]', 'geo', state.geoOn ? 'on' : 'off');
-  const c = ctx(), why = { manual: 'you chose it', off: 'the feature is off', ask: 'MyCare hasn’t asked for location yet', denied: 'location is denied', nofix: 'there’s no location fix', gps: 'simulated location' }[c.src];
-  $('#now-line').innerHTML = `Home shows: <b>${showsCtx(c) ? (c.id === 'unavailable' ? 'Location unavailable fallback' : placeLabel(c) + (c.id === 'arriving' ? ' (arriving)' : '')) : pausedHere(c) ? 'Common homepage (paused here)' : 'Common homepage'}</b> – ${why}`;
+  const c = ctx(), why = { manual: 'you chose it', off: 'location help off', ask: 'location not asked yet', denied: 'location denied', nofix: 'no signal', gps: state.sim === 'away' ? 'away from campus' : 'simulated location' }[c.src];
+  $('#now-line').innerHTML = `Home shows <b>${pausedHere(c) ? 'Common homepage (paused)' : showsCtx(c) ? SHOWS[c.id] : 'Common homepage'}</b> · ${why}`;
 }
-/* The device moved: a fresh, trusted reading replaces a manual pick and ends a pause for another place */
+/* The phone moved. A journey step allows location if it was never asked, so every step shows something. */
 function move(sim, zone) {
   if (sim === 'nofix') state.fix = false; else { state.fix = true; state.sim = sim; if (zone) state.zone = zone; }
+  if (state.perm === 'ask' && sim !== 'away') { state.perm = 'granted'; state.acc = 'precise'; }
   if (state.perm === 'granted' && state.fix) manual = null;
   const c = ctx();
   if (paused && pauseKey(c) !== paused.pk) paused = null;
@@ -2839,17 +2667,17 @@ $$('[data-sim]').forEach(b => b.onclick = () => { stopWalk(); move(b.dataset.sim
 $$('[data-zone]').forEach(b => b.onclick = () => { stopWalk(); move('inside', b.dataset.zone); });
 $$('[data-perm]').forEach(b => b.onclick = () => {
   stopWalk(); const v = b.dataset.perm;
-  if (v === 'nofix') { state.perm = 'granted'; state.fix = false; } else { state.perm = v; if (v === 'granted') state.fix = true; }
+  if (v === 'nofix') { state.perm = 'granted'; state.fix = false; } else { state.perm = v; state.fix = true; }
+  if (v === 'ask') offerHidden = false;
   update({ announce: v === 'granted' || v === 'nofix' });
 });
 $$('[data-acc]').forEach(b => b.onclick = () => { stopWalk(); state.acc = b.dataset.acc; update({ announce: true }); });
 $$('[data-auth]').forEach(b => b.onclick = () => { stopWalk(); setAuth(b.dataset.auth); });
-$$('[data-geo]').forEach(b => b.onclick = () => { stopWalk(); state.geoOn = b.dataset.geo === 'on'; update(); });
 $$('[data-alerts]').forEach(b => b.onclick = () => {
-  state.alerts = +b.dataset.alerts; state.alertOpen = false; pressSeg('[data-alerts]', 'alerts', state.alerts); renderHome({ animate: false });
+  state.alerts = +b.dataset.alerts; state.alertOpen = false; pressSeg('[data-alerts]', 'alerts', state.alerts); update();
   if (state.alerts) { const l = $('#live-alert'); l.textContent = ''; setTimeout(() => l.textContent = `Alert: ${ALERT.title}`, 60); }
 });
-$$('[data-w]').forEach(b => b.onclick = () => { phone.style.setProperty('--pw', b.dataset.w + 'px'); phone.classList.toggle('narrow', b.dataset.w === '360'); pressSeg('[data-w]', 'w', b.dataset.w); $('#cap').textContent = `${b.dataset.w} × 844 pt · simulated location · fictional sample data`; setTimeout(moveInd, 420); });
+$$('[data-w]').forEach(b => b.onclick = () => { phone.style.setProperty('--pw', b.dataset.w + 'px'); phone.classList.toggle('narrow', b.dataset.w === '360'); pressSeg('[data-w]', 'w', b.dataset.w); setTimeout(moveInd, 420); });
 $$('[data-ts]').forEach(b => b.onclick = () => { phone.style.setProperty('--ts', b.dataset.ts); phone.classList.toggle('lg', b.dataset.ts !== '1'); pressSeg('[data-ts]', 'ts', b.dataset.ts); setTimeout(moveInd, 50); });
 const applyRM = v => { state.rm = v; phone.classList.toggle('rm', v); pressSeg('[data-rm]', 'rm', v ? 1 : 0); };
 $$('[data-rm]').forEach(b => b.onclick = () => applyRM(b.dataset.rm === '1'));
@@ -2857,35 +2685,34 @@ sysRM.addEventListener?.('change', e => applyRM(e.matches));
 function reset() {
   stopWalk(); closeAll(); if (!lockscr.hidden) { lockscr.hidden = true; popLayer(lockscr); }
   Object.assign(state, { sim: 'away', zone: 'f1', perm: 'ask', fix: true, acc: 'precise', auth: 'patient', geoOn: true, notif: true, locType: '' });
-  manual = null; paused = null; dest = {}; offerHidden = false; parked = false; typedLoc = null;
+  manual = null; paused = null; dest = {}; offerHidden = false; typedLoc = null;
   if (state.tab !== 0) setTab(0);
   update(); $('#scroller').scrollTop = 0;
 }
 $('#reset').onclick = () => { reset(); toast('Prototype reset'); };
-/* Jumps from the flow map: precise location allowed, then move */
+/* Jumps from How it works */
 function jump(k) {
   stopWalk(); closeAll(); if (!lockscr.hidden) { lockscr.hidden = true; popLayer(lockscr); }
   Object.assign(state, { perm: 'granted', fix: true, acc: 'precise', geoOn: true }); manual = null; paused = null;
   if (state.tab !== 0) setTab(0);
   phone.scrollIntoView({ behavior: RM() ? 'auto' : 'smooth', block: 'center' });
   $('#scroller').scrollTop = 0;
-  if (k === 'leave') { state.sim = 'inside'; state.zone = 'f7'; parked = true; update(); setTimeout(() => move('away'), RM() ? 300 : 900); return; }
   if (k === 'inside') return move('inside', 'f1');
   move(k);
 }
 $$('[data-jump]').forEach(b => b.onclick = () => jump(b.dataset.jump));
-/* Walk through a visit */
+/* Play the journey: away, arriving, entrance, Floor 1, Floor 7, back home */
 let walkT = null;
 const WALK = [['away'], ['arriving'], ['entrance'], ['inside', 'f1'], ['inside', 'f7'], ['away']];
-function stopWalk() { if (!walkT) return; clearTimeout(walkT); walkT = null; $('#walk').setAttribute('aria-pressed', 'false'); $('#walk').textContent = 'Walk through a visit'; }
+function stopWalk() { if (!walkT) return; clearTimeout(walkT); walkT = null; $('#walk').setAttribute('aria-pressed', 'false'); $('#walk').textContent = 'Play'; }
 $('#walk').onclick = () => {
   if (walkT) return stopWalk();
   closeAll(); Object.assign(state, { perm: 'granted', fix: true, acc: 'precise', geoOn: true }); manual = null; paused = null;
   if (state.tab !== 0) setTab(0);
-  $('#walk').setAttribute('aria-pressed', 'true'); $('#walk').textContent = 'Stop the walk-through';
+  $('#walk').setAttribute('aria-pressed', 'true'); $('#walk').textContent = 'Stop';
   phone.scrollIntoView({ behavior: RM() ? 'auto' : 'smooth', block: 'center' });
   let i = 0;
-  const step = () => { const [s, z] = WALK[i]; $('#scroller').scrollTo({ top: 0, behavior: RM() ? 'auto' : 'smooth' }); move(s, z); i++; if (i < WALK.length) walkT = setTimeout(step, 4000); else { walkT = 1; stopWalk(); } };
+  const step = () => { const [s, z] = WALK[i]; $('#scroller').scrollTo({ top: 0, behavior: RM() ? 'auto' : 'smooth' }); move(s, z); i++; if (i < WALK.length) walkT = setTimeout(step, 3500); else { walkT = 1; stopWalk(); } };
   step();
 };
 
