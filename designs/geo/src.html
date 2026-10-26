@@ -894,9 +894,14 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
 .phone.rm .mod[data-m^="ctx:"]:not(.out){animation-name:fadeOnly}
 
 /* Map strip: the car drives to the garage, or you pulse at the door */
-.ctx-map{position:relative; height:120px; background:var(--map-bg); overflow:hidden}
+.ctx-map{position:relative; display:block; width:100%; height:136px; border:0; padding:0; background:var(--map-bg); overflow:hidden; border-radius:0}
+button.ctx-map:active{filter:brightness(.97)}
+.m-street{fill:var(--map-road)} .m-bridge{fill:var(--map-block-2)} .m-door{fill:var(--ctl)} .m-done{stroke-opacity:.35}
+.m-floor{fill:var(--map-road); stroke:var(--map-block-2); stroke-width:4} .m-target{stroke:var(--blue); stroke-width:3} .m-focus{stroke:var(--blue); stroke-width:2}
+.m-mark{fill:var(--blue)} .m-check{fill:var(--ctl)} .m-check-t{fill:none; stroke:#FFFFFF; stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round}
+.map-where{position:absolute; left:var(--s3); bottom:var(--s2); font-size:var(--t12); font-weight:700; line-height:1.4; color:var(--ink); background:var(--surface); padding:2px var(--s2); border-radius:var(--r-pill); box-shadow:var(--shadow-1)}
 .ctx-map svg,.intro-art svg{position:absolute; inset:0; width:100%; height:100%}
-.map-tag{position:absolute; right:var(--s3); top:var(--s3); font-size:var(--t12); font-weight:600; line-height:1.4; color:var(--ink-2); background:var(--surface); padding:2px var(--s2); border-radius:var(--r-pill); box-shadow:var(--shadow-1)}
+.map-tag{position:absolute; right:var(--s3); bottom:var(--s2); font-size:var(--t12); font-weight:600; line-height:1.4; color:var(--ink-2); background:var(--surface); padding:2px var(--s2); border-radius:var(--r-pill); box-shadow:var(--shadow-1)}
 .m-sign{fill:var(--ctl)}
 .m-sign-t{fill:#FFFFFF; font:700 16.0px var(--font)}
 .m-car{fill:var(--ctl); stroke:#FFFFFF; stroke-width:3}
@@ -951,7 +956,7 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
 .flr-pin{position:absolute; right:0; color:var(--blue); --fill:1}
 .inside .big{font-size:var(--t28); line-height:1.15; font-weight:700; color:var(--blue); letter-spacing:-.02em}
 .inside .sm{font-size:var(--t14); line-height:1.4; color:var(--ink-2); margin-top:var(--s1)}
-.inside .map-tag{top:var(--s2); right:var(--s2)}
+.inside .map-tag{top:var(--s2); bottom:auto; right:var(--s2)}
 
 /* Which building? Two big tiles */
 .bld{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:var(--s2)}
@@ -1047,19 +1052,35 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
 .rt-draw{stroke-dasharray:var(--len); stroke-dashoffset:var(--len); animation:draw2 900ms var(--ease-in-out) both 200ms}
 @keyframes draw2{to{stroke-dashoffset:0}}
 .phone.rm .rt-draw{animation:none; stroke-dashoffset:0}
-.m-label{fill:var(--ink); font:600 12.0px var(--font)}
-.m-label2{fill:var(--ink-2); font:600 12.0px var(--font)}
+.m-label{fill:var(--ink); font:600 14.0px var(--font)}
+.m-label2{fill:var(--ink-2); font:600 14.0px var(--font)}
 .m-elev{fill:var(--tint-2); stroke:var(--blue); stroke-width:2}
 .m-me{fill:var(--cyan); stroke:#FFFFFF; stroke-width:3}
 .m-halo{fill:rgba(0,169,224,.25)}
 .floors{display:flex; gap:var(--s2); margin-top:var(--s3)}
-.rsteps{list-style:none; margin:var(--s4) 0 0; padding:0; display:grid; gap:var(--s2)}
-.rsteps li{display:grid; grid-template-columns:32px minmax(0,1fr); gap:var(--s3); align-items:start}
+.nav-card{display:flex; gap:var(--s3); align-items:flex-start; margin-top:var(--s4); padding:var(--s4); border-radius:var(--r-lg); background:var(--surface); box-shadow:var(--shadow-1), 0 0 0 1px var(--line)}
+.nav-card .txt{display:grid; gap:2px; min-width:0}
+.page-body .nav-card p{margin:0}
+.nav-of{font-size:var(--t12); font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--blue)}
+.nav-t{font-size:var(--t20); font-weight:700; line-height:1.3; color:var(--ink); text-wrap:balance}
+.nav-s{font-size:var(--t14); line-height:1.4; color:var(--ink-2)}
+.nav-ctl{display:flex; gap:var(--s2); margin-top:var(--s3)}
+.page-body .nav-ctl .btn{flex:1; margin:0; width:auto}
+.nav-ctl .icon-btn{width:var(--hit-lg); height:var(--hit-lg)}
+.nav-ctl .icon-btn:disabled{opacity:.4}
+.page-body .nav-maps{margin-top:var(--s2)}
+.all-steps{margin-top:var(--s4); border-top:1px solid var(--line)}
+.all-steps summary{min-height:var(--hit); display:flex; align-items:center; font-size:var(--t14); font-weight:600; color:var(--blue); cursor:pointer; border-radius:var(--r-sm)}
+.all-steps summary:focus-visible{box-shadow:var(--focus)}
+.rsteps{list-style:none; margin:0; padding:0; display:grid}
+.rs-b{width:100%; min-height:var(--hit); display:grid; grid-template-columns:32px minmax(0,1fr); gap:var(--s3); align-items:center; border:0; background:none; padding:var(--s1) 0; text-align:left; color:var(--ink); border-radius:var(--r-md)}
+.rs-b:active{background:var(--tint)}
 .rs-n{width:32px; height:32px; border-radius:50%; display:grid; place-items:center; background:var(--tint); color:var(--blue)}
 .rsteps .done .rs-n,.rsteps .now .rs-n{background:var(--ctl); color:#FFFFFF; --grad:-25}
 .rsteps .now .rs-n{box-shadow:0 0 0 6px rgba(0,169,224,.28)}
 .rsteps .t{display:grid; padding-top:4px; min-width:0}
 .rsteps b{font-size:var(--t16); font-weight:600; line-height:1.35; color:var(--ink)}
+.rsteps .now b{color:var(--blue); font-weight:700}
 .rsteps .done b{font-weight:500; color:var(--ink-2)}
 .rsteps small{font-size:var(--t14); line-height:1.4; color:var(--ink-2)}
 .rsteps .link{justify-self:start; margin-left:calc(-1 * var(--s2))}
@@ -1085,6 +1106,13 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
 .btn-pair{display:grid; grid-template-columns:1fr 1fr; gap:8.0px}
 .disp{display:grid; gap:8.0px}
 .disp > div{display:grid; grid-template-columns:72px minmax(0,1fr); align-items:center; gap:8.0px; font-size:14.0px; color:var(--bd-muted)}
+.tour{display:flex; align-items:center; gap:8.0px; width:min(100%, 414px)}
+.tour-t{flex:1; margin:0; text-align:center; font-size:14.0px; color:var(--bd-ink)}
+.tour-t b{color:var(--bd-accent)}
+.tour-b{min-height:44px; min-width:44px; padding:0 12.0px; border:1px solid var(--bd-line); border-radius:999px; background:var(--bd-panel); color:var(--bd-accent); display:inline-flex; align-items:center; justify-content:center; gap:4.0px; font-weight:700; font-size:14.0px; cursor:pointer}
+.tour-b.next{background:var(--bd-accent); border-color:var(--bd-accent); color:var(--bd-panel); padding:0 12.0px 0 20.0px}
+.tour-b:disabled{opacity:.4; cursor:default}
+.tour-b:focus-visible{outline:3px solid var(--bd-accent); outline-offset:2px}
 .now-line{margin:0; font-size:14.0px; color:var(--bd-muted); text-align:center}
 .now-line b{color:var(--bd-ink)}
 .jcards{display:grid; gap:16.0px; grid-template-columns:repeat(auto-fit, minmax(min(100%, 200px), 1fr))}
@@ -1108,7 +1136,7 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
 <div class="board">
   <header class="board-head">
     <h1>UTSW MyCare – location-aware home</h1>
-    <p>One homepage that adapts to where the patient is. Pick a step in the journey and watch the home change. Location is simulated; every visit, floor, and parking detail is sample data.</p>
+    <p>One homepage that adapts to where the patient is. Press Next under the phone to walk through a visit, or pick any step on the left. Location is simulated; every visit, floor, and parking detail is sample data.</p>
     <nav class="jump" aria-label="On this page"><a href="#how">How it works</a><a href="#perm">Permission</a><a href="#privacy">Privacy</a><a href="#integrations">Real integrations</a><a href="#tokens">Tokens</a><a href="#glyphs">Glyphs</a></nav>
   </header>
 
@@ -1254,7 +1282,8 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
         <div class="vh" id="live" aria-live="polite" aria-atomic="true"></div>
       </div>
     </div>
-    <p class="now-line" id="now-line" aria-live="polite"></p>
+    <div class="tour" role="group" aria-label="Demo steps"><button class="tour-b" id="tour-prev" aria-label="Previous step"><span class="ms" aria-hidden="true">chevron_left</span></button><p class="tour-t" id="tour-t" aria-live="polite"></p><button class="tour-b next" id="tour-next">Next<span class="ms s20" aria-hidden="true">chevron_right</span></button></div>
+    <p class="now-line" id="now-line"></p>
   </div>
 
   <section class="spec panel" id="tokens" aria-label="Token spec">
@@ -1480,19 +1509,19 @@ const PLACES = {
       { k: 'acc', ic: 'accessible', t: 'Accessible parking', val: 'Level 1', s: 'Garage A, Level 1, next to the elevators' }
     ],
     depts: [
-      { k: 'admit', t: 'Admitting', short: 'Admitting', floor: 1, suite: 'Suite 1100', room: 'a' },
-      { k: 'lab', t: 'Lab and blood draw', short: 'Lab', floor: 1, suite: 'Suite 1300', room: 'b' },
-      { k: 'imaging', t: 'Imaging', short: 'Imaging', floor: 2, suite: 'Suite 2100', room: 'a' },
-      { k: 'heart', t: 'Heart and vascular clinic', short: 'Heart clinic', floor: 7, suite: 'Suite 7200', room: 'a' },
-      { k: 'hearttest', t: 'Heart testing', short: 'Heart testing', floor: 7, suite: 'Suite 7400', room: 'b' }
+      { k: 'admit', t: 'Admitting', short: 'Admitting', floor: 1, suite: 'Suite 1100', room: 'R1' },
+      { k: 'lab', t: 'Lab and blood draw', short: 'Lab', floor: 1, suite: 'Suite 1300', room: 'R2' },
+      { k: 'imaging', t: 'Imaging', short: 'Imaging', floor: 2, suite: 'Suite 2100', room: 'R1' },
+      { k: 'heart', t: 'Heart and vascular clinic', short: 'Heart clinic', floor: 7, suite: 'Suite 7200', room: 'R1' },
+      { k: 'hearttest', t: 'Heart testing', short: 'Heart testing', floor: 7, suite: 'Suite 7400', room: 'R2' }
     ],
     amen: [
-      { k: 'cafe', ic: 'food', t: 'Café', floor: 1, ft: 140, where: 'Floor 1, east wing', hours: '6 a.m. to 8 p.m.', room: 'e' },
-      { k: 'pharm', ic: 'pharmacy', t: 'Pharmacy', floor: 1, ft: 220, where: 'Floor 1, past the main lobby', hours: 'Weekdays, 8 a.m. to 6 p.m.', room: 'd' },
-      { k: 'wc', ic: 'restroom', t: 'Restrooms', every: true, ft: 60, where: 'Every floor, next to the elevators', hours: 'Open 24 hours', room: 'c' },
-      { k: 'chapel', ic: 'chapel', t: 'Chapel', floor: 2, ft: 180, where: 'Floor 2, west wing · open to all faiths', hours: 'Open 24 hours', room: 'e' },
-      { k: 'atm', ic: 'atm', t: 'ATM', floor: 1, ft: 80, where: 'Floor 1, main lobby', hours: 'Open 24 hours', room: 'b' },
-      { k: 'desk', ic: 'infoDesk', t: 'Info desk', floor: 1, ft: 40, where: 'Floor 1, main lobby · interpreters on request', hours: '6 a.m. to 9 p.m.', room: 'd' }
+      { k: 'cafe', ic: 'food', t: 'Café', floor: 1, ft: 140, where: 'Floor 1, east wing', hours: '6 a.m. to 8 p.m.', room: 'R4' },
+      { k: 'pharm', ic: 'pharmacy', t: 'Pharmacy', floor: 1, ft: 220, where: 'Floor 1, past the main lobby', hours: 'Weekdays, 8 a.m. to 6 p.m.', room: 'R3' },
+      { k: 'wc', ic: 'restroom', t: 'Restrooms', every: true, ft: 60, where: 'Every floor, next to the elevators', hours: 'Open 24 hours', room: 'WC' },
+      { k: 'chapel', ic: 'chapel', t: 'Chapel', floor: 2, ft: 180, where: 'Floor 2, west wing · open to all faiths', hours: 'Open 24 hours', room: 'R2' },
+      { k: 'atm', ic: 'atm', t: 'ATM', floor: 1, ft: 80, where: 'Floor 1, main lobby', hours: 'Open 24 hours', room: 'L:atm' },
+      { k: 'desk', ic: 'infoDesk', t: 'Info desk', floor: 1, ft: 40, where: 'Floor 1, main lobby · interpreters on request', hours: '6 a.m. to 9 p.m.', room: 'L:desk' }
     ],
     visit: { tm: '10:30', ap: 'a.m.', time: '10:30 a.m.', type: 'Follow-up visit', pv: 'Taylor Brooks, M.D.', dept: 'heart' }
   },
@@ -1505,17 +1534,17 @@ const PLACES = {
       { k: 'accS', ic: 'accessible', t: 'Accessible parking', val: 'Level 1', s: 'Simmons garage, Level 1, by the walkway' }
     ],
     depts: [
-      { k: 'onc', t: 'Medical oncology clinic', short: 'Oncology', floor: 4, suite: 'Suite 4100', room: 'a' },
-      { k: 'rad', t: 'Radiation oncology', short: 'Radiation', floor: 1, suite: 'Suite 1500', room: 'd' },
-      { k: 'prc', t: 'Patient and family resource center', short: 'Resource center', floor: 2, suite: 'Suite 2200', room: 'b' }
+      { k: 'onc', t: 'Medical oncology clinic', short: 'Oncology', floor: 4, suite: 'Suite 4100', room: 'R1' },
+      { k: 'rad', t: 'Radiation oncology', short: 'Radiation', floor: 1, suite: 'Suite 1500', room: 'R1' },
+      { k: 'prc', t: 'Patient and family resource center', short: 'Resource center', floor: 2, suite: 'Suite 2200', room: 'R1' }
     ],
     amen: [
-      { k: 'cafeS', ic: 'food', t: 'Café', floor: 1, ft: 100, where: 'Floor 1, atrium', hours: '7 a.m. to 4 p.m.', room: 'e' },
-      { k: 'wcS', ic: 'restroom', t: 'Restrooms', every: true, ft: 50, where: 'Every floor, next to the elevators', hours: 'Open during clinic hours', room: 'c' },
-      { k: 'lib', ic: 'guide', t: 'Resource library', floor: 2, ft: 120, where: 'Floor 2, in the patient and family resource center', hours: 'Weekdays, 8 a.m. to 5 p.m.', room: 'b' },
-      { k: 'quiet', ic: 'chapel', t: 'Quiet room', floor: 2, ft: 160, where: 'Floor 2, east side', hours: 'Open during clinic hours', room: 'e' },
-      { k: 'atmS', ic: 'atm', t: 'ATM', floor: 1, ft: 70, where: 'Floor 1, atrium', hours: 'Open during clinic hours', room: 'b' },
-      { k: 'deskS', ic: 'infoDesk', t: 'Info desk', floor: 1, ft: 30, where: 'Floor 1, atrium · interpreters on request', hours: '7 a.m. to 6 p.m.', room: 'd' }
+      { k: 'cafeS', ic: 'food', t: 'Café', floor: 1, ft: 100, where: 'Floor 1, atrium', hours: '7 a.m. to 4 p.m.', room: 'R4' },
+      { k: 'wcS', ic: 'restroom', t: 'Restrooms', every: true, ft: 50, where: 'Every floor, next to the elevators', hours: 'Open during clinic hours', room: 'WC' },
+      { k: 'lib', ic: 'guide', t: 'Resource library', floor: 2, ft: 120, where: 'Floor 2, in the patient and family resource center', hours: 'Weekdays, 8 a.m. to 5 p.m.', room: 'R2' },
+      { k: 'quiet', ic: 'chapel', t: 'Quiet room', floor: 2, ft: 160, where: 'Floor 2, east side', hours: 'Open during clinic hours', room: 'R3' },
+      { k: 'atmS', ic: 'atm', t: 'ATM', floor: 1, ft: 70, where: 'Floor 1, atrium', hours: 'Open during clinic hours', room: 'L:atm' },
+      { k: 'deskS', ic: 'infoDesk', t: 'Info desk', floor: 1, ft: 30, where: 'Floor 1, atrium · interpreters on request', hours: '7 a.m. to 6 p.m.', room: 'L:desk' }
     ],
     visit: { tm: '2', ap: 'p.m.', time: '2 p.m.', type: 'Medical oncology visit', pv: 'Casey Moreno, M.D.', dept: 'onc' }
   }
@@ -1770,24 +1799,7 @@ const R = {
 };
 
 /* ---------- The context card: map strip, header, one visual, one action ---------- */
-/* Map strip, drawn in map tokens. drive: the car follows the route into the garage. door: you pulse at the entrance. */
-const ROUTE = 'M8 108 H112 V56 H128';
-function stripSVG(pk, mode, anim) {
-  const car = mode !== 'drive' ? '' : anim && !RM()
-    ? `<circle r="8" class="m-car"><animateMotion dur="1.8s" fill="freeze" calcMode="spline" keyPoints="0;0.85" keyTimes="0;1" keySplines=".4 0 .2 1" path="${ROUTE}"/></circle>`
-    : '<circle cx="112" cy="80" r="8" class="m-car"/>';
-  const me = mode === 'door' ? `${anim ? '<circle cx="240" cy="56" r="10" class="door-pulse"/>' : ''}<circle cx="240" cy="56" r="16" class="m-halo"/><circle cx="240" cy="56" r="7" class="m-me"/>` : '';
-  const sign = (x, y, l) => `<rect x="${x}" y="${y}" width="28" height="28" rx="6" class="m-sign"/><text x="${x + 14}" y="${y + 20}" text-anchor="middle" class="m-sign-t">${l}</text>`;
-  return `<svg viewBox="0 0 358 128" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="358" height="136" class="m-bg"/>
-    <g class="m-block"><rect x="8" y="8" width="88" height="84" rx="8"/><rect x="128" y="124" width="98" height="40" rx="8"/><rect x="240" y="120" width="110" height="40" rx="8"/><rect x="-20" y="124" width="116" height="40" rx="8"/></g>
-    <path d="M0 108H358M112 0V136M226 0V136" class="m-road" stroke-width="12"/>
-    <rect x="128" y="20" width="84" height="72" rx="8" class="m-block2"/><rect x="240" y="8" width="110" height="88" rx="8" class="m-block2"/>
-    ${sign(156, 42, 'P')}${pk === 'cuh' ? sign(281, 38, 'H') : ''}
-    <path d="${ROUTE}" class="${anim ? 'strip-route' : 'rt-path'}" pathLength="1"/><path d="M212 56 H240" class="m-walk"/>
-    ${mode === 'door' ? '' : `<g class="m-pin"><path d="M240 70c-9 0-14-6-14-13a14 14 0 0 1 28 0c0 7-5 13-14 13z"/></g><circle cx="240" cy="55" r="5" fill="#FFFFFF"/>`}
-    ${car}${me}</svg>`;
-}
-const mapStrip = (pk, mode) => `<div class="ctx-map">${stripSVG(pk, mode, !calmRender)}<span class="map-tag">Simulated</span></div>`;
+const mapStrip = (pk, mode, t) => { const inner = `${campusSVG(pk, mode, !calmRender, CAMPUS[pk].crop)}<span class="map-tag">Sample map</span>`; return t ? `<button class="ctx-map" data-route aria-label="Open directions">${inner}</button>` : `<div class="ctx-map">${inner}</div>`; };
 function ctxHead(c, ic, title, st) {
   return `<div class="ctx-hd">${circle(ic, 40, 'solid')}<div class="txt"><h2 id="ctx-h" tabindex="-1">${title}</h2>
     <p class="ctx-st">${c.src === 'manual' ? ico('pick', 16) : c.id === 'unavailable' ? ico('locOff', 16) : '<i class="live-dot" aria-hidden="true"></i>'}<span>${c.src === 'manual' ? `You chose · ${st}` : st}</span></p></div>
@@ -1812,7 +1824,7 @@ function ctxHTML(c) {
   const visitSt = pre => isPatient() ? `${pre}${pre ? ' · ' : ''}Visit at ${v.time}` : pre || 'Here now';
   if (c.id === 'arriving' || c.id === 'entrance' || c.id === 'cancer') {
     const n = c.id === 'arriving' ? 0 : 1;
-    strip = mapStrip(pk, n ? 'door' : 'drive');
+    strip = mapStrip(pk, n ? 'door' : 'drive', t);
     title = P.short;
     st = c.id === 'entrance' ? 'At the entrance' : visitSt(c.id === 'arriving' ? 'Arriving' : '');
     const next = !t ? destChips(pk) : '';
@@ -2120,84 +2132,105 @@ function wirePage() {
 }
 
 /* ---------- Directions: route steps and a simulated map ---------- */
+/* ---------- Maps: one campus map and one floor-plan system, shared by the card, Directions, Wayfinding, and the intro ---------- */
+/* Campus (400 × 260 units): Sample Blvd runs east–west through the middle, Campus Dr north–south at x 200.
+   Clements is north-east with Garage A across Campus Dr; Simmons is south-east with its garage. A covered walkway joins each garage to its entrance. */
+const CAMPUS = {
+  cuh: { b: [224, 16, 160, 90], g: [40, 24, 136, 82], name: ['Clements University', 'Hospital'], sign: 'H', door: [224, 52], gexit: [176, 52], drive: 'M0 130 H200 V88 H176', walk: 'M176 52 H224', crop: '0 0 400 160', car: [162, 130] },
+  scc: { b: [224, 154, 160, 90], g: [40, 154, 136, 82], name: ['Simmons Cancer', 'Center'], sign: '', door: [224, 208], gexit: [176, 208], drive: 'M0 130 H200 V172 H176', walk: 'M176 208 H224', crop: '0 100 400 160', car: [162, 130] }
+};
+const wrapWords = (s, n = 12) => s.split(' ').reduce((ls, w) => { const l = ls[ls.length - 1]; if (l && (l + ' ' + w).length <= n) ls[ls.length - 1] = l + ' ' + w; else ls.push(w); return ls; }, []);
+/* Centered, wrapped map label; y is the visual center */
+const mlabel = (x, y, s, cls = 'm-label', n = 12) => { const ls = wrapWords(s, n); return `<text x="${x}" y="${y + 5 - (ls.length - 1) * 8}" text-anchor="middle" class="${cls}">${ls.map((l, i) => `<tspan x="${x}" dy="${i ? 16 : 0}">${l}</tspan>`).join('')}</text>`; };
+const pin = ([x, y]) => `<g class="m-pin"><path d="M${x} ${y}c-9 0-14-7-14-14a14 14 0 0 1 28 0c0 7-5 14-14 14z"/></g><circle cx="${x}" cy="${y - 15}" r="5" fill="#FFFFFF"/>`;
+const youDot = ([x, y], pulse) => `${pulse ? `<circle cx="${x}" cy="${y}" r="10" class="door-pulse"/>` : ''}<circle cx="${x}" cy="${y}" r="16" class="m-halo"/><circle cx="${x}" cy="${y}" r="7" class="m-me"/>`;
+const sign = (x, y, l) => `<rect x="${x}" y="${y}" width="24" height="24" rx="6" class="m-sign"/><text x="${x + 12}" y="${y + 17}" text-anchor="middle" class="m-sign-t">${l}</text>`;
+/* mode: drive (car en route), walk (parked, walkway lit), door (you at the entrance), overview (both entrances pinned) */
+function campusSVG(pk, mode, anim, vb = '0 0 400 260', fit = 'slice') {
+  const C = pk && CAMPUS[pk], a = anim && !RM();
+  const place = k => { const B = CAMPUS[k], [x, y, w, h] = B.b, [gx, gy, gw, gh] = B.g;
+    return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="8" class="m-block2${k === pk ? ' m-focus' : ''}"/>${B.sign ? sign(x + 10, y + 10, B.sign) : ''}<text x="${x + w / 2}" y="${y + h / 2 + (B.sign ? 12 : 5)}" text-anchor="middle" class="m-label">${B.name.map((l, i) => `<tspan x="${x + w / 2}" dy="${i ? 16 : 0}">${l}</tspan>`).join('')}</text>
+      <rect x="${gx}" y="${gy}" width="${gw}" height="${gh}" rx="8" class="m-block"/>${sign(gx + 10, gy + 10, 'P')}${mlabel(gx + gw / 2 + 12, gy + gh / 2, k === 'cuh' ? 'Garage A' : 'Simmons garage', 'm-label', 10)}
+      <rect x="176" y="${B.door[1] - 5}" width="48" height="10" class="m-bridge"/><rect x="${x - 3}" y="${B.door[1] - 9}" width="6" height="18" rx="2" class="m-door"/>`; };
+  let route = '';
+  if (C && mode === 'drive') route = `<path d="${C.drive}" class="${a ? 'strip-route' : 'rt-path'}" pathLength="1"/><path d="${C.walk}" class="m-walk"/>${pin(C.door)}
+    ${a ? `<circle r="8" class="m-car"><animateMotion dur="1.6s" fill="freeze" calcMode="spline" keyPoints="0;0.6" keyTimes="0;1" keySplines=".4 0 .2 1" path="${C.drive}"/></circle>` : `<circle cx="${C.car[0]}" cy="${C.car[1]}" r="8" class="m-car"/>`}`;
+  if (C && mode === 'walk') route = `<path d="${C.drive}" class="rt-path m-done"/><path d="${C.walk}" class="${a ? 'strip-route' : 'rt-path'}" pathLength="1"/>${pin(C.door)}${youDot(C.gexit)}`;
+  if (C && mode === 'door') route = `<path d="${C.walk}" class="rt-path m-done"/>${youDot([C.door[0] - 10, C.door[1]], a)}`;
+  if (mode === 'overview') route = `${pin(CAMPUS.cuh.door)}${pin(CAMPUS.scc.door)}`;
+  return `<svg viewBox="${vb}" preserveAspectRatio="xMidYMid ${fit}" aria-hidden="true"><rect x="-100" y="-100" width="600" height="460" class="m-bg"/>
+    <rect x="-100" y="118" width="600" height="24" class="m-street"/><rect x="192" y="-100" width="16" height="460" class="m-street"/>
+    <text x="255" y="135" text-anchor="middle" class="m-label2">Sample Blvd</text>${fit === 'meet' ? '<text x="0" y="0" transform="translate(205 286) rotate(-90)" class="m-label2">Campus Dr</text>' : ''}
+    ${place('cuh')}${place('scc')}${route}</svg>`;
+}
+/* Floor plans (400 × 260 units): rooms on both sides of one corridor (y 130); elevators and restrooms on the north side; the lobby and entrance on Floor 1 */
+const SLOTS = { R1: [14, 14, 96, 97], R2: [118, 14, 96, 97], ELEV: [222, 14, 76, 97], WC: [306, 14, 80, 97], R3: [14, 149, 138, 88], R4: [248, 149, 138, 88], LOBBY: [160, 149, 80, 88] };
+const DOORS = { R1: [62, 111], R2: [166, 111], ELEV: [260, 111], WC: [346, 111], R3: [83, 149], R4: [317, 149], 'L:desk': [176, 176], 'L:atm': [224, 176] };
+const ENT = [200, 248], HALL = [200, 138], ELEVD = [260, 124];
+function planItems(pk, f) {
+  const P = PLACES[pk], out = {};
+  [...P.depts, ...P.amen].forEach(x => { if (x.every) out.WC = x; else if (x.floor === f && x.room) out[x.room] = x; });
+  return out;
+}
+function floorPath([x0, y0], [x1, y1]) {
+  if (y0 > 140 && y1 > 140 && Math.abs(x0 - x1) < 60) return `M${x0} ${y0} V${y1} H${x1 + (x1 < x0 ? 11 : -11)}`;
+  return `M${x0} ${y0} V130 H${x1} V${y1}`;
+}
+function floorSVG(pk, f, { from, to, you, arrived, anim }) {
+  const P = PLACES[pk], items = planItems(pk, f), a = anim && !RM();
+  const room = k => { const [x, y, w, h] = SLOTS[k], it = items[k], tgt = to === k;
+    const name = k === 'ELEV' ? 'Elevators' : it ? (it.short || it.t) : k === 'R3' || (k === 'LOBBY' && f > 1) ? 'Waiting' : k === 'R4' ? 'Staff only' : 'Offices';
+    const suite = it && it.suite ? it.suite.replace('Suite ', '') : '';
+    return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" class="${k === 'ELEV' ? 'm-elev' : 'm-block'}${tgt ? ' m-target' : ''}"/>${mlabel(x + w / 2, y + h / 2 - (suite ? 8 : 0), name, 'm-label', w > 100 ? 14 : 10)}${suite ? `<text x="${x + w / 2}" y="${y + h / 2 + 22}" text-anchor="middle" class="m-label2">${suite}</text>` : ''}`; };
+  const lobby = f === 1 ? `${['desk', 'atm'].map(m => { const it = items[`L:${m}`]; if (!it) return ''; const [x, y] = DOORS[`L:${m}`]; return `<circle cx="${x}" cy="${y}" r="11" class="m-mark${to === `L:${m}` ? ' m-target' : ''}"/><text x="${x}" y="${y + 5}" text-anchor="middle" class="m-sign-t">${m === 'desk' ? 'i' : '$'}</text>`; }).join('')}
+    <rect x="182" y="250" width="36" height="12" class="m-bg"/><text x="230" y="252" class="m-label2">Entrance</text>` : room('LOBBY');
+  const end = to && DOORS[to], path = from && end ? floorPath(from, to === 'ELEV' ? [260, 111] : end) : '';
+  return `<svg viewBox="0 0 400 292" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><rect x="-100" y="-100" width="600" height="500" class="m-bg"/>
+    <rect x="6" y="6" width="388" height="250" rx="14" class="m-floor"/>
+    ${['R1', 'R2', 'ELEV', 'WC', 'R3', 'R4'].map(room).join('')}${lobby}
+    ${path ? `<path d="${path}" class="${a ? 'rt-path rt-draw' : 'rt-path'}" style="--len:700"/>` : ''}
+    ${end && !arrived ? pin(end) : ''}${you ? youDot(you, arrived && a) : ''}
+    ${arrived && end ? `<circle cx="${end[0]}" cy="${end[1]}" r="12" class="m-check"/><path d="M${end[0] - 5} ${end[1]}l3.5 3.5 6.5-7" class="m-check-t"/>` : ''}</svg>`;
+}
+/* The whole trip as steps; each step carries the map that shows it */
 function routeTarget(spec, pk) {
-  if (spec && spec.startsWith('am:')) { const [, p, k] = spec.split(':'); const a = PLACES[p].amen.find(x => x.k === k); return { ...a, floor: a.every ? null : a.floor }; }
+  if (spec && spec.startsWith('am:')) { const [, p, k] = spec.split(':'); return PLACES[p].amen.find(x => x.k === k); }
   if (spec && spec.startsWith('dp:')) { const [, p, k] = spec.split(':'); return deptOf(p, k); }
   return target(pk);
 }
-function routeSteps(pk, t, zf) {
-  const P = PLACES[pk], g = P.park[0], floor = t.floor || zf;
-  const st = [
-    { ic: 'directions', t: `Drive to ${g.t}`, s: '' , drive: true },
-    { ic: 'parking', t: `Park in ${g.t}`, s: P.walk },
-    { ic: 'entrance', t: P.ent.t, s: P.ent.s }
+function routePlan(pk, t, c) {
+  const P = PLACES[pk], g = P.park[0], onSite = placeOf(c) === pk, zf = onSite && c.id === 'inside' ? zoneFloor(c) : 1;
+  const floor = t.every ? zf : t.floor, slot = t.every ? 'WC' : t.room, name = t.short || t.t;
+  const inside = onSite && c.id === 'inside', mine = target(pk) && target(pk).k === t.k;
+  const steps = [
+    { ic: 'directions', t: `Drive to ${g.t}`, s: 'Sample Blvd, then right on Campus Dr', map: { campus: 'drive' }, maps: true },
+    { ic: 'parking', t: 'Park, then take the walkway', s: `Covered walkway to the ${P.ent.t.toLowerCase()}`, map: { campus: 'walk' } },
+    { ic: 'entrance', t: floor === 1 ? `Walk to ${name}` : `Go to ${P.elev}`, s: floor === 1 ? 'Through the lobby' : 'Past the info desk, on your right', map: { f: 1, from: inside && zf === 1 ? HALL : ENT, to: floor === 1 ? slot : 'ELEV', you: inside && zf === 1 ? HALL : ENT } }
   ];
-  if (floor !== 1) st.push({ ic: 'elevator', k: 'Elevator', t: `${P.elev} to Floor ${floor}`, s: zf !== 1 && zf !== floor ? `Go ${floor > zf ? 'up' : 'down'} from Floor ${zf}` : 'Past the information desk, on your right' });
-  st.push({ ic: 'place', t: t.suite || t.t, s: t.every ? 'Next to the elevators' : 'Ahead on your left' });
-  return st;
+  if (floor !== 1) steps.push(inside && zf === floor
+    ? { ic: 'navigate', t: `Walk to ${name}`, s: 'From the elevators, along the hall', map: { f: floor, from: ELEVD, to: slot, you: ELEVD } }
+    : { ic: 'elevator', t: `${P.elev} to Floor ${floor}`, s: inside && zf !== 1 ? `Go ${floor > zf ? 'up' : 'down'} from Floor ${zf}, then turn left` : 'Then turn left', map: { f: floor, from: ELEVD, to: slot, you: ELEVD } });
+  steps.push({ ic: 'place', t: t.suite ? `${t.suite} – ${name}` : name, s: 'You’ve arrived', map: { f: floor, to: slot, you: DOORS[slot], arrived: true }, last: true });
+  const now = !onSite || c.id === 'arriving' ? 0 : c.id !== 'inside' ? 2 : zf === floor && mine ? steps.length - 1 : zf === 1 ? 2 : 3;
+  return { steps, now, floor };
 }
-function routeNow(c, steps, t) {
-  if (c.id === 'arriving' || !placeOf(c)) return 0;
-  if (c.id === 'entrance' || c.id === 'cancer') return 2;
-  const zf = zoneFloor(c), floor = t.floor || zf;
-  if (zf === floor) return steps.length - 1;
-  return steps.findIndex(s => s.k === 'Elevator');
-}
-/* Floor plans share one geometry: rooms a–e, a corridor at y=120, the entrance hall at x=180, elevators at the right */
-const ROOMS = { a: [68, 88, 68, 50], b: [180, 88, 180, 50], c: [292, 76, 292, 44], d: [68, 152, 68, 192], e: [290, 152, 290, 192] };
-function floorSVG(f, { from, to, label, me, entrance }) {
-  const r = ROOMS[to] || ROOMS.a;
-  const start = from || [180, 120];
-  const path = to === 'elev' ? `M${start[0]} ${start[1]} V120 H300` : `M${start[0]} ${start[1]} V120 H${r[0]} V${r[1]}`;
-  const pin = to === 'elev' ? [319, 100] : [r[2], r[3]];
-  const len = 600;
-  return `<svg viewBox="0 0 358 240" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><rect width="358" height="240" class="m-bg"/>
-    <g class="m-block"><rect x="16" y="16" width="104" height="72" rx="8"/><rect x="136" y="16" width="88" height="72" rx="8"/><rect x="240" y="16" width="104" height="60" rx="8"/><rect x="16" y="152" width="104" height="72" rx="8"/><rect x="240" y="152" width="104" height="72" rx="8"/></g>
-    <path d="M16 120H342${entrance ? 'M180 120V240' : ''}" class="m-road" stroke-width="22" stroke-linecap="round"/>
-    <rect x="300" y="88" width="38" height="22" rx="4" class="m-elev"/><text x="296" y="140" text-anchor="middle" class="m-label2">Elevators</text>
-    ${entrance ? '<text x="196" y="228" class="m-label2">Entrance</text>' : ''}
-    <path d="${path}" class="rt-path rt-draw" style="--len:${len}"/>
-    <g class="m-pin"><path d="M${pin[0]} ${pin[1] + 14}c-9 0-14-6-14-13a14 14 0 0 1 28 0c0 7-5 13-14 13z"/></g><circle cx="${pin[0]}" cy="${pin[1] - 1}" r="5" fill="#FFFFFF"/>
-    ${me ? `<circle cx="${me[0]}" cy="${me[1]}" r="16" class="m-halo"/><circle cx="${me[0]}" cy="${me[1]}" r="7" class="m-me"/>` : ''}
-    <text x="20" y="108" class="m-label">Floor ${f}${label ? ` · ${label}` : ''}</text></svg>`;
-}
-function outdoorSVG(pk, me) {
-  const P = PLACES[pk];
-  return `<svg viewBox="0 0 358 240" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><rect width="358" height="240" class="m-bg"/>
-    <g class="m-block"><rect x="16" y="16" width="104" height="100" rx="8"/><rect x="152" y="152" width="190" height="72" rx="8"/></g>
-    <rect x="152" y="16" width="190" height="100" rx="8" class="m-block2"/><rect x="16" y="152" width="104" height="72" rx="8" class="m-block2"/>
-    <path d="M0 134H358M136 0V240" class="m-road" stroke-width="14"/>
-    <text x="247" y="60" text-anchor="middle" class="m-label">${P.short.replace(' University Hospital', '').replace(' Cancer Center', '')}</text><text x="247" y="104" text-anchor="middle" class="m-label2">${P.ent.t.replace('Simmons ', '')}</text>
-    <text x="68" y="194" text-anchor="middle" class="m-label">${P.park[0].t.replace('Simmons ', '')}</text>
-    <path d="M8 134 H68 V152" class="rt-path rt-draw" style="--len:200"/><path d="M68 152 V134 H240 V118" class="rt-path" stroke-dasharray="1 10"/>
-    <g class="m-pin"><path d="M240 132c-9 0-14-6-14-13a14 14 0 0 1 28 0c0 7-5 13-14 13z"/></g><circle cx="240" cy="117" r="5" fill="#FFFFFF"/>
-    ${me ? `<circle cx="${me[0]}" cy="${me[1]}" r="16" class="m-halo"/><circle cx="${me[0]}" cy="${me[1]}" r="7" class="m-me"/>` : ''}</svg>`;
-}
-function routeMap(pk, t, c, view) {
-  const zf = zoneFloor(c), floor = t.floor || zf, onSite = !!placeOf(c);
-  const v = view || (c.id === 'arriving' || !onSite ? 'out' : String(c.id === 'inside' ? zf : 1));
-  const room = t.room || 'a';
-  if (v === 'out') return { svg: outdoorSVG(pk, c.id === 'arriving' ? [24, 134] : null), cap: `${PLACES[pk].short} · outside (sample)` };
-  const f = +v, meHere = (c.id === 'inside' && f === zf) || (f === 1 && ['entrance', 'cancer'].includes(c.id));
-  const arrived = c.id === 'inside' && f === floor && zf === floor && f !== 1;
-  const me = !meHere ? null : c.id === 'inside' ? (f === 1 ? [180, 170] : arrived ? [(ROOMS[room] || ROOMS.a)[0] + 48, 120] : [300, 120]) : [180, 224];
-  const from = f === 1 ? (me || [180, 224]) : arrived ? me : [300, 120];
-  const to = f === floor ? room : 'elev';
-  return { svg: floorSVG(f, { from, to, me, entrance: f === 1 }), cap: `Floor ${f} (sample floor plan)` };
-}
+const stepMap = (pk, m, anim) => m.campus ? campusSVG(pk, m.campus, anim, '0 -6 400 296', 'meet') : floorSVG(pk, m.f, { ...m, anim });
+let rStep = 0, rCtx = '';
 function routeHTML(spec) {
   const c0 = ctx(), pk = (spec && spec.split(':')[1]) || placeOf(c0) || 'cuh', c = placeOf(c0) === pk ? c0 : { id: 'away' }, P = PLACES[pk], t = routeTarget(spec, pk);
   if (!t) return `<p class="kick">Directions</p><h1 id="page-h" tabindex="-1">Where are you going?</h1>${destChips(pk)}`;
-  const zf = zoneFloor(c), floor = t.floor || zf, steps = routeSteps(pk, t, zf), now = routeNow(c, steps, t);
-  const m = routeMap(pk, t, c, routeView);
-  const views = [['out', 'Outside'], ['1', 'Floor 1'], ...(floor !== 1 ? [[String(floor), `Floor ${floor}`]] : [])];
-  const cur = routeView || (c.id === 'arriving' || !placeOf(c) ? 'out' : String(c.id === 'inside' ? zf : 1));
-  return `<p class="kick">Directions</p><h1 id="page-h" tabindex="-1">${t.t}</h1>
-    <p class="route-sum">${P.nick} · ${t.floor ? `Floor ${t.floor}` : 'This floor'}${t.suite ? ` · ${t.suite}` : ''} · about ${now >= 3 ? 2 : now === 2 ? 4 : 9} min</p>
-    <div class="route-map">${m.svg}<span class="map-tag">Simulated</span></div>
-    <div class="chips floors" role="group" aria-label="Show on map">${views.map(([k, l]) => `<button class="chip${cur === k ? ' sel' : ''}" data-floor="${k}" aria-pressed="${cur === k}">${l}</button>`).join('')}</div>
-    <ol class="rsteps" aria-label="Steps">${steps.map((s, i) => `<li class="${i < now ? 'done' : i === now ? 'now' : ''}"><span class="rs-n" aria-hidden="true">${ico(i < now ? 'stepDone' : s.ic, 20)}</span>
-      <span class="t"><b>${s.t}<span class="vh">${i < now ? ', done' : i === now ? ', now' : ''}</span></b>${i === now ? (s.drive ? `<button class="link" data-maps="${P.park[0].t}">Open in your map app ${ico('external', 16)}</button>` : s.s ? `<small>${s.s}</small>` : '') : ''}</span></li>`).join('')}</ol>`;
+  const { steps, now, floor } = routePlan(pk, t, c), key = JSON.stringify([c, spec]);
+  if (key !== rCtx) { rCtx = key; rStep = now; }
+  rStep = Math.max(0, Math.min(steps.length - 1, rStep));
+  const s = steps[rStep], m = s.map, left = steps.length - 1 - rStep;
+  return `<p class="kick">Directions · ${P.nick}</p><h1 id="page-h" tabindex="-1">${t.short || t.t}</h1>
+    <p class="route-sum">${t.suite ? `Floor ${floor} · ${t.suite}` : `Floor ${floor}`} · ${left ? `about ${left * 2} min` : 'here'}</p>
+    <div class="route-map">${stepMap(pk, m, true)}<span class="map-where">${m.campus ? 'Outside' : `Floor ${m.f}`}</span><span class="map-tag">Sample map</span></div>
+    <div class="nav-card" aria-live="polite"><span class="dot d48 solid" aria-hidden="true">${ico(s.ic)}</span><div class="txt"><p class="nav-of">Step ${rStep + 1} of ${steps.length}${rStep === now && now ? ' · you’re here' : ''}</p><p class="nav-t">${s.t}</p><p class="nav-s">${s.s}</p></div></div>
+    <div class="nav-ctl"><button class="icon-btn" data-rstep="-1" aria-label="Previous step" ${rStep ? '' : 'disabled'}>${ico('prev')}</button>
+      ${s.last ? `<button class="btn btn-primary" data-rdone>${ico('done', 20)}Done</button>` : `<button class="btn btn-primary" data-rstep="1">Next step${ico('next', 20)}</button>`}</div>
+    ${s.maps ? `<button class="btn btn-tonal nav-maps" data-maps="${P.park[0].t}">Open in your map app${ico('external', 20)}</button>` : ''}
+    <details class="all-steps"><summary>All steps</summary><ol class="rsteps">${steps.map((x, i) => `<li class="${i < rStep ? 'done' : i === rStep ? 'now' : ''}"><button class="rs-b" data-rgo="${i}"><span class="rs-n" aria-hidden="true">${ico(i < rStep ? 'stepDone' : x.ic, 20)}</span><b>${x.t}</b></button></li>`).join('')}</ol></details>`;
 }
 
 /* ---------- Appearance ---------- */
@@ -2327,7 +2360,7 @@ function openWherePicker(from) {
 /* Before the system dialog: show what it's for, in pictures */
 function openGeoIntro(from) {
   openSheet(`<h2 id="sheet-h" tabindex="-1">Help when you arrive</h2>
-    <div class="intro-art">${stripSVG('cuh', 'drive', true)}</div>
+    <div class="intro-art">${campusSVG('cuh', 'drive', true, CAMPUS.cuh.crop)}</div>
     <div class="nbs static">${[['parking', 'Parking'], ['entrance', 'Best entrance'], ['navigate', 'Directions']].map(([ic, t]) => `<span class="nb" style="--j:0">${circle(ic, 48)}<span class="nbl">${t}</span></span>`).join('')}</div>
     <p class="callout">${ico('privacy', 20)}<span>Your location stays on this phone, only while MyCare is open.</span></p>
     <button class="btn btn-primary" data-geo-continue>Continue</button>
@@ -2519,24 +2552,18 @@ function renderLocs() {
       <ul class="group">${list.map(([k, l, d]) => row({ ic: LOC_TYPES.find(t => t[0] === l.type)[2], title: l.n, sub: `${d != null ? (d < .1 ? 'You’re here · ' : fmtMi(d) + ' · ') : ''}${l.hours.split(' · ')[0]}`, attrs: `data-page="l:${k}"` })).join('')}</ul></section>`;
   nbsp($('#locs-body'));
 }
-const WAY_SVG = `<svg viewBox="0 0 358 280" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="358" height="280" class="m-bg"/>
-  <g class="m-block"><rect x="16" y="16" width="96" height="72" rx="8"/><rect x="132" y="16" width="88" height="72" rx="8"/><rect x="240" y="16" width="104" height="72" rx="8"/><rect x="16" y="112" width="96" height="64" rx="8"/><rect x="240" y="112" width="104" height="64" rx="8"/><rect x="16" y="200" width="96" height="64" rx="8"/><rect x="132" y="200" width="88" height="64" rx="8"/><rect x="240" y="200" width="104" height="64" rx="8"/></g>
-  <rect x="132" y="112" width="88" height="64" rx="8" class="m-block2"/><path d="M0 100H358M0 188H358M122 0V280M230 0V280" class="m-road" stroke-width="14"/>
-  <g class="m-pin"><path d="M176 144c-9 0-14-6-14-13a14 14 0 0 1 28 0c0 7-5 13-14 13z"/><path d="M64 60c-9 0-14-6-14-13a14 14 0 0 1 28 0c0 7-5 13-14 13z"/><path d="M292 152c-9 0-14-6-14-13a14 14 0 0 1 28 0c0 7-5 13-14 13z"/></g>
-  <g fill="#FFFFFF"><circle cx="176" cy="129" r="5"/><circle cx="64" cy="45" r="5"/><circle cx="292" cy="137" r="5"/></g></svg>`;
 function renderWay() {
   const c = ctx(), pk = showsCtx(c) ? placeOf(c) : null, t = pk && target(pk);
-  let top;
+  let map, cap, top = '';
   if (pk && t) {
-    const m = routeMap(pk, t, c, null);
-    top = `<div class="way-map">${m.svg}<span class="way-cap">${m.cap}</span></div>
-      <section class="sec" aria-labelledby="wy-r" style="margin-top:var(--s4)"><div class="sec-head"><h2 id="wy-r">Your route</h2><span class="tag muted">Simulated</span></div>
-      <ul class="group">${row({ ic: 'navigate', title: `${t.t} · Floor ${t.floor}, ${t.suite}`, sub: `${PLACES[pk].short} · ${c.id === 'arriving' ? 'start with parking' : 'from where you are'}`, attrs: 'data-route' })}</ul></section>`;
-  } else top = `<div class="way-map">${WAY_SVG}<span class="way-cap">Dallas campus (sample)</span></div>
-    ${pk ? `<p class="src-note">${ico('info', 16)}<span>Choose where you’re going on the home card to see your route.</span></p>` : ''}`;
-  $('#way-body').innerHTML = `<div class="page-h"><h1>Wayfinding</h1><p>Directions to campus and turn-by-turn inside buildings.</p></div>${top}
-    <section class="sec" aria-labelledby="wy-h"><div class="sec-head"><h2 id="wy-h">Indoor maps</h2></div>
-      <ul class="group">${[['cuh', 'Clements University Hospital'], ['scc', 'Simmons Cancer Center']].map(([k, n]) => row({ ic: 'indoor', title: n, sub: 'Sample floor plans', attrs: `data-page="route:dp:${k}:${PLACES[k].depts[0].k}"` })).join('')}</ul></section>`;
+    const { steps, now } = routePlan(pk, t, c), m = steps[now].map;
+    map = stepMap(pk, m, false); cap = m.campus ? 'Outside' : `Floor ${m.f}`;
+    top = `<section class="sec" aria-labelledby="wy-r" style="margin-top:var(--s4)">${head('wy-r', 'Your route')}<ul class="group">${row({ ic: 'navigate', title: t.short || t.t, sub: `${PLACES[pk].nick} · Floor ${t.floor} · step ${now + 1} of ${steps.length}`, attrs: 'data-route' })}</ul></section>`;
+  } else { map = campusSVG(null, 'overview', false, '0 -6 400 296', 'meet'); cap = 'Dallas campus'; }
+  $('#way-body').innerHTML = `<div class="page-h"><h1>Wayfinding</h1><p>Directions to campus and inside buildings.</p></div>
+    <div class="way-map">${map}<span class="map-where">${cap}</span><span class="map-tag">Sample map</span></div>${top}
+    <section class="sec" aria-labelledby="wy-h">${head('wy-h', 'Indoor maps')}
+      <ul class="group">${['cuh', 'scc'].map(k => row({ ic: 'indoor', title: PLACES[k].short, sub: 'Sample floor plans', attrs: `data-page="route:dp:${k}:${PLACES[k].depts[0].k}"` })).join('')}</ul></section>`;
   nbsp($('#way-body'));
 }
 let pwShow = false;
@@ -2597,7 +2624,10 @@ phone.addEventListener('click', e => {
   if ((b = c('[data-precise]'))) { askPermission('precise'); return; }
   if ((b = c('[data-retry-loc]'))) { say('Trying to find your location'); b.disabled = true; setTimeout(() => { if (!state.fix) { b.disabled = false; toast('Still can’t find your location – choose where you are'); } else update({ announce: true }); }, RM() ? 200 : 900); return; }
   if ((b = c('[data-dest]'))) { const [pk, k] = b.dataset.dest.split(':'); dest[pk] = k; if (!page.hidden && !pageHist.at(-1).startsWith('route')) closePage(); update(); island(`Going to ${deptOf(pk, k).short}`, 'navigate'); return; }
-  if ((b = c('[data-route]'))) { if (!sheet.hidden) closeSheet(true); routeView = null; const s = b.dataset.route; if (!page.hidden) { pageHist.push(s ? `route:${s}` : 'route'); openPage(pageHist.at(-1), null, true); } else openPage(s ? `route:${s}` : 'route', b); return; }
+  if ((b = c('[data-rstep]'))) { rStep += +b.dataset.rstep; openPage(pageHist.at(-1), null, true, true); $('#page-body [data-rstep="1"],#page-body [data-rdone]')?.focus(); say($('#page-body .nav-t').textContent); return; }
+  if ((b = c('[data-rgo]'))) { rStep = +b.dataset.rgo; openPage(pageHist.at(-1), null, true, true); say($('#page-body .nav-t').textContent); return; }
+  if ((b = c('[data-rdone]'))) { closePage(); island('You’ve arrived', 'done'); return; }
+  if ((b = c('[data-route]'))) { if (!sheet.hidden) closeSheet(true); routeView = null; rCtx = ''; const s = b.dataset.route; if (!page.hidden) { pageHist.push(s ? `route:${s}` : 'route'); openPage(pageHist.at(-1), null, true); } else openPage(s ? `route:${s}` : 'route', b); return; }
   if ((b = c('[data-maps]'))) { toast(`Opening directions to ${b.dataset.maps} in your map app (prototype)`); return; }
   if ((b = c('[data-mychart]'))) { toast(`Opening ${b.dataset.mychart} in MyChart (prototype)`); return; }
   if ((b = c('[data-signout]'))) { setAuth('guest'); toast('Signed out'); return; }
@@ -2637,6 +2667,8 @@ function openFromLock() {
   setTimeout(() => $('#ctx-h')?.focus({ preventScroll: true }), 100);
 }
 $('#lk-note').onclick = openFromLock;
+$('#tour-next').onclick = () => tour(1);
+$('#tour-prev').onclick = () => tour(-1);
 $('#lock-demo').onclick = openLock;
 
 /* ---------- Board controls ---------- */
@@ -2651,7 +2683,17 @@ function syncBoard() {
   pressSeg('[data-acc]', 'acc', state.acc);
   pressSeg('[data-auth]', 'auth', state.auth);
   const c = ctx(), why = { manual: 'you chose it', off: 'location help off', ask: 'location not asked yet', denied: 'location denied', nofix: 'no signal', gps: state.sim === 'away' ? 'away from campus' : 'simulated location' }[c.src];
+  const ti = TOUR.findIndex(([sm, z]) => sm === state.sim && (!z || z === state.zone));
+  $('#tour-t').innerHTML = ti < 0 ? 'Start the tour' : `<b>${ti + 1} of ${TOUR.length}</b> ${TOUR[ti][2]}`; $('#tour-prev').disabled = ti <= 0;
   $('#now-line').innerHTML = `Home shows <b>${pausedHere(c) ? 'Common homepage (paused)' : showsCtx(c) ? SHOWS[c.id] : 'Common homepage'}</b> · ${why}`;
+}
+const TOUR = [['away', '', 'Away'], ['arriving', '', 'Arriving'], ['entrance', '', 'At the entrance'], ['inside', 'f1', 'Inside · Floor 1'], ['inside', 'f7', 'Inside · Floor 7'], ['cancer', '', 'Cancer center']];
+function tour(d) {
+  const ti = TOUR.findIndex(([sm, z]) => sm === state.sim && (!z || z === state.zone));
+  const n = ti < 0 ? 0 : (ti + d + TOUR.length) % TOUR.length, [sm, z] = TOUR[n];
+  stopWalk(); closeAll(); if (state.tab !== 0) setTab(0);
+  $('#scroller').scrollTo({ top: 0, behavior: RM() ? 'auto' : 'smooth' });
+  move(sm, z || undefined);
 }
 /* The phone moved. A journey step allows location if it was never asked, so every step shows something. */
 function move(sim, zone) {

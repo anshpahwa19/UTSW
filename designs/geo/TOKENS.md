@@ -24,6 +24,22 @@ Guests see no visit details; the card asks “Where are you going?” with four 
 
 Precedence: manual choice → setting → permission → signal → accuracy → place and floor. A journey step allows location if it was never asked.
 
+## Maps (one system everywhere)
+
+The card, Directions, Wayfinding, and the permission explainer all draw the same two maps, labelled “Sample map” – the layout is illustrative, not surveyed.
+
+- **Campus** (400 × 260 units): Sample Blvd east–west, Campus Dr north–south. Clements University Hospital (H sign) north-east with Garage A across Campus Dr; Simmons Cancer Center south-east with Simmons garage. A covered walkway joins each garage to its entrance (Blue door mark). The card shows a crop around the place; Directions and Wayfinding show the whole campus.
+- **Floor plans** (400 × 260 units): one corridor; north side rooms, Elevators, Restrooms; south side rooms and, on Floor 1, the lobby (i = info desk, $ = ATM) and the entrance. Rooms are labelled from the department and amenity data (name and suite), so the plan always matches the card and search. Empty rooms read Offices, Waiting, or Staff only.
+- **Marks:** route 6.0 --blue; done legs at 35%; destination room outlined 3.0 --blue with a pin; you = cyan dot, white ring, 25% halo (pulses at a door); arrived = --ctl check. Labels 14.0 units (≈ 12.0 on screen) in --ink / --ink-2. Floor and “Sample map” chips sit in a reserved band at the bottom so they never cover a label.
+
+## Directions (step by step)
+
+Tap the card's map or Directions. One step at a time, each with its own map: Drive to the garage (campus) → Park, then take the walkway (campus) → Go to Elevator B (Floor 1) → Elevator B to Floor 7 (Floor 7) → Suite 7200 (arrived). It opens on the step the simulated location says you're at (“you're here”). Large instruction card (20.0/700), 48.0 Back and Next step buttons, Done on the last step, Open in your map app on the drive step, and an All steps list to jump. Inside on another floor, the steps start from where you are.
+
+## Board
+
+Journey timeline on the left; **Back / Next** under the phone steps through Away → Arriving → Entrance → Floor 1 → Floor 7 → Cancer center, with “2 of 6 Arriving” and what the home shows.
+
 ## Motion
 
 | Moment | Motion |
@@ -64,7 +80,7 @@ Precedence: manual choice → setting → permission → signal → accuracy →
 
 | Component | Tokens |
 |---|---|
-| Context card | r-xl surface, shadow-2 + 1.0 --line · map strip 120.0 · header s4: 40.0 solid dot, 18.0/700 place, 14.0 --ink-2 status with live dot · ⋯ 44.0 · body s4 |
+| Context card | r-xl surface, shadow-2 + 1.0 --line · map strip 136.0 (tap for directions) · header s4: 40.0 solid dot, 18.0/700 place, 14.0 --ink-2 status with live dot · ⋯ 44.0 · body s4 |
 | Map strip | Map tokens · route 6.0 --blue · P and H signs: 28.0 --ctl squares, white 16.0/700 · car 8.0 --ctl with white ring · you: cyan dot, 25% halo · “Simulated” tag 12.0/600 on surface |
 | Step tracker | 40.0 circles, 2.0 --tint-2 ring at rest; --ctl when done or now; now adds a 6.0 cyan halo · 4.0 track --tint-2, --ctl fill · 12.0/600 label + 12.0 sub |
 | Floor stack | 7 bars 12.0 high, 4.0 gap, r 4.0, --tint-2 · destination --ctl + 16.0 pin · you: 12.0 cyan dot with a 3.0 surface ring · 28.0/700 --blue floor, 14.0 sub · --bg panel, r-lg |
