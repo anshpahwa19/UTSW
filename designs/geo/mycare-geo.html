@@ -896,9 +896,10 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
 /* Map strip: the car drives to the garage, or you pulse at the door */
 .ctx-map{position:relative; display:block; width:100%; height:136px; border:0; padding:0; background:var(--map-bg); overflow:hidden; border-radius:0}
 button.ctx-map:active{filter:brightness(.97)}
+.ctx-map .map-tag{top:var(--s2); bottom:auto}
 .m-street{fill:var(--map-road)} .m-bridge{fill:var(--map-block-2)} .m-door{fill:var(--ctl)} .m-done{stroke-opacity:.35}
 .m-floor{fill:var(--map-road); stroke:var(--map-block-2); stroke-width:4} .m-target{stroke:var(--blue); stroke-width:3} .m-focus{stroke:var(--blue); stroke-width:2}
-.m-mark{fill:var(--blue)} .m-check{fill:var(--ctl)} .m-check-t{fill:none; stroke:#FFFFFF; stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round}
+.m-mark{fill:var(--blue)} .m-dest{fill:var(--surface); stroke:var(--blue); stroke-width:4} .m-opening{fill:var(--map-road)} .m-check{fill:var(--ctl)} .m-check-t{fill:none; stroke:#FFFFFF; stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round}
 .map-where{position:absolute; left:var(--s3); bottom:var(--s2); font-size:var(--t12); font-weight:700; line-height:1.4; color:var(--ink); background:var(--surface); padding:2px var(--s2); border-radius:var(--r-pill); box-shadow:var(--shadow-1)}
 .ctx-map svg,.intro-art svg{position:absolute; inset:0; width:100%; height:100%}
 .map-tag{position:absolute; right:var(--s3); bottom:var(--s2); font-size:var(--t12); font-weight:600; line-height:1.4; color:var(--ink-2); background:var(--surface); padding:2px var(--s2); border-radius:var(--r-pill); box-shadow:var(--shadow-1)}
@@ -928,7 +929,7 @@ button.ctx-map:active{filter:brightness(.97)}
 .stepper ol{list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); position:relative}
 .stepper .st-track{position:absolute; left:16.67%; right:16.67%; top:18px; height:4px; border-radius:2px; background:var(--tint-2)}
 .stepper .fill{position:absolute; left:0; top:0; bottom:0; border-radius:2px; background:var(--ctl)}
-.stepper li{display:grid; justify-items:center; gap:var(--s1); text-align:center; min-width:0}
+.stepper li{display:grid; justify-items:center; align-content:start; gap:var(--s1); text-align:center; min-width:0}
 .sn{width:40px; height:40px; border-radius:50%; display:grid; place-items:center; background:var(--surface); color:var(--blue); box-shadow:inset 0 0 0 2px var(--tint-2); position:relative}
 .stepper .done .sn,.stepper .now .sn{background:var(--ctl); color:#FFFFFF; box-shadow:none; --grad:-25}
 .stepper .now .sn{box-shadow:0 0 0 6px rgba(0,169,224,.28); animation:nowPop 520ms var(--spring-snappy) both 300ms}
@@ -1099,8 +1100,9 @@ button.ctx-map:active{filter:brightness(.97)}
 .jb[aria-pressed="true"] .jd{background:var(--bd-accent); color:var(--bd-panel); box-shadow:none; --fill:1}
 .jb b{display:block; font-size:16.0px; line-height:1.3}
 .jb small{display:block; font-size:14.0px; line-height:1.4; color:var(--bd-muted)}
-.zone{display:flex; gap:4.0px; padding:0 0 4.0px 60px}
-.zone button{min-height:40px; padding:0 12.0px; border:1px solid var(--bd-line); border-radius:999px; background:var(--bd-panel); color:var(--bd-ink); font-weight:600; font-size:14.0px; cursor:pointer}
+.zone{display:flex; align-items:center; gap:8.0px; padding:0 0 8.0px 60px}
+.zone span{font-size:14.0px; font-weight:600; color:var(--bd-muted); margin-right:4.0px}
+.zone button{width:40px; height:40px; flex:none; padding:0; border:1px solid var(--bd-line); border-radius:50%; background:var(--bd-panel); color:var(--bd-ink); font-weight:600; font-size:14.0px; cursor:pointer}
 .zone button[aria-pressed="true"]{background:var(--bd-accent); border-color:var(--bd-accent); color:var(--bd-panel)}
 .board-btn{width:100%; min-height:44px; border:1px solid var(--bd-line); border-radius:999px; background:var(--bd-chip); color:var(--bd-accent); font-weight:600; font-size:14.0px; cursor:pointer}
 .btn-pair{display:grid; grid-template-columns:1fr 1fr; gap:8.0px}
@@ -1148,7 +1150,7 @@ button.ctx-map:active{filter:brightness(.97)}
         <li><button class="jb" data-sim="arriving" aria-pressed="false"><span class="jd"><span class="ms s20" aria-hidden="true">directions_car</span></span><span><b>Arriving</b><small>Parking and entrance</small></span></button></li>
         <li><button class="jb" data-sim="entrance" aria-pressed="false"><span class="jd"><span class="ms s20" aria-hidden="true">door_open</span></span><span><b>At the entrance</b><small>Next step, check-in</small></span></button></li>
         <li><button class="jb" data-sim="inside" aria-pressed="false"><span class="jd"><span class="ms s20" aria-hidden="true">layers</span></span><span><b>Inside</b><small>Your floor and what's nearby</small></span></button>
-          <div class="zone" id="zone" role="group" aria-label="Floor" hidden><button data-zone="f1" aria-pressed="true">Floor 1</button><button data-zone="f2" aria-pressed="false">Floor 2</button><button data-zone="f7" aria-pressed="false">Floor 7</button></div></li>
+          <div class="zone" id="zone" role="group" aria-labelledby="zone-l" hidden><span id="zone-l">Floor</span><button data-zone="f1" aria-pressed="true" aria-label="Floor 1">1</button><button data-zone="f2" aria-pressed="false" aria-label="Floor 2">2</button><button data-zone="f7" aria-pressed="false" aria-label="Floor 7">7</button></div></li>
         <li><button class="jb" data-sim="cancer" aria-pressed="false"><span class="jd"><span class="ms s20" aria-hidden="true">apartment</span></span><span><b>Cancer center</b><small>Visit and support</small></span></button></li>
       </ol>
     </div>
@@ -2149,7 +2151,7 @@ const sign = (x, y, l) => `<rect x="${x}" y="${y}" width="24" height="24" rx="6"
 function campusSVG(pk, mode, anim, vb = '0 0 400 260', fit = 'slice') {
   const C = pk && CAMPUS[pk], a = anim && !RM();
   const place = k => { const B = CAMPUS[k], [x, y, w, h] = B.b, [gx, gy, gw, gh] = B.g;
-    return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="8" class="m-block2${k === pk ? ' m-focus' : ''}"/>${B.sign ? sign(x + 10, y + 10, B.sign) : ''}<text x="${x + w / 2}" y="${y + h / 2 + (B.sign ? 12 : 5)}" text-anchor="middle" class="m-label">${B.name.map((l, i) => `<tspan x="${x + w / 2}" dy="${i ? 16 : 0}">${l}</tspan>`).join('')}</text>
+    return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="8" class="m-block2${k === pk ? ' m-focus' : ''}"/>${B.sign ? sign(x + 18, y + 10, B.sign) : ''}<text x="${x + w / 2}" y="${y + h / 2 + (B.sign ? 12 : 5)}" text-anchor="middle" class="m-label">${B.name.map((l, i) => `<tspan x="${x + w / 2}" dy="${i ? 16 : 0}">${l}</tspan>`).join('')}</text>
       <rect x="${gx}" y="${gy}" width="${gw}" height="${gh}" rx="8" class="m-block"/>${sign(gx + 10, gy + 10, 'P')}${mlabel(gx + gw / 2 + 12, gy + gh / 2, k === 'cuh' ? 'Garage A' : 'Simmons garage', 'm-label', 10)}
       <rect x="176" y="${B.door[1] - 5}" width="48" height="10" class="m-bridge"/><rect x="${x - 3}" y="${B.door[1] - 9}" width="6" height="18" rx="2" class="m-door"/>`; };
   let route = '';
@@ -2165,8 +2167,8 @@ function campusSVG(pk, mode, anim, vb = '0 0 400 260', fit = 'slice') {
 }
 /* Floor plans (400 × 260 units): rooms on both sides of one corridor (y 130); elevators and restrooms on the north side; the lobby and entrance on Floor 1 */
 const SLOTS = { R1: [14, 14, 96, 97], R2: [118, 14, 96, 97], ELEV: [222, 14, 76, 97], WC: [306, 14, 80, 97], R3: [14, 149, 138, 88], R4: [248, 149, 138, 88], LOBBY: [160, 149, 80, 88] };
-const DOORS = { R1: [62, 111], R2: [166, 111], ELEV: [260, 111], WC: [346, 111], R3: [83, 149], R4: [317, 149], 'L:desk': [176, 176], 'L:atm': [224, 176] };
-const ENT = [200, 248], HALL = [200, 138], ELEVD = [260, 124];
+const DOORS = { R1: [62, 130], R2: [166, 130], ELEV: [260, 130], WC: [346, 130], R3: [83, 130], R4: [317, 130], 'L:desk': [176, 176], 'L:atm': [224, 176] };
+const ENT = [200, 248], HALL = [200, 130], ELEVD = [260, 130];
 function planItems(pk, f) {
   const P = PLACES[pk], out = {};
   [...P.depts, ...P.amen].forEach(x => { if (x.every) out.WC = x; else if (x.floor === f && x.room) out[x.room] = x; });
@@ -2181,15 +2183,16 @@ function floorSVG(pk, f, { from, to, you, arrived, anim }) {
   const room = k => { const [x, y, w, h] = SLOTS[k], it = items[k], tgt = to === k;
     const name = k === 'ELEV' ? 'Elevators' : it ? (it.short || it.t) : k === 'R3' || (k === 'LOBBY' && f > 1) ? 'Waiting' : k === 'R4' ? 'Staff only' : 'Offices';
     const suite = it && it.suite ? it.suite.replace('Suite ', '') : '';
-    return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" class="${k === 'ELEV' ? 'm-elev' : 'm-block'}${tgt ? ' m-target' : ''}"/>${mlabel(x + w / 2, y + h / 2 - (suite ? 8 : 0), name, 'm-label', w > 100 ? 14 : 10)}${suite ? `<text x="${x + w / 2}" y="${y + h / 2 + 22}" text-anchor="middle" class="m-label2">${suite}</text>` : ''}`; };
+    const dy = y < 130 ? y + h - 3 : y - 3, dx = DOORS[k] ? DOORS[k][0] : x + w / 2;
+    return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" class="${k === 'ELEV' ? 'm-elev' : 'm-block'}${tgt ? ' m-target' : ''}"/>${k === 'LOBBY' ? '' : `<rect x="${dx - 9}" y="${dy}" width="18" height="6" class="m-opening"/>`}${mlabel(x + w / 2, y + h / 2 - (suite ? 8 : 0), name, 'm-label', w > 100 ? 14 : 10)}${suite ? `<text x="${x + w / 2}" y="${y + h / 2 + 22}" text-anchor="middle" class="m-label2">${suite}</text>` : ''}`; };
   const lobby = f === 1 ? `${['desk', 'atm'].map(m => { const it = items[`L:${m}`]; if (!it) return ''; const [x, y] = DOORS[`L:${m}`]; return `<circle cx="${x}" cy="${y}" r="11" class="m-mark${to === `L:${m}` ? ' m-target' : ''}"/><text x="${x}" y="${y + 5}" text-anchor="middle" class="m-sign-t">${m === 'desk' ? 'i' : '$'}</text>`; }).join('')}
-    <rect x="182" y="250" width="36" height="12" class="m-bg"/><text x="230" y="252" class="m-label2">Entrance</text>` : room('LOBBY');
-  const end = to && DOORS[to], path = from && end ? floorPath(from, to === 'ELEV' ? [260, 111] : end) : '';
+    <rect x="182" y="250" width="36" height="12" class="m-bg"/><text x="230" y="250" class="m-label2">Entrance</text>` : room('LOBBY');
+  const end = to && DOORS[to], path = from && end ? floorPath(from, end) : '';
   return `<svg viewBox="0 0 400 292" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><rect x="-100" y="-100" width="600" height="500" class="m-bg"/>
     <rect x="6" y="6" width="388" height="250" rx="14" class="m-floor"/>
     ${['R1', 'R2', 'ELEV', 'WC', 'R3', 'R4'].map(room).join('')}${lobby}
     ${path ? `<path d="${path}" class="${a ? 'rt-path rt-draw' : 'rt-path'}" style="--len:700"/>` : ''}
-    ${end && !arrived ? pin(end) : ''}${you ? youDot(you, arrived && a) : ''}
+    ${end && !arrived ? `<circle cx="${end[0]}" cy="${end[1]}" r="9" class="m-dest"/>` : ''}${you ? youDot(you, arrived && a) : ''}
     ${arrived && end ? `<circle cx="${end[0]}" cy="${end[1]}" r="12" class="m-check"/><path d="M${end[0] - 5} ${end[1]}l3.5 3.5 6.5-7" class="m-check-t"/>` : ''}</svg>`;
 }
 /* The whole trip as steps; each step carries the map that shows it */
