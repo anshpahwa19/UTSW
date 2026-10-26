@@ -131,6 +131,8 @@ html:not(.ms-ready) .ms{color:transparent!important}
   .board{grid-template-columns:300px auto; align-items:start; justify-items:stretch}
   .board-head{grid-column:1 / -1}
   .spec,.icons-sec{grid-column:1 / -1}
+  /* Beside the phone, the controls scroll inside their own panel (as tall as the device), so the board doesn't grow */
+  .controls{max-height:868px; overflow-y:auto; overscroll-behavior:contain; scrollbar-gutter:stable; scrollbar-width:thin; scrollbar-color:var(--bd-muted) transparent}
 }
 @media (min-width:1240px){
   .board{grid-template-columns:280px auto minmax(0,1fr)}
