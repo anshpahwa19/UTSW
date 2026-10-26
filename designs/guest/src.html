@@ -1088,13 +1088,6 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
 .pz-sig b{font-size:var(--t16); color:var(--ink)}
 .pz-sig .tag{margin-top:var(--s1)}
 .phone.rm .pz-sw .dot{transition:none}
-/* Once the card scrolls under the app bar, a compact copy floats just below it, so the switch is always one tap away */
-.scroller.home{scroll-padding-top:calc(48.0px + var(--hit) + var(--s2) + var(--s4))}
-.pz-float{position:absolute; left:var(--s4); right:var(--s4); top:calc(48.0px + var(--hit) + var(--s2) + var(--s2)); z-index:19; background:var(--surface); border-radius:var(--r-lg); box-shadow:var(--shadow-2), 0 0 0 1px var(--line); opacity:0; transform:translateY(-8px); pointer-events:none; transition:opacity var(--d-base) var(--ease-out), transform var(--d-snappy) var(--spring-snappy)}
-.pz-float.show{opacity:1; transform:none; pointer-events:auto}
-.pz-float .pz-sw{min-height:56px; padding:var(--s2) var(--s4)}
-.pz-float small{white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
-.phone.rm .pz-float{transform:none}
 
 /* ===================== Board: flow map and coverage ===================== */
 .wide{grid-column:1 / -1; justify-self:stretch; padding:24.0px}
@@ -1299,9 +1292,6 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
                 </div>
               </div>
             </div>
-            <div class="pz-float" id="pz-float" aria-hidden="true" inert>
-              <button class="sw-row pz-sw" id="pz-sw2" role="switch" aria-checked="false" aria-labelledby="pz-t2" aria-describedby="pz-st2"><span class="txt"><span class="pz-t" id="pz-t2">Personalise My Homepage</span><small id="pz-st2">Showing the common homepage</small></span><span class="track" aria-hidden="true"></span></button>
-            </div>
           </section>
           <section class="screen" id="scr-find" aria-label="Find my Care" hidden><div class="scroller" id="find-body"></div></section>
           <section class="screen" id="scr-locs" aria-label="Locations" hidden><div class="scroller" id="locs-body"></div></section>
@@ -1499,7 +1489,6 @@ mark{background:var(--tint-2); color:inherit; border-radius:4px}
         <tr><td>Dark mode</td><td>Menu → Appearance: Light, Dark, System (default; follows the phone). Brand surfaces stay #004278; page #0D1620, cards #16222E; text #E6EDF3 and #A6B4C0; Blue text and icons #8CC0EA; control Blue #2D6CA6 with white 5.5:1</td></tr>
         <tr><td>Toast with action</td><td>Same Blue toast; Undo is a 44.0 white-on-Blue pill (the only toast that takes focus)</td></tr>
         <tr><td>Personalise switch card</td><td>Top of the light sheet in both modes · r-lg surface, shadow-1 + hairline · 64.0 row: 40.0 dot (tint off, control Blue on), “Personalise My Homepage” 16.0/600, status 14.0 #5B6770, standard 52.0 × 32.0 switch · when on, a hairline and two 44.0 links: How personalisation works, Back to the common homepage</td></tr>
-        <tr><td>Floating switch</td><td>When the card scrolls under the app bar, a compact copy floats 8.0 below it: r-lg surface, shadow-2 + hairline, 56.0 row with the label, a one-line status, and the switch; fades and drops in 8.0 on spring-snappy (fade only with reduced motion). Tapping it scrolls back to the card, then switches</td></tr>
         <tr><td>Because line</td><td>Under each personalised section head · 16.0 info glyph in Blue + 14.0 #5B6770 (“Because you saw orthopaedics in the last 6 months”)</td></tr>
         <tr><td>Visit card</td><td>r-lg, s4 · 48.0 date box (control Blue for the next visit, tint after) · 16.0/700 date and time · 14.0 visit type · provider row on page color, 44.0+ · location 14.0 · two 44.0 tonal buttons · “From MyChart” tag in the section head</td></tr>
         <tr><td>Mode change</td><td>Leaving modules fade up 160 ms; kept modules and Quick links tiles slide to their new place on spring-snappy; new modules enter on the 40 ms stagger · reduced motion cross-fades</td></tr>
@@ -2325,7 +2314,7 @@ function renderHome({ animate = true, flip = false } = {}) {
     e.animate([{ transform: `translate(${dx}px, ${dy}px)` }, { transform: 'none' }], { duration: 400, easing: spring() });
   });
   wireHome();
-  syncPz(); syncFloat();
+  syncPz();
   nbsp(homeInner);
 }
 function refreshTilesMod() { const m = $('.mod[data-m="tiles"]', modulesEl); if (!m) return; m.innerHTML = R.tiles(); m.style.animation = 'none'; $$('.qa-tile', m).forEach(initTile); nbsp(m); }
@@ -2789,8 +2778,7 @@ let pzLinks = null, pzT;
 function syncPz() {
   $('#pz-sw').setAttribute('aria-checked', pz);
   $('#pz').classList.toggle('on', pz);
-  $('#pz-st').textContent = $('#pz-st2').textContent = nbText(pzStatus());
-  $('#pz-sw2').setAttribute('aria-checked', pz);
+  $('#pz-st').textContent = nbText(pzStatus());
   if (pzLinks !== pz) {
     pzLinks = pz;
     $('#pz-links').innerHTML = pz ? `<button class="link" data-pz-info>How personalisation works</button><button class="link" data-pz-off>Back to the common homepage</button>` : '';
@@ -2834,20 +2822,6 @@ function openPzSheet(from, ask) {
     ${btns}`, from);
 }
 $('#pz-sw').onclick = pzSwitch;
-/* The floating copy: brings the card back into view, then switches, so the new composition is seen from the top */
-const pzFloat = $('#pz-float');
-function syncFloat() {
-  const show = !$('#scr-home').hidden && $('#pz').getBoundingClientRect().bottom < $('#appbar').getBoundingClientRect().bottom;
-  if (show === pzFloat.classList.contains('show')) return;
-  pzFloat.classList.toggle('show', show); pzFloat.toggleAttribute('inert', !show); pzFloat.setAttribute('aria-hidden', !show);
-  if (!show && pzFloat.contains(document.activeElement)) $('#pz-sw').focus({ preventScroll: true });
-}
-$('#pz-sw2').onclick = () => {
-  const card = $('#pz').getBoundingClientRect(), bar = $('#appbar').getBoundingClientRect();
-  scroller.scrollTo({ top: Math.max(0, scroller.scrollTop + card.top - bar.bottom - 16), behavior: RM() ? 'auto' : 'smooth' });
-  $('#pz-sw').focus({ preventScroll: true });
-  pzSwitch();
-};
 
 function shareProvider(id, from) { const p = PV[id]; openShare({ lead: `<span class="pav sm" aria-hidden="true">${ini(p)}</span>`, title: `${fullName(p)} – ${p.specs[0]}`, url: `utswmed.org/doctors/${slug(p)}` }, from); }
 
@@ -3283,7 +3257,7 @@ function doRefresh() {
     toast('Home is up to date', true); say('Home updated');
   }, 1100);
 }
-scroller.addEventListener('scroll', () => { $('#appbar').classList.toggle('scrolled', scroller.scrollTop > 4); syncFloat(); }, { passive: true });
+scroller.addEventListener('scroll', () => { $('#appbar').classList.toggle('scrolled', scroller.scrollTop > 4); }, { passive: true });
 
 /* ---------- Board controls ---------- */
 const pressSeg = (sel, attr, val) => $$(sel).forEach(b => b.setAttribute('aria-pressed', b.dataset[attr] === String(val)));
