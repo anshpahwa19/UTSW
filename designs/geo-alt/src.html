@@ -292,14 +292,15 @@ code{font-size:12.0px; background:var(--bd-chip); padding:2px 4px; border-radius
 .line-h{display:flex; align-items:center; justify-content:space-between; gap:var(--s2); padding:var(--s2) var(--s4) var(--s2)}
 .line-h h2,.sec-h{font-size:var(--t18); font-weight:700; line-height:1.3; color:var(--ink)}
 .line-h .count{font-size:var(--t14); color:var(--ink-2); font-weight:600; font-variant-numeric:tabular-nums}
-.line{position:relative; margin:0 var(--s4) var(--s4); --node:var(--dot40)}
-.rail,.rail-fill{position:absolute; left:calc(var(--node) / 2 - 2px); width:4px; border-radius:2px; top:var(--rt,0); background:var(--tint-2); height:var(--rh,0)}
+/* The line is inset by the you ring's overhang, so the ring's outer edge sits on the 16.0 margin with the heading and cards */
+.line{position:relative; margin:0 var(--s4) var(--s4); --node:var(--dot40); --ring:6px}
+.rail,.rail-fill{position:absolute; left:calc(var(--ring) + var(--node) / 2 - 2px); width:4px; border-radius:2px; top:var(--rt,0); background:var(--tint-2); height:var(--rh,0)}
 .rail-fill{background:var(--ctl); height:var(--fh,0); transition:height var(--d-travel) var(--ease-in-out)}
-.you{position:absolute; left:calc(var(--node) / 2 - var(--node) / 2 - 6px); top:0; width:calc(var(--node) + 12px); height:calc(var(--node) + 12px); border-radius:50%; border:3px solid var(--cyan); z-index:3; pointer-events:none; transform:translateY(var(--y,0)); transition:transform var(--d-travel) var(--spring), opacity var(--d-base)}
+.you{position:absolute; left:0; top:0; width:calc(var(--node) + 12px); height:calc(var(--node) + 12px); border-radius:50%; border:3px solid var(--cyan); z-index:3; pointer-events:none; transform:translateY(var(--y,0)); transition:transform var(--d-travel) var(--spring), opacity var(--d-base)}
 .you::after{content:""; position:absolute; inset:-6px; border-radius:50%; border:2px solid var(--cyan); opacity:0}
 .phone:not(.rm) .you.on::after{animation:youPing 2.4s var(--ease-out) infinite}
 @keyframes youPing{0%{transform:scale(.8); opacity:.7} 80%,100%{transform:scale(1.35); opacity:0}}
-.stops{position:relative; display:grid; gap:var(--s1)}
+.stops{position:relative; display:grid; gap:var(--s1); padding-left:var(--ring)}
 .stop{display:grid; grid-template-columns:var(--node) minmax(0,1fr); column-gap:var(--s3); align-items:center}
 .node{width:var(--node); height:var(--node); border-radius:50%; display:grid; place-items:center; position:relative; z-index:2; background:var(--bg); border:2px solid var(--line-strong); color:var(--ink-2)}
 .node .ms{font-size:var(--i20); --opsz:20}
@@ -318,7 +319,7 @@ code{font-size:12.0px; background:var(--bd-chip); padding:2px 4px; border-radius
 .st-m{font-size:var(--t14); color:var(--ink-2); font-weight:600; font-variant-numeric:tabular-nums; white-space:nowrap}
 .stop.now .st-m{color:var(--blue)}
 /* The current stop's panel spans the full width, sitting on the line */
-.st-panel{grid-column:1 / -1; display:grid; grid-template-rows:1fr; position:relative; z-index:2}
+.st-panel{grid-column:1 / -1; margin-left:calc(-1 * var(--ring)); display:grid; grid-template-rows:1fr; position:relative; z-index:2}
 .st-panel > div{min-height:0; overflow:hidden}
 .phone:not(.rm) .stop.opening .st-panel{animation:openRows 520ms var(--ease-out) both}
 .phone:not(.rm) .stop.opening .card{animation:riseIn 520ms var(--spring) both}
@@ -326,7 +327,7 @@ code{font-size:12.0px; background:var(--bd-chip); padding:2px 4px; border-radius
 @keyframes openRows{from{grid-template-rows:0fr} to{grid-template-rows:1fr}}
 @keyframes riseIn{from{transform:translateY(-8px); opacity:0} to{transform:none; opacity:1}}
 @keyframes fadeIn{from{opacity:0} to{opacity:1}}
-.card{background:var(--surface); border:1px solid var(--line); border-radius:var(--r-md); padding:var(--s3); display:grid; gap:var(--s3); margin:var(--s1) 0 var(--s2)}
+.card{background:var(--surface); border:1px solid var(--line); border-radius:var(--r-md); padding:var(--s3); display:grid; gap:var(--s3); margin:var(--s2) 0}
 .card .one{font-size:var(--t16); font-weight:600; line-height:1.4; display:flex; align-items:center; gap:var(--s2)}
 .card .one .ms{color:var(--blue)}
 .stats{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:var(--s2)}
