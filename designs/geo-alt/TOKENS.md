@@ -36,7 +36,7 @@ Precedence: your choice → paused → permission → signal → accuracy → pl
 - Location chip (top of the home) always says what the home is using; live dot when location is in use. Tap for **Location**: why you see this (each signal tagged Simulated, MyChart, or Sample data), Not here?, Show the common homepage (paused for today, Resume), Clear my choice, Location settings.
 - “Not here?” beside the chip whenever location content is active.
 - **Where are you?** works without location: Clements or Simmons, then On my way, entrance, Floor 1, 2, or 7; Not at a UTSW campus; Another UTSW location; ZIP or city.
-- Lock screen (simulated) names the place only.
+- Lock screen (simulated) shows live directions, like a Live Activity (iOS) or live notification (Android): step number, the step itself, a progress line, and the place and floor. The final step reads “Go to Suite 7200” – never the department or the visit. It stays open while the board steps through the journey; Open directions goes to the same step in the app.
 - Epic stays Epic: Check in, visit details, messages, results, visits, and billing open in MyChart (↗, “opens in MyChart”). Guests are sent to sign in.
 
 ## Maps (one system)
@@ -93,7 +93,7 @@ One builder for every route: Drive to the garage (campus) → Walk to the entran
 | Floor, suite, entrance | Department directory mapped to buildings |
 | Spaces open, rate | Garage occupancy and pricing feed |
 | Amenities, support, education | CMS content per building, approved by each center |
-| Lock screen notice | Geofence-triggered local notification |
+| Lock screen notice and live directions | Geofence-triggered local notification; ActivityKit Live Activity (iOS) or an ongoing notification (Android) updated by indoor positioning |
 
 Design intent to confirm with UTSW privacy and Epic teams: location is read only while the app is open, decides the home on the phone, and is never saved or shared.
 
