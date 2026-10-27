@@ -405,14 +405,14 @@ button.map{border:0; padding:0; width:100%; text-align:left; color:inherit}
 .phone:not(.rm) .home-anim > *{animation:riseIn 360ms var(--spring) both; animation-delay:calc(var(--i,0) * 50ms)}
 
 /* Tab bar: full-width, hairline top, pill indicator behind the active icon */
-.tabbar{position:absolute; left:0; right:0; bottom:0; z-index:25; display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); background:var(--surface); border-top:1px solid var(--line); padding:var(--s1) var(--s1) var(--s6)}
-.tab{min-height:56px; border:0; background:none; display:grid; justify-items:center; align-content:start; padding-top:var(--s1)!important; gap:2px; color:var(--ink-2); font-size:12.0px; font-weight:600; padding:0; line-height:1.2; text-align:center; min-width:0}
+.tabbar{position:absolute; left:0; right:0; bottom:0; z-index:25; display:flex; gap:2px; background:var(--surface); border-top:1px solid var(--line); padding:var(--s1) var(--s1) var(--s6)}
+.tab{min-height:56px; border:0; background:none; display:grid; justify-items:center; align-content:start; padding-top:var(--s1)!important; gap:2px; color:var(--ink-2); font-size:12.0px; font-weight:600; padding:0; line-height:1.2; text-align:center; flex:1 1 0; min-width:max-content; white-space:nowrap; padding-inline:2px!important}
+/* Tabs share the width but never squeeze a label onto two lines: at 360 (Android) each takes the width its label needs */
 /* Like the platform tab bars, the tab bar keeps its size when text is enlarged; labels wrap only between words */
 .tab .ms{font-size:24.0px}
 .tab .pillx{width:56px; height:32px; border-radius:var(--r-pill); display:grid; place-items:center; transition:background-color var(--d-base) var(--ease-out)}
 .tab[aria-selected="true"]{color:var(--blue)}
 .tab[aria-selected="true"] .pillx{background:var(--tint); --fill:1}
-.tab .tl{max-width:100%}
 
 /* Overlays */
 .shade{position:absolute; inset:0; z-index:50; background:rgba(5,20,35,.45); opacity:0; pointer-events:none; transition:opacity var(--d-base) var(--ease-out)}

@@ -81,7 +81,7 @@ One builder for every route: Drive to the garage (campus) → Walk to the entran
 | Tiles | 3 across, r-sm, 88.0 high, glyph + 12.0/600 name + 12.0 distance |
 | Location chip | 44.0 pill, surface, 1.0 line, live dot or glyph |
 | Notice | 2.0 dashed line-strong, stacked 48.0 actions |
-| Tab bar | full width, surface, 56.0 tabs, 56 × 32 pill indicator · like the platform bars, keeps its 12.0 labels when text is enlarged |
+| Tab bar | full width, surface, 56.0 tabs sized to their labels (one line at 360), 56 × 32 pill indicator · like the platform bars, keeps its 12.0 labels when text is enlarged |
 
 ## Real integrations needed
 
