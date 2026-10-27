@@ -1067,11 +1067,16 @@ button.ctx-map:active{filter:brightness(.97)}
 .nav-s{font-size:var(--t14); line-height:1.4; color:var(--ink-2)}
 .nav-ctl{display:flex; gap:var(--s2); margin-top:var(--s3)}
 .page-body .nav-ctl .btn{flex:1; margin:0; width:auto}
-.nav-ctl .icon-btn{width:var(--hit-lg); height:var(--hit-lg)}
-.nav-ctl .icon-btn:disabled{opacity:.4}
-.page-body .nav-maps{margin-top:var(--s2)}
+.nav-ctl .nav-prev{width:var(--hit-lg); height:var(--hit-lg); flex:none; background:var(--tint); color:var(--blue); box-shadow:none}
+.phone .nav-ctl .nav-prev:disabled{opacity:.4}
+.nav-card .nav-link{justify-self:start; margin:var(--s1) 0 calc(-1 * var(--s2)) calc(-1 * var(--s2))}
 .all-steps{margin-top:var(--s4); border-top:1px solid var(--line)}
-.all-steps summary{min-height:var(--hit); display:flex; align-items:center; font-size:var(--t14); font-weight:600; color:var(--blue); cursor:pointer; border-radius:var(--r-sm)}
+.all-steps summary{min-height:var(--hit-lg); display:flex; align-items:center; gap:var(--s2); list-style:none; font-size:var(--t16); font-weight:600; color:var(--ink); cursor:pointer; border-radius:var(--r-sm)}
+.all-steps summary::-webkit-details-marker{display:none}
+.all-steps summary > span:first-child{flex:1}
+.as-n{min-width:24px; height:24px; padding:0 var(--s2); border-radius:var(--r-pill); background:var(--tint); color:var(--blue); font-size:var(--t12); font-weight:700; display:grid; place-items:center}
+.all-steps summary .ms{color:var(--ink-2); transition:transform var(--d-base) var(--ease-out)}
+.all-steps[open] summary .ms{transform:rotate(180deg)}
 .all-steps summary:focus-visible{box-shadow:var(--focus)}
 .rsteps{list-style:none; margin:0; padding:0; display:grid}
 .rs-b{width:100%; min-height:var(--hit); display:grid; grid-template-columns:32px minmax(0,1fr); gap:var(--s3); align-items:center; border:0; background:none; padding:var(--s1) 0; text-align:left; color:var(--ink); border-radius:var(--r-md)}
@@ -2162,7 +2167,7 @@ function campusSVG(pk, mode, anim, vb = '0 0 400 260', fit = 'slice') {
   if (mode === 'overview') route = `${pin(CAMPUS.cuh.door)}${pin(CAMPUS.scc.door)}`;
   return `<svg viewBox="${vb}" preserveAspectRatio="xMidYMid ${fit}" aria-hidden="true"><rect x="-100" y="-100" width="600" height="460" class="m-bg"/>
     <rect x="-100" y="118" width="600" height="24" class="m-street"/><rect x="192" y="-100" width="16" height="460" class="m-street"/>
-    <text x="255" y="135" text-anchor="middle" class="m-label2">Sample Blvd</text>${fit === 'meet' ? '<text x="0" y="0" transform="translate(205 286) rotate(-90)" class="m-label2">Campus Dr</text>' : ''}
+    <text x="255" y="135" text-anchor="middle" class="m-label2">Sample Blvd</text>${fit === 'meet' ? '<text x="0" y="0" transform="translate(205 290) rotate(-90)" class="m-label2">Campus Dr</text>' : ''}
     ${place('cuh')}${place('scc')}${route}</svg>`;
 }
 /* Floor plans (400 × 260 units): rooms on both sides of one corridor (y 130); elevators and restrooms on the north side; the lobby and entrance on Floor 1 */
@@ -2206,7 +2211,7 @@ function routePlan(pk, t, c) {
   const floor = t.every ? zf : t.floor, slot = t.every ? 'WC' : t.room, name = t.short || t.t;
   const inside = onSite && c.id === 'inside', mine = target(pk) && target(pk).k === t.k;
   const steps = [
-    { ic: 'directions', t: `Drive to ${g.t}`, s: 'Sample Blvd, then right on Campus Dr', map: { campus: 'drive' }, maps: true },
+    { ic: 'directions', t: `Drive to ${g.t}`, s: 'Sample Blvd, then Campus Dr', map: { campus: 'drive' }, maps: true },
     { ic: 'parking', t: 'Park, then take the walkway', s: `Covered walkway to the ${P.ent.t.toLowerCase()}`, map: { campus: 'walk' } },
     { ic: 'entrance', t: floor === 1 ? `Walk to ${name}` : `Go to ${P.elev}`, s: floor === 1 ? 'Through the lobby' : 'Past the info desk, on your right', map: { f: 1, from: inside && zf === 1 ? HALL : ENT, to: floor === 1 ? slot : 'ELEV', you: inside && zf === 1 ? HALL : ENT } }
   ];
@@ -2229,11 +2234,10 @@ function routeHTML(spec) {
   return `<p class="kick">Directions · ${P.nick}</p><h1 id="page-h" tabindex="-1">${t.short || t.t}</h1>
     <p class="route-sum">${t.suite ? `Floor ${floor} · ${t.suite}` : `Floor ${floor}`} · ${left ? `about ${left * 2} min` : 'here'}</p>
     <div class="route-map">${stepMap(pk, m, true)}<span class="map-where">${m.campus ? 'Outside' : `Floor ${m.f}`}</span><span class="map-tag">Sample map</span></div>
-    <div class="nav-card" aria-live="polite"><span class="dot d48 solid" aria-hidden="true">${ico(s.ic)}</span><div class="txt"><p class="nav-of">Step ${rStep + 1} of ${steps.length}${rStep === now && now ? ' · you’re here' : ''}</p><p class="nav-t">${s.t}</p><p class="nav-s">${s.s}</p></div></div>
-    <div class="nav-ctl"><button class="icon-btn" data-rstep="-1" aria-label="Previous step" ${rStep ? '' : 'disabled'}>${ico('prev')}</button>
+    <div class="nav-card" aria-live="polite"><span class="dot d48 solid" aria-hidden="true">${ico(s.ic)}</span><div class="txt"><p class="nav-of">Step ${rStep + 1} of ${steps.length}${rStep === now && now ? ' · you’re here' : ''}</p><p class="nav-t">${s.t}</p><p class="nav-s">${s.s}</p>${s.maps ? `<button class="link nav-link" data-maps="${P.park[0].t}">Open in your map app ${ico('external', 16)}</button>` : ''}</div></div>
+    <div class="nav-ctl"><button class="icon-btn nav-prev" data-rstep="-1" aria-label="Previous step" ${rStep ? '' : 'disabled'}>${ico('prev')}</button>
       ${s.last ? `<button class="btn btn-primary" data-rdone>${ico('done', 20)}Done</button>` : `<button class="btn btn-primary" data-rstep="1">Next step${ico('next', 20)}</button>`}</div>
-    ${s.maps ? `<button class="btn btn-tonal nav-maps" data-maps="${P.park[0].t}">Open in your map app${ico('external', 20)}</button>` : ''}
-    <details class="all-steps"><summary>All steps</summary><ol class="rsteps">${steps.map((x, i) => `<li class="${i < rStep ? 'done' : i === rStep ? 'now' : ''}"><button class="rs-b" data-rgo="${i}"><span class="rs-n" aria-hidden="true">${ico(i < rStep ? 'stepDone' : x.ic, 20)}</span><b>${x.t}</b></button></li>`).join('')}</ol></details>`;
+    <details class="all-steps"><summary><span>All steps</span><span class="as-n">${steps.length}</span>${ico('expand', 20)}</summary><ol class="rsteps">${steps.map((x, i) => `<li class="${i < rStep ? 'done' : i === rStep ? 'now' : ''}"><button class="rs-b" data-rgo="${i}"><span class="rs-n" aria-hidden="true">${ico(i < rStep ? 'stepDone' : x.ic, 20)}</span><b>${x.t}</b></button></li>`).join('')}</ol></details>`;
 }
 
 /* ---------- Appearance ---------- */
