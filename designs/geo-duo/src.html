@@ -1,0 +1,1877 @@
+<title>MyCare Duo</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=__ICON_NAMES__&display=block">
+<style>
+/* Layout: presentation board – a concept book-style foldable ("iPhone Duo") pinned on the left and scaled to the window height;
+   the journey, fold control, prototype controls, and docs scroll beside it. Closed = 390 × 844 cover screen; open = 780 × 844
+   inner screen with the hinge at 390. App palette, type, spacing, radii, and dark values follow designs/guest and designs/geo-alt. */
+:root{
+  /* Board chrome */
+  --bd-bg:#EEF2F6; --bd-panel:#FFFFFF; --bd-ink:#1F2A33; --bd-muted:#5B6770; --bd-line:#D5DDE5; --bd-accent:#004278; --bd-chip:#E3EAF1; --bd-on-accent:#FFFFFF;
+  /* Device: a neutral graphite bezel, no maker marks */
+  --bd-bezel:#1E2125; --bd-bezel-edge:#3A3F45; --bd-spine:#2B2F34; --bd-shadow:rgba(0,20,40,.24);
+
+  /* App palette (light) */
+  --blue:#004278; --cyan:#00A9E0;
+  --bg:#F7F8FA; --surface:#FFFFFF; --tint:#EBF0F5; --tint-2:#D1DDE6;
+  --line:#D5DDE5; --line-strong:#808B96;
+  --ink:#333333; --ink-2:#5B6770;
+  --brand:#004278; --ctl:#004278; --on-ctl:#FFFFFF;
+  --inverse:#333333; --on-inverse:#FFFFFF;
+  --map-bg:#E6EDF3; --map-block:#FFFFFF; --map-wall:#A9B8C6; --map-road:#FFFFFF; --map-road-edge:#C9D5E0; --map-walk:#D6E4F0;
+  --dest-fill:rgba(0,66,120,.12);
+  --crease:rgba(16,38,60,.10);
+
+  --ts:1;
+  --font:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+
+  /* Spacing – one 4-pt scale */
+  --s1:4.0px; --s2:8.0px; --s3:12.0px; --s4:16.0px; --s6:24.0px; --s8:32.0px; --s10:40.0px; --s12:48.0px;
+  --hit:44.0px; --btn:48.0px;
+  /* Hinge: 32.0 keep-out centred on the crease (16.0 each side) */
+  --half:390px; --keep:16.0px;
+
+  --r-sm:8.0px; --r-md:12.0px; --r-lg:16.0px; --r-pill:999px;
+
+  /* Motion */
+  --d-fast:150ms; --d-base:240ms; --d-slow:400ms; --d-travel:700ms; --d-fold:900ms;
+  --ease-out:cubic-bezier(.2,.8,.2,1); --ease-in-out:cubic-bezier(.65,0,.35,1);
+  --spring:linear(0, 0.066, 0.218, 0.401, 0.58, 0.735, 0.857, 0.945, 1.003, 1.037, 1.051, 1.054, 1.049, 1.04, 1.03, 1.02, 1.012, 1.006, 1.002, 0.999, 0.998, 0.997, 0.997, 0.997, 1);
+
+  --shadow-1:0 1px 2px rgba(16,38,60,.08), 0 2px 6px rgba(16,38,60,.06);
+  --shadow-2:0 8px 24px rgba(16,38,60,.16);
+  --focus:0 0 0 2px #FFFFFF, 0 0 0 5px #004278;
+  --focus-on-blue:0 0 0 2px #004278, 0 0 0 4px #FFFFFF;
+  --fill:0; --wght:500; --grad:0;
+}
+:root,.scr{
+  --t12:calc(12.0px * var(--ts)); --t14:calc(14.0px * var(--ts)); --t16:calc(16.0px * var(--ts)); --t18:calc(18.0px * var(--ts));
+  --t20:calc(20.0px * var(--ts)); --t24:calc(24.0px * var(--ts)); --t28:calc(28.0px * var(--ts)); --t32:calc(32.0px * var(--ts));
+  --i16:calc(16.0px * var(--ts)); --i20:calc(20.0px * var(--ts)); --i24:calc(24.0px * var(--ts));
+  --dot32:calc(32.0px * var(--ts)); --dot40:calc(40.0px * var(--ts));
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){ --bd-bg:#0B141C; --bd-panel:#121E29; --bd-ink:#E6EDF3; --bd-muted:#A3B1BD; --bd-line:#26384A; --bd-accent:#A9C7E0; --bd-chip:#1A2A39; --bd-on-accent:#0B141C; --bd-bezel:#202429; --bd-bezel-edge:#4A5058; --bd-spine:#33383E; --bd-shadow:rgba(0,0,0,.28); color-scheme:dark }
+}
+:root[data-theme="dark"]{ --bd-bg:#0B141C; --bd-panel:#121E29; --bd-ink:#E6EDF3; --bd-muted:#A3B1BD; --bd-line:#26384A; --bd-accent:#A9C7E0; --bd-chip:#1A2A39; --bd-on-accent:#0B141C; --bd-bezel:#202429; --bd-bezel-edge:#4A5058; --bd-spine:#33383E; --bd-shadow:rgba(0,0,0,.28); color-scheme:dark }
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{background:var(--bd-bg)}
+body{color:var(--bd-ink); font-family:var(--font); font-size:16.0px; line-height:1.5; padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px)); padding-block:16.0px 48.0px}
+button,input{font:inherit; color:inherit}
+.vh{position:absolute!important; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
+
+/* ===================== Icons ===================== */
+.ms{
+  font-family:"Material Symbols Rounded"; font-weight:normal; font-style:normal; font-size:var(--i24);
+  width:1em; height:1em; line-height:1; display:inline-block; flex:none; overflow:hidden; text-align:center;
+  letter-spacing:normal; text-transform:none; white-space:nowrap; word-wrap:normal; direction:ltr;
+  font-feature-settings:"liga"; -webkit-font-smoothing:antialiased; user-select:none; --opsz:24;
+  font-variation-settings:"FILL" var(--fill), "wght" var(--wght), "GRAD" var(--grad), "opsz" var(--opsz);
+}
+.ms.s16{font-size:var(--i16); --opsz:20}
+.ms.s20{font-size:var(--i20); --opsz:20}
+.ms.f1{--fill:1}
+html:not(.ms-ready) .ms{color:transparent!important}
+html:not(.ms-ready) .m-ico{fill:transparent!important}
+
+/* ===================== Board ===================== */
+.board{max-width:1440px; margin:0 auto; display:grid; gap:24.0px; grid-template-columns:minmax(0,1fr)}
+@media (min-width:1000px){
+  .board{grid-template-columns:auto minmax(0,1fr); column-gap:32.0px; row-gap:16.0px; align-items:start}
+  .stage{grid-column:1; grid-row:1 / span 20; position:sticky; top:16.0px; align-self:start}
+  .board > :not(.stage){grid-column:2}
+}
+.bh h1{font-size:28.0px; line-height:1.2; margin:0 0 8.0px; letter-spacing:-.01em; text-wrap:balance}
+.bh p{margin:0; color:var(--bd-muted); max-width:62ch; font-size:16.0px}
+.panel{background:var(--bd-panel); border:1px solid var(--bd-line); border-radius:16.0px; padding:16.0px; min-width:0; container-type:inline-size}
+.kicker{font-size:12.0px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--bd-muted); margin:0 0 8.0px}
+.bbtn{min-height:48px; min-width:48px; padding:0 16.0px; border-radius:12.0px; border:1px solid var(--bd-line); background:var(--bd-panel); color:var(--bd-ink); font-weight:600; font-size:16.0px; display:inline-flex; align-items:center; justify-content:center; gap:8.0px; cursor:pointer; white-space:nowrap}
+.bbtn.pri{background:var(--bd-accent); color:var(--bd-on-accent); border-color:var(--bd-accent)}
+.bbtn:disabled{opacity:.4; cursor:default}
+.bbtn:focus-visible,.seg button:focus-visible,.jn:focus-visible,.hinge:focus-visible{outline:3px solid var(--bd-accent); outline-offset:2px}
+
+/* Journey: the transit line across the board, then Back · Fold · Next */
+.jwrap{position:relative; min-width:0}
+.jline{list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); position:relative; z-index:1}
+.jwrap::before{content:""; position:absolute; left:calc(100% / 14); right:calc(100% / 14); top:22px; height:4px; border-radius:2px; background:var(--bd-chip)}
+.jfill{position:absolute; left:calc(100% / 14); top:22px; height:4px; border-radius:2px; background:var(--bd-accent); width:calc((100% - 100% / 7) * var(--p,0)); transition:width var(--d-travel) var(--ease-in-out)}
+.jn{position:relative; display:grid; justify-items:center; gap:4.0px; background:none; border:0; padding:0; cursor:pointer; color:var(--bd-muted); font-size:12.0px; font-weight:600; text-align:center; min-height:48px; min-width:48px; border-radius:8.0px; justify-self:center}
+.jn .jd{width:48px; height:48px; border-radius:50%; display:grid; place-items:center; background:var(--bd-panel); border:2px solid var(--bd-line); color:var(--bd-muted); transition:background-color var(--d-base), border-color var(--d-base), color var(--d-base), transform var(--d-base) var(--spring)}
+.jn .jl{display:none; white-space:nowrap}
+@container (min-width:640px){ .jn .jl{display:block} }
+.jn.done .jd{border-color:var(--bd-accent); color:var(--bd-accent)}
+.jn[aria-current="step"]{color:var(--bd-ink)}
+.jn[aria-current="step"] .jd{background:var(--bd-accent); border-color:var(--bd-accent); color:var(--bd-on-accent); transform:scale(1.08)}
+.jrow{display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:8.0px; margin-top:16.0px}
+.jrow #j-fold{justify-self:center}
+.jcap{display:flex; flex-wrap:wrap; gap:4.0px 16.0px; align-items:baseline; margin:12.0px 0 0; font-size:14.0px; color:var(--bd-muted)}
+.jcap b{color:var(--bd-ink); font-size:16.0px}
+
+/* Stage: the device at its natural size, zoomed to fit the window */
+.stage{display:grid; justify-items:center; gap:8.0px; min-width:0}
+.stage-in{width:804px; height:932px; position:relative}
+.caption{font-size:14.0px; color:var(--bd-muted); margin:0; text-align:center; max-width:560px; text-wrap:balance}
+.caption b{color:var(--bd-ink)}
+
+.controls{display:grid; gap:16.0px; align-content:start; grid-template-columns:repeat(auto-fill,minmax(min(100%,200px),1fr))}
+.ctl.wide{grid-column:1 / -1}
+.ctl{display:grid; gap:8.0px; align-content:start}
+.ctl > span{font-size:14.0px; font-weight:600}
+.ctl small{font-size:12.0px; color:var(--bd-muted)}
+.seg{display:flex; flex-wrap:wrap; background:var(--bd-chip); border-radius:12.0px; padding:4.0px; gap:4.0px}
+.seg button{flex:1 1 auto; min-height:44px; border:0; background:transparent; border-radius:8.0px; font-size:14.0px; font-weight:600; cursor:pointer; color:var(--bd-ink); padding:0 8.0px; white-space:nowrap}
+.seg button[aria-pressed="true"]{background:var(--bd-panel); color:var(--bd-accent); box-shadow:0 0 0 2px var(--bd-accent)}
+.seg button:disabled{opacity:.4; cursor:default}
+
+.docs{display:grid; gap:16.0px; grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr))}
+.docs h2{font-size:18.0px; margin:0 0 12.0px; line-height:1.3; text-wrap:balance}
+.docs p,.docs li{font-size:14.0px; color:var(--bd-muted)}
+.docs p{margin:0 0 8.0px}
+.docs ul{margin:0; padding-left:16.0px; display:grid; gap:4.0px}
+.docs .wide{grid-column:1 / -1}
+.tbl{overflow-x:auto}
+.tbl table{border-collapse:collapse; width:100%; font-size:14.0px}
+.tbl th,.tbl td{text-align:left; padding:8.0px 8.0px 8.0px 0; border-bottom:1px solid var(--bd-line); vertical-align:top}
+.tbl th{font-size:12.0px; text-transform:uppercase; letter-spacing:.06em; color:var(--bd-muted)}
+.tbl td:first-child{font-weight:600; white-space:nowrap}
+.tbl td{color:var(--bd-ink); font-variant-numeric:tabular-nums}
+.states{display:grid; gap:8.0px; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); list-style:none; margin:0; padding:0!important}
+.states li{border:1px solid var(--bd-line); border-radius:12.0px; padding:12.0px; display:grid; gap:4.0px; color:var(--bd-ink)}
+.states b{font-size:14.0px}
+.states span{font-size:12.0px; color:var(--bd-muted)}
+.gmap{display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:4.0px 16.0px; list-style:none; margin:0; padding:0!important}
+.gmap li{display:flex; align-items:center; gap:8.0px; font-size:12.0px; color:var(--bd-ink); min-height:32px}
+.gmap code{color:var(--bd-muted)}
+code{font-size:12.0px; background:var(--bd-chip); padding:2px 4px; border-radius:4px; color:var(--bd-ink)}
+.dgm{overflow-x:auto}
+.dgm svg{display:block; width:100%; min-width:320px; height:auto}
+.dg-scr{fill:var(--bd-panel); stroke:var(--bd-muted); stroke-width:1.5}
+.dg-bar{fill:var(--bd-accent)}
+.dg-zone{fill:var(--bd-chip); stroke:var(--bd-line)}
+.dg-keep{fill:url(#hatch)}
+.dg-hatch{stroke:var(--bd-muted); stroke-width:1.5}
+.dg-crease{stroke:var(--bd-muted); stroke-width:1; stroke-dasharray:3 3}
+.dg-t{fill:var(--bd-ink); font:600 12px var(--font)}
+.dg-s{fill:var(--bd-muted); font:500 12px var(--font)}
+.dg-on{fill:var(--bd-on-accent); font:600 12px var(--font)}
+.dg-pri{fill:var(--bd-accent)}
+.tl{list-style:none; margin:0; padding:0!important; display:grid; gap:0}
+.tl li{display:grid; grid-template-columns:64px minmax(0,1fr); gap:12.0px; padding:8.0px 0; border-bottom:1px solid var(--bd-line); color:var(--bd-ink)}
+.tl li b{font-variant-numeric:tabular-nums; color:var(--bd-ink); font-size:14.0px}
+.tl li span{color:var(--bd-muted); font-size:14.0px}
+
+/* ===================== Device: concept book-style foldable ===================== */
+/* Geometry (device units): each half 402 wide (12.0 bezel + 390 screen); height 868 (844 + 12.0 top and bottom).
+   Hinge at x 402. The leaf (left half) turns about the hinge; closed, its outside face carries the 390 × 844 cover screen. */
+.duo{position:absolute; left:0; top:0; width:804px; height:868px; perspective:2800px; transform:translateX(-201px); filter:drop-shadow(0 20px 24px var(--bd-shadow))}
+.duo.open{transform:none}
+.duo.anim{transition:transform var(--d-fold) var(--ease-in-out)}
+.body-r{position:absolute; left:402px; top:0; width:402px; height:868px; border-radius:0 48px 48px 0; background:var(--bd-bezel); box-shadow:inset 0 0 0 1px var(--bd-bezel-edge)}
+.spine{position:absolute; left:394px; top:16px; width:16px; height:836px; border-radius:8px; background:linear-gradient(90deg,var(--bd-spine),var(--bd-bezel)); box-shadow:inset 0 0 0 1px var(--bd-bezel-edge)}
+.leaf{position:absolute; left:402px; top:0; width:402px; height:868px; transform-origin:0 50%; transform-style:preserve-3d; transform:rotateY(0deg); z-index:3}
+.duo.open .leaf{transform:rotateY(-180deg)}
+.duo.anim .leaf{transition:transform var(--d-fold) var(--ease-in-out)}
+.face{position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; background:var(--bd-bezel); box-shadow:inset 0 0 0 1px var(--bd-bezel-edge)}
+.face.front{border-radius:16px 48px 48px 16px; }
+.face.back{transform:rotateY(180deg); border-radius:48px 0 0 48px}
+.fshade{position:absolute; inset:0; border-radius:inherit; background:#000000; opacity:0; pointer-events:none; z-index:9}
+.cover-slot{position:absolute; left:6px; top:12px; width:390px; height:844px; border-radius:40px; overflow:hidden}
+.back-slot{position:absolute; left:12px; top:12px; width:390px; height:844px; border-radius:38px 0 0 38px; overflow:hidden}
+.back-slot .scr{left:0!important; top:0!important; visibility:visible!important; clip-path:none!important}
+.duo > .scr.inner{left:12px; top:12px; z-index:1}
+.duo.open:not(.anim) > .scr.inner{z-index:5}
+.duo:not(.open):not(.anim) > .scr.inner{visibility:hidden}
+.duo.anim > .scr.inner{clip-path:inset(0 0 0 var(--half))}
+.hinge{position:absolute; left:402px; top:880px; transform:translateX(-50%); z-index:6; min-height:48px; padding:0 16.0px 0 12.0px; border-radius:999px; border:2px solid var(--bd-bezel-edge); background:var(--bd-bezel); color:#FFFFFF; font-weight:600; font-size:16.0px; display:inline-flex; align-items:center; gap:8.0px; cursor:pointer; white-space:nowrap; box-shadow:0 4px 12px var(--bd-shadow)}
+.hinge::before{content:""; position:absolute; left:50%; top:-14px; width:4px; height:12px; margin-left:-2px; border-radius:2px; background:var(--bd-bezel-edge)}
+
+/* ===================== Screens (shared app styles) ===================== */
+.scr{
+  position:absolute; inset:0; overflow:hidden; background:var(--bg); color:var(--ink);
+  font-family:var(--font); font-size:var(--t16); line-height:1.5; isolation:isolate; -webkit-tap-highlight-color:transparent;
+}
+.scr.cover{width:390px; height:844px; border-radius:40px}
+.scr.inner{width:780px; height:844px; inset:auto; border-radius:38px}
+:where(.scr) :where(h1,h2,h3,p,ol,ul){margin:0}
+:where(.scr) :where(ol,ul){padding:0; list-style:none}
+.scr :focus-visible{outline:none; box-shadow:var(--focus)}
+.appbar :focus-visible{box-shadow:var(--focus-on-blue)}
+.scr button{cursor:pointer; user-select:none}
+.scr.dark{
+  color-scheme:dark;
+  --bg:#0D1620; --surface:#16222E; --tint:#1F3042; --tint-2:#2A4157;
+  --line:#2B3C4D; --line-strong:#7D8E9E;
+  --ink:#E6EDF3; --ink-2:#A6B4C0;
+  --blue:#8CC0EA; --ctl:#2D6CA6; --on-ctl:#FFFFFF;
+  --inverse:#E6EDF3; --on-inverse:#0D1620;
+  --map-bg:#132130; --map-block:#1C2F42; --map-wall:#4A6178; --map-road:#2E4760; --map-road-edge:#3A5470; --map-walk:#24405C;
+  --dest-fill:rgba(140,192,234,.18);
+  --crease:rgba(0,0,0,.45);
+  --shadow-1:0 1px 2px rgba(0,0,0,.4), 0 2px 6px rgba(0,0,0,.3);
+  --shadow-2:0 8px 24px rgba(0,0,0,.5);
+  --focus:0 0 0 2px #0D1620, 0 0 0 5px #8CC0EA;
+}
+.scr.theme-anim, .scr.theme-anim *{transition:background-color 320ms var(--ease-out), color 320ms var(--ease-out), border-color 320ms var(--ease-out), fill 320ms var(--ease-out), stroke 320ms var(--ease-out)!important}
+
+.statusbar{position:absolute; inset:0 0 auto 0; height:48.0px; z-index:70; display:flex; align-items:center; justify-content:space-between; padding:0 32.0px; font-size:14.0px; font-weight:600; color:#FFFFFF; pointer-events:none}
+.statusbar.dk{color:var(--ink)}
+.sb-r{display:flex; gap:4.0px}
+.sb-r i{display:block; width:18px; height:10px; border-radius:3px; border:1.5px solid currentColor}
+.sb-r i:first-child{width:14px; border-radius:2px; background:currentColor}
+
+.views,.view{position:absolute; inset:0}
+.scroller{position:absolute; inset:0; overflow-y:auto; overflow-x:hidden; scrollbar-width:none; padding-bottom:112px}
+.scroller::-webkit-scrollbar,.dt-scroll::-webkit-scrollbar{display:none}
+
+/* Inner screen: two panes of 390, a Blue band across the top, nothing within 16.0 of the crease */
+.inner .appbar{position:absolute; inset:0 0 auto 0; z-index:20}
+.inner .pane{position:absolute; top:var(--abh,108px); bottom:0; width:var(--half)}
+.inner .pane.l{left:0}
+.inner .pane.r{left:var(--half); display:flex; flex-direction:column}
+.inner .pane .scroller,.inner .pane.scroller{top:var(--abh,108px)}
+.inner .pane.scroller{position:absolute; inset:auto; top:var(--abh,108px); bottom:0; left:0; width:var(--half)}
+.inner .page-bar{padding-top:var(--s2); padding-right:var(--keep); position:sticky}
+.crease{position:absolute; top:0; bottom:0; left:calc(var(--half) - 12px); width:24px; z-index:95; pointer-events:none; background:linear-gradient(90deg, transparent, var(--crease) 50%, transparent)}
+.crease::after{content:""; position:absolute; left:11.5px; top:0; bottom:0; width:1px; background:var(--crease)}
+.dt-scroll{flex:1; min-height:0; overflow-y:auto; overflow-x:hidden; scrollbar-width:none}
+.dt-in{padding:var(--s4) var(--keep) var(--s6) var(--keep); display:grid; gap:var(--s3)}
+.dt-h{display:flex; align-items:center; gap:var(--s3); min-width:0}
+.dt-t{font-size:var(--t20); font-weight:700; line-height:1.3; color:var(--ink)}
+.dt-t:focus-visible{border-radius:4px}
+.dt-acts{flex:none; padding:var(--s3) var(--keep) var(--s6); background:var(--surface); border-top:1px solid var(--line); display:grid}
+.dt-acts .wf-nav{margin:0}
+.dt-body{display:grid; gap:var(--s3)}
+
+/* App bar: slim Blue band with the reversed logo */
+.appbar{position:sticky; top:0; z-index:20; display:flex; align-items:center; gap:var(--s2); padding:48.0px var(--s4) var(--s2); background:var(--brand); --grad:-25}
+.appbar .logo{display:block; width:200px; height:auto; margin-left:calc(-1 * var(--s4)); flex:none}
+.appbar .sp{flex:1}
+.ab-btn{min-width:var(--hit); height:var(--hit); border-radius:var(--r-pill); border:0; background:rgba(255,255,255,.12); color:#FFFFFF; display:inline-flex; align-items:center; justify-content:center; gap:var(--s1); padding:0 var(--s3); font-size:var(--t14); font-weight:600; white-space:nowrap}
+.ab-btn.round{padding:0; width:var(--hit)}
+.avatar{width:32px; height:32px; border-radius:50%; background:#FFFFFF; color:#004278; display:grid; place-items:center; font-size:12.0px; font-weight:700}
+.page-bar{position:sticky; top:0; z-index:20; display:flex; align-items:center; gap:var(--s2); padding:48.0px var(--s2) var(--s2); background:var(--bg); border-bottom:1px solid var(--line)}
+.page-bar h1{font-size:var(--t18); font-weight:700; line-height:1.3; flex:1; min-width:0}
+.icon-btn{width:var(--hit); height:var(--hit); border-radius:50%; border:0; background:none; color:var(--ink); display:grid; place-items:center; flex:none}
+
+/* Where you are: always visible, always tappable */
+.where{display:flex; align-items:center; gap:var(--s2); padding:var(--s3) var(--s4) 0}
+.chip-loc{min-height:var(--hit); display:inline-flex; align-items:center; gap:var(--s2); padding:var(--s1) var(--s3) var(--s1) var(--s2); border-radius:var(--r-pill); border:1px solid var(--line); background:var(--surface); color:var(--ink); font-size:var(--t14); font-weight:600; min-width:0; max-width:100%; text-align:left; line-height:1.3}
+.chip-loc .cl-t{min-width:0}
+.where .link-btn{white-space:nowrap}
+.chip-loc .ms{color:var(--blue)}
+.live{width:8px; height:8px; border-radius:50%; background:#43B02A; box-shadow:0 0 0 3px rgba(67,176,42,.2); flex:none}
+.scr:not(.rm) .live{animation:livePulse 2s var(--ease-in-out) infinite}
+@keyframes livePulse{50%{box-shadow:0 0 0 6px rgba(67,176,42,0)}}
+.where .sp{flex:1}
+.search-btn{width:var(--hit); height:var(--hit); border-radius:50%; border:1px solid var(--line); background:var(--surface); color:var(--ink); display:grid; place-items:center; flex:none}
+.search-field{margin:var(--s3) var(--s4) 0; min-height:var(--btn); width:calc(100% - var(--s8)); display:flex; align-items:center; gap:var(--s2); padding:0 var(--s4); border-radius:var(--r-md); background:var(--tint); border:1px solid transparent; color:var(--ink-2); font-size:var(--t16); text-align:left}
+.search-field .ms{color:var(--blue)}
+
+.today{padding:var(--s6) var(--s4) var(--s3); display:flex; align-items:baseline; gap:var(--s3); flex-wrap:wrap}
+.today h1{font-size:var(--t28); font-weight:800; letter-spacing:-.02em; line-height:1.15; color:var(--ink)}
+.today p{font-size:var(--t14); color:var(--ink-2); font-weight:600}
+
+.notice{margin:0 var(--s4) var(--s3); border:2px dashed var(--line-strong); border-radius:var(--r-md); padding:var(--s3); display:grid; grid-template-columns:auto minmax(0,1fr); gap:var(--s3); align-items:center; background:var(--surface)}
+.notice .nt{font-size:var(--t16); font-weight:700; line-height:1.3}
+.notice .acts{grid-column:1 / -1; display:grid; gap:var(--s2)}
+.dot{width:var(--dot40); height:var(--dot40); border-radius:50%; display:grid; place-items:center; flex:none; background:var(--tint); color:var(--blue)}
+.dot.solid{background:var(--ctl); color:var(--on-ctl); --grad:-25}
+.dot.d32{width:var(--dot32); height:var(--dot32)}
+
+.btn{min-height:var(--btn); padding:0 var(--s4); border-radius:var(--r-md); border:1px solid var(--line-strong); background:var(--surface); color:var(--blue); font-size:var(--t16); font-weight:600; display:inline-flex; align-items:center; justify-content:center; gap:var(--s2); text-align:center; line-height:1.2}
+.btn.pri{background:var(--ctl); border-color:var(--ctl); color:var(--on-ctl); --grad:-25}
+.btn.ghost{border-color:transparent; background:none}
+.btn.full{width:100%}
+.btn:disabled,.btn[aria-disabled="true"]{background:var(--tint); border-color:var(--line); color:var(--ink-2); cursor:not-allowed}
+.btn-row{display:grid; gap:var(--s2)}
+.scr:not(.rm) .btn:active{transform:scale(.98)}
+
+/* ===================== Visit pass ===================== */
+.pass-wrap{padding:0 var(--s4) var(--s4); perspective:900px}
+.pass{display:grid; grid-template-columns:minmax(0,1fr) auto; border-radius:var(--r-md); box-shadow:var(--shadow-1); position:relative;
+  -webkit-mask:radial-gradient(circle 8px at var(--cut) 0, transparent 98%, #000) top/100% 51% no-repeat, radial-gradient(circle 8px at var(--cut) 100%, transparent 98%, #000) bottom/100% 51% no-repeat;
+  mask:radial-gradient(circle 8px at var(--cut) 0, transparent 98%, #000) top/100% 51% no-repeat, radial-gradient(circle 8px at var(--cut) 100%, transparent 98%, #000) bottom/100% 51% no-repeat;
+  --cut:calc(100% - var(--stub)); --stub:calc(96px * var(--ts));
+}
+.pass-main{background:var(--surface); padding:var(--s4); display:grid; gap:var(--s1); border-radius:var(--r-md) 0 0 var(--r-md); min-width:0; border:1px solid var(--line); border-right:0}
+.pass-stub{width:var(--stub); background:var(--ctl); color:var(--on-ctl); border-radius:0 var(--r-md) var(--r-md) 0; display:grid; place-content:center; justify-items:center; text-align:center; padding:var(--s3) var(--s2); position:relative; --grad:-25}
+.pass-stub::before{content:""; position:absolute; left:-1px; top:12px; bottom:12px; border-left:2px dashed var(--line-strong)}
+.pass-stub .lbl{font-size:var(--t12); font-weight:700; text-transform:uppercase; letter-spacing:.08em}
+.pass-stub .big{font-size:var(--t32); font-weight:800; line-height:1.1; font-variant-numeric:tabular-nums; display:block}
+.pass-stub .sub{font-size:var(--t12); font-weight:600; white-space:nowrap}
+.p-top{display:flex; align-items:center; gap:var(--s2); flex-wrap:wrap}
+.pass-main > *{min-width:0}
+.pass .time{flex:1 1 auto; white-space:nowrap; font-size:var(--t24); font-weight:800; color:var(--blue); line-height:1.15; letter-spacing:-.02em; font-variant-numeric:tabular-nums}
+.pass .dept{font-size:var(--t16); font-weight:700; line-height:1.3}
+.pass .bld{font-size:var(--t14); color:var(--ink-2); line-height:1.4}
+.pass .pfoot{display:flex; align-items:center; gap:var(--s2); flex-wrap:wrap; margin-top:var(--s1)}
+.pass .tag{justify-self:start; white-space:normal; padding-block:2px; line-height:1.3}
+.pass.mini .pass-main{padding:var(--s2) var(--s4) var(--s3)}
+.pass.mini .time{font-size:var(--t20)}
+.pass.mini .bld,.pass.mini .tag{display:none}
+.pass.mini .pass-stub .big{font-size:var(--t28)}
+.pass.mini{--stub:calc(88px * var(--ts))}
+.tag{display:inline-flex; align-items:center; min-height:24px; padding:0 var(--s2); border-radius:var(--r-sm); background:var(--tint); color:var(--ink-2); font-size:var(--t12); font-weight:600; white-space:nowrap}
+.link-btn{min-height:var(--hit); border:0; background:none; color:var(--blue); font-weight:600; font-size:var(--t14); display:inline-flex; align-items:center; gap:var(--s1); padding:0 var(--s1); border-radius:var(--r-sm)}
+.pass.empty .pass-stub{background:var(--tint); color:var(--ink-2)}
+.choose{display:flex; flex-wrap:wrap; gap:var(--s2); margin-top:var(--s2)}
+.chip{min-height:var(--hit); padding:0 var(--s3); border-radius:var(--r-pill); border:1px solid var(--line-strong); background:var(--surface); color:var(--ink); font-size:var(--t14); font-weight:600; display:inline-flex; align-items:center; gap:var(--s1)}
+.scr:not(.rm) .pass.flip{animation:passFlip 560ms var(--ease-out)}
+@keyframes passFlip{0%{transform:rotateX(0)} 45%{transform:rotateX(90deg); opacity:.4} 55%{transform:rotateX(-90deg); opacity:.4} 100%{transform:rotateX(0)}}
+.scr.rm .pass.flip{animation:fadeIn var(--d-base) var(--ease-out)}
+
+/* ===================== Cover: the now card ===================== */
+.line-h{display:flex; align-items:center; justify-content:space-between; gap:var(--s2); padding:var(--s2) var(--s4)}
+.line-h h2,.sec-h{font-size:var(--t18); font-weight:700; line-height:1.3; color:var(--ink)}
+.line-h .count{margin-left:var(--s1); font-size:var(--t14); color:var(--ink-2); font-weight:600; font-variant-numeric:tabular-nums; white-space:nowrap}
+.nowcard{margin:0 var(--s4) var(--s3); background:var(--surface); border:1px solid var(--line); border-radius:var(--r-md); padding:var(--s3); display:grid; gap:var(--s3)}
+.now-h{display:flex; align-items:center; gap:var(--s3); min-width:0}
+.now-tx{flex:1; min-width:0}
+.now-k{font-size:var(--t12); font-weight:600; color:var(--ink-2); line-height:1.4}
+.now-t{font-size:var(--t18); font-weight:700; line-height:1.3; color:var(--ink)}
+.now-t:focus-visible{border-radius:4px}
+.st-m{font-size:var(--t14); color:var(--blue); font-weight:600; font-variant-numeric:tabular-nums; white-space:nowrap}
+/* A compact transit line: one dot per stop, the cyan ring is you */
+.strip{position:relative; display:grid; grid-template-columns:repeat(var(--n),minmax(0,1fr)); align-items:center; height:24px}
+.strip::before,.strip .sf{content:""; position:absolute; left:calc(50% / var(--n)); top:10px; height:4px; border-radius:2px; background:var(--tint-2); right:calc(50% / var(--n))}
+.strip .sf{right:auto; background:var(--ctl); width:calc((100% - 100% / var(--n)) * var(--p,0)); transition:width var(--d-travel) var(--ease-in-out)}
+.strip i{position:relative; z-index:1; justify-self:center; width:12px; height:12px; border-radius:50%; background:var(--surface); border:2px solid var(--line-strong)}
+.strip i.done{background:var(--ctl); border-color:var(--ctl)}
+.strip i.now{width:16px; height:16px; background:var(--ctl); border-color:var(--ctl)}
+.strip .ring{position:absolute; z-index:2; top:-2px; width:28px; height:28px; margin-left:-14px; border-radius:50%; border:3px solid var(--cyan); left:calc((var(--i) + .5) * 100% / var(--n)); transition:left var(--d-travel) var(--spring)}
+.then{margin:0 var(--s4) var(--s3); display:flex; align-items:center; gap:var(--s3); min-height:var(--btn); padding:0 var(--s3); border-radius:var(--r-md); background:var(--tint)}
+.then-k{font-size:var(--t12); font-weight:700; color:var(--ink-2); text-transform:uppercase; letter-spacing:.08em}
+.then .ms{color:var(--blue)}
+.then-t{flex:1; min-width:0; font-size:var(--t14); font-weight:600; line-height:1.3}
+.scr:not(.rm) .opening > *{animation:riseIn 420ms var(--spring) both; animation-delay:calc(var(--k,0) * 40ms)}
+.scr.rm .opening{animation:fadeIn var(--d-base) var(--ease-out) both}
+
+/* ===================== The line (inner, left pane) ===================== */
+.line{position:relative; margin:0 var(--s4) var(--s4); --node:var(--dot40); --ring:6px}
+.rail,.rail-fill{position:absolute; left:calc(var(--ring) + var(--node) / 2 - 2px); width:4px; border-radius:2px; top:var(--rt,0); background:var(--tint-2); height:var(--rh,0)}
+.rail-fill{background:var(--ctl); height:var(--fh,0); transition:height var(--d-travel) var(--ease-in-out)}
+.you{position:absolute; left:0; top:0; width:calc(var(--node) + 12px); height:calc(var(--node) + 12px); border-radius:50%; border:3px solid var(--cyan); z-index:3; pointer-events:none; transform:translateY(var(--y,0)); transition:transform var(--d-travel) var(--spring), opacity var(--d-base)}
+.you::after{content:""; position:absolute; inset:-6px; border-radius:50%; border:2px solid var(--cyan); opacity:0}
+.scr:not(.rm) .you.on::after{animation:youPing 2.4s var(--ease-out) infinite}
+@keyframes youPing{0%{transform:scale(.8); opacity:.7} 80%,100%{transform:scale(1.35); opacity:0}}
+.stops{position:relative; display:grid; gap:var(--s1); padding-left:var(--ring)}
+.stop{display:grid; grid-template-columns:var(--node) minmax(0,1fr); column-gap:var(--s3); align-items:center}
+.node{width:var(--node); height:var(--node); border-radius:50%; display:grid; place-items:center; position:relative; z-index:2; background:var(--bg); border:2px solid var(--line-strong); color:var(--ink-2)}
+.node .ms{font-size:var(--i20); --opsz:20}
+.stop.done .node{background:var(--ctl); border-color:var(--ctl); color:var(--on-ctl); --grad:-25; width:calc(24px * var(--ts)); height:calc(24px * var(--ts)); justify-self:center}
+.stop.done .node .ms{font-size:var(--i16); --opsz:20}
+.stop.done .st-row{min-height:calc(36px * var(--ts))}
+.stop.done .st-t{font-size:var(--t14)}
+.stop.sum .link-btn{padding:0; margin-left:calc(-1 * var(--s1))}
+.stop.now .node{background:var(--ctl); border-color:var(--ctl); color:var(--on-ctl); --grad:-25}
+.scr:not(.rm) .stop.just-done .node{animation:pop 420ms var(--spring)}
+@keyframes pop{0%{transform:scale(.6)} 100%{transform:scale(1)}}
+.st-row{display:flex; align-items:center; gap:var(--s2); min-height:var(--btn); min-width:0}
+.st-t{flex:1; min-width:0; font-size:var(--t16); font-weight:600; line-height:1.3; color:var(--ink)}
+.stop.done .st-t{color:var(--ink-2); font-weight:500}
+.stop.now .st-t{font-weight:700; font-size:var(--t18)}
+.stop .st-m{color:var(--ink-2)}
+.stop.now .st-m{color:var(--blue)}
+.st-side{font-size:var(--t12); font-weight:700; color:var(--blue); display:inline-flex; align-items:center; gap:2px; white-space:nowrap}
+@keyframes riseIn{from{transform:translateY(-8px); opacity:0} to{transform:none; opacity:1}}
+@keyframes fadeIn{from{opacity:0} to{opacity:1}}
+.card{background:var(--surface); border:1px solid var(--line); border-radius:var(--r-md); padding:var(--s3); display:grid; gap:var(--s3)}
+.one{font-size:var(--t16); font-weight:600; line-height:1.4; display:flex; align-items:center; gap:var(--s2)}
+.one .ms{color:var(--blue)}
+.stats{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:var(--s2)}
+.stat{display:grid; justify-items:center; gap:2px; padding:var(--s2) var(--s1); border-radius:var(--r-sm); background:var(--tint); text-align:center; min-width:0}
+.stat .ms{color:var(--blue)}
+.stat b{font-size:var(--t16); font-weight:700; line-height:1.3; font-variant-numeric:tabular-nums}
+.stat span:not(.ms){font-size:var(--t12); color:var(--ink-2); line-height:1.3}
+
+/* Maps: one system everywhere */
+.map{position:relative; border-radius:var(--r-sm); overflow:hidden; background:var(--map-bg); display:block}
+.map svg{display:block; width:100%; height:auto}
+.map-foot{display:flex; align-items:center; gap:var(--s2); padding:var(--s1) var(--s2); background:var(--map-bg); border-top:1px solid var(--line); min-height:32px}
+.map-foot .tag{background:var(--surface)}
+.map-foot .sp{flex:1}
+button.map{border:0; padding:0; width:100%; text-align:left; color:inherit}
+.m-bg{fill:var(--map-bg)}
+.m-blk{fill:var(--map-block); stroke:var(--map-wall); stroke-width:1.5}
+.m-room{fill:var(--map-block); stroke:var(--map-wall); stroke-width:1.5}
+.m-room.dest,.m-blk.dest{fill:var(--dest-fill); stroke:var(--blue); stroke-width:3}
+.m-cor{fill:var(--map-bg)}
+.m-road{stroke:var(--map-road); stroke-width:16; fill:none}
+.m-road-e{stroke:var(--map-road-edge); stroke-width:18; fill:none}
+.m-walk{fill:var(--map-walk); stroke:var(--map-wall); stroke-width:1}
+.m-door{fill:var(--blue)}
+.m-lbl{fill:var(--ink); font:600 12px var(--font)}
+.m-sub{fill:var(--ink-2); font:600 12px var(--font)}
+.m-ico{fill:var(--blue); font-family:"Material Symbols Rounded"; font-size:20px; font-feature-settings:"liga"}
+.m-route{fill:none; stroke:var(--blue); stroke-width:5; stroke-linecap:round; stroke-linejoin:round}
+.m-route.plan{stroke-dasharray:2 9; stroke-width:5}
+.m-route.done{opacity:.3}
+.m-you{fill:var(--cyan); stroke:#FFFFFF; stroke-width:3}
+.m-halo{fill:var(--cyan); opacity:.25}
+.scr:not(.rm) .m-halo.pulse{animation:halo 1.6s var(--ease-out) 3; transform-box:fill-box; transform-origin:center}
+@keyframes halo{0%{transform:scale(.6); opacity:.5} 100%{transform:scale(1.8); opacity:0}}
+.m-flag{fill:var(--ctl); stroke:#FFFFFF; stroke-width:2}
+.scr:not(.rm) .m-route.draw{stroke-dasharray:var(--len); stroke-dashoffset:var(--len); animation:draw 1000ms var(--ease-in-out) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+
+.lift{display:grid; grid-template-columns:auto minmax(0,1fr); gap:var(--s3); align-items:center}
+.lift-disp{width:calc(64px * var(--ts)); height:calc(64px * var(--ts)); border-radius:var(--r-md); background:var(--inverse); color:var(--on-inverse); display:grid; place-items:center; grid-template-rows:auto auto; align-content:center; line-height:1}
+.lift-disp .lbl{font-size:var(--t12); font-weight:700}
+.lift-disp .big{font-size:var(--t28); font-weight:800; height:1em; overflow:hidden; font-variant-numeric:tabular-nums; display:block}
+.lift-disp .big span{display:block; line-height:1}
+.floors{display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:var(--s1)}
+.fl{aspect-ratio:1; max-width:40px; width:100%; justify-self:center; border-radius:50%; display:grid; place-items:center; font-size:var(--t12); font-weight:700; border:2px solid var(--line-strong); color:var(--ink-2); background:var(--surface); position:relative}
+.fl.dest{background:var(--ctl); border-color:var(--ctl); color:var(--on-ctl)}
+.fl.here{box-shadow:0 0 0 3px var(--surface), 0 0 0 6px var(--cyan)}
+.lift-cap{grid-column:1 / -1; display:flex; gap:var(--s3); flex-wrap:wrap; font-size:var(--t12); color:var(--ink-2); font-weight:600}
+.lift-cap i{display:inline-block; width:12px; height:12px; border-radius:50%; vertical-align:-1px; margin-right:var(--s1)}
+.lift-cap .k1{box-shadow:inset 0 0 0 3px var(--cyan)} .lift-cap .k2{background:var(--ctl)}
+
+.tiles{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:var(--s2)}
+.tile{min-height:calc(88px * var(--ts)); border-radius:var(--r-sm); border:1px solid var(--line); background:var(--surface); display:grid; justify-items:center; align-content:center; gap:var(--s1); padding:var(--s2) var(--s1); text-align:center; color:var(--ink)}
+.tile .ms{color:var(--blue)}
+.tile b{font-size:var(--t12); font-weight:600; line-height:1.3}
+.tile span:not(.ms){font-size:var(--t12); color:var(--ink-2); line-height:1.3; font-variant-numeric:tabular-nums}
+.scr:not(.rm) .opening .tile{animation:riseIn 420ms var(--spring) both; animation-delay:calc(200ms + var(--i,0) * 40ms)}
+
+.sec{padding:var(--s2) var(--s4) var(--s4); display:grid; gap:var(--s3)}
+.sh-label{font-size:var(--t14); font-weight:700; color:var(--ink-2)}
+.rows{background:var(--surface); border:1px solid var(--line); border-radius:var(--r-md); overflow:hidden}
+.rows li + li{border-top:1px solid var(--line)}
+.row{width:100%; min-height:calc(56px * var(--ts)); border:0; background:none; display:flex; align-items:center; gap:var(--s3); padding:var(--s2) var(--s3); text-align:left; color:var(--ink)}
+.row .txt{flex:1; min-width:0; display:grid}
+.row .rt{font-size:var(--t16); font-weight:600; line-height:1.3}
+.row .rs{font-size:var(--t14); color:var(--ink-2); line-height:1.4}
+.row .chev,.row .ext{color:var(--ink-2)}
+.row .fnum{min-width:calc(40px * var(--ts)); height:calc(40px * var(--ts)); border-radius:var(--r-sm); background:var(--tint); color:var(--blue); display:grid; place-items:center; font-weight:800; font-size:var(--t16); flex:none}
+.ql{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:var(--s2)}
+.ql button{min-height:calc(64px * var(--ts)); border-radius:var(--r-md); border:1px solid var(--line); background:var(--surface); display:flex; align-items:center; gap:var(--s2); padding:var(--s2) var(--s3); text-align:left; color:var(--ink); font-size:var(--t14); font-weight:600; line-height:1.3}
+.ql button > span:nth-child(2){flex:1; min-width:0}
+.ql .lk{color:var(--ink-2)}
+
+/* Tab bar: full width on the cover; the left pane only when open, so no tab sits on the crease */
+.tabbar{position:absolute; left:0; right:0; bottom:0; z-index:25; display:flex; gap:2px; background:var(--surface); border-top:1px solid var(--line); padding:var(--s1) var(--s1) var(--s6)}
+.inner .tabbar{right:auto; width:var(--half)}
+.tab{min-height:56px; border:0; background:none; display:grid; justify-items:center; align-content:start; padding:var(--s1) 2px 0; gap:2px; color:var(--ink-2); font-size:12.0px; font-weight:600; line-height:1.2; text-align:center; flex:1 1 0; min-width:max-content; white-space:nowrap}
+.tab .ms{font-size:24.0px}
+.tab .pillx{width:56px; height:32px; border-radius:var(--r-pill); display:grid; place-items:center; transition:background-color var(--d-base) var(--ease-out)}
+.tab[aria-selected="true"]{color:var(--blue)}
+.tab[aria-selected="true"] .pillx{background:var(--tint); --fill:1}
+
+/* Overlays */
+.shade{position:absolute; inset:0; z-index:50; background:rgba(5,20,35,.45); opacity:0; pointer-events:none; transition:opacity var(--d-base) var(--ease-out)}
+.shade.on{opacity:1; pointer-events:auto}
+.sheet{position:absolute; left:0; right:0; bottom:0; z-index:51; background:var(--surface); border-radius:var(--r-lg) var(--r-lg) 0 0; padding:var(--s2) var(--s4) var(--s8); max-height:88%; overflow-y:auto; transform:translateY(100%); transition:transform var(--d-slow) var(--ease-out); visibility:hidden}
+.inner .sheet{right:auto; width:var(--half)}
+.sheet.on{transform:none; visibility:visible}
+.scr.rm .sheet{transform:none; opacity:0; transition:opacity var(--d-base) var(--ease-out)}
+.scr.rm .sheet.on{opacity:1}
+.grab{width:40px; height:4px; border-radius:2px; background:var(--line-strong); margin:0 auto var(--s3)}
+.sh-head{display:flex; align-items:center; gap:var(--s2); margin-bottom:var(--s3)}
+.sh-head h2{flex:1; font-size:var(--t20); font-weight:700; line-height:1.3}
+.sh-body{display:grid; gap:var(--s4)}
+.sh-body p{font-size:var(--t16); color:var(--ink-2); line-height:1.5}
+.pick{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:var(--s2)}
+.pick button{min-height:calc(96px * var(--ts)); border-radius:var(--r-md); border:1px solid var(--line-strong); background:var(--surface); display:grid; align-content:start; justify-items:start; gap:var(--s2); padding:var(--s3); text-align:left; color:var(--ink); font-size:var(--t14); font-weight:600; line-height:1.3}
+.pick button[aria-pressed="true"]{border:2px solid var(--blue); background:var(--tint)}
+.zip{display:flex; gap:var(--s2)}
+.zip input{flex:1; min-width:0; min-height:var(--btn); border-radius:var(--r-md); border:1px solid var(--line-strong); background:var(--surface); padding:0 var(--s3); font-size:var(--t16); color:var(--ink)}
+.zip input:focus-visible{outline:none; box-shadow:var(--focus)}
+.why{display:grid; gap:var(--s2)}
+.why li{display:flex; gap:var(--s3); align-items:center; font-size:var(--t14); line-height:1.4; color:var(--ink)}
+.why li span:nth-child(2){flex:1}
+.appear{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:var(--s2)}
+.appear button{min-height:calc(72px * var(--ts)); border-radius:var(--r-md); border:1px solid var(--line-strong); background:var(--surface); display:grid; justify-items:center; align-content:center; gap:var(--s1); font-size:var(--t14); font-weight:600; color:var(--ink)}
+.appear button[aria-checked="true"]{border:2px solid var(--blue); background:var(--tint); color:var(--blue); --fill:1}
+
+/* Full pages (cover) and the left-pane page (inner) */
+.page{position:absolute; inset:0; z-index:40; background:var(--bg); display:flex; flex-direction:column; transform:translateX(100%); visibility:hidden; transition:transform var(--d-slow) var(--ease-out), visibility 0s linear var(--d-slow)}
+.inner .page{inset:auto; top:var(--abh,108px); bottom:0; left:0; width:var(--half); transform:translateX(-100%)}
+.page.on{transform:none; visibility:visible; transition:transform var(--d-slow) var(--ease-out)}
+.scr.rm .page{transform:none; opacity:0; transition:opacity var(--d-base) var(--ease-out), visibility 0s linear var(--d-base)}
+.scr.rm .page.on{opacity:1; transition:opacity var(--d-base) var(--ease-out)}
+.page .page-bar{position:relative}
+.page-body{flex:1; overflow-y:auto; padding:var(--s4); display:grid; gap:var(--s4); align-content:start}
+/* Inner directions: steps on the left, the map and the current step on the right */
+.wfv{position:absolute; inset:var(--abh,108px) 0 0 0; z-index:30; background:var(--bg)}
+.inner .wfv .pane{top:0}
+.wfv .pane.l{overflow-y:auto; scrollbar-width:none; background:var(--bg)}
+.wf-ol{display:grid; gap:var(--s2)}
+.wf-li{width:100%; min-height:calc(64px * var(--ts)); border:1px solid var(--line); border-radius:var(--r-md); background:var(--surface); display:flex; align-items:center; gap:var(--s3); padding:var(--s2) var(--s3); text-align:left; color:var(--ink)}
+.wf-li .txt{flex:1; min-width:0; display:grid}
+.wf-li .rs{font-size:var(--t12); font-weight:600; color:var(--ink-2)}
+.wf-li .rt{font-size:var(--t16); font-weight:600; line-height:1.3}
+.wf-li[aria-current="step"]{border:2px solid var(--blue); background:var(--tint)}
+.wf-li.done .rt{color:var(--ink-2); font-weight:500}
+.wf-steps{display:grid; grid-template-columns:repeat(var(--n),minmax(0,1fr)); gap:var(--s1)}
+.wf-steps i{height:6px; border-radius:3px; background:var(--tint-2)}
+.wf-steps i.on{background:var(--ctl)}
+.wf-steps i.here{background:var(--cyan)}
+.wf-card{background:var(--surface); border:1px solid var(--line); border-radius:var(--r-md); padding:var(--s4); display:grid; gap:var(--s3)}
+.wf-n{font-size:var(--t14); font-weight:700; color:var(--ink-2); display:flex; gap:var(--s2); align-items:center; flex-wrap:wrap}
+.wf-i{font-size:var(--t20); font-weight:700; line-height:1.3; display:flex; gap:var(--s3); align-items:center}
+.wf-nav{display:grid; grid-template-columns:1fr 1fr; gap:var(--s2)}
+.scr:not(.rm) .wf-anim{animation:slideStep 360ms var(--ease-out)}
+@keyframes slideStep{from{transform:translateX(16px); opacity:0} to{transform:none; opacity:1}}
+.so-input{flex:1; min-width:0; margin-right:var(--s2); display:flex; align-items:center; gap:var(--s2); min-height:var(--btn); border-radius:var(--r-md); background:var(--tint); padding:0 var(--s3)}
+.so-input input{flex:1; min-width:0; align-self:stretch; min-height:var(--hit); border:0; background:none; font-size:var(--t16); color:var(--ink); outline:none}
+.so-input:focus-within{box-shadow:var(--focus)}
+.seg-in{display:flex; gap:var(--s1); background:var(--tint); border-radius:var(--r-md); padding:var(--s1)}
+.seg-in button{flex:1; min-height:var(--hit); border:0; border-radius:var(--r-sm); background:none; font-size:var(--t14); font-weight:600; color:var(--ink)}
+.seg-in button[aria-pressed="true"]{background:var(--surface); color:var(--blue); box-shadow:0 0 0 2px var(--blue)}
+.field{display:grid; gap:var(--s1)}
+.field label{font-size:var(--t14); font-weight:600}
+.field .zip input{width:100%}
+
+/* System surfaces (simulated) */
+.sys{position:absolute; inset:0; z-index:60; display:grid; place-items:center; padding:var(--s6); background:rgba(5,20,35,.5)}
+.inner .sys{padding-right:calc(var(--half) + var(--s6))}
+.sys-box{width:100%; max-width:300px; background:var(--surface); border-radius:var(--r-lg); overflow:hidden; text-align:center; box-shadow:var(--shadow-2)}
+.sys-box h2{font-size:var(--t16); font-weight:700; padding:var(--s4) var(--s4) var(--s1); line-height:1.3}
+.sys-box p{font-size:var(--t14); color:var(--ink-2); padding:0 var(--s4) var(--s3)}
+.sys-box button{display:block; width:100%; min-height:var(--btn); border:0; border-top:1px solid var(--line); background:none; color:var(--blue); font-size:var(--t16); font-weight:600}
+.sys-tag{font-size:var(--t12); color:var(--ink-2); font-weight:600; padding:var(--s2) 0 0}
+.lock{position:absolute; inset:0; z-index:65; background:linear-gradient(180deg,#0E2236,#004278); color:#FFFFFF; display:flex; flex-direction:column; align-items:center; padding:80px var(--s4) var(--s8); gap:var(--s2); overflow-y:auto}
+.live-act{margin-top:var(--s6); width:100%; background:rgba(0,10,20,.55); border:1px solid rgba(255,255,255,.18); border-radius:var(--r-lg); padding:var(--s4); display:grid; gap:var(--s3); text-align:left}
+.la-head{display:flex; align-items:center; gap:var(--s2); font-size:var(--t14); font-weight:600; color:#D6E4F0}
+.la-head img{width:24px; height:24px; border-radius:6px}
+.la-head b{color:#FFFFFF}
+.la-head .sp{flex:1}
+.la-step{font-variant-numeric:tabular-nums}
+.la-t{display:flex; align-items:center; gap:var(--s3); font-size:var(--t20); font-weight:700; line-height:1.3}
+.la-t .la-ico{width:var(--dot40); height:var(--dot40); border-radius:50%; background:#FFFFFF; color:#004278; display:grid; place-items:center; flex:none; --grad:0}
+.scr:not(.rm) .la-t.anim{animation:slideStep 360ms var(--ease-out)}
+.la-prog{position:relative; display:flex; justify-content:space-between; align-items:center; height:24px}
+.la-prog::before,.la-fill{content:""; position:absolute; left:12px; top:10px; height:4px; border-radius:2px; background:rgba(255,255,255,.3); right:12px}
+.la-fill{background:#FFFFFF; right:auto; width:calc((100% - 24px) * var(--p,0)); transition:width var(--d-travel) var(--ease-in-out)}
+.scr.rm .la-fill{transition:none}
+.la-prog i{position:relative; z-index:1; width:24px; height:24px; border-radius:50%; background:#0A2038; border:2px solid rgba(255,255,255,.55); display:grid; place-items:center}
+.la-prog i.done{background:#FFFFFF; border-color:#FFFFFF; color:#004278}
+.la-prog i.now{border:3px solid var(--cyan); background:#FFFFFF; box-shadow:0 0 0 3px rgba(0,169,224,.35)}
+.la-sub{font-size:var(--t14); color:#D6E4F0; font-weight:600}
+.lock-acts{margin-top:auto; width:100%; display:grid; grid-template-columns:1fr 1fr; gap:var(--s2); padding-top:var(--s4)}
+.lock .clock{font-size:64px; font-weight:700; line-height:1; letter-spacing:-.02em}
+.lock .ldate{font-size:var(--t16); font-weight:600}
+.lock-n{width:100%; background:rgba(255,255,255,.94); color:#333333; border-radius:var(--r-lg); padding:var(--s3); display:grid; grid-template-columns:auto minmax(0,1fr); gap:var(--s3); text-align:left}
+.lock-n img{width:40px; height:40px; border-radius:10px}
+.lock-n b{font-size:var(--t14)} .lock-n p{font-size:var(--t14); line-height:1.4}
+.lock-n small{font-size:var(--t12); color:#5B6770; font-weight:600}
+.lock .btn{background:rgba(255,255,255,.16); color:#FFFFFF; border-color:rgba(255,255,255,.5)}
+.lock .btn.pri{background:#FFFFFF; color:#004278; border-color:#FFFFFF}
+.lock :focus-visible{box-shadow:0 0 0 2px #0E2236, 0 0 0 4px #FFFFFF!important}
+.lock .sys-tag{color:#D6E4F0}
+.scr:not(.rm) .lock-n{animation:riseIn 520ms var(--spring) both 200ms}
+.toast{position:absolute; left:var(--s4); right:var(--s4); bottom:104px; z-index:80; background:var(--inverse); color:var(--on-inverse); border-radius:var(--r-md); padding:var(--s3) var(--s4); font-size:var(--t14); font-weight:600; display:flex; gap:var(--s2); align-items:center; box-shadow:var(--shadow-2); transform:translateY(16px); opacity:0; pointer-events:none; transition:transform var(--d-base) var(--ease-out), opacity var(--d-base) var(--ease-out)}
+.inner .toast{right:auto; width:calc(var(--half) - var(--s4) - var(--keep))}
+.toast.on{transform:none; opacity:1}
+.scr.rm .you,.scr.rm .rail-fill,.scr.rm .strip .ring,.scr.rm .strip .sf{transition:none}
+@media (prefers-reduced-motion: reduce){ .jfill,.jn .jd{transition:none} }
+</style>
+
+<div class="board">
+  <header class="bh">
+    <h1>MyCare Duo</h1>
+    <p>The location-aware home for a book-style foldable. Closed, it is a one-hand glance at where you are and what to do next. Open, your day and the map sit side by side. Fold or unfold at any step – your place is kept.</p>
+  </header>
+
+  <div class="stage" id="stage">
+    <div class="stage-in" id="stage-in">
+      <div class="duo" id="duo">
+        <div class="spine" aria-hidden="true"></div>
+        <div class="body-r" aria-hidden="true"></div>
+        <section class="scr inner" id="scr-inner" lang="en" aria-label="iPhone Duo, inner screen (open)"></section>
+        <div class="leaf" id="leaf">
+          <div class="face front"><div class="cover-slot"><section class="scr cover" id="scr-cover" lang="en" aria-label="iPhone Duo, cover screen (closed)"></section></div><span class="fshade" id="shade-f"></span></div>
+          <div class="face back" aria-hidden="true"><div class="back-slot" id="back-slot"></div><span class="fshade" id="shade-b"></span></div>
+        </div>
+        <button class="hinge" id="hinge" aria-label="Unfold the device"><span class="ms s20" aria-hidden="true">open_in_full</span><span id="hinge-t">Unfold</span></button>
+      </div>
+    </div>
+    <p class="caption" id="cap"><b>Concept device.</b> “iPhone Duo” is not a shipping Apple product; sizes are assumptions. Location is simulated and all data is sample.</p>
+  </div>
+
+  <section class="panel" aria-labelledby="jr-h">
+    <p class="kicker" id="jr-h">Journey</p>
+    <div class="jwrap"><span class="jfill" id="jfill" aria-hidden="true"></span><ol class="jline" id="jline"></ol></div>
+    <div class="jrow">
+      <button class="bbtn" id="j-back" aria-label="Back to the previous step"><span class="ms s20" aria-hidden="true">arrow_back</span><span>Back</span></button>
+      <button class="bbtn" id="j-fold"><span class="ms s20" aria-hidden="true" id="j-fold-i">open_in_full</span><span id="j-fold-t">Unfold</span></button>
+      <button class="bbtn pri" id="j-next" aria-label="Next step"><span>Next</span><span class="ms s20" aria-hidden="true">arrow_forward</span></button>
+    </div>
+    <p class="jcap" aria-live="polite"><b id="j-title"></b><span id="j-sub"></span></p>
+  </section>
+
+  <section class="panel" aria-labelledby="pc-h">
+    <p class="kicker" id="pc-h">Prototype controls</p>
+    <div class="controls" id="controls">
+      <div class="ctl wide"><span id="l-zone">Simulated location</span><div class="seg" role="group" aria-labelledby="l-zone" data-ctl="zone"><button data-v="away">Away</button><button data-v="arriving">Arriving</button><button data-v="entrance">Entrance</button><button data-v="inside">Inside</button><button data-v="simmons">Simmons</button></div></div>
+      <div class="ctl wide"><span id="l-perm">Location permission</span><div class="seg" role="group" aria-labelledby="l-perm" data-ctl="perm"><button data-v="ask">Ask</button><button data-v="allowed">Allowed</button><button data-v="denied">Denied</button><button data-v="nosignal">No signal</button></div></div>
+      <div class="ctl"><span id="l-floor">Floor (inside Clements)</span><div class="seg" role="group" aria-labelledby="l-floor" data-ctl="floor"><button data-v="1">1</button><button data-v="2">2</button><button data-v="7">7</button></div><small id="floor-note">Choose Inside to change floors.</small></div>
+      <div class="ctl"><span id="l-open">Posture</span><div class="seg" role="group" aria-labelledby="l-open" data-ctl="open"><button data-v="0">Closed</button><button data-v="1">Open</button></div></div>
+      <div class="ctl"><span id="l-acc">Accuracy</span><div class="seg" role="group" aria-labelledby="l-acc" data-ctl="acc"><button data-v="precise">Precise</button><button data-v="approx">Approximate</button></div></div>
+      <div class="ctl"><span id="l-acct">MyChart</span><div class="seg" role="group" aria-labelledby="l-acct" data-ctl="signed"><button data-v="1">Signed in</button><button data-v="0">Guest</button></div></div>
+      <div class="ctl"><span id="l-ts">Text size</span><div class="seg" role="group" aria-labelledby="l-ts" data-ctl="ts"><button data-v="1">Default</button><button data-v="1.3">Large</button></div></div>
+      <div class="ctl"><span id="l-th">Theme</span><div class="seg" role="group" aria-labelledby="l-th" data-ctl="theme"><button data-v="system">System</button><button data-v="light">Light</button><button data-v="dark">Dark</button></div></div>
+      <div class="ctl"><span id="l-m">Motion</span><div class="seg" role="group" aria-labelledby="l-m" data-ctl="rm"><button data-v="0">Full</button><button data-v="1">Reduced</button></div></div>
+      <div class="ctl"><span id="l-x">Moments</span><div class="seg" role="group" aria-labelledby="l-x"><button data-moment="lock">Lock screen</button><button data-moment="reset">Start over</button></div></div>
+    </div>
+  </section>
+
+  <div class="docs" id="docs">
+    <section class="panel wide">
+      <h2>Two postures, one day</h2>
+      <p>Closed, the cover is a glance: where you are, the stop you're at, and one primary action. Open, the left pane holds your day – pass, line, and Quick links – and the right pane gives the current stop a large map, its details, and the primary action at the bottom. Search, the tabs, and the menu are in reach either way.</p>
+      <div class="dgm" id="dgm"></div>
+    </section>
+    <section class="panel">
+      <h2>Pane rules around the hinge</h2>
+      <ul>
+        <li>Two panes of 390, each with 16.0 margins, so nothing sits within 16.0 of the crease (a 32.0 keep-out).</li>
+        <li>Only colour crosses the crease: the Blue band, backgrounds, and the scrim.</li>
+        <li>Tabs, sheets, search, and the system prompt live in the left pane; the primary action is pinned to the bottom of the right pane, level with the tab bar.</li>
+        <li>Directions open as steps on the left and the step map on the right.</li>
+      </ul>
+    </section>
+    <section class="panel">
+      <h2>Folding keeps your place</h2>
+      <ol class="tl">
+        <li><b>0 ms</b><span>The leaf lifts off the hinge. Under it, the map grows from where it sat on the cover.</span></li>
+        <li><b>450 ms</b><span>The leaf is on edge. The cover turns away; the day line arrives on the left half.</span></li>
+        <li><b>900 ms</b><span>Flat. The map fills the right pane; from 630 ms, details and the primary action fade in.</span></li>
+        <li><b>Fold</b><span>The same timeline backwards: the map shrinks into the cover's now card as the leaf closes.</span></li>
+        <li><b>Reduced</b><span>A 320 ms cross-fade. No turn, no growth.</span></li>
+      </ol>
+    </section>
+    <section class="panel">
+      <h2>Assumed device sizes</h2>
+      <div class="tbl"><table><thead><tr><th>Part</th><th>Assumption</th></tr></thead><tbody>
+        <tr><td>Cover screen</td><td>390 × 844 pt, portrait</td></tr>
+        <tr><td>Inner screen</td><td>780 × 844 pt, near-square</td></tr>
+        <tr><td>Hinge</td><td>Vertical, at x 390; visible crease</td></tr>
+        <tr><td>Keep-out</td><td>32.0 centred on the crease</td></tr>
+        <tr><td>Bezel</td><td>12.0 inner, 6.0 cover sides</td></tr>
+      </tbody></table></div>
+      <p style="margin-top:12px">“iPhone Duo” is a concept. Confirm sizes, safe areas, and posture APIs with the platform once a real device exists.</p>
+    </section>
+    <section class="panel wide">
+      <h2>Journey states</h2>
+      <ul class="states" id="doc-states"></ul>
+    </section>
+    <section class="panel">
+      <h2>Trust and control</h2>
+      <ul>
+        <li>Never asks on launch. “Help when you arrive” explains first, then the simulated system prompt.</li>
+        <li>The location chip says what the home is using. Tap it for Not here?, Show the common homepage (pause), and Location settings.</li>
+        <li>Without location, everything works: choose a building, a spot inside, or a ZIP or city.</li>
+        <li>The cover's lock screen shows live directions – place, floor, suite, and step – never the department or the visit.</li>
+        <li>Check in, visit details, messages, results, visits, and billing open in MyChart.</li>
+      </ul>
+    </section>
+    <section class="panel">
+      <h2>Real integrations needed</h2>
+      <div class="tbl"><table><thead><tr><th>Shown here</th><th>Needs</th></tr></thead><tbody>
+        <tr><td>Fold and unfold</td><td>Posture and hinge events, state restoration</td></tr>
+        <tr><td>Arriving, entrance</td><td>Geofences around campus, garages, doors</td></tr>
+        <tr><td>Floor, indoor route</td><td>Indoor positioning and a wayfinding SDK</td></tr>
+        <tr><td>Today's visits</td><td>Epic MyChart integration</td></tr>
+        <tr><td>Floor, suite</td><td>Department directory by building</td></tr>
+        <tr><td>Spaces open</td><td>Garage occupancy feed</td></tr>
+        <tr><td>Amenities, support</td><td>CMS content per building</td></tr>
+        <tr><td>Lock screen</td><td>Live Activity (iOS) or live notification</td></tr>
+      </tbody></table></div>
+    </section>
+    <section class="panel wide">
+      <h2>Glyphs</h2>
+      <p>One concept, one glyph – __APP_GLYPHS__ glyphs from Material Symbols Rounded, served as a subset (about __FONT_KB__ KB).</p>
+      <ul class="gmap" id="gmap"></ul>
+    </section>
+  </div>
+</div>
+
+<script>
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = t => String(t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+
+const markIcons = () => document.documentElement.classList.add('ms-ready');
+if (document.fonts && document.fonts.load) {
+  document.fonts.load('24px "Material Symbols Rounded"', 'home').then(f => { if (f.length) markIcons(); }).catch(() => {});
+  setTimeout(markIcons, 3000);
+} else markIcons();
+
+/* ---------- Iconography: one concept, one glyph. The glyph map on the board is generated from this list. ---------- */
+/* EXTRA_GLYPHS: */
+const ICON_MAP = [
+  ['home', 'home', 'Home', 'Tab bar, journey', 'Navigation'],
+  ['findCare', 'stethoscope', 'Find my Care', 'Tab bar, Quick links', 'Navigation'],
+  ['place', 'location_on', 'Locations', 'Tab bar, Quick links, location chip', 'Navigation'],
+  ['wayfinding', 'directions_walk', 'Wayfinding', 'Tab bar', 'Navigation'],
+  ['signIn', 'login', 'Sign in – MyChart', 'Tab bar, app bar', 'Navigation'],
+  ['signOut', 'logout', 'Sign out', 'MyChart tab', 'Navigation'],
+  ['search', 'search', 'Search', 'Search field', 'Navigation'],
+  ['menu', 'menu', 'Menu', 'App bar', 'Navigation'],
+  ['back', 'arrow_back', 'Back', 'Pages, board', 'Navigation'],
+  ['go', 'arrow_forward', 'Next', 'Directions, board', 'Navigation'],
+  ['next', 'chevron_right', 'Open', 'Rows', 'Navigation'],
+  ['close', 'close', 'Close', 'Sheets', 'Navigation'],
+  ['unfold', 'open_in_full', 'Unfold', 'Hinge handle, board', 'Device'],
+  ['fold', 'close_fullscreen', 'Fold', 'Hinge handle, board', 'Device'],
+  ['nearMe', 'near_me', 'Use my location', 'Notice, explainer', 'Location'],
+  ['locOff', 'location_off', 'Location off or no signal', 'Notice, chip', 'Location'],
+  ['approx', 'location_searching', 'Approximate location', 'Notice, chip', 'Location'],
+  ['pick', 'pin_drop', 'Chosen by you', 'Chip, picker, destination', 'Location'],
+  ['notHere', 'edit_location_alt', 'Not here?', 'Location sheet', 'Location'],
+  ['pause', 'pause_circle', 'Common homepage (paused)', 'Location sheet, notice', 'Location'],
+  ['settings', 'settings', 'Location settings', 'Location sheet, notice', 'Location'],
+  ['privacy', 'privacy_tip', 'Privacy', 'Explainer, menu', 'Location'],
+  ['hospital', 'domain', 'Hospital', 'Map, picker', 'Places'],
+  ['building', 'apartment', 'Center or building', 'Map, picker, line', 'Places'],
+  ['parking', 'local_parking', 'Parking', 'Line, map, stats', 'Places'],
+  ['money', 'payments', 'Parking rate', 'Stats', 'Places'],
+  ['accessible', 'accessible', 'Valet and accessible entry', 'Stats', 'Places'],
+  ['entrance', 'door_open', 'Entrance', 'Line, directions', 'Places'],
+  ['elevator', 'elevator', 'Elevator', 'Line, map, directions', 'Places'],
+  ['up', 'arrow_upward', 'Ride up', 'Directions', 'Places'],
+  ['car', 'directions_car', 'Drive', 'Line, directions', 'Places'],
+  ['clinic', 'door_front', 'Department or suite', 'Directory, directions', 'Places'],
+  ['navigate', 'navigation', 'Start wayfinding', 'Now card, detail pane', 'Wayfinding'],
+  ['mapApp', 'map', 'Open in your map app', 'Directions', 'Wayfinding'],
+  ['arrived', 'check_circle', 'Arrived or done', 'Line, directions', 'Wayfinding', 'f1'],
+  ['stepDone', 'check', 'Stop passed', 'Line', 'Wayfinding'],
+  ['food', 'restaurant', 'Café and food', 'Tiles, map', 'Amenities'],
+  ['pharmacy', 'local_pharmacy', 'Pharmacy', 'Tiles, map', 'Amenities'],
+  ['restroom', 'wc', 'Restrooms', 'Tiles, map', 'Amenities'],
+  ['chapel', 'self_improvement', 'Chapel and quiet room', 'Tiles, map', 'Amenities'],
+  ['atm', 'local_atm', 'ATM', 'Tiles, map', 'Amenities'],
+  ['infoDesk', 'support_agent', 'Information desk', 'Tiles, map', 'Amenities'],
+  ['wifi', 'wifi', 'Guest Wi-Fi', 'Hospital resources', 'Amenities'],
+  ['language', 'translate', 'Interpreters', 'Hospital resources', 'Amenities'],
+  ['shuttle', 'directions_bus', 'Campus shuttle', 'Hospital resources', 'Amenities'],
+  ['help', 'help', 'Help and contact', 'Menu, resources', 'Amenities'],
+  ['navigator', 'assistant_navigation', 'Patient navigators', 'Support for you', 'Cancer center'],
+  ['counsel', 'psychology', 'Counseling', 'Support for you', 'Cancer center'],
+  ['nutrition', 'nutrition', 'Nutrition', 'Support for you', 'Cancer center'],
+  ['groups', 'diversity_3', 'Support groups', 'Support for you', 'Cancer center'],
+  ['education', 'school', 'Patient education', 'Support, learn', 'Cancer center'],
+  ['caregiver', 'handshake', 'Caregivers', 'Support, learn', 'Cancer center'],
+  ['checkin', 'how_to_reg', 'Check in – MyChart', 'Now card, MyChart tab', 'MyChart'],
+  ['messages', 'chat', 'Message your doctor', 'Quick links, MyChart tab', 'MyChart'],
+  ['results', 'lab_profile', 'Test results', 'Quick links, MyChart tab', 'MyChart'],
+  ['visits', 'calendar_month', 'Visits', 'Quick links, line, MyChart tab', 'MyChart'],
+  ['bill', 'receipt_long', 'Billing', 'Quick links, MyChart tab', 'MyChart'],
+  ['lock', 'lock', 'Needs sign-in', 'Quick links (guest)', 'MyChart'],
+  ['external', 'open_in_new', 'Opens in MyChart or another app', 'Hand-off buttons and rows', 'MyChart'],
+  ['show', 'visibility', 'Show password', 'Sign-in', 'MyChart'],
+  ['hide', 'visibility_off', 'Hide password', 'Sign-in', 'MyChart'],
+  ['info', 'info', 'Why you see this', 'Location sheet', 'Controls'],
+  ['website', 'public', 'Full website', 'Menu', 'Controls'],
+  ['appearance', 'contrast', 'Appearance – system', 'Menu', 'Controls'],
+  ['light', 'light_mode', 'Light appearance', 'Menu', 'Controls'],
+  ['dark', 'dark_mode', 'Dark appearance', 'Menu', 'Controls']
+];
+const ICONS = Object.fromEntries(ICON_MAP.map(r => [r[0], r]));
+const g = k => ICONS[k][1];
+const ico = (k, size = 24, cls = '') => `<span class="${['ms', size === 24 ? '' : 's' + size, ICONS[k][5] || '', cls].filter(Boolean).join(' ')}" aria-hidden="true">${g(k)}</span>`;
+const dot = (k, cls = '') => `<span class="dot${cls ? ' ' + cls : ''}" aria-hidden="true">${ico(k, 20)}</span>`;
+
+/* ---------- Sample data: real building names; every floor, suite, garage, rate, visit, and person is fictional ---------- */
+const PLACES = {
+  clem: { full: 'William P. Clements Jr. University Hospital', short: 'Clements University Hospital', ic: 'hospital', garage: 'Garage A', door: 'North entrance', open: 120, plans: ['clem1', 'clem2', 'clem7'], lift: 'Elevator B' },
+  simm: { full: 'Harold C. Simmons Comprehensive Cancer Center', short: 'Simmons Cancer Center', ic: 'building', garage: 'Simmons garage', door: 'Main entrance', open: 64, plans: ['simm1'], lift: 'the elevator' }
+};
+const PLAN_META = { clem1: { b: 'clem', floor: 1, elev: 156 }, clem2: { b: 'clem', floor: 2, elev: 156 }, clem7: { b: 'clem', floor: 7, elev: 156 }, simm1: { b: 'simm', floor: 1, elev: 256 } };
+// [id, plan, side, x0, x1, kind, name, suite, icon]
+const ROOM_ROWS = [
+  ['c1-info', 'clem1', 'n', 12, 64, 'amen', 'Information desk', '', 'infoDesk'],
+  ['c1-cafe', 'clem1', 'n', 64, 136, 'amen', 'Café', '', 'food'],
+  ['c1-elev', 'clem1', 'n', 136, 176, 'core', 'Elevator B', '', 'elevator'],
+  ['c1-pharm', 'clem1', 'n', 176, 236, 'amen', 'Pharmacy', '', 'pharmacy'],
+  ['c1-wc', 'clem1', 'n', 236, 308, 'amen', 'Restrooms', '', 'restroom'],
+  ['c1-chapel', 'clem1', 's', 12, 64, 'amen', 'Chapel', '', 'chapel'],
+  ['c1-atm', 'clem1', 's', 64, 100, 'amen', 'ATM', '', 'atm'],
+  ['c1-lobby', 'clem1', 's', 100, 196, 'other', 'Lobby', '', ''],
+  ['c1-img', 'clem1', 's', 196, 308, 'dept', 'Imaging', '1300', ''],
+  ['c2-lab', 'clem2', 'n', 12, 100, 'dept', 'Lab', '2100', ''],
+  ['c2-wc', 'clem2', 'n', 100, 136, 'amen', 'Restrooms', '', 'restroom'],
+  ['c2-elev', 'clem2', 'n', 136, 176, 'core', 'Elevator B', '', 'elevator'],
+  ['c2-wait', 'clem2', 'n', 176, 308, 'other', 'Waiting', '', ''],
+  ['c2-quiet', 'clem2', 's', 12, 64, 'amen', 'Quiet room', '', 'chapel'],
+  ['c2-snack', 'clem2', 's', 64, 100, 'amen', 'Snacks', '', 'food'],
+  ['c2-rehab', 'clem2', 's', 100, 308, 'dept', 'Rehab', '2400', ''],
+  ['c7-wait', 'clem7', 'n', 12, 100, 'other', 'Waiting', '', ''],
+  ['c7-wc', 'clem7', 'n', 100, 136, 'amen', 'Restrooms', '', 'restroom'],
+  ['c7-elev', 'clem7', 'n', 136, 176, 'core', 'Elevator B', '', 'elevator'],
+  ['c7-staff', 'clem7', 'n', 176, 308, 'other', 'Staff only', '', ''],
+  ['c7-heart', 'clem7', 's', 12, 196, 'dept', 'Heart clinic', '7200', ''],
+  ['c7-off', 'clem7', 's', 196, 308, 'other', 'Offices', '', ''],
+  ['s1-info', 'simm1', 'n', 12, 64, 'amen', 'Welcome desk', '', 'infoDesk'],
+  ['s1-wc', 'simm1', 'n', 64, 100, 'amen', 'Restrooms', '', 'restroom'],
+  ['s1-res', 'simm1', 'n', 100, 236, 'dept', 'Resource center', '1200', ''],
+  ['s1-elev', 'simm1', 'n', 236, 276, 'core', 'Elevator', '', 'elevator'],
+  ['s1-cafe', 'simm1', 'n', 276, 308, 'amen', 'Café', '', 'food'],
+  ['s1-pharm', 'simm1', 's', 12, 64, 'amen', 'Pharmacy', '', 'pharmacy'],
+  ['s1-onc', 'simm1', 's', 64, 236, 'dept', 'Oncology clinic', '1400', ''],
+  ['s1-quiet', 'simm1', 's', 236, 308, 'amen', 'Quiet room', '', 'chapel']
+];
+const ROOMS = {};
+ROOM_ROWS.forEach(([id, plan, side, x0, x1, kind, name, suite, ic]) => {
+  ROOMS[id] = { id, plan, side, x0, x1, kind, name, suite, ic, cx: (x0 + x1) / 2, b: PLAN_META[plan].b, floor: PLAN_META[plan].floor };
+});
+const roomsOn = plan => ROOM_ROWS.filter(r => r[1] === plan).map(r => ROOMS[r[0]]);
+const planOf = (b, f) => b + f;
+const VISITS = { clem: { id: 'v1', room: 'c7-heart', time: '10:30 a.m.' }, simm: { id: 'v2', room: 's1-onc', time: '2 p.m.' } };
+const GUEST_DEST = { clem: ['c7-heart', 'c1-img', 'c2-lab', 'c1-pharm'], simm: ['s1-onc', 's1-res', 's1-pharm'] };
+const SUPPORT = [['navigator', 'Navigators'], ['counsel', 'Counseling'], ['nutrition', 'Nutrition'], ['groups', 'Groups'], ['education', 'Classes'], ['caregiver', 'Caregivers']];
+
+/* Campus routes (map units). You and the route stay on roads, walkways, and corridors */
+const DRIVE = { clem: [[0, 100], [76, 100], [76, 64]], simm: [[0, 100], [76, 100], [76, 136]] };
+const WALK = { clem: [[76, 64], [76, 50], [160, 50]], simm: [[76, 136], [76, 150], [160, 150]] };
+const ENTRY = [12, 100];
+
+/* ---------- One map system: campus and floor plans share units (320 × 200), marks, and tokens ---------- */
+const plen = pts => pts.slice(1).reduce((a, p, i) => a + Math.hypot(p[0] - pts[i][0], p[1] - pts[i][1]), 0);
+const pathD = pts => 'M' + pts.map(p => p.join(' ')).join('L');
+const routeEl = (pts, cls = '') => pts && pts.length > 1 ? `<path class="m-route ${cls}" d="${pathD(pts)}" style="--len:${Math.ceil(plen(pts))}"/>` : '';
+const youEl = (p, o = {}) => p ? `<g class="m-me" transform="translate(${p[0]} ${p[1]})"><circle class="m-halo${o.pulse ? ' pulse' : ''}" r="12"/><circle class="m-you" r="6"/></g>` : '';
+const flagEl = p => p ? `<circle class="m-flag" cx="${p[0]}" cy="${p[1]}" r="6"/>` : '';
+const txt = (x, y, t, cls = 'm-lbl', a = 'middle') => `<text class="${cls}" x="${x}" y="${y}" text-anchor="${a}" dominant-baseline="central">${t}</text>`;
+
+function campusSVG(o = {}) {
+  let s = `<rect class="m-bg" width="320" height="200"/>`;
+  s += `<path class="m-road-e" d="M0 100H320M156 0V200"/><path class="m-road" d="M0 100H320M156 0V200"/>`;
+  s += `<rect class="m-blk" x="12" y="12" width="128" height="76"/>`;
+  s += `<rect class="m-blk${o.destB === 'clem' ? ' dest' : ''}" x="172" y="12" width="136" height="76"/>`;
+  s += `<rect class="m-blk" x="12" y="112" width="128" height="76"/>`;
+  s += `<rect class="m-blk${o.destB === 'simm' ? ' dest' : ''}" x="172" y="112" width="136" height="76"/>`;
+  s += `<rect class="m-walk" x="140" y="44" width="32" height="12"/><rect class="m-walk" x="140" y="144" width="32" height="12"/>`;
+  s += `<rect class="m-cor" x="68" y="86" width="16" height="4"/><rect class="m-cor" x="68" y="110" width="16" height="4"/>`;
+  s += `<rect class="m-door" x="169" y="42" width="6" height="16" rx="2"/><rect class="m-door" x="169" y="142" width="6" height="16" rx="2"/>`;
+  s += txt(36, 28, g('parking'), 'm-ico') + txt(50, 28, 'Garage A', 'm-lbl', 'start');
+  s += txt(240, 30, g('hospital'), 'm-ico') + txt(240, 52, 'Clements') + txt(240, 68, 'University Hospital', 'm-sub');
+  s += txt(240, 130, g('building'), 'm-ico') + txt(240, 152, 'Simmons') + txt(240, 168, 'Cancer Center', 'm-sub');
+  s += txt(28, 172, g('parking'), 'm-ico') + txt(42, 172, 'Simmons garage', 'm-lbl', 'start');
+  (o.routes || []).forEach(([pts, cls]) => { s += routeEl(pts, cls); });
+  s += youEl(o.you, o);
+  return s;
+}
+function planSVG(plan, o = {}) {
+  const m = PLAN_META[plan], rooms = roomsOn(plan);
+  let s = `<rect class="m-bg" width="320" height="200"/><rect class="m-blk" x="12" y="12" width="296" height="176"/>`;
+  s += rooms.map(r => `<rect class="m-room${o.dest === r.id ? ' dest' : ''}" x="${r.x0}" y="${r.side === 'n' ? 12 : 112}" width="${r.x1 - r.x0}" height="76"/>`).join('');
+  s += `<rect class="m-cor" x="13" y="89" width="294" height="22"/>`;
+  s += rooms.map(r => `<rect class="m-cor" x="${r.cx - 8}" y="${r.side === 'n' ? 86.5 : 110.5}" width="16" height="3"/>`).join('');
+  if (m.floor === 1) s += `<rect class="m-door" x="9" y="90" width="6" height="20" rx="2"/>`;
+  s += rooms.map(r => {
+    const cy = r.side === 'n' ? 50 : 150;
+    if (r.ic) return txt(r.cx, cy, g(r.ic), 'm-ico');
+    return r.suite ? txt(r.cx, cy - 8, r.name) + txt(r.cx, cy + 9, r.suite, 'm-sub') : txt(r.cx, cy, r.name);
+  }).join('');
+  (o.routes || []).forEach(([pts, cls]) => { s += routeEl(pts, cls); });
+  if (o.flag) s += flagEl(o.flag);
+  s += youEl(o.you, o);
+  return s;
+}
+/* share: the key the fold animation uses to pair this map on the cover with the same map on the inner screen */
+function mapBox({ plan, label, foot, btn, share, ...o }) {
+  const svg = `<svg viewBox="0 0 320 200" role="img" aria-label="${esc(label)}">${plan === 'campus' ? campusSVG(o) : planSVG(plan, o)}</svg>`;
+  const where = plan === 'campus' ? 'Campus' : `Floor ${PLAN_META[plan].floor}`;
+  const ft = `<div class="map-foot"><span class="tag">Sample map</span><span class="sp"></span><span class="tag">${foot || where}</span></div>`;
+  const sh = share ? ` data-share="${share}"` : '';
+  return btn ? `<button class="map"${sh} ${btn}>${svg}${ft}</button>` : `<div class="map"${sh}>${svg}${ft}</div>`;
+}
+
+/* ---------- State ---------- */
+const mqRM = matchMedia('(prefers-reduced-motion: reduce)');
+const mqDark = matchMedia('(prefers-color-scheme: dark)');
+const S = { zone: 'away', floor: 1, perm: 'ask', acc: 'precise', signed: true, ts: 1, theme: 'system', rm: mqRM.matches, manual: null, paused: false, askHidden: false, guestDest: { clem: null, simm: null }, tab: 0, pickB: null, showPassed: false, open: false, anim: false };
+let WF = null;              // directions in progress – shared by both screens
+const SO = { on: false, q: '' };   // search – shared by both screens
+
+function ctx() {
+  if (S.manual) return { ...S.manual, src: 'manual' };
+  if (S.paused) return { zone: 'away', src: 'paused' };
+  if (S.perm !== 'allowed') return { zone: 'away', src: S.perm };
+  if (S.acc === 'approx' && S.zone !== 'away') return { zone: 'away', src: 'approx' };
+  return { zone: S.zone, floor: S.floor, src: 'live' };
+}
+const placeOf = c => c.zone === 'away' ? null : c.zone === 'simmons' ? 'simm' : 'clem';
+const isActive = c => c.src === 'live' || c.src === 'manual';
+function youOnFloor(c, destRoom) {
+  if (destRoom && destRoom.floor === c.floor && destRoom.b === 'clem') return [destRoom.cx, 100];
+  return c.floor === 1 ? [28, 100] : [PLAN_META.clem1.elev, 100];
+}
+
+/* ---------- Directions: one builder for every route ---------- */
+function routeSteps(roomId) {
+  const r = ROOMS[roomId], P = PLACES[r.b], p1 = planOf(r.b, 1), e1 = PLAN_META[p1].elev, ef = PLAN_META[r.plan].elev;
+  const name = r.suite ? `${r.name}, Suite ${r.suite}` : r.name;
+  const steps = [
+    { ic: 'car', t: `Drive to ${P.garage}`, plan: 'campus', routes: [[DRIVE[r.b]]], you: DRIVE[r.b][0], destB: r.b, ext: true },
+    { ic: 'entrance', t: `Walk to the ${P.door}`, plan: 'campus', routes: [[DRIVE[r.b], 'done'], [WALK[r.b]]], you: WALK[r.b][0], destB: r.b }
+  ];
+  if (r.floor !== 1) {
+    steps.push({ ic: 'elevator', t: `Take ${P.lift} to Floor ${r.floor}`, plan: p1, routes: [[[ENTRY, [e1, 100]]]], you: ENTRY, flag: [e1, 100] });
+    steps.push({ ic: 'up', t: `Get off at Floor ${r.floor}`, plan: r.plan, you: [ef, 100], lift: r.floor });
+    steps.push({ ic: 'clinic', t: name, plan: r.plan, routes: [[[[ef, 100], [r.cx, 100]]]], you: [ef, 100], flag: [r.cx, 100], dest: r.id, last: true });
+  } else {
+    steps.push({ ic: 'clinic', t: name, plan: p1, routes: [[[ENTRY, [r.cx, 100]]]], you: ENTRY, flag: [r.cx, 100], dest: r.id, last: true });
+  }
+  return steps;
+}
+function startIndex(c, roomId, steps) {
+  const r = ROOMS[roomId], p = placeOf(c);
+  if (!isActive(c) || p !== r.b) return 0;
+  if (c.zone === 'arriving') return 1;
+  if (c.zone === 'entrance' || c.zone === 'simmons') return 2;
+  if (c.zone === 'inside') {
+    if (c.floor === r.floor) return steps.length - 1;
+    return r.floor === 1 ? steps.length - 1 : c.floor === 1 ? 2 : 3;
+  }
+  return 0;
+}
+
+/* ---------- The line ---------- */
+function lineModel(c) {
+  const p = placeOf(c), active = isActive(c);
+  if (S.signed) {
+    const stops = [
+      { k: 'leave', ic: 'car', t: 'Leave home', m: '9:50 a.m.' },
+      { k: 'park', ic: 'parking', t: 'Park in Garage A' },
+      { k: 'enter', ic: 'entrance', t: 'Enter at the North entrance' },
+      { k: 'lift', ic: 'elevator', t: 'Elevator B to Floor 7' },
+      { k: 'visit', ic: 'visits', t: 'Heart clinic', m: '10:30 a.m.' },
+      { k: 'simm', ic: 'building', t: 'Simmons Cancer Center', m: '2 p.m.' }
+    ];
+    const idx = !active ? 0 : { away: 0, arriving: 1, entrance: 2, inside: c.floor === 7 ? 4 : 3, simmons: 5 }[c.zone];
+    return { title: 'Your day', stops, idx, active, room: idx === 5 ? VISITS.simm.room : VISITS.clem.room };
+  }
+  if (!p) return null;
+  const P = PLACES[p], dId = S.guestDest[p], d = dId && ROOMS[dId];
+  const stops = [{ k: 'park', ic: 'parking', t: `Park in ${P.garage}` }, { k: 'enter', ic: 'entrance', t: `Enter at the ${P.door}` }];
+  if (d && d.floor !== 1) stops.push({ k: 'lift', ic: 'elevator', t: `${P.lift === 'Elevator B' ? 'Elevator B' : 'Elevator'} to Floor ${d.floor}` });
+  stops.push({ k: 'dest', ic: d ? 'clinic' : 'pick', t: d ? d.name : 'Your destination' });
+  let idx = { arriving: 0, entrance: 1, simmons: 1 }[c.zone];
+  if (c.zone === 'inside') idx = d && d.floor !== 1 && c.floor !== d.floor ? 2 : stops.length - 1;
+  return { title: 'Your way in', stops, idx, active, room: dId || (p === 'clem' ? 'c1-lobby' : 's1-info') };
+}
+
+function liftPanel(from, to) {
+  const floors = [1, 2, 3, 4, 5, 6, 7];
+  return `<div class="lift" role="img" aria-label="You are on Floor ${from}. ${from === to ? 'This is your floor.' : `Go to Floor ${to}.`}">
+    <div class="lift-disp" aria-hidden="true"><span class="lbl">${from === to ? 'Here' : 'Floor'}</span><span class="big"><span>${from}</span></span></div>
+    <div class="floors" aria-hidden="true">${floors.map(f => `<span class="fl${f === to ? ' dest' : ''}${f === from ? ' here' : ''}">${f}</span>`).join('')}</div>
+    <div class="lift-cap" aria-hidden="true"><span><i class="k1"></i>You</span><span><i class="k2"></i>Your floor</span></div>
+  </div>`;
+}
+function tileList(items) {
+  return `<ul class="tiles">${items.map((t, i) => `<li style="display:contents"><button class="tile" style="--i:${i}" ${t.attrs}>${ico(t.ic)}<b>${t.name}</b>${t.sub ? `<span>${t.sub}</span>` : ''}</button></li>`).join('')}</ul>`;
+}
+function amenityTiles(plan, youX) {
+  const items = roomsOn(plan).filter(r => r.kind === 'amen').map(r => { const m = Math.max(1, Math.round(Math.abs(r.cx - youX) / 80)); return { ic: r.ic, name: r.name, sub: `${m} min`, attrs: `data-act="wf" data-room="${r.id}" aria-label="${r.name}, ${m} minute walk, directions"` }; });
+  if (items.length < 3 && plan !== 'clem1') ['c1-cafe', 'c1-pharm'].slice(0, 3 - items.length).forEach(id => { const r = ROOMS[id]; items.push({ ic: r.ic, name: r.name, sub: 'Floor 1', attrs: `data-act="wf" data-room="${id}" aria-label="${r.name}, Floor 1, directions"` }); });
+  return items;
+}
+const btnWF = (room, label = 'Start wayfinding') => `<button class="btn pri" data-act="wf" data-room="${room}">${ico('navigate', 20)}<span>${label}</span></button>`;
+const btnExt = (label, key, pri) => `<button class="btn${pri ? ' pri' : ''}" data-act="ext" data-label="${label}" aria-label="${label}, opens in MyChart">${ico(key, 20)}<span>${label}</span>${ico('external', 16)}</button>`;
+
+/* ---------- The current stop, in parts: both screens compose it (cover: header, map, action; inner: all of it) ---------- */
+function stopParts(k, c, L) {
+  const p = placeOf(c) || 'clem', P = PLACES[p], room = L.room, r = ROOMS[room];
+  const open = `data-act="wf" data-room="${room}" aria-label="Open directions"`;
+  const checkIn = S.signed ? btnExt('Check in', 'checkin') : '';
+  switch (k) {
+    case 'leave':
+      return { map: { plan: 'campus', label: 'Sample map: the drive to Garage A, then the walkway to the North entrance', routes: [[DRIVE.clem, 'plan'], [WALK.clem, 'plan']], destB: 'clem', btn: open }, acts: [btnWF(room, 'Get directions')] };
+    case 'park':
+      return { map: { plan: 'campus', label: `Sample map: you are parking in ${P.garage}`, routes: [[DRIVE[p], 'draw'], [WALK[p], 'plan']], you: DRIVE[p][DRIVE[p].length - 1], destB: p, btn: open },
+        body: `<div class="stats"><div class="stat">${ico('parking', 20)}<b>${P.open}</b><span>spaces open</span></div><div class="stat">${ico('money', 20)}<b>$2</b><span>per hour</span></div><div class="stat">${ico('accessible', 20)}<b>Valet</b><span>at the door</span></div></div>`,
+        acts: [btnWF(room)] };
+    case 'enter':
+      return { map: { plan: 'campus', label: `Sample map: you are at the ${P.door}`, routes: [[DRIVE[p], 'done'], [WALK[p], 'done']], you: WALK[p][2], pulse: true, destB: p, btn: open }, acts: [btnWF(room), checkIn].filter(Boolean) };
+    case 'lift': {
+      const you = youOnFloor(c, null), plan = planOf('clem', c.floor);
+      return { pre: liftPanel(c.floor, r.floor), map: { plan, label: `Sample map of Floor ${c.floor}: the way to Elevator B`, routes: [[[you, [156, 100]]]], you, flag: [156, 100], btn: open },
+        body: `<p class="sh-label">On Floor ${c.floor}</p>` + tileList(amenityTiles(plan, you[0])), acts: [btnWF(room, 'Resume wayfinding')] };
+    }
+    case 'visit': case 'dest': {
+      if (!r || (k === 'dest' && !S.guestDest[p])) {
+        return { msg: `<p class="one">${ico('pick', 20)}Choose your destination on the pass</p>`, body: c.zone === 'inside' ? `<p class="sh-label">On Floor ${c.floor}</p>` + tileList(amenityTiles(planOf('clem', c.floor), youOnFloor(c)[0])) : '', acts: [`<button class="btn pri" data-act="focus-dest">${ico('pick', 20)}<span>Choose a destination</span></button>`] };
+      }
+      if (c.zone === 'inside' && c.floor === r.floor) {
+        return { msg: `<p class="one">${ico('arrived', 20)}You've arrived</p>`,
+          map: { plan: r.plan, label: `Sample map of Floor ${r.floor}: you are at ${r.name}${r.suite ? ', Suite ' + r.suite : ''}`, you: [r.cx, 100], dest: r.id },
+          body: `<p class="sh-label">Nearby</p>` + tileList(amenityTiles(r.plan, r.cx)),
+          acts: [S.signed ? btnExt('Check in', 'checkin', true) : `<button class="btn pri" data-act="tab" data-tab="4">${ico('signIn', 20)}<span>Sign in to check in</span></button>`] };
+      }
+      const you = c.zone === 'inside' ? youOnFloor(c) : ENTRY;
+      return { map: { plan: r.plan, label: `Sample map of Floor ${r.floor}: the way to ${r.name}`, routes: [[[you, [r.cx, 100]]]], you, flag: [r.cx, 100], dest: r.id }, acts: [btnWF(room)] };
+    }
+    case 'simm':
+      return { map: { plan: 'campus', label: 'Sample map: you are at the Simmons Cancer Center main entrance', routes: [[WALK.simm, 'done']], you: WALK.simm[2], pulse: true, destB: 'simm', btn: open },
+        body: `<p class="sh-label">Support for you</p>` + tileList(SUPPORT.map(([ic, n]) => ({ ic, name: n, attrs: `data-act="info" data-msg="${n} – sample content approved by the center"` }))),
+        acts: [btnWF(room), checkIn].filter(Boolean) };
+  }
+  return { acts: [] };
+}
+function detailFor(c, L) {
+  if (!L) return { ic: 'place', kick: 'Common homepage', t: 'Plan a visit', map: { plan: 'campus', label: 'Sample map of the Dallas campus: Clements University Hospital, Simmons Cancer Center, and their garages', btn: 'data-act="tab" data-tab="2" aria-label="Open Locations"' },
+    acts: [`<button class="btn pri" data-act="tab" data-tab="4">${ico('signIn', 20)}<span>Sign in to MyChart</span></button>`, `<button class="btn" data-act="tab" data-tab="2">${ico('place', 20)}<span>Locations</span></button>`] };
+  const s = L.stops[L.idx], n = L.stops.length;
+  return { ic: s.ic, kick: L.active ? `Now · Stop ${L.idx + 1} of ${n}` : `First stop · ${n} in all`, t: s.t, m: s.m, ...stopParts(s.k, c, L) };
+}
+
+/* ---------- Home pieces ---------- */
+function chipFor(c) {
+  const p = placeOf(c);
+  if (c.src === 'manual') return [ico('pick', 20), p ? `You chose · ${PLACES[p].short}` : 'You chose · Not at a campus', false];
+  if (c.src === 'paused') return [ico('pause', 20), 'Location paused for today', false];
+  if (c.src === 'ask') return [ico('nearMe', 20), 'Location not on', false];
+  if (c.src === 'denied') return [ico('locOff', 20), 'Location off', false];
+  if (c.src === 'nosignal') return [ico('locOff', 20), 'No location signal', false];
+  if (c.src === 'approx') return [ico('approx', 20), 'Near the Dallas campus', false];
+  if (!p) return [ico('nearMe', 20), 'Not at a UTSW campus', true];
+  return ['', PLACES[p].short, true];
+}
+function noticeFor(c) {
+  const n = (ic, t, acts, solid) => `<div class="notice">${dot(ic, solid ? 'solid' : '')}<p class="nt">${t}</p><div class="acts">${acts}</div></div>`;
+  const choose = `<button class="btn pri" data-act="picker">${ico('pick', 20)}<span>Choose a place</span></button>`;
+  switch (c.src) {
+    case 'ask': return S.askHidden ? '' : n('nearMe', 'Help when you arrive', `<button class="btn pri" data-act="explain">Turn on</button><button class="btn ghost" data-act="not-now">Not now</button>`, true);
+    case 'denied': return n('locOff', 'Location is off – choose a place', choose + `<button class="btn" data-act="settings">${ico('settings', 20)}<span>Settings</span></button>`);
+    case 'nosignal': return n('locOff', "We can't find you right now", choose + `<button class="btn" data-act="retry">Try again</button>`);
+    case 'approx': return n('approx', 'Near the Dallas campus – which building?', `<button class="btn pri" data-act="mz" data-place="clem" data-zone="arriving">${ico('hospital', 20)}<span>Clements</span></button><button class="btn" data-act="mz" data-place="simm" data-zone="simmons">${ico('building', 20)}<span>Simmons</span></button><button class="btn ghost" data-act="precise">Use precise location</button>`);
+    case 'paused': return n('pause', 'Showing the common homepage', `<button class="btn pri" data-act="resume">Resume</button>`);
+  }
+  return '';
+}
+function passFor(c, mini) {
+  const p = placeOf(c);
+  mini = mini || (isActive(c) && !!p);
+  if (S.signed) {
+    const v = p === 'simm' ? VISITS.simm : VISITS.clem, r = ROOMS[v.room], P = PLACES[r.b];
+    return { key: v.id, html: `<article class="pass${mini ? ' mini' : ''}" aria-label="Visit pass, sample">
+      <div class="pass-main"><div class="p-top"><p class="time">${v.time}</p><button class="link-btn" data-act="ext" data-label="Visit details" aria-label="Visit details, opens in MyChart">Details${ico('external', 16)}</button></div><p class="dept">${r.name}</p><p class="bld">${P.full}</p>
+        <span class="tag">Sample · From MyChart</span></div>
+      <div class="pass-stub"><span class="lbl">Floor</span><span class="big">${r.floor}</span><span class="sub">Suite ${r.suite}</span></div></article>` };
+  }
+  if (!p) return null;
+  const P = PLACES[p], d = S.guestDest[p] && ROOMS[S.guestDest[p]];
+  if (d) return { key: d.id, html: `<article class="pass${mini ? ' mini' : ''}" aria-label="Destination pass, sample">
+      <div class="pass-main"><p class="dept">${d.name}</p><p class="bld">${P.full}</p>
+        <div class="pfoot"><span class="tag">Sample</span><button class="link-btn" data-act="clear-dest" aria-label="Change destination">Change</button></div></div>
+      <div class="pass-stub"><span class="lbl">Floor</span><span class="big">${d.floor}</span>${d.suite ? `<span class="sub">Suite ${d.suite}</span>` : ''}</div></article>` };
+  return { key: 'empty-' + p, html: `<article class="pass empty" aria-label="Destination pass">
+      <div class="pass-main"><p class="dept">Where are you going?</p><p class="bld">${P.full}</p>
+        <div class="choose">${GUEST_DEST[p].map(id => `<button class="chip" data-act="dest" data-room="${id}">${ROOMS[id].name}</button>`).join('')}</div></div>
+      <div class="pass-stub"><span class="lbl">Floor</span><span class="big">–</span></div></article>` };
+}
+function sectionsFor(c, k) {
+  const p = placeOf(c), active = isActive(c);
+  let s = '';
+  if (active && c.zone === 'inside') {
+    const depts = ROOM_ROWS.filter(r => r[5] === 'dept' && r[1].startsWith('clem')).map(r => ROOMS[r[0]]).sort((a, b) => a.floor - b.floor);
+    s += `<section class="sec" aria-labelledby="${k}-sec-dir"><h2 class="sec-h" id="${k}-sec-dir">In this building</h2><ul class="rows">${depts.map(r => `<li><button class="row" data-act="wf" data-room="${r.id}" aria-label="${r.name}, Floor ${r.floor}, Suite ${r.suite}, directions"><span class="fnum" aria-hidden="true">${r.floor}</span><span class="txt"><span class="rt">${r.name}</span><span class="rs">Suite ${r.suite}</span></span>${ico('next', 20, 'chev')}</button></li>`).join('')}</ul></section>`;
+    s += `<section class="sec" aria-labelledby="${k}-sec-res"><h2 class="sec-h" id="${k}-sec-res">Hospital resources</h2><ul class="rows">${[['wifi', 'Guest Wi-Fi'], ['language', 'Interpreters'], ['shuttle', 'Campus shuttle'], ['help', 'Patient relations']].map(([ic, t]) => `<li><button class="row" data-act="info" data-msg="${t} – sample content">${dot(ic)}<span class="txt"><span class="rt">${t}</span></span>${ico('next', 20, 'chev')}</button></li>`).join('')}</ul></section>`;
+  }
+  if (active && p === 'simm') {
+    s += `<section class="sec" aria-labelledby="${k}-sec-learn"><h2 class="sec-h" id="${k}-sec-learn">Learn</h2><ul class="rows">${[['education', 'Starting treatment'], ['caregiver', 'For caregivers'], ['clinic', 'Resource center', 's1-res', 'Suite 1200']].map(([ic, t, room, sub]) => `<li><button class="row" ${room ? `data-act="wf" data-room="${room}"` : `data-act="info" data-msg="${t} – sample patient education"`}>${dot(ic)}<span class="txt"><span class="rt">${t}</span>${sub ? `<span class="rs">${sub}</span>` : ''}</span><span class="tag">Sample</span>${ico('next', 20, 'chev')}</button></li>`).join('')}</ul></section>`;
+  }
+  return s;
+}
+const QUICK = [
+  ['messages', 'Message your doctor', 'mc'], ['results', 'Get your test results', 'mc'], ['visits', 'Manage Your Visits', 'mc'],
+  ['bill', 'Manage Billing', 'mc'], ['findCare', 'Find my Care', 1], ['place', 'Locations', 2]
+];
+function quickLinks(k) {
+  return `<section class="sec" aria-labelledby="${k}-sec-ql"><h2 class="sec-h" id="${k}-sec-ql">Quick links</h2><ul class="ql">${QUICK.map(([ic, t, to]) => {
+    const mc = to === 'mc';
+    const attrs = mc ? (S.signed ? `data-act="ext" data-label="${t}" aria-label="${t}, opens in MyChart"` : `data-act="tab" data-tab="4" aria-label="${t}, sign in to MyChart"`) : `data-act="tab" data-tab="${to}"`;
+    const trail = mc ? (S.signed ? ico('external', 16, 'lk') : ico('lock', 16, 'lk')) : '';
+    return `<li style="display:contents"><button ${attrs}>${dot(ic, 'd32')}<span>${t}</span>${trail}</button></li>`;
+  }).join('')}</ul></section>`;
+}
+function whereRow(c, withSearch) {
+  const [cIco, cTxt, live] = chipFor(c), p = placeOf(c);
+  const chipLabel = p ? `Location: ${cTxt.replace(PLACES[p].short, PLACES[p].full)}. Options` : `Location: ${cTxt}. Options`;
+  return `<div class="where"><button class="chip-loc" data-act="loc" aria-label="${chipLabel}" aria-haspopup="dialog">${live && p ? '<span class="live" aria-hidden="true"></span>' : cIco}<span class="cl-t">${cTxt}</span></button><span class="sp"></span>${isActive(c) && p && !withSearch ? `<button class="link-btn" data-act="picker">Not here?</button>` : ''}${withSearch ? `<button class="search-btn" data-act="search" aria-label="Search">${ico('search', 20)}</button>` : ''}</div>`;
+}
+const demote = (h, yes) => yes && h ? h.replace('btn pri', 'btn') : h;
+
+/* ---------- Screens: the cover (390) and the inner screen (780) render the same state ---------- */
+const SCR = { cover: { k: 'cover', root: $('#scr-cover'), last: {} }, inner: { k: 'inner', root: $('#scr-inner'), last: {} } };
+const BOTH = [SCR.cover, SCR.inner];
+let A = SCR.cover;   // the screen in use
+const q = (R, s) => R.root.querySelector(s);
+const qa = (R, s) => [...R.root.querySelectorAll(s)];
+const TABS = [['home', 'Home'], ['findCare', 'Find my Care'], ['place', 'Locations'], ['wayfinding', 'Wayfinding'], ['signIn', 'MyChart']];
+
+function shell(R) {
+  const k = R.k, inner = k === 'inner';
+  const ab = `<header class="appbar"><img class="logo" alt="UTSW MyCare" src="data:image/svg+xml;base64,__LOGO__"><span class="sp"></span>
+    <button class="ab-btn ab-signin" data-act="tab" data-tab="4">${ico('signIn', 20)}<span>Sign in</span></button>
+    <button class="ab-btn round ab-acct" data-act="tab" data-tab="4" aria-label="MyChart account, Jordan Rivera (sample)" hidden><span class="avatar" aria-hidden="true">JR</span></button>
+    <button class="ab-btn round" data-act="menu" aria-label="Menu" aria-haspopup="dialog">${ico('menu')}</button></header>`;
+  const views = TABS.map((t, i) => {
+    const attrs = `class="view" data-v="${i}" id="${k}-v-${i}" role="tabpanel" aria-labelledby="${k}-tab-${i}"${i ? ' hidden' : ''}`;
+    if (!inner) return `<section ${attrs}><div class="scroller${i ? ' tab-body' : ' home-scroll'}">${i ? '' : ab + '<div class="home"></div>'}</div></section>`;
+    return `<section ${attrs}><div class="pane l scroller${i ? ' tab-body' : ''}">${i ? '' : '<div class="home"></div>'}</div><div class="pane r${i ? ' ctx' : ' detail'}" role="region"></div></section>`;
+  }).join('');
+  R.root.innerHTML = `<div class="statusbar" aria-hidden="true"><span>9:41</span><span class="sb-r"><i></i><i></i></span></div>
+    ${inner ? ab : ''}<div class="views">${views}</div>
+    <nav class="tabbar" aria-label="Main"><div role="tablist" class="tablist" aria-label="Main sections" style="display:contents"></div></nav>
+    ${inner ? `<div class="wfv" role="region" aria-labelledby="inner-wf-title" hidden><div class="pane l wf-list"></div><div class="pane r wf-r"></div></div>`
+      : `<div class="page pg-way" role="dialog" aria-modal="true" aria-labelledby="cover-wf-title"><div class="page-bar"><button class="icon-btn" data-act="close-wf" aria-label="Close directions">${ico('back')}</button><h1 id="cover-wf-title" class="wf-title">Directions</h1></div><div class="page-body wf-body"></div></div>`}
+    <div class="page pg-search" role="dialog" aria-modal="true" aria-label="Search">
+      <div class="page-bar"><button class="icon-btn" data-act="close-search" aria-label="Close search">${ico('back')}</button>
+        <label class="so-input" for="${k}-so-q">${ico('search', 20)}<span class="vh">Search UT Southwestern</span><input id="${k}-so-q" class="so-q" type="search" autocomplete="off" placeholder="Doctors, places, and more"></label></div>
+      <div class="page-body so-body" aria-live="polite"></div>
+    </div>
+    <div class="shade"></div>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="${k}-sh-title"><div class="grab" aria-hidden="true"></div><div class="sh-head"><h2 id="${k}-sh-title" class="sh-title"></h2><button class="icon-btn" data-act="close-sheet" aria-label="Close">${ico('close')}</button></div><div class="sh-body"></div></div>
+    <div class="sys" hidden></div>
+    ${inner ? '<div class="crease" aria-hidden="true"></div>' : '<div class="lock" hidden></div>'}
+    <div class="toast" role="status" aria-live="polite"><span class="toast-t"></span></div>
+    <div class="vh sr" aria-live="polite"></div>`;
+  q(R, '.so-q').addEventListener('input', e => { SO.q = e.target.value; renderSearch(R); });
+  q(R, '.shade').addEventListener('click', () => closeSheet(R));
+}
+
+/* ---------- Home ---------- */
+function renderHome(R, force) {
+  const c = ctx(), L = lineModel(c), note = noticeFor(c);
+  const key = JSON.stringify([c, S.signed, S.guestDest, S.askHidden, S.showPassed]);
+  if (key === R.last.key && !force) return;
+  const ckey = JSON.stringify([c, S.signed, S.guestDest]);
+  const animate = R === A && !S.anim && !S.rm && R.last.key != null && ckey !== R.last.ckey;
+  const prev = R.last, D = detailFor(c, L);
+  const pass = R.k === 'cover' ? passFor(c, true) : passFor(c);
+  if (R.k === 'cover') coverHome(R, c, L, pass, note, D); else innerHome(R, c, L, pass, note, D);
+  R.last = { key, ckey, idx: L ? L.idx : -1, pass: pass ? pass.key : null, floor: c.zone === 'inside' ? c.floor : null };
+
+  if (animate) {
+    const tgt = R.k === 'cover' ? q(R, '.nowcard') : q(R, '.detail .dt-in');
+    if (tgt) { tgt.classList.add('opening'); [...tgt.children].forEach((el, i) => el.style.setProperty('--k', i)); }
+    if (pass && prev.pass && prev.pass !== pass.key) q(R, '.pass').classList.add('flip');
+    if (R.k === 'inner' && L && L.active && prev.idx >= 0 && prev.idx < L.idx) qa(R, '.stop').forEach(el => { if (+el.dataset.to >= prev.idx && +el.dataset.from < L.idx) el.classList.add('just-done'); });
+    const ring = q(R, '.strip .ring'), sf = q(R, '.strip .sf');
+    if (ring && L && prev.idx >= 0) {
+      ring.style.transition = sf.style.transition = 'none';
+      ring.style.setProperty('--i', prev.idx); sf.style.setProperty('--p', prev.idx / (L.stops.length - 1));
+      void ring.offsetWidth; ring.style.transition = sf.style.transition = '';
+      requestAnimationFrame(() => { ring.style.setProperty('--i', L.idx); sf.style.setProperty('--p', L.idx / (L.stops.length - 1)); });
+    }
+  }
+  if (R.k === 'inner') layoutLine(R, animate ? prev.idx : -1);
+  runMapMotion(R, animate);
+  if (animate && prev.floor && R.last.floor && prev.floor !== R.last.floor) rollLift(R, prev.floor, R.last.floor);
+  if (R === A && prev.ckey && prev.ckey !== ckey) say(L && L.active ? `Home updated: ${L.stops[L.idx].t}` : `Home updated: ${chipFor(c)[1]}`);
+}
+function coverHome(R, c, L, pass, note, D) {
+  let h = whereRow(c, true);
+  h += `<div class="line-h"><h2>Today <span class="count">Tuesday, Oct. 27</span></h2>${isActive(c) && placeOf(c) ? `<button class="link-btn" data-act="picker">Not here?</button>` : ''}</div>`;
+  if (pass) h += `<div class="pass-wrap">${pass.html}</div>`;
+  h += note;
+  const n = L ? L.stops.length : 0;
+  const strip = L ? `<div class="strip" style="--n:${n}" aria-hidden="true"><span class="sf" style="--p:${L.active ? L.idx / (n - 1) : 0}"></span>${L.stops.map((s, i) => `<i class="${L.active && i < L.idx ? 'done' : i === L.idx && L.active ? 'now' : ''}"></i>`).join('')}${L.active ? `<span class="ring" style="--i:${L.idx}"></span>` : ''}</div>` : '';
+  h += `<article class="nowcard" aria-labelledby="cover-now-t">${strip}
+    <div class="now-h">${dot(D.ic, 'solid')}<div class="now-tx"><p class="now-k">${D.kick}</p><h2 class="now-t" id="cover-now-t" tabindex="-1">${D.t}</h2></div>${D.m ? `<span class="st-m">${D.m}</span>` : ''}</div>
+    ${D.msg || ''}${D.map ? mapBox({ ...D.map, share: 'stop' }) : ''}
+    ${D.acts.length ? `<div class="btn-row">${D.acts.map((a, i) => i ? a.replace('btn pri', 'btn') : demote(a, !!note)).join('')}</div>` : ''}</article>`;
+  const nx = L && L.stops[L.idx + 1];
+  if (nx) h += `<div class="then"><span class="then-k">Then</span>${ico(nx.ic, 20)}<span class="then-t">${nx.t}</span>${nx.m ? `<span class="st-m">${nx.m}</span>` : ''}</div>`;
+  h += quickLinks('cover');
+  q(R, '.home').innerHTML = h;
+}
+function detailPane(R, D, demoted, sfx, share = 'stop') {
+  const id = `${R.k}-dt-${sfx}`, pri = demote(D.acts[0], demoted), more = D.acts.slice(1);
+  return `<div class="dt-scroll"><div class="dt-in">
+    <div class="dt-h dt-fade">${dot(D.ic, 'solid')}<div class="now-tx"><p class="now-k">${D.kick}</p><h2 class="dt-t" id="${id}" tabindex="-1">${D.t}</h2></div>${D.m ? `<span class="st-m">${D.m}</span>` : ''}</div>
+    ${D.msg ? `<div class="dt-fade">${D.msg}</div>` : ''}${D.pre ? `<div class="dt-fade">${D.pre}</div>` : ''}
+    ${D.map ? mapBox({ ...D.map, share }) : ''}
+    ${more.length || D.body ? `<div class="dt-body dt-fade">${more.length ? `<div class="btn-row">${more.join('')}</div>` : ''}${D.body || ''}</div>` : ''}
+  </div></div>${pri ? `<div class="dt-acts dt-fade">${pri}</div>` : ''}`;
+}
+function fillDetail(R, el, sfx) {
+  const c = ctx(), L = lineModel(c), D = detailFor(c, L);
+  el.innerHTML = detailPane(R, D, !!noticeFor(c), sfx);
+  el.setAttribute('aria-labelledby', `${R.k}-dt-${sfx}`);
+}
+function innerHome(R, c, L, pass, note, D) {
+  let h = whereRow(c, false);
+  h += `<button class="search-field" data-act="search">${ico('search', 20)}<span>Search doctors and places</span></button>`;
+  h += `<div class="today"><h1>Today</h1><p>Tuesday, Oct. 27</p></div>`;
+  h += note;
+  if (pass) h += `<div class="pass-wrap">${pass.html}</div>`;
+  if (L) {
+    const n = L.stops.length, collapse = L.active && L.idx >= 3 && !S.showPassed;
+    h += `<div class="line-h"><h2 id="inner-line-h" tabindex="-1">${L.title}</h2><span class="count">${L.active ? `Stop ${L.idx + 1} of ${n}` : `${n} stops`}</span></div>`;
+    h += `<div class="line" aria-labelledby="inner-line-h"><span class="rail" aria-hidden="true"></span><span class="rail-fill" aria-hidden="true"></span><span class="you${L.active ? ' on' : ''}" aria-hidden="true"${L.active ? '' : ' hidden'}></span><ol class="stops">${L.stops.map((s, i) => {
+      const st = i < L.idx && L.active ? 'done' : i === L.idx ? 'now' : 'next';
+      if (collapse && i < L.idx - 1) return i > 0 ? '' : `<li class="stop done sum" data-from="0" data-to="${L.idx - 2}"><span class="node" aria-hidden="true">${ico('stepDone', 16)}</span><div class="st-row"><button class="link-btn" data-act="passed" aria-expanded="false">${L.idx - 1} earlier stops</button></div></li>`;
+      const label = `${s.t}${s.m ? ', ' + s.m : ''}${st === 'done' ? ', passed' : st === 'now' && L.active ? ', you are here, details on the right' : ''}`;
+      return `<li class="stop ${st}" data-from="${i}" data-to="${i}" ${st === 'now' ? 'aria-current="step"' : ''}><span class="node" aria-hidden="true">${ico(st === 'done' ? 'stepDone' : s.ic, 20)}</span><div class="st-row"><span class="st-t"><span class="vh">${label}</span><span aria-hidden="true">${s.t}</span></span>${s.m ? `<span class="st-m" aria-hidden="true">${s.m}</span>` : ''}</div></li>`;
+    }).join('')}</ol></div>`;
+  }
+  h += sectionsFor(c, 'inner');
+  h += quickLinks('inner');
+  q(R, '.home').innerHTML = h;
+  const det = q(R, '.view[data-v="0"] .detail');
+  det.innerHTML = detailPane(R, D, !!note, 'home');
+  det.setAttribute('aria-labelledby', 'inner-dt-home');
+}
+
+/* Rail, fill, and the you ring are measured from the real nodes (layout offsets, so zoom and the fold never shift them) */
+function layoutLine(R, fromIdx) {
+  const line = q(R, '.home .line'); if (!line) return;
+  const lis = qa(R, '.home .stop'), nodes = lis.map(li => $('.node', li)), you = $('.you', line), fill = $('.rail-fill', line), rail = $('.rail', line);
+  const L = lineModel(ctx()); if (!L) return;
+  const relTop = el => { let y = 0; while (el && el !== line) { y += el.offsetTop; el = el.offsetParent; } return y; };
+  const centers = () => nodes.map(n => relTop(n) + n.offsetHeight / 2);
+  const ys = centers();
+  const nodeH = ($('.stop.now .node', line) || nodes[0]).offsetHeight;
+  const at = k => Math.max(0, lis.findIndex(li => +li.dataset.from <= k && k <= +li.dataset.to));
+  const place = (i, el) => el.style.setProperty('--y', (ys[at(i)] - nodeH / 2 - 6) + 'px');
+  rail.style.setProperty('--rt', ys[0] + 'px'); rail.style.setProperty('--rh', (ys[ys.length - 1] - ys[0]) + 'px');
+  fill.style.setProperty('--rt', ys[0] + 'px');
+  const tgt = L.active ? L.idx : 0;
+  if (fromIdx >= 0 && L.active) {
+    you.style.transition = 'none'; fill.style.transition = 'none';
+    place(fromIdx, you); fill.style.setProperty('--fh', (ys[at(fromIdx)] - ys[0]) + 'px');
+    void you.offsetWidth; you.style.transition = ''; fill.style.transition = '';
+    requestAnimationFrame(() => { place(tgt, you); fill.style.setProperty('--fh', ys[at(tgt)] - ys[0] + 'px'); });
+  } else { place(tgt, you); fill.style.setProperty('--fh', (L.active ? ys[at(tgt)] - ys[0] : 0) + 'px'); }
+}
+
+/* Route drawing and the car following it */
+const rafs = new Map();
+function runMapMotion(R, animate) {
+  (rafs.get(R) || []).forEach(cancelAnimationFrame); rafs.set(R, []);
+  if (!animate || S.rm) { qa(R, '.m-route.draw').forEach(el => el.classList.remove('draw')); return; }
+  const host = R.k === 'cover' ? q(R, '.nowcard') : q(R, '.detail');
+  const svgDrive = host && $('.m-route.draw', host); if (!svgDrive) return;
+  const me = svgDrive.parentNode.querySelector('.m-me'); if (!me) return;
+  const pts = DRIVE[placeOf(ctx()) || 'clem'], total = plen(pts), t0 = performance.now(), dur = 1000;
+  const at = d => { let acc = 0; for (let i = 1; i < pts.length; i++) { const seg = Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]); if (acc + seg >= d) { const k = (d - acc) / seg; return [pts[i - 1][0] + (pts[i][0] - pts[i - 1][0]) * k, pts[i - 1][1] + (pts[i][1] - pts[i - 1][1]) * k]; } acc += seg; } return pts[pts.length - 1]; };
+  const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  const step = now => { const t = Math.min(1, (now - t0) / dur); const p = at(total * ease(t)); me.setAttribute('transform', `translate(${p[0]} ${p[1]})`); if (t < 1) rafs.get(R).push(requestAnimationFrame(step)); };
+  rafs.get(R).push(requestAnimationFrame(step));
+}
+function rollLift(R, from, to) {
+  const big = q(R, '.lift-disp .big'); if (!big || S.rm) return;
+  const dir = to > from ? 1 : -1, seq = []; for (let f = from; f !== to + dir; f += dir) seq.push(f);
+  big.innerHTML = `<span style="transition:transform ${seq.length * 140}ms steps(${seq.length - 1}, end)">${seq.map(f => `<span>${f}</span>`).join('')}</span>`;
+  const inner = big.firstElementChild; void inner.offsetWidth;
+  inner.style.transform = `translateY(-${seq.length - 1}em)`;
+}
+
+/* ---------- Tabs and other screens ---------- */
+function renderTabs(R) {
+  q(R, '.tablist').innerHTML = TABS.map(([ic, t], i) => `<button class="tab" role="tab" id="${R.k}-tab-${i}" aria-controls="${R.k}-v-${i}" aria-selected="${S.tab === i}" tabindex="${S.tab === i ? 0 : -1}" data-act="tab" data-tab="${i}"><span class="pillx">${ico(ic)}</span><span class="tl">${t}</span></button>`).join('');
+  qa(R, '.view').forEach((v, i) => { v.hidden = i !== S.tab; });
+}
+function setTab(i, focus) {
+  S.tab = +i;
+  BOTH.forEach(R => { renderTabs(R); renderTabView(R); const v = q(R, `.view[data-v="${S.tab}"] .scroller`); if (v) v.scrollTop = 0; chrome(R); });
+  if (focus) $(`#${A.k}-tab-${S.tab}`).focus({ preventScroll: true });
+}
+function renderTabView(R) {
+  if (S.tab === 1) renderFind(R); if (S.tab === 2) renderLocs(R); if (S.tab === 3) renderWay(R); if (S.tab === 4) renderMC(R);
+}
+const pageBar = t => `<div class="page-bar"><h1 style="padding-left:8px">${t}</h1></div>`;
+const tabBody = R => q(R, `.view[data-v="${S.tab}"] .tab-body`);
+const tabCtx = R => q(R, `.view[data-v="${S.tab}"] .ctx`);
+function ctxPane(R, D, share) {
+  const el = tabCtx(R); if (!el) return;
+  el.innerHTML = detailPane(R, D, false, 'v' + S.tab, share);
+  el.setAttribute('aria-labelledby', `${R.k}-dt-v${S.tab}`);
+}
+function renderFind(R) {
+  tabBody(R).innerHTML = pageBar('Find my Care') + `<button class="search-field" data-act="search">${ico('search', 20)}<span>Search doctors and specialties</span></button>
+    <section class="sec" style="margin-top:12px"><h2 class="sec-h">Browse by specialty</h2><ul class="rows">${['Primary care', 'Heart and vascular', 'Cancer care', 'Orthopaedics', 'Women’s health'].map(t => `<li><button class="row" data-act="info" data-msg="${t} – provider search, sample">${dot('findCare')}<span class="txt"><span class="rt">${t}</span></span>${ico('next', 20, 'chev')}</button></li>`).join('')}</ul></section>`;
+  if (R.k === 'inner') fillDetail(R, tabCtx(R), 'v1');
+}
+const LOC_MAP = { plan: 'campus', label: 'Sample map of the Dallas campus: Clements University Hospital, Simmons Cancer Center, and their garages' };
+function renderLocs(R) {
+  const rows = `<ul class="rows">${['clem', 'simm'].map(b => `<li><button class="row" data-act="wf" data-room="${b === 'clem' ? 'c1-lobby' : 's1-info'}" aria-label="${PLACES[b].full}, directions">${dot(PLACES[b].ic)}<span class="txt"><span class="rt">${PLACES[b].full}</span><span class="rs">${PLACES[b].garage} · ${PLACES[b].door}</span></span>${ico('next', 20, 'chev')}</button></li>`).join('')}
+    ${['UTSW Medical Center at RedBird', 'UTSW Richardson/Plano'].map(t => `<li><button class="row" data-act="info" data-msg="${t} – sample location page">${dot('building')}<span class="txt"><span class="rt">${t}</span><span class="rs">Sample</span></span>${ico('next', 20, 'chev')}</button></li>`).join('')}</ul>`;
+  if (R.k === 'cover') tabBody(R).innerHTML = pageBar('Locations') + `<section class="sec" style="margin-top:12px">${mapBox({ ...LOC_MAP, share: 'locs' })}${rows}</section>`;
+  else {
+    tabBody(R).innerHTML = pageBar('Locations') + `<section class="sec" style="margin-top:12px">${rows}</section>`;
+    ctxPane(R, { ic: 'place', kick: 'Locations', t: 'Dallas campus', map: LOC_MAP, acts: [btnWF('c1-lobby', 'Directions to Clements')] }, 'locs');
+  }
+}
+let WAY = { b: 'clem', f: 1 };
+function renderWay(R) {
+  const plans = PLACES[WAY.b].plans; if (!plans.includes(planOf(WAY.b, WAY.f))) WAY.f = 1;
+  const plan = planOf(WAY.b, WAY.f), rooms = roomsOn(plan).filter(r => r.kind === 'dept' || r.kind === 'amen');
+  const map = { plan, label: `Sample map of ${PLACES[WAY.b].short}, Floor ${WAY.f}` };
+  const segs = `<div class="seg-in" role="group" aria-label="Building">${['clem', 'simm'].map(b => `<button data-act="way-b" data-b="${b}" aria-pressed="${WAY.b === b}">${b === 'clem' ? 'Clements' : 'Simmons'}</button>`).join('')}</div>
+    <div class="seg-in" role="group" aria-label="Floor">${plans.map(pl => `<button data-act="way-f" data-f="${PLAN_META[pl].floor}" aria-pressed="${pl === plan}">Floor ${PLAN_META[pl].floor}</button>`).join('')}</div>`;
+  const rows = `<ul class="rows">${rooms.map(r => `<li><button class="row" data-act="wf" data-room="${r.id}">${dot(r.ic || 'clinic')}<span class="txt"><span class="rt">${r.name}</span>${r.suite ? `<span class="rs">Suite ${r.suite}</span>` : ''}</span>${ico('next', 20, 'chev')}</button></li>`).join('')}</ul>`;
+  if (R.k === 'cover') tabBody(R).innerHTML = pageBar('Wayfinding') + `<section class="sec" style="margin-top:12px">${segs}${mapBox({ ...map, share: 'way' })}${rows}</section>`;
+  else {
+    tabBody(R).innerHTML = pageBar('Wayfinding') + `<section class="sec" style="margin-top:12px">${segs}${rows}</section>`;
+    ctxPane(R, { ic: 'wayfinding', kick: PLACES[WAY.b].short, t: `Floor ${WAY.f}`, map, acts: [] }, 'way');
+  }
+}
+const pw = { shown: false };
+function renderMC(R) {
+  const el = tabBody(R), k = R.k;
+  const keep = { u: $(`#${k}-mc-u`) ? $(`#${k}-mc-u`).value : '', p: $(`#${k}-mc-p`) ? $(`#${k}-mc-p`).value : '' };
+  if (S.signed) {
+    el.innerHTML = pageBar('MyChart') + `<section class="sec" style="margin-top:12px"><ul class="rows"><li><div class="row"><span class="dot solid" aria-hidden="true"><span class="avatar" style="background:none;color:inherit">JR</span></span><span class="txt"><span class="rt">Jordan Rivera</span><span class="rs">Sample patient</span></span></div></li></ul>
+      <ul class="rows">${[['checkin', 'Check in'], ['visits', 'Manage Your Visits'], ['messages', 'Message your doctor'], ['results', 'Get your test results'], ['bill', 'Manage Billing']].map(([ic, t]) => `<li><button class="row" data-act="ext" data-label="${t}" aria-label="${t}, opens in MyChart">${dot(ic)}<span class="txt"><span class="rt">${t}</span></span>${ico('external', 20, 'ext')}</button></li>`).join('')}</ul>
+      <button class="btn" data-act="signout">${ico('signOut', 20)}<span>Sign out</span></button></section>`;
+  } else {
+    el.innerHTML = pageBar('MyChart') + `<section class="sec" style="margin-top:12px"><form class="sh-body mc-form" novalidate>
+      <div class="field"><label for="${k}-mc-u">MyChart username</label><div class="zip"><input id="${k}-mc-u" autocomplete="username"></div></div>
+      <div class="field"><label for="${k}-mc-p">Password</label><div class="zip"><input id="${k}-mc-p" type="${pw.shown ? 'text' : 'password'}" autocomplete="current-password"><button type="button" class="btn" data-act="pw" aria-label="${pw.shown ? 'Hide password' : 'Show password'}" style="width:48px;padding:0">${ico(pw.shown ? 'hide' : 'show', 20)}</button></div></div>
+      <button class="btn pri full mc-go" type="submit" disabled>${ico('signIn', 20)}<span>Sign in</span></button>
+      <span class="tag" style="justify-self:start">Simulated sign-in – any text works</span></form></section>`;
+    const u = $(`#${k}-mc-u`), p = $(`#${k}-mc-p`), go = $('.mc-go', el);
+    u.value = keep.u; p.value = keep.p;
+    const sync = () => { go.disabled = !(u.value.trim() && p.value); };
+    u.addEventListener('input', sync); p.addEventListener('input', sync); sync();
+    $('.mc-form', el).addEventListener('submit', e => { e.preventDefault(); if (go.disabled) return; S.signed = true; toast('Signed in – sample account'); renderAll(true); });
+  }
+  if (R.k === 'inner') fillDetail(R, tabCtx(R), 'v4');
+}
+
+/* ---------- Directions ---------- */
+function openWF(roomId) {
+  const steps = routeSteps(roomId), here = startIndex(ctx(), roomId, steps);
+  WF = { roomId, steps, i: here, here };
+  returnFocus.push(document.activeElement);
+  BOTH.forEach(R => renderWF(R, false));
+  showWF();
+  setTimeout(() => { const b = A.k === 'cover' ? q(A, '.pg-way [data-act="close-wf"]') : q(A, '.wfv [data-act="close-wf"]'); if (b) b.focus({ preventScroll: true }); }, 50);
+}
+function showWF() {
+  q(SCR.cover, '.pg-way').classList.toggle('on', !!WF);
+  q(SCR.inner, '.wfv').hidden = !WF;
+  BOTH.forEach(chrome);
+}
+function closeWF() {
+  if (!WF) return;
+  WF = null; showWF();
+  const f = returnFocus.pop(); if (f && f.isConnected && A.root.contains(f)) f.focus({ preventScroll: true });
+}
+function wfStep(anim) {
+  const { steps, i, here } = WF, s = steps[i];
+  const map = mapBox({ plan: s.plan, label: `Sample map, step ${i + 1}: ${s.t}`, routes: (s.routes || []).map(([pts, cls]) => [pts, cls || '']), you: s.you, flag: s.flag, dest: s.dest, destB: s.destB, pulse: i === here, share: 'wf' });
+  const bar = `<div class="wf-steps" style="--n:${steps.length}" aria-hidden="true">${steps.map((_, k) => `<i class="${k < i ? 'on' : k === i ? 'here' : ''}"></i>`).join('')}</div>`;
+  const card = `<div class="wf-card"><p class="wf-n">Step ${i + 1} of ${steps.length}${i === here && isActive(ctx()) ? `<span class="tag">You're here</span>` : ''}</p>
+      <p class="wf-i">${dot(s.last ? 'arrived' : s.ic, 'solid')}<span>${s.t}</span></p>
+      ${s.lift ? liftPanel(s.lift, s.lift) : ''}
+      ${s.ext ? `<button class="btn" data-act="info" data-msg="Opens your map app – simulated">${ico('mapApp', 20)}<span>Open in your map app</span>${ico('external', 16)}</button>` : ''}</div>`;
+  const nav = `<div class="wf-nav"><button class="btn" data-act="wf-prev" ${i === 0 ? 'disabled' : ''}>${ico('back', 20)}<span>Back</span></button>${i === steps.length - 1 ? `<button class="btn pri" data-act="close-wf">${ico('arrived', 20)}<span>Done</span></button>` : `<button class="btn pri" data-act="wf-next"><span>Next</span>${ico('go', 20)}</button>`}</div>`;
+  return { map, bar, card, nav };
+}
+function renderWF(R, anim) {
+  if (!WF) return;
+  const { steps, i, here, roomId } = WF, r = ROOMS[roomId], P = wfStep(anim);
+  if (R.k === 'cover') {
+    q(R, '.wf-title').textContent = `To ${r.name}`;
+    q(R, '.wf-body').innerHTML = `${P.bar}<div class="${anim ? 'wf-anim' : ''}" style="display:grid;gap:16px">${P.map}${P.card}</div>${P.nav}`;
+  } else {
+    q(R, '.wf-list').innerHTML = `<div class="page-bar"><button class="icon-btn" data-act="close-wf" aria-label="Close directions">${ico('back')}</button><h1 id="inner-wf-title">To ${r.name}</h1></div>
+      <div class="sec" style="margin-top:12px"><ol class="wf-ol">${steps.map((s, k) => `<li><button class="wf-li${k < i ? ' done' : ''}" data-act="wf-go" data-i="${k}"${k === i ? ' aria-current="step"' : ''}><span class="dot${k === i ? ' solid' : ''}" aria-hidden="true">${ico(k < i ? 'stepDone' : s.last ? 'arrived' : s.ic, 20)}</span><span class="txt"><span class="rs">Step ${k + 1}${k === here && isActive(ctx()) ? " · You're here" : ''}</span><span class="rt">${s.t}</span></span></button></li>`).join('')}</ol></div>`;
+    q(R, '.wf-r').innerHTML = `<div class="dt-scroll"><div class="dt-in"><div class="dt-fade">${P.bar}</div><div class="${anim ? 'wf-anim' : ''}" style="display:grid;gap:12px">${P.map}<div class="dt-fade">${P.card}</div></div></div></div><div class="dt-acts dt-fade">${P.nav}</div>`;
+  }
+  if (anim && R === A) say(`Step ${i + 1} of ${steps.length}: ${steps[i].t}`);
+}
+function wfGo(i) {
+  WF.i = Math.max(0, Math.min(WF.steps.length - 1, i));
+  BOTH.forEach(R => renderWF(R, R === A));
+  const n = q(A, '[data-act="wf-next"]') || q(A, '.wf-nav [data-act="close-wf"]');
+  if (n) n.focus({ preventScroll: true });
+}
+
+/* ---------- Search ---------- */
+function searchIndex() {
+  const rooms = Object.values(ROOMS).filter(r => r.kind !== 'core' && r.kind !== 'other').map(r => ({ ic: r.ic || 'clinic', t: r.name, s: `${PLACES[r.b].short} · Floor ${r.floor}`, a: `data-act="wf" data-room="${r.id}"` }));
+  const places = ['clem', 'simm'].map(b => ({ ic: PLACES[b].ic, t: PLACES[b].full, s: 'Location', a: `data-act="tab" data-tab="2"` }));
+  const ql = QUICK.map(([ic, t, to]) => ({ ic, t, s: to === 'mc' ? 'MyChart' : 'In MyCare', a: to === 'mc' ? (S.signed ? `data-act="ext" data-label="${t}"` : `data-act="tab" data-tab="4"`) : `data-act="tab" data-tab="${to}"` }));
+  return [...places, ...rooms, ...ql];
+}
+function renderSearch(R) {
+  const qv = SO.q.trim().toLowerCase();
+  const all = searchIndex(), res = qv ? all.filter(x => (x.t + ' ' + x.s).toLowerCase().includes(qv)) : all.filter(x => ['Heart clinic', 'Pharmacy', 'Restrooms', 'Find my Care'].includes(x.t)).slice(0, 5);
+  q(R, '.so-body').innerHTML = `<h2 class="sec-h">${qv ? (res.length ? 'Results' : `No results for “${esc(qv)}”`) : 'Popular'}</h2>${res.length ? `<ul class="rows">${res.slice(0, 12).map(x => `<li><button class="row" ${x.a}>${dot(x.ic)}<span class="txt"><span class="rt">${x.t}</span><span class="rs">${x.s}</span></span>${ico('next', 20, 'chev')}</button></li>`).join('')}</ul>` : `<p class="sh-label">Try a department, a building, or “pharmacy”.</p>`}`;
+}
+function openSearch() {
+  SO.on = true; SO.q = ''; returnFocus.push(document.activeElement); syncSearch();
+  setTimeout(() => q(A, '.so-q').focus({ preventScroll: true }), 50);
+}
+function syncSearch() {
+  BOTH.forEach(R => { q(R, '.pg-search').classList.toggle('on', SO.on); q(R, '.so-q').value = SO.q; if (SO.on) renderSearch(R); chrome(R); });
+}
+function closeSearch() {
+  if (!SO.on) return;
+  SO.on = false; syncSearch();
+  const f = returnFocus.pop(); if (f && f.isConnected && A.root.contains(f)) f.focus({ preventScroll: true });
+}
+
+/* ---------- Sheets and system surfaces (always in the screen in use; on the inner screen, the left pane) ---------- */
+let returnFocus = [];
+function openSheet(title, html, bind) {
+  const R = A, sh = q(R, '.sheet');
+  if (!sh.classList.contains('on')) returnFocus.push(document.activeElement);
+  q(R, '.sh-title').textContent = title; q(R, '.sh-body').innerHTML = html;
+  sh.classList.add('on'); q(R, '.shade').classList.add('on');
+  if (bind) bind(R);
+  setTimeout(() => ($('.sh-body button, .sh-body input', sh) || $('[data-act="close-sheet"]', sh)).focus({ preventScroll: true }), 60);
+}
+function closeSheet(R = A, keepFocus) {
+  const sh = q(R, '.sheet'); if (!sh.classList.contains('on')) return;
+  sh.classList.remove('on'); q(R, '.shade').classList.remove('on');
+  const f = returnFocus.pop(); if (!keepFocus && f && f.isConnected) f.focus({ preventScroll: true });
+}
+function openLocSheet() {
+  const c = ctx(), p = placeOf(c), active = isActive(c);
+  const why = active && p ? `<p class="sh-label">Why you see this</p><ul class="why">
+      <li>${dot(c.src === 'manual' ? 'pick' : 'place')}<span>${c.src === 'manual' ? 'You chose this place' : `You're at ${PLACES[p].full}`}</span><span class="tag">${c.src === 'manual' ? 'Your choice' : 'Simulated'}</span></li>
+      ${S.signed ? `<li>${dot('visits')}<span>Your visit at ${VISITS[p].time}</span><span class="tag">MyChart</span></li>` : ''}
+      <li>${dot('parking')}<span>Parking and floors</span><span class="tag">Sample data</span></li></ul>` : '';
+  openSheet('Location', `<p class="one" style="font-weight:700;font-size:var(--t18);color:var(--ink)">${chipFor(c)[1]}</p>${why}
+    <div style="display:grid;gap:8px">
+      ${active && p ? `<button class="btn full" data-act="picker">${ico('notHere', 20)}<span>Not here?</span></button>` : `<button class="btn full" data-act="picker">${ico('pick', 20)}<span>Choose where you are</span></button>`}
+      ${c.src === 'paused' ? `<button class="btn full" data-act="resume">Resume location help</button>` : active ? `<button class="btn full" data-act="pause">${ico('pause', 20)}<span>Show the common homepage</span></button>` : ''}
+      ${S.manual ? `<button class="btn full" data-act="clear-choice">Clear my choice</button>` : ''}
+      ${S.perm === 'ask' ? `<button class="btn full" data-act="explain">${ico('nearMe', 20)}<span>Turn on location</span></button>` : `<button class="btn full" data-act="settings">${ico('settings', 20)}<span>Location settings</span></button>`}
+    </div><p>${ico('privacy', 16)} Read only while MyCare is open. Never saved or shared.</p>`);
+}
+function openPicker() {
+  const b = S.pickB;
+  const zones = b === 'clem' ? [['arriving', 'On my way'], ['entrance', 'At the North entrance'], ['inside', 'Floor 1', 1], ['inside', 'Floor 2', 2], ['inside', 'Floor 7', 7]] : b === 'simm' ? [['simmons', 'At the Main entrance']] : [];
+  openSheet('Where are you?', `<div class="pick">${['clem', 'simm'].map(k => `<button data-act="mb" data-place="${k}" aria-pressed="${b === k}">${dot(PLACES[k].ic)}<span>${PLACES[k].short}</span></button>`).join('')}</div>
+    ${zones.length ? `<p class="sh-label" id="${A.k}-pz-h">Where in the building?</p><div class="choose" role="group" aria-labelledby="${A.k}-pz-h">${zones.map(([z, t, f]) => `<button class="chip" data-act="mz" data-place="${b}" data-zone="${z}" ${f ? `data-floor="${f}"` : ''}>${t}</button>`).join('')}</div>` : ''}
+    <ul class="rows"><li><button class="row" data-act="mz" data-place="" data-zone="away">${dot('home')}<span class="txt"><span class="rt">Not at a UTSW campus</span></span>${ico('next', 20, 'chev')}</button></li>
+    <li><button class="row" data-act="tab" data-tab="2">${dot('place')}<span class="txt"><span class="rt">Another UTSW location</span></span>${ico('next', 20, 'chev')}</button></li></ul>
+    <form class="field zip-form"><label for="${A.k}-zip">ZIP or city</label><div class="zip"><input id="${A.k}-zip" inputmode="text" autocomplete="postal-code" placeholder="75390 or Dallas"><button class="btn" type="submit">Find</button></div></form><div class="zip-out" aria-live="polite"></div>`,
+    R => q(R, '.zip-form').addEventListener('submit', e => {
+      e.preventDefault(); const v = $(`#${R.k}-zip`).value.trim();
+      q(R, '.zip-out').innerHTML = v ? `<p class="sh-label">Closest to ${esc(v)} (sample)</p><ul class="rows">${['clem', 'simm'].map((k, i) => `<li><button class="row" data-act="tab" data-tab="2">${dot(PLACES[k].ic)}<span class="txt"><span class="rt">${PLACES[k].short}</span><span class="rs">${[4, 5][i]} mi</span></span>${ico('next', 20, 'chev')}</button></li>`).join('')}</ul>` : `<p class="sh-label">Enter a ZIP code or city.</p>`;
+    }));
+}
+function openExplain() {
+  openSheet('Help when you arrive', `${mapBox({ plan: 'campus', label: 'Sample map: the way from the garage to the entrance', routes: [[DRIVE.clem, 'plan'], [WALK.clem, 'plan']], destB: 'clem' })}
+    <ul class="tiles">${[['parking', 'Parking'], ['entrance', 'Best entrance'], ['elevator', 'Your floor']].map(([ic, t]) => `<li class="tile">${ico(ic)}<b>${t}</b></li>`).join('')}</ul>
+    <p>${ico('privacy', 16)} Read only while MyCare is open. Never saved or shared.</p>
+    <div style="display:grid;gap:8px"><button class="btn pri full" data-act="sys-show">Continue</button><button class="btn full" data-act="not-now">Not now</button><button class="btn ghost full" data-act="picker">Choose a place instead</button></div>`);
+}
+function showSys() {
+  closeSheet(A, true);
+  const s = q(A, '.sys'); s.hidden = false;
+  s.innerHTML = `<div class="sys-box" role="alertdialog" aria-modal="true" aria-labelledby="${A.k}-sys-h"><p class="sys-tag">Simulated system prompt</p><h2 id="${A.k}-sys-h">Allow “MyCare” to use your location?</h2><p>Shows parking, entrances, and floors when you arrive at UT&nbsp;Southwestern.</p>
+    <button data-act="sys" data-v="allowed">Allow while using the app</button><button data-act="sys" data-v="allowed">Allow once</button><button data-act="sys" data-v="denied">Don't allow</button></div>`;
+  setTimeout(() => $('button', s).focus({ preventScroll: true }), 50);
+}
+function openMenu() {
+  const opts = [['system', 'System', 'appearance'], ['light', 'Light', 'light'], ['dark', 'Dark', 'dark']];
+  openSheet('Menu', `<p class="sh-label" id="${A.k}-ap-h">Appearance</p><div class="appear" role="radiogroup" aria-labelledby="${A.k}-ap-h">${opts.map(([k, t, ic]) => `<button role="radio" aria-checked="${S.theme === k}" tabindex="${S.theme === k ? 0 : -1}" data-act="theme" data-v="${k}">${ico(ic)}<span>${t}</span></button>`).join('')}</div>
+    <ul class="rows"><li><button class="row" data-act="loc">${dot('place')}<span class="txt"><span class="rt">Location</span><span class="rs">${chipFor(ctx())[1]}</span></span>${ico('next', 20, 'chev')}</button></li>
+    <li><button class="row" data-act="info" data-msg="Privacy – sample content">${dot('privacy')}<span class="txt"><span class="rt">Privacy</span></span>${ico('next', 20, 'chev')}</button></li>
+    <li><button class="row" data-act="info" data-msg="Call 214-648-3266">${dot('help')}<span class="txt"><span class="rt">Help and contact</span><span class="rs">214-648-3266</span></span>${ico('next', 20, 'chev')}</button></li>
+    <li><button class="row" data-act="info" data-msg="Opens utswmed.org – simulated">${dot('website')}<span class="txt"><span class="rt">Full website</span></span>${ico('external', 20, 'ext')}</button></li></ul>`);
+}
+
+/* ---------- Lock screen: the cover only. Live directions name the place, floor, suite, and step – never the visit ---------- */
+function lockRoute() {
+  const c = ctx(), p = placeOf(c);
+  if (!isActive(c) || !p) return null;
+  const room = WF ? WF.roomId : S.signed ? VISITS[p].room : (S.guestDest[p] || (p === 'clem' ? 'c1-lobby' : 's1-info'));
+  const r = ROOMS[room], steps = routeSteps(room);
+  const i = WF && WF.roomId === room ? WF.i : startIndex(c, room, steps);
+  const arrived = c.zone === 'inside' && r.b === 'clem' && c.floor === r.floor && i === steps.length - 1;
+  return { p, r, steps, i, arrived };
+}
+const lockText = (s, r, arrived) => arrived ? `You've arrived at ${r.suite ? 'Suite ' + r.suite : 'the ' + r.name.toLowerCase()}` : s.last ? `Go to ${r.suite ? 'Suite ' + r.suite : 'the ' + r.name.toLowerCase()}` : s.t;
+let lockPrev = null;
+const lockEl = () => q(SCR.cover, '.lock');
+function showLock() {
+  const l = lockEl(), was = !l.hidden;
+  l.hidden = false;
+  const L = lockRoute();
+  let live = '';
+  if (L) {
+    const { p, r, steps, i, arrived } = L, s = steps[i], n = steps.length, done = arrived ? n : i;
+    const from = was && lockPrev && lockPrev.room === r.id ? lockPrev.p : null, pNow = arrived ? 1 : i / (n - 1);
+    live = `<div class="live-act" role="group" aria-label="MyCare directions, live">
+      <div class="la-head"><img alt="" src="data:image/svg+xml;base64,__ICON__"><b>MyCare</b><span>Directions</span><span class="sp"></span><span class="la-step">${arrived ? 'Arrived' : `Step ${i + 1} of ${n}`}</span></div>
+      <p class="la-t${from !== null && lockPrev.i !== i ? ' anim' : ''}"><span class="la-ico" aria-hidden="true">${ico(arrived ? 'arrived' : s.ic, 20)}</span><span>${lockText(s, r, arrived)}</span></p>
+      <div class="la-prog" aria-hidden="true"><span class="la-fill" style="--p:${from ?? pNow}"></span>${steps.map((st, k) => `<i class="${k < done ? 'done' : k === i ? 'now' : ''}">${k < done ? ico('stepDone', 16) : ''}</i>`).join('')}</div>
+      <p class="la-sub">${PLACES[p].short}${r.floor !== 1 || s.plan !== 'campus' ? ` · Floor ${r.floor}` : ''}</p></div>`;
+    lockPrev = { room: r.id, i, p: pNow };
+  } else lockPrev = null;
+  const c = ctx(), p = placeOf(c);
+  l.innerHTML = `<span class="clock">9:41</span><span class="ldate">Tuesday, Oct. 27</span>${live}
+    <div class="lock-n" role="group" aria-label="Notification"><img alt="" src="data:image/svg+xml;base64,__ICON__"><div><b>MyCare</b> <small>now</small><p>${p && isActive(c) ? `You're at ${PLACES[p].short}. Parking and directions are ready.` : 'Location help is ready when you arrive.'}</p></div></div>
+    <p class="sys-tag">Simulated lock screen – the place and the step, never the visit</p>
+    <div class="lock-acts">${L ? `<button class="btn pri" data-act="lock-open">Open directions</button>` : ''}<button class="btn" data-act="lock-close"${L ? '' : ' style="grid-column:1 / -1"'}>Close</button></div>`;
+  if (L) requestAnimationFrame(() => { const f = $('.la-fill', l); if (f) f.style.setProperty('--p', lockPrev.p); });
+  chrome(SCR.cover); syncControls();
+  if (!was) setTimeout(() => $('.lock-acts button', l).focus({ preventScroll: true }), 50);
+}
+function hideLock() { lockEl().hidden = true; chrome(SCR.cover); syncControls(); }
+function lockMoment() { if (S.open || S.anim) setPosture(false, showLock); else showLock(); }
+
+/* ---------- Feedback ---------- */
+let toastT;
+function toast(msg) { const t = q(A, '.toast'); q(A, '.toast-t').textContent = msg; t.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 2600); }
+function say(msg) { const sr = q(A, '.sr'); sr.textContent = ''; setTimeout(() => { sr.textContent = msg; }, 30); }
+
+/* ===================== Fold and unfold ===================== */
+/* The leaf turns about the hinge (CSS transition, 900 ms). One rAF loop reads its real angle every frame and drives the rest
+   from it – the shading, the shared map growing from its cover position into the right pane, and the right pane's fade –
+   so the screen and the device stay in step, even when the turn is reversed half way. */
+const duo = $('#duo'), leaf = $('#leaf'), backSlot = $('#back-slot'), hinge = $('#hinge');
+const FOLD = { raf: 0, timer: 0, pair: null, fade: [], then: null, focus: false };
+const COVER_X = 396;   // the cover screen's left edge in inner-screen units when closed (408 − 12 in device units)
+
+function relRect(el, root) {
+  let x = 0, y = 0, e = el;
+  while (e && e !== root) {
+    x += e.offsetLeft; y += e.offsetTop;
+    const op = e.offsetParent;
+    for (let a = e.parentElement; a && a !== op && a !== root; a = a.parentElement) { x -= a.scrollLeft; y -= a.scrollTop; }
+    if (op && op !== root) { x -= op.scrollLeft; y -= op.scrollTop; }
+    e = op;
+  }
+  return { x, y, w: el.offsetWidth, h: el.offsetHeight };
+}
+function sharedEl(R) {
+  if (R.k === 'cover') return WF ? q(R, '.pg-way [data-share]') : SO.on ? null : q(R, `.view[data-v="${S.tab}"] [data-share]`);
+  return WF ? q(R, '.wfv [data-share]') : q(R, `.view[data-v="${S.tab}"] .pane.r [data-share]`);
+}
+function rightPane() { return WF ? q(SCR.inner, '.wf-r') : q(SCR.inner, `.view[data-v="${S.tab}"] .pane.r`); }
+function prepareTurn() {
+  const C = SCR.cover, I = SCR.inner;
+  // Keep the place: the inner left pane opens at the current stop, the cover at its now card
+  const lp = q(I, `.view[data-v="${S.tab}"] .pane.l`), now = lp && $('.stop.now', lp);
+  if (lp && now) { const y = relRect(now, lp).y; if (y < 0 || y + now.offsetHeight > lp.clientHeight - 120) lp.scrollTop = Math.max(0, y + lp.scrollTop - 160); }
+  const rp = rightPane(); $$('.dt-scroll', rp).forEach(s => { s.scrollTop = 0; });
+  const cs = q(C, `.view[data-v="${S.tab}"] .scroller`); if (cs && S.tab === 0) cs.scrollTop = 0;
+  // The left half of the inner screen rides on the leaf's back face as a still copy
+  const clone = I.root.cloneNode(true);
+  clone.removeAttribute('id'); clone.querySelectorAll('[id]').forEach(e => e.removeAttribute('id'));
+  clone.inert = true; clone.setAttribute('aria-hidden', 'true');
+  backSlot.replaceChildren(clone);
+  const src = qa(I, '.scroller, .dt-scroll, .wf-list'), dst = [...clone.querySelectorAll('.scroller, .dt-scroll, .wf-list')];
+  src.forEach((e, i) => { if (dst[i]) dst[i].scrollTop = e.scrollTop; });
+  // The shared element: the same map on both screens
+  const a = sharedEl(C), b = sharedEl(I);
+  FOLD.pair = null;
+  if (a && b && a.dataset.share === b.dataset.share) {
+    const f = 390 / (C.root.offsetWidth || 390);   // guard against zoomed offsets
+    const ca = relRect(a, C.root), fb = relRect(b, I.root);
+    FOLD.pair = { el: b, C: { x: ca.x * f + COVER_X, y: ca.y * f, w: ca.w * f }, F: { x: fb.x * f, y: fb.y * f, w: fb.w * f } };
+    b.style.transformOrigin = '0 0'; b.style.position = 'relative'; b.style.zIndex = '2';
+  }
+  FOLD.fade = FOLD.pair ? $$('.dt-fade', rp) : [rp];
+}
+function leafProgress() {
+  const t = getComputedStyle(leaf).transform;
+  if (!t || t === 'none') return 0;
+  const m = new DOMMatrixReadOnly(t);
+  return Math.acos(Math.max(-1, Math.min(1, m.m11))) / Math.PI;   // 0 closed → 1 open
+}
+function tick() {
+  const p = leafProgress();
+  $('#shade-f').style.opacity = Math.min(.5, p);
+  $('#shade-b').style.opacity = Math.min(.5, 1 - p);
+  const P = FOLD.pair;
+  if (P) {
+    const x = P.C.x + (P.F.x - P.C.x) * p, y = P.C.y + (P.F.y - P.C.y) * p, s = (P.C.w + (P.F.w - P.C.w) * p) / P.F.w;
+    P.el.style.transform = `translate(${(x - P.F.x).toFixed(2)}px, ${(y - P.F.y).toFixed(2)}px) scale(${s.toFixed(4)})`;
+  }
+  const o = Math.max(0, Math.min(1, (p - (FOLD.pair ? .7 : .45)) / (FOLD.pair ? .3 : .55)));
+  FOLD.fade.forEach(e => { e.style.opacity = o; });
+  FOLD.raf = requestAnimationFrame(tick);
+}
+function setInert() {
+  SCR.cover.root.inert = S.anim || S.open; SCR.inner.root.inert = S.anim || !S.open;
+  SCR.cover.root.setAttribute('aria-hidden', S.open ? 'true' : 'false'); SCR.inner.root.setAttribute('aria-hidden', S.open ? 'false' : 'true');
+}
+function setPosture(open, then) {
+  if (open === S.open && !S.anim) { if (then) then(); return; }
+  BOTH.forEach(R => { closeSheet(R, true); q(R, '.sys').hidden = true; });
+  returnFocus = [];
+  if (open && !lockEl().hidden) hideLock();
+  const ae = document.activeElement;
+  FOLD.focus = FOLD.focus || (duo.contains(ae) && !hinge.contains(ae));
+  S.open = open; A = open ? SCR.inner : SCR.cover; FOLD.then = then || null;
+  BOTH.forEach(chrome);
+  renderBoard();
+  if (S.rm) { crossFade(); return; }
+  if (!S.anim) { prepareTurn(); cancelAnimationFrame(FOLD.raf); FOLD.raf = requestAnimationFrame(tick); }
+  S.anim = true; setInert();
+  duo.classList.add('anim'); void duo.offsetWidth;
+  duo.classList.toggle('open', open);
+  clearTimeout(FOLD.timer); FOLD.timer = setTimeout(settle, 1400);
+}
+function settle() {
+  if (!S.anim) return;
+  S.anim = false; cancelAnimationFrame(FOLD.raf); clearTimeout(FOLD.timer);
+  duo.classList.remove('anim');
+  if (FOLD.pair) ['transform', 'transformOrigin', 'position', 'zIndex'].forEach(k => { FOLD.pair.el.style[k] = ''; });
+  FOLD.fade.forEach(e => { e.style.opacity = ''; });
+  $('#shade-f').style.opacity = ''; $('#shade-b').style.opacity = '';
+  backSlot.replaceChildren(); FOLD.pair = null; FOLD.fade = [];
+  afterPosture();
+}
+function afterPosture() {
+  setInert(); BOTH.forEach(chrome); layoutLine(SCR.inner, -1);
+  if (FOLD.focus) {
+    const h = WF ? q(A, A.k === 'cover' ? '.pg-way [data-act="close-wf"]' : '.wfv [data-act="close-wf"]') : S.tab === 0 ? q(A, A.k === 'cover' ? '#cover-now-t' : '#inner-dt-home') : q(A, `#${A.k}-tab-${S.tab}`);
+    if (h) h.focus({ preventScroll: true });
+  }
+  FOLD.focus = false;
+  say(S.open ? 'Unfolded – your day is on the left, the current stop on the right' : 'Folded – the cover shows the current stop');
+  renderBoard();
+  const t = FOLD.then; FOLD.then = null; if (t) t();
+}
+leaf.addEventListener('transitionend', e => { if (e.target === leaf && e.propertyName === 'transform' && S.anim && !S.rm) settle(); });
+/* Reduced motion: the screens cross-fade; the device does not turn */
+function crossFade() {
+  S.anim = true; setInert();
+  const out = duo.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 120, easing: 'ease-out', fill: 'forwards' });
+  out.onfinish = () => {
+    duo.classList.remove('anim'); duo.classList.toggle('open', S.open);
+    out.cancel(); S.anim = false;
+    duo.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200, easing: 'ease-out' });
+    afterPosture();
+  };
+}
+hinge.addEventListener('click', () => setPosture(!S.open));
+
+/* ---------- Device interactions ---------- */
+duo.addEventListener('click', e => {
+  const b = e.target.closest('[data-act]'); if (!b || S.anim) return;
+  const scr = b.closest('.scr'); if (!scr || scr !== A.root) return;
+  const a = b.dataset.act, d = b.dataset;
+  switch (a) {
+    case 'tab': closeSheet(A, true); closeSearch(); if (WF) { WF = null; showWF(); } setTab(d.tab, true); break;
+    case 'menu': openMenu(); break;
+    case 'passed': S.showPassed = true; renderAll(true); $('#inner-line-h').focus({ preventScroll: true }); break;
+    case 'search': closeSheet(A, true); openSearch(); break;
+    case 'close-search': closeSearch(); break;
+    case 'loc': openLocSheet(); break;
+    case 'picker': S.pickB = S.pickB || placeOf(ctx()); openPicker(); break;
+    case 'mb': S.pickB = d.place; openPicker(); break;
+    case 'mz': S.showPassed = false; S.manual = d.zone === 'away' ? { zone: 'away' } : { zone: d.zone, floor: +(d.floor || 1) }; S.pickB = null; closeSheet(); toast(d.zone === 'away' ? 'Showing the common homepage' : `Set to ${PLACES[d.place].short}`); renderAll(); break;
+    case 'clear-choice': S.manual = null; closeSheet(); toast('Your choice is cleared'); renderAll(); break;
+    case 'pause': S.paused = true; S.manual = null; closeSheet(); toast('Common homepage for today'); renderAll(); break;
+    case 'resume': S.paused = false; closeSheet(); renderAll(); break;
+    case 'explain': openExplain(); break;
+    case 'not-now': S.askHidden = true; closeSheet(); renderAll(); break;
+    case 'sys-show': showSys(); break;
+    case 'sys': q(A, '.sys').hidden = true; S.perm = d.v; renderAll(); { const f = q(A, '.chip-loc'); if (f) f.focus({ preventScroll: true }); } toast(d.v === 'allowed' ? 'Location help is on' : 'Location stays off – choose a place any time'); break;
+    case 'settings': toast("Opens your phone's Settings – simulated"); break;
+    case 'retry': toast('Still no signal – simulated'); break;
+    case 'precise': S.acc = 'precise'; renderAll(); break;
+    case 'focus-dest': { const ch = q(A, '.pass .chip'); if (ch) ch.focus(); break; }
+    case 'wf': closeSheet(A, true); if (SO.on) { SO.on = false; syncSearch(); returnFocus.pop(); } openWF(d.room); break;
+    case 'wf-prev': if (WF.i > 0) { wfGo(WF.i - 1); const p = q(A, '[data-act="wf-prev"]'); if (p && !p.disabled) p.focus({ preventScroll: true }); } break;
+    case 'wf-next': wfGo(WF.i + 1); break;
+    case 'wf-go': wfGo(+d.i); { const it = q(A, `.wf-li[data-i="${d.i}"]`); if (it) it.focus({ preventScroll: true }); } break;
+    case 'close-wf': closeWF(); break;
+    case 'close-sheet': closeSheet(); break;
+    case 'ext': toast(`${d.label} opens in MyChart – simulated`); break;
+    case 'info': toast(d.msg); break;
+    case 'dest': { const p = placeOf(ctx()); S.guestDest[p] = d.room; renderAll(); break; }
+    case 'clear-dest': { const p = placeOf(ctx()); S.guestDest[p] = null; renderAll(); break; }
+    case 'theme': S.theme = d.v; applyTheme(true); openMenu(); syncControls(); break;
+    case 'way-b': WAY.b = d.b; WAY.f = 1; BOTH.forEach(renderWay); break;
+    case 'way-f': WAY.f = +d.f; BOTH.forEach(renderWay); break;
+    case 'pw': pw.shown = !pw.shown; BOTH.forEach(renderMC); q(A, '[data-act="pw"]').focus({ preventScroll: true }); break;
+    case 'signout': S.signed = false; toast('Signed out'); renderAll(true); break;
+    case 'lock-close': hideLock(); break;
+    case 'lock-open': { const L = lockRoute(); hideLock(); if (L && !WF) openWF(L.r.id); } break;
+  }
+});
+duo.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    if (!lockEl().hidden && !S.open) { hideLock(); return; }
+    if (!q(A, '.sys').hidden) { q(A, '.sys').hidden = true; return; }
+    if (q(A, '.sheet').classList.contains('on')) { closeSheet(); return; }
+    if (SO.on) { closeSearch(); return; }
+    if (WF) closeWF();
+  }
+  const t = e.target.closest('[role="tab"], [role="radio"]');
+  if (t && ['ArrowLeft', 'ArrowRight'].includes(e.key)) {
+    const group = $$(t.getAttribute('role') === 'tab' ? '[role="tab"]' : '[role="radio"]', t.parentNode);
+    const i = (group.indexOf(t) + (e.key === 'ArrowRight' ? 1 : -1) + group.length) % group.length;
+    e.preventDefault();
+    if (t.getAttribute('role') === 'tab') setTab(i, true); else { S.theme = group[i].dataset.v; applyTheme(true); openMenu(); syncControls(); }
+  }
+});
+// The screens clip their content; never let focus scroll them sideways
+BOTH.forEach(R => R.root.addEventListener('scroll', () => { R.root.scrollLeft = 0; R.root.scrollTop = 0; }));
+$$('.cover-slot, .back-slot, #stage-in').forEach(el => el.addEventListener('scroll', () => { el.scrollLeft = 0; el.scrollTop = 0; }));
+
+/* ---------- Appearance, size, motion ---------- */
+const boardDark = () => { const t = document.documentElement.getAttribute('data-theme'); return t === 'dark' || (t !== 'light' && mqDark.matches); };
+function applyTheme(anim) {
+  const dark = S.theme === 'dark' || (S.theme === 'system' && boardDark());
+  BOTH.forEach(R => {
+    if (anim && !S.rm && dark !== R.root.classList.contains('dark')) { R.root.classList.add('theme-anim'); setTimeout(() => R.root.classList.remove('theme-anim'), 360); }
+    R.root.classList.toggle('dark', dark);
+  });
+}
+mqDark.addEventListener('change', () => applyTheme(true));
+new MutationObserver(() => applyTheme(true)).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+mqRM.addEventListener('change', () => { S.rm = mqRM.matches; BOTH.forEach(chrome); syncControls(); });
+function chrome(R) {
+  R.root.classList.toggle('rm', S.rm);
+  R.root.style.setProperty('--ts', S.ts);
+  if (R.k === 'cover') { const onBlue = (S.tab === 0 && !q(R, '.page.on')) || !q(R, '.lock').hidden; q(R, '.statusbar').classList.toggle('dk', !onBlue); }
+  else R.root.style.setProperty('--abh', q(R, '.appbar').offsetHeight + 'px');
+  const tb = q(R, '.tabbar').offsetHeight;
+  qa(R, '.scroller').forEach(s => { s.style.paddingBottom = (tb + 24) + 'px'; });
+  q(R, '.toast').style.bottom = (tb + 8) + 'px';
+}
+
+/* ---------- Board: journey and controls ---------- */
+const STEPS = [
+  { t: 'Away', ic: 'home', sub: 'Common homepage with today\'s plan – nothing location-based yet', set: { zone: 'away' } },
+  { t: 'Arriving', ic: 'car', sub: 'Parking at Clements University Hospital; the car follows the route in', set: { zone: 'arriving' } },
+  { t: 'Entrance', ic: 'entrance', sub: 'Best entrance, wayfinding, and check-in in MyChart', set: { zone: 'entrance' } },
+  { t: 'Floor 1', ic: 'elevator', sub: 'The way to the elevator and what is on this floor', set: { zone: 'inside', floor: 1 } },
+  { t: 'Floor 7', ic: 'arrived', sub: 'Arrived – the primary action is Check in, in MyChart', set: { zone: 'inside', floor: 7 } },
+  { t: 'Simmons', ic: 'building', sub: 'The pass flips to the next visit; support moves up', set: { zone: 'simmons' } },
+  { t: 'No location', ic: 'locOff', sub: 'Permission denied – choose a place and everything still works', set: { perm: 'denied' } }
+];
+function currentStep() {
+  if (S.perm === 'denied' || S.perm === 'nosignal') return 6;
+  return { away: 0, arriving: 1, entrance: 2, inside: S.floor === 7 ? 4 : 3, simmons: 5 }[S.zone];
+}
+function goStep(i) {
+  if (S.anim) return;
+  i = Math.max(0, Math.min(STEPS.length - 1, i));
+  const st = STEPS[i].set;
+  S.manual = null; S.paused = false; S.acc = 'precise'; S.showPassed = false;
+  BOTH.forEach(R => { closeSheet(R, true); q(R, '.sys').hidden = true; });
+  returnFocus = []; SO.on = false; syncSearch(); WF = null; showWF();
+  if (st.perm) S.perm = st.perm; else { if (S.perm !== 'allowed') S.perm = 'allowed'; S.zone = st.zone; if (st.floor) S.floor = st.floor; }
+  if (S.tab !== 0) setTab(0);
+  BOTH.forEach(R => { const s = R.k === 'cover' ? q(R, '.home-scroll') : q(R, '.view[data-v="0"] .pane.l'); s.scrollTo({ top: 0, behavior: S.rm || R !== A ? 'auto' : 'smooth' }); });
+  renderAll();
+}
+$('#jline').innerHTML = STEPS.map((s, i) => `<li style="display:grid"><button class="jn" data-step="${i}" aria-label="${i + 1} of ${STEPS.length}: ${s.t}"><span class="jd">${ico(s.ic, 20)}</span><span class="jl">${s.t}</span></button></li>`).join('');
+$('#jline').addEventListener('click', e => { const b = e.target.closest('[data-step]'); if (b) goStep(+b.dataset.step); });
+$('#j-back').addEventListener('click', () => goStep(currentStep() - 1));
+$('#j-next').addEventListener('click', () => goStep(currentStep() + 1));
+$('#j-fold').addEventListener('click', () => setPosture(!S.open));
+function renderBoard() {
+  const i = currentStep();
+  $$('.jn').forEach((b, k) => { b.classList.toggle('done', k < i); if (k === i) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current'); });
+  $('#jfill').style.setProperty('--p', i / (STEPS.length - 1));
+  $('#j-back').disabled = i === 0; $('#j-next').disabled = i === STEPS.length - 1;
+  $('#j-title').textContent = `${i + 1} of ${STEPS.length} · ${STEPS[i].t} · ${S.open ? 'Open' : 'Closed'}`;
+  const c = ctx();
+  $('#j-sub').textContent = S.manual ? 'Manual choice is overriding the simulated location' : S.paused ? 'Paused – common homepage for today' : c.src === 'ask' ? 'Location not on yet – the home explains before it asks' : c.src === 'approx' ? 'Approximate – the home asks which building' : STEPS[i].sub;
+  const lbl = S.open ? 'Fold' : 'Unfold';
+  $('#j-fold-t').textContent = lbl; $('#j-fold-i').textContent = g(S.open ? 'fold' : 'unfold');
+  $('#hinge-t').textContent = lbl; $('.ms', hinge).textContent = g(S.open ? 'fold' : 'unfold');
+  hinge.setAttribute('aria-label', `${lbl} the device`);
+  syncControls();
+}
+function syncControls() {
+  const val = { zone: S.zone, floor: String(S.floor), perm: S.perm, acc: S.acc, signed: S.signed ? '1' : '0', ts: String(S.ts), theme: S.theme, rm: S.rm ? '1' : '0', open: S.open ? '1' : '0' };
+  $$('[data-ctl]').forEach(gp => $$('button', gp).forEach(b => b.setAttribute('aria-pressed', b.dataset.v === val[gp.dataset.ctl])));
+  $$('[data-ctl="floor"] button').forEach(b => { b.disabled = S.zone !== 'inside'; });
+  $('#floor-note').hidden = S.zone === 'inside';
+  $('[data-moment="lock"]').setAttribute('aria-pressed', !lockEl().hidden);
+}
+$('#controls').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b || b.disabled) return;
+  const gp = b.closest('[data-ctl]');
+  if (b.dataset.moment === 'lock') { if (lockEl().hidden || S.open) lockMoment(); else hideLock(); return; }
+  if (b.dataset.moment === 'reset') {
+    Object.assign(S, { zone: 'away', floor: 1, perm: 'ask', acc: 'precise', signed: true, manual: null, paused: false, askHidden: false, guestDest: { clem: null, simm: null } });
+    BOTH.forEach(R => { closeSheet(R, true); q(R, '.sys').hidden = true; }); returnFocus = [];
+    SO.on = false; syncSearch(); WF = null; showWF(); hideLock(); setTab(0); renderAll(); return;
+  }
+  if (!gp) return;
+  const k = gp.dataset.ctl, v = b.dataset.v;
+  if (k === 'open') { setPosture(v === '1'); return; }
+  if (S.anim) return;
+  if (k === 'zone' || k === 'floor') S.showPassed = false;
+  if (k === 'zone') { S.zone = v; S.manual = null; S.paused = false; }
+  if (k === 'floor') { S.floor = +v; S.manual = null; }
+  if (k === 'perm') { S.perm = v; if (v === 'ask') S.askHidden = false; BOTH.forEach(R => { q(R, '.sys').hidden = true; }); }
+  if (k === 'acc') S.acc = v;
+  if (k === 'signed') S.signed = v === '1';
+  if (k === 'ts') S.ts = +v;
+  if (k === 'theme') { S.theme = v; applyTheme(true); }
+  if (k === 'rm') S.rm = v === '1';
+  renderAll(['ts', 'rm', 'signed'].includes(k));
+});
+
+function renderAll(force) {
+  BOTH.forEach(R => {
+    chrome(R);
+    qa(R, '.ab-signin').forEach(b => { b.hidden = S.signed; }); qa(R, '.ab-acct').forEach(b => { b.hidden = !S.signed; });
+    renderHome(R, force);
+    if (S.tab !== 0) renderTabView(R);
+    if (WF) { const keep = WF.i; WF.steps = routeSteps(WF.roomId); WF.here = startIndex(ctx(), WF.roomId, WF.steps); WF.i = Math.min(keep, WF.steps.length - 1); renderWF(R, false); }
+    if (SO.on) renderSearch(R);
+  });
+  renderBoard();
+  if (!lockEl().hidden) showLock();
+  if (force) setTimeout(() => { BOTH.forEach(chrome); layoutLine(SCR.inner, -1); }, 420);
+}
+
+/* ---------- Docs ---------- */
+$('#doc-states').innerHTML = STEPS.map((s, i) => `<li><b>${i + 1}. ${s.t}</b><span>${s.sub}</span></li>`).join('') + `<li><b>Approximate</b><span>Asks which building</span></li><li><b>Guest</b><span>A blank pass asks where you're going</span></li>`;
+$('#gmap').innerHTML = ICON_MAP.map(r => `<li>${ico(r[0], 20)}<span>${r[2]}</span><code>${r[1]}</code></li>`).join('');
+/* Layout diagram: both screens at 0.3 scale, drawn to the real pane and keep-out sizes */
+(function diagram() {
+  const k = .3, W = 780 * k, H = 844 * k, ab = 108 * k, tb = 85 * k, ox = 8, oy = 8, cx = 330;
+  const t = (x, y, s, c = 'dg-t', a = 'middle') => `<text class="${c}" x="${x}" y="${y}" text-anchor="${a}" dominant-baseline="central">${s}</text>`;
+  const keepX = ox + W / 2 - 16 * k;
+  let s = `<defs><pattern id="hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line class="dg-hatch" x1="0" y1="0" x2="0" y2="5"/></pattern></defs>`;
+  s += `<rect class="dg-scr" x="${ox}" y="${oy}" width="${W}" height="${H}" rx="10"/>`;
+  s += `<rect class="dg-bar" x="${ox}" y="${oy}" width="${W}" height="${ab}" rx="10"/><rect class="dg-bar" x="${ox}" y="${oy + 10}" width="${W}" height="${ab - 10}"/>`;
+  s += t(ox + 12, oy + ab / 2 + 6, 'Blue band', 'dg-on', 'start');
+  s += `<rect class="dg-zone" x="${ox + 16 * k}" y="${oy + ab + 8}" width="${W / 2 - 32 * k}" height="${H - ab - tb - 16}" rx="4"/>`;
+  s += `<rect class="dg-zone" x="${ox + W / 2 + 16 * k}" y="${oy + ab + 8}" width="${W / 2 - 32 * k}" height="${H - ab - tb - 16}" rx="4"/>`;
+  s += t(ox + W / 4, oy + 92, 'Your day') + t(ox + W / 4, oy + 110, 'pass, line,', 'dg-s') + t(ox + W / 4, oy + 126, 'Quick links', 'dg-s');
+  s += t(ox + 3 * W / 4, oy + 92, 'Now') + t(ox + 3 * W / 4, oy + 110, 'large map,', 'dg-s') + t(ox + 3 * W / 4, oy + 126, 'details', 'dg-s');
+  s += `<rect class="dg-zone" x="${ox}" y="${oy + H - tb}" width="${W / 2}" height="${tb}"/>` + t(ox + W / 4, oy + H - tb / 2, 'Tabs');
+  s += `<rect class="dg-pri" x="${ox + W / 2 + 16 * k}" y="${oy + H - tb + 4}" width="${W / 2 - 32 * k}" height="${48 * k}" rx="4"/>` + t(ox + 3 * W / 4, oy + H - tb + 4 + 24 * k, 'Primary', 'dg-on');
+  s += `<rect class="dg-keep" x="${keepX}" y="${oy}" width="${32 * k}" height="${H}"/><line class="dg-crease" x1="${ox + W / 2}" y1="${oy - 4}" x2="${ox + W / 2}" y2="${oy + H + 4}"/>`;
+  s += t(ox + W / 2, oy + H + 18, 'Crease · 32.0 keep-out') + t(ox + W / 2, oy + H + 36, 'Open 780 × 844', 'dg-s');
+  const cw = 390 * k;
+  s += `<rect class="dg-scr" x="${cx}" y="${oy}" width="${cw}" height="${H}" rx="10"/><rect class="dg-bar" x="${cx}" y="${oy}" width="${cw}" height="${ab}" rx="10"/><rect class="dg-bar" x="${cx}" y="${oy + 10}" width="${cw}" height="${ab - 10}"/>`;
+  s += `<rect class="dg-zone" x="${cx + 16 * k}" y="${oy + ab + 8}" width="${cw - 32 * k}" height="20" rx="10"/>` + t(cx + cw / 2, oy + ab + 18, 'Where', 'dg-s');
+  s += `<rect class="dg-zone" x="${cx + 16 * k}" y="${oy + ab + 36}" width="${cw - 32 * k}" height="${H - ab - tb - 52}" rx="4"/>` + t(cx + cw / 2, oy + 112, 'Now card') + t(cx + cw / 2, oy + 130, 'one map', 'dg-s');
+  s += `<rect class="dg-pri" x="${cx + 24 * k}" y="${oy + H - tb - 40}" width="${cw - 48 * k}" height="${48 * k}" rx="4"/>` + t(cx + cw / 2, oy + H - tb - 40 + 24 * k, 'Primary', 'dg-on');
+  s += `<rect class="dg-zone" x="${cx}" y="${oy + H - tb}" width="${cw}" height="${tb}"/>` + t(cx + cw / 2, oy + H - tb / 2, 'Tabs');
+  s += t(cx + cw / 2, oy + H + 18, 'Closed') + t(cx + cw / 2, oy + H + 36, 'Cover 390 × 844', 'dg-s');
+  $('#dgm').innerHTML = `<svg viewBox="0 0 ${cx + cw + 8} ${oy + H + 48}" role="img" aria-label="Diagram: the open inner screen has two panes of 390 with a 32.0 keep-out on the crease, your day on the left with the tabs, and the current stop with the primary action on the right. The closed cover screen has the location chip, one now card, the primary action, and the tabs.">${s}</svg>`;
+})();
+
+/* ---------- Boot ---------- */
+BOTH.forEach(shell);
+applyTheme(false);
+BOTH.forEach(renderTabs);
+renderAll();
+setInert();
+/* Fit the device to the window: on wide screens to the height (it stays whole and pinned), on narrow ones to the width */
+function fitDevice() {
+  const st = $('#stage-in'), wide = innerWidth >= 1000;
+  st.style.zoom = '';
+  const capH = $('#cap').offsetHeight + 8;
+  const z = wide ? Math.min(1, (innerHeight - 32 - capH) / 932, (innerWidth - 32) * .62 / 804) : Math.min(1, (innerWidth - 32) / 804);
+  st.style.zoom = Math.max(.3, z).toFixed(3);
+}
+fitDevice();
+window.addEventListener('resize', () => { fitDevice(); layoutLine(SCR.inner, -1); });
+</script>
