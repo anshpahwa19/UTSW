@@ -77,6 +77,15 @@ html:not(.ms-ready) .m-ico{fill:transparent!important}
 
 /* ===================== Board ===================== */
 .board{max-width:1240px; margin:0 auto; display:grid; gap:24.0px}
+/* Laptop and up: the phone sits left, pinned and scaled to the window height, so the whole mockup is always in view;
+   the journey, controls, and docs scroll in the column beside it */
+@media (min-width:1000px){
+  .board{max-width:1440px; grid-template-columns:auto minmax(0,1fr); column-gap:32.0px; align-items:start}
+  .board .main{display:contents}
+  .board .stage{grid-column:1; grid-row:1 / span 5; position:sticky; top:16.0px; align-self:start}
+  .bh,.board > .panel,.main > .panel,.docs{grid-column:2}
+  .docs{grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr))}
+}
 .bh h1{font-size:28.0px; line-height:1.2; margin:0 0 8.0px; letter-spacing:-.01em; text-wrap:balance}
 .bh p{margin:0; color:var(--bd-muted); max-width:68ch}
 .panel{background:var(--bd-panel); border:1px solid var(--bd-line); border-radius:16.0px; padding:16.0px; min-width:0}
@@ -1086,9 +1095,11 @@ function layoutLine(fromIdx) {
   const line = $('.line', home); if (!line) return;
   const nodes = $$('.stop', line).map(li => $('.node', li)), lis = $$('.stop', line), you = $('.you', line), fill = $('.rail-fill', line), rail = $('.rail', line);
   const L = lineModel(ctx());
-  const centers = () => { const lt = line.getBoundingClientRect().top; return nodes.map(n => { const r = n.getBoundingClientRect(); return r.top - lt + r.height / 2; }); };
+  // Layout offsets (not screen rects), so the board's fit-to-window zoom never shifts the ring
+  const relTop = el => { let y = 0; while (el && el !== line) { y += el.offsetTop; el = el.offsetParent; } return y; };
+  const centers = () => nodes.map(n => relTop(n) + n.offsetHeight / 2);
   const ys = centers();
-  const nodeH = $('.stop.now .node', line) ? $('.stop.now .node', line).getBoundingClientRect().height : nodes[0].getBoundingClientRect().height;
+  const nodeH = ($('.stop.now .node', line) || nodes[0]).offsetHeight;
   const at = k => Math.max(0, lis.findIndex(li => +li.dataset.from <= k && k <= +li.dataset.to));
   const place = (i, el, prop) => el.style.setProperty(prop, (ys[at(i)] - nodeH / 2 - 6) + 'px');
   rail.style.setProperty('--rt', ys[0] + 'px'); rail.style.setProperty('--rh', (ys[ys.length - 1] - ys[0]) + 'px');
@@ -1468,5 +1479,12 @@ $('#gmap').innerHTML = ICON_MAP.map(r => `<li>${ico(r[0], 20)}<span>${r[2]}</spa
 applyTheme(false);
 renderTabs();
 renderAll();
-window.addEventListener('resize', () => layoutLine(-1));
+/* Fit the device to the window height on wide screens (the board scrolls; the phone stays whole) */
+function fitDevice() {
+  const dev = $('.device'), wide = innerWidth >= 1000;
+  dev.style.zoom = '';
+  if (wide) { const need = dev.offsetHeight + $('#cap').offsetHeight + 12 + 32; dev.style.zoom = Math.min(1, Math.max(.6, innerHeight / need)).toFixed(3); }
+}
+fitDevice();
+window.addEventListener('resize', () => { fitDevice(); layoutLine(-1); });
 </script>

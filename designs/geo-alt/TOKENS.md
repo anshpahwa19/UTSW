@@ -1,6 +1,6 @@
 # UTSW MyCare Today line – spec
 
-Prototype: `mycare-geo-alt.html`, built from `src.html` by `build.py`. 390 × 844 pt, checked at 360, large text (130%), reduced motion, light and dark. A second direction for the location-aware home; the first lives in `designs/geo/`.
+Prototype: `mycare-geo-alt.html`, built from `src.html` by `build.py`. On screens 1000 px and wider the board pins the phone on the left and scales it to the window height, so the whole mockup stays in view while the journey, controls, and docs scroll beside it. 390 × 844 pt, checked at 360, large text (130%), reduced motion, light and dark. A second direction for the location-aware home; the first lives in `designs/geo/`.
 
 Location is **simulated**. Real building names (William P. Clements Jr. University Hospital, Harold C. Simmons Comprehensive Cancer Center); every floor, suite, entrance, garage, rate, count, person, and visit is sample data. Maps are labelled “Sample map”.
 
