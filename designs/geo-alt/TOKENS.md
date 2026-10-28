@@ -30,6 +30,21 @@ Inside Clements, “In this building” (departments by floor) and “Hospital r
 
 Precedence: your choice → paused → permission → signal → accuracy → place and floor. A journey step on the board turns location on if it was never asked.
 
+## Common homepage modules (from `designs/guest`)
+
+The location layer sits on top; the guest home's modules follow in their usual CMS order in every state, so the common homepage is always there:
+
+1. **Emergency alert banner** (board control) – above everything, with an icon and the word "Alert" (never color alone), "Show all alerts (2)", and the full alert on a page.
+2. **Global search** – one field for doctors, places, MedBlog articles, resources, and announcements, with scope chips: All, Doctors, Places, Articles, Resources. **Top searches** sit under the field and lead to real results here: Heart clinic, Parking, Pharmacy, Lab, Urgent care, Flu shots.
+3. **MyChart sign-in prompt** (guests only) – Sign in or Create account.
+4. **Quick links** – the same six links.
+5. **MedBlog** – a swipeable carousel with previous and next buttons and a progress bar. It never auto-advances. "See all" opens a list with topic chips, and each article opens on its own page.
+6. **UTSW resources** – rankings, wayfinding (opens the tab), video visit prep, virtual urgent care, financial assistance.
+7. **Campaign banners** – the Blue flu campaign (walk-in facts, Find a flu shot, add to calendar), plus a tint promo for virtual urgent care.
+8. **Announcements** – date badges, and "See all".
+
+The menu adds "Why UT Southwestern" and "Patient resource guide". Article, resource, announcement, and campaign copy is copied unchanged from the guest prototype; all of it is sample CMS content.
+
 ## Scenarios (board switch above the journey)
 
 Each scenario has its own Back / Next steps. People, hours, waits, conditions, and times are sample data.

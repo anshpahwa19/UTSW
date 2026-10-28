@@ -3,7 +3,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..800&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=accessible,apartment,arrow_back,arrow_forward,arrow_upward,assistant_navigation,biotech,calendar_add_on,calendar_month,chat,check,check_circle,chevron_right,close,contrast,dark_mode,directions_bus,directions_car,directions_walk,diversity_1,diversity_3,domain,door_front,door_open,edit_calendar,edit_location_alt,elevator,emergency,explore,hail,handshake,help,home,hourglass_top,how_to_reg,info,lab_profile,layers,light_mode,local_atm,local_parking,local_pharmacy,location_off,location_on,location_searching,lock,login,logout,map,menu,more_horiz,navigation,near_me,nutrition,open_in_new,pause_circle,payments,person,pin_drop,privacy_tip,psychology,public,receipt_long,restaurant,schedule,school,search,self_improvement,settings,stethoscope,support_agent,translate,visibility,visibility_off,wc,wifi&display=block">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=accessible,acute,apartment,arrow_back,arrow_forward,arrow_upward,article,assistant_navigation,biotech,calendar_add_on,calendar_month,campaign,chat,check,check_circle,chevron_left,chevron_right,close,contrast,dark_mode,directions_bus,directions_car,directions_walk,diversity_1,diversity_3,domain,door_front,door_open,edit_calendar,edit_location_alt,elevator,emergency,event_available,explore,hail,handshake,help,home,hourglass_top,how_to_reg,info,lab_profile,layers,light_mode,local_atm,local_parking,local_pharmacy,location_off,location_on,location_searching,lock,login,logout,map,menu,more_horiz,navigation,near_me,nutrition,open_in_new,pause_circle,payments,person,pin_drop,privacy_tip,psychology,public,receipt_long,restaurant,schedule,school,search,self_improvement,settings,stethoscope,support_agent,translate,vaccines,videocam,visibility,visibility_off,volunteer_activism,warning,wc,wifi,workspace_premium&display=block">
 <style>
 /* Layout: presentation board – a journey scrubber across the top (Back / Next), the 390 × 844 phone beside its prototype
    controls, then concise visual docs. Concept: the home is the patient's day drawn as a transit line with a visit pass.
@@ -406,7 +406,7 @@ button.map{border:0; padding:0; width:100%; text-align:left; color:inherit}
 .row .rs{font-size:var(--t14); color:var(--ink-2); line-height:1.4}
 .row .chev,.row .ext{color:var(--ink-2)}
 .row .fnum{min-width:calc(40px * var(--ts)); height:calc(40px * var(--ts)); border-radius:var(--r-sm); background:var(--tint); color:var(--blue); display:grid; place-items:center; font-weight:800; font-size:var(--t16); flex:none}
-.ql{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:var(--s2)}
+.ql{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,calc(144px * var(--ts))),1fr)); gap:var(--s2)}
 .ql button{min-height:calc(64px * var(--ts)); border-radius:var(--r-md); border:1px solid var(--line); background:var(--surface); display:flex; align-items:center; gap:var(--s2); padding:var(--s2) var(--s3); text-align:left; color:var(--ink); font-size:var(--t14); font-weight:600; line-height:1.3}
 .ql button > span:nth-child(2){flex:1; min-width:0}
 .ql .lk{color:var(--ink-2)}
@@ -468,6 +468,7 @@ button.map{border:0; padding:0; width:100%; text-align:left; color:inherit}
 .so-input{flex:1; min-width:0; margin-right:var(--s2); display:flex; align-items:center; gap:var(--s2); min-height:var(--btn); border-radius:var(--r-md); background:var(--tint); padding:0 var(--s3)}
 .so-input input{flex:1; min-width:0; align-self:stretch; min-height:var(--hit); border:0; background:none; font-size:var(--t16); color:var(--ink); outline:none}
 .so-input:focus-within{box-shadow:var(--focus)}
+.so-input input:focus-visible{box-shadow:none}
 .seg-in{display:flex; gap:var(--s1); background:var(--tint); border-radius:var(--r-md); padding:var(--s1)}
 .seg-in button{flex:1; min-height:var(--hit); border:0; border-radius:var(--r-sm); background:none; font-size:var(--t14); font-weight:600; color:var(--ink)}
 .seg-in button[aria-pressed="true"]{background:var(--surface); color:var(--blue); box-shadow:0 0 0 2px var(--blue)}
@@ -517,6 +518,64 @@ button.map{border:0; padding:0; width:100%; text-align:left; color:inherit}
 .toast.on{transform:none; opacity:1}
 .toast button{margin-left:auto; min-height:var(--hit); border:0; background:none; color:var(--on-inverse); font-weight:700; text-decoration:underline; padding:0 var(--s2)}
 .phone.rm .you,.phone.rm .rail-fill{transition:opacity var(--d-base)}
+/* ===================== Common homepage modules (from the guest home) ===================== */
+.alerts{margin:var(--s3) var(--s4) 0; display:grid; gap:var(--s2)}
+.alert{width:100%; min-height:var(--btn); display:flex; align-items:center; gap:var(--s3); padding:var(--s3); border-radius:var(--r-md); border:1px solid var(--alert-ink); background:var(--alert-bg); color:var(--alert-ink); text-align:left}
+.alert .txt{flex:1; min-width:0; display:grid}
+.al-k{font-size:var(--t12); font-weight:700; text-transform:uppercase; letter-spacing:.06em}
+.al-t{font-size:var(--t14); font-weight:600; line-height:1.4; color:var(--ink)}
+.al-ic{--fill:1}
+.al-more{justify-self:start}
+.ts-row{display:flex; gap:var(--s2); overflow-x:auto; padding:var(--s3) var(--s4) var(--s1); scrollbar-width:none; align-items:center}
+.ts-row::-webkit-scrollbar{display:none}
+.ts-row .chip{flex:none; white-space:nowrap}
+.ts-k{flex:none; font-size:var(--t12); font-weight:700; color:var(--ink-2); white-space:nowrap}
+.signin-card{justify-items:start}
+.signin-card h2{font-size:var(--t18); font-weight:700; line-height:1.3}
+.signin-card .sub{font-size:var(--t14); color:var(--ink-2)}
+.btn-row.two{grid-template-columns:repeat(auto-fit,minmax(min(100%,120px),1fr)); width:100%}
+.car{display:flex; gap:var(--s3); overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none; margin:0 calc(-1 * var(--s4)); padding:0 var(--s4); scroll-padding:0 var(--s4)}
+.car::-webkit-scrollbar{display:none}
+.feat{flex:0 0 min(82%, 280px); scroll-snap-align:start; border:1px solid var(--line); border-radius:var(--r-md); background:var(--surface); padding:0; overflow:hidden; display:flex; flex-direction:column; text-align:left; color:var(--ink)}
+.art{display:block; aspect-ratio:304 / 144; width:100%; max-width:100%; overflow:hidden; background:var(--tint)}
+.art svg{display:block; width:100%; height:100%}
+.phone.dark .art svg{filter:brightness(.86) saturate(.92)}
+.feat-b{display:grid; gap:var(--s1); padding:var(--s3); flex:1; align-content:start}
+.kick{font-size:var(--t12); font-weight:700; color:var(--blue); text-transform:uppercase; letter-spacing:.06em}
+.feat-t{font-size:var(--t16); font-weight:700; line-height:1.3}
+.feat-m{font-size:var(--t12); color:var(--ink-2); margin-top:auto}
+.car-ctl{display:flex; align-items:center; gap:var(--s2)}
+.car-track{flex:1; height:4px; border-radius:2px; background:var(--tint-2); overflow:hidden}
+.car-thumb{display:block; height:100%; border-radius:2px; background:var(--ctl); transition:transform var(--d-fast) linear}
+.icon-btn:disabled{opacity:.4; cursor:default}
+.car-ctl .icon-btn{border:1px solid var(--line-strong)}
+.camp{background:var(--brand); color:#FFFFFF; border-radius:var(--r-md); padding:var(--s4); display:grid; gap:var(--s3); --grad:-25}
+.camp-top{display:flex; align-items:flex-start; justify-content:space-between; gap:var(--s3)}
+.camp-tag{font-size:var(--t12); font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:#D6E4F0}
+.camp h2{font-size:var(--t24); font-weight:800; line-height:1.2}
+.camp-dot{width:calc(48px * var(--ts)); height:calc(48px * var(--ts)); border-radius:50%; background:rgba(255,255,255,.14); display:grid; place-items:center; flex:none; box-shadow:0 0 0 6px rgba(0,169,224,.25)}
+.camp-p{font-size:var(--t14); color:#D6E4F0; line-height:1.4}
+.camp-facts{display:grid; gap:var(--s2)}
+.camp-facts li{display:flex; align-items:center; gap:var(--s2); font-size:var(--t14); font-weight:600}
+.camp-cta{display:flex; gap:var(--s2)}
+.btn.light{flex:1; background:#FFFFFF; color:#004278; border-color:#FFFFFF}
+.camp-cal{width:var(--btn); height:var(--btn); border-radius:var(--r-md); border:1px solid rgba(255,255,255,.6); background:rgba(255,255,255,.12); color:#FFFFFF; display:grid; place-items:center; flex:none}
+.camp-cal[aria-pressed="true"]{background:#FFFFFF; color:#004278; --fill:1}
+.camp :focus-visible{box-shadow:var(--focus-on-blue)!important}
+.promo{width:100%; min-height:calc(64px * var(--ts)); display:flex; align-items:center; gap:var(--s3); padding:var(--s3); border-radius:var(--r-md); border:1px solid var(--line); background:var(--tint); text-align:left; color:var(--ink)}
+.promo .txt{flex:1; min-width:0; display:grid}
+.promo .rt{font-size:var(--t16); font-weight:700}
+.promo .rs{font-size:var(--t14); color:var(--ink-2)}
+.date-b{width:calc(48px * var(--ts)); flex:none; border-radius:var(--r-sm); background:var(--tint); color:var(--blue); display:grid; justify-items:center; padding:var(--s1) 0; line-height:1.1}
+.date-b span{font-size:var(--t12); font-weight:700}
+.date-b b{font-size:var(--t20); font-weight:800}
+.blog-row .thumb{width:calc(96px * var(--ts)); flex:none; border-radius:var(--r-sm)}
+.hero-art{border-radius:var(--r-md)}
+.in-t{font-size:var(--t24); font-weight:800; line-height:1.2; letter-spacing:-.01em}
+.in-m{font-size:var(--t14); color:var(--ink-2)}
+.in-p{font-size:var(--t16); line-height:1.6; color:var(--ink); max-width:62ch}
+.so-scopes{display:flex; gap:var(--s2); overflow-x:auto; scrollbar-width:none}
+.so-scopes .chip{flex:none}
 /* ===================== Scenarios: guest nearby, booking, why you're here ===================== */
 /* Why you're here: asked once on arrival when there's no visit; the answer shapes the home */
 .ask{margin:0 var(--s4) var(--s4); background:var(--surface); border:1px solid var(--line); border-radius:var(--r-md); padding:var(--s4); display:grid; gap:var(--s3)}
@@ -618,6 +677,10 @@ button.map{border:0; padding:0; width:100%; text-align:left; color:inherit}
             <div class="page-bar"><button class="icon-btn" data-act="close-page" aria-label="Close booking"><span class="ms" aria-hidden="true">close</span></button><h1 id="bk-title">Book a visit</h1></div>
             <div class="page-body" id="bk-body"></div>
           </div>
+          <div class="page" id="pg-info" role="dialog" aria-modal="true" aria-labelledby="in-title">
+            <div class="page-bar"><button class="icon-btn" data-act="close-page" aria-label="Back"><span class="ms" aria-hidden="true">arrow_back</span></button><h1 id="in-title">MedBlog</h1></div>
+            <div class="page-body" id="in-body"></div>
+          </div>
           <div class="page" id="pg-search" role="dialog" aria-modal="true" aria-label="Search">
             <div class="page-bar">
               <button class="icon-btn" data-act="close-page" aria-label="Close search"><span class="ms" aria-hidden="true">arrow_back</span></button>
@@ -654,6 +717,7 @@ button.map{border:0; padding:0; width:100%; text-align:left; color:inherit}
         <div class="ctl"><span id="l-ts">Text size</span><div class="seg" role="group" aria-labelledby="l-ts" data-ctl="ts"><button data-v="1">Default</button><button data-v="1.3">Large</button></div></div>
         <div class="ctl"><span id="l-th">Theme</span><div class="seg" role="group" aria-labelledby="l-th" data-ctl="theme"><button data-v="system">System</button><button data-v="light">Light</button><button data-v="dark">Dark</button></div></div>
         <div class="ctl"><span id="l-m">Motion</span><div class="seg" role="group" aria-labelledby="l-m" data-ctl="rm"><button data-v="0">Full</button><button data-v="1">Reduced</button></div></div>
+        <div class="ctl"><span id="l-al">Emergency alert</span><div class="seg" role="group" aria-labelledby="l-al" data-ctl="alert"><button data-v="0">Off</button><button data-v="1">On</button></div></div>
         <div class="ctl"><span id="l-x">Moments</span><div class="seg" role="group" aria-labelledby="l-x"><button data-moment="lock">Lock screen</button><button data-moment="reset">Start over</button></div></div>
       </div>
     </aside>
@@ -726,7 +790,7 @@ button.map{border:0; padding:0; width:100%; text-align:left; color:inherit}
     </section>
     <section class="panel wide">
       <h2>Glyphs</h2>
-      <p>One concept, one glyph – 76 glyphs from Material Symbols Rounded, served as a subset (about 100 KB).</p>
+      <p>One concept, one glyph – 86 glyphs from Material Symbols Rounded, served as a subset (about 100 KB).</p>
       <ul class="gmap" id="gmap"></ul>
     </section>
   </div>
@@ -779,6 +843,16 @@ const ICON_MAP = [
   ['car', 'directions_car', 'Drive', 'Line, directions', 'Places'],
   ['clinic', 'door_front', 'Department or suite', 'Directory, directions', 'Places'],
   ['floor', 'layers', 'Floor', 'Department page', 'Places'],
+  ['alert', 'warning', 'Emergency alert', 'Alert banner – always filled, always with the word Alert', 'Common homepage', 'f1'],
+  ['prev', 'chevron_left', 'Previous', 'MedBlog carousel', 'Common homepage'],
+  ['vaccine', 'vaccines', 'Vaccines', 'Flu campaign only', 'Common homepage'],
+  ['added', 'event_available', 'Added to calendar', 'Flu campaign', 'Common homepage', 'f1'],
+  ['rank', 'workspace_premium', 'Recognition', 'UTSW resources', 'Common homepage'],
+  ['urgent', 'acute', 'Urgent care', 'UTSW resources', 'Common homepage'],
+  ['video', 'videocam', 'Video visits', 'UTSW resources, campaign', 'Common homepage'],
+  ['aid', 'volunteer_activism', 'Financial assistance', 'UTSW resources', 'Common homepage'],
+  ['article', 'article', 'Articles', 'Search results', 'Common homepage'],
+  ['news', 'campaign', 'Announcements', 'Search results', 'Common homepage'],
   ['visitor', 'diversity_1', 'Visiting someone', 'Why you are here', 'Why you are here'],
   ['lab', 'biotech', 'Lab or imaging', 'Why you are here, care near you', 'Why you are here'],
   ['explore', 'explore', 'Looking around', 'Why you are here', 'Why you are here'],
@@ -982,7 +1056,7 @@ function mapBox({ plan, label, foot, btn, ...o }) {
 /* ---------- State ---------- */
 const mqRM = matchMedia('(prefers-reduced-motion: reduce)');
 const mqDark = matchMedia('(prefers-color-scheme: dark)');
-const S = { zone: 'away', floor: 1, perm: 'ask', acc: 'precise', signed: true, width: 390, ts: 1, theme: 'system', rm: mqRM.matches, manual: null, paused: false, askHidden: false, guestDest: { clem: null, simm: null }, tab: 0, pickB: null, showPassed: false, appt: true, reason: null, booked: null, book: null, scn: 'guest', step: 0 };
+const S = { zone: 'away', floor: 1, perm: 'ask', acc: 'precise', signed: true, width: 390, ts: 1, theme: 'system', rm: mqRM.matches, manual: null, paused: false, askHidden: false, guestDest: { clem: null, simm: null }, tab: 0, pickB: null, showPassed: false, appt: true, reason: null, booked: null, book: null, scn: 'guest', step: 0, alert: false, alertsAll: false, fluCal: false, soScope: 'All' };
 
 /* Precedence: your choice → paused → permission → signal → accuracy → place and floor */
 function ctx() {
@@ -1117,6 +1191,153 @@ function stopPanel(k, c, L) {
         `<p class="sh-label">Support for you</p>` + tileList(SUPPORT.map(([ic, n]) => ({ ic, name: n, attrs: `data-act="info" data-msg="${n} – sample content approved by the center"` })));
   }
   return '';
+}
+
+/* ---------- Common homepage content: copied unchanged from designs/guest (sample CMS content) ---------- */
+const ART = {
+  a: { dark: true, svg: '<rect width="304" height="144" fill="#004278"/><circle cx="268" cy="8" r="120" fill="#336893"/><path d="M160 -12v72a56 56 0 0 0 112 0v-72" fill="none" stroke="#7BAFD4" stroke-width="20" stroke-linecap="round"/><circle cx="216" cy="64" r="12" fill="#00A9E0"/><circle cx="56" cy="112" r="40" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="2"/>' },
+  b: { dark: false, svg: '<rect width="304" height="144" fill="#D6E4F0"/><circle cx="212" cy="72" r="52" fill="#004278"/><circle cx="236" cy="56" r="44" fill="#D6E4F0"/><g fill="#336893"><circle cx="72" cy="40" r="3"/><circle cx="104" cy="88" r="2"/><circle cx="56" cy="104" r="2"/><circle cx="132" cy="36" r="2"/></g><circle cx="168" cy="100" r="8" fill="#00A9E0"/>' },
+  c: { dark: true, svg: '<rect width="304" height="144" fill="#336893"/><rect x="96" y="28" width="148" height="96" rx="16" fill="#004278"/><circle cx="170" cy="70" r="20" fill="#7BAFD4"/><path d="M136 124a34 34 0 0 1 68 0" fill="#7BAFD4"/><circle cx="226" cy="44" r="6" fill="#00A9E0"/><circle cx="40" cy="24" r="64" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="2"/>' },
+  d: { dark: false, svg: '<rect width="304" height="144" fill="#7BAFD4"/><circle cx="232" cy="64" r="64" fill="#D6E4F0"/><circle cx="232" cy="64" r="36" fill="none" stroke="#004278" stroke-width="10"/><circle cx="72" cy="120" r="48" fill="#336893" opacity=".5"/><circle cx="232" cy="64" r="8" fill="#00A9E0"/>' },
+  e: { dark: true, svg: '<rect width="304" height="144" fill="#004278"/><path d="M-20 150L120 40L200 110L330 0V150Z" fill="#336893"/><circle cx="120" cy="40" r="22" fill="#7BAFD4"/><circle cx="200" cy="110" r="22" fill="#7BAFD4"/><circle cx="252" cy="36" r="10" fill="#00A9E0"/>' },
+  f: { dark: false, svg: '<rect width="304" height="144" fill="#EBF0F5"/><circle cx="96" cy="72" r="58" fill="#D6E4F0"/><circle cx="96" cy="72" r="58" fill="none" stroke="#004278" stroke-width="8" stroke-dasharray="10 12"/><circle cx="220" cy="48" r="30" fill="#7BAFD4"/><circle cx="96" cy="72" r="10" fill="#00A9E0"/><circle cx="252" cy="108" r="16" fill="#336893"/>' }
+};
+const artSVG = m => `<svg viewBox="0 0 304 144" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${ART[m].svg}</svg>`;
+
+const FEATURED = [
+  { kick: 'Medications', title: 'Taking a GLP-1? Learn how it may affect your other medications', date: 'Oct. 7, 2026', read: '5 min read', m: 'a',
+    body: ['Some GLP-1 medicines slow how fast your stomach empties. That can change how your body absorbs other medicines you take by mouth.', 'Keep a list of everything you take, including vitamins and supplements, and bring it to every visit.', 'Ask your pharmacist or care team before you change or stop any medicine.'] },
+  { kick: 'Bones and joints', title: 'Are you ruining your knees? The truth about sports injuries and arthritis', date: 'Oct. 5, 2026', read: '6 min read', m: 'e',
+    body: ['Staying active is good for your joints. Most knee pain from sports comes from overuse or a sudden twist, not from exercise itself.', 'Warm up, build strength around the knee, and increase your training slowly.', 'See a specialist for swelling that doesn’t go down, a knee that gives way, or pain that keeps you from your usual activities.'] },
+  { kick: 'Heart', title: 'Inflammation and the heart: A new approach to cardiovascular disease prevention', date: 'Oct. 1, 2026', read: '7 min read', m: 'd',
+    body: ['Researchers are learning more about how inflammation in the body is linked to heart disease.', 'Healthy habits that lower inflammation – regular activity, not smoking, and a balanced diet – also protect your heart.', 'Ask your care team which heart tests make sense for you. (Sample summary.)'] },
+  { kick: 'Heart', title: 'Enlicitide: What to know about the new cholesterol-lowering pill', date: 'Sept. 28, 2026', read: '5 min read', m: 'b',
+    body: ['A new kind of cholesterol medicine that comes as a pill may give some people another option for lowering LDL cholesterol.', 'It is not right for everyone. Your care team looks at your cholesterol, your heart risk, and the medicines you already take.', 'Don’t stop a cholesterol medicine without talking with your care team first. (Sample summary.)'] },
+  { kick: 'Skin', title: 'Skin cancer screening: What to look for and when to see a dermatologist', date: 'Sept. 23, 2026', read: '6 min read', m: 'f',
+    body: ['Check your skin once a month for spots that are new, changing, or look different from your other moles.', 'Use the ABCDE guide: asymmetry, uneven borders, more than one color, a diameter larger than a pencil eraser, and evolving size or shape.', 'See a dermatologist about any spot that bleeds, itches, or changes.'] },
+  { kick: 'Pregnancy', title: 'How prenatal genetic screening can identify more conditions during pregnancy', date: 'Sept. 22, 2026', read: '6 min read', m: 'c',
+    body: ['Prenatal screening uses a blood test to estimate the chance of certain genetic conditions.', 'Screening is optional. A genetic counselor can help you decide which tests fit your goals.', 'A screening result is not a diagnosis; follow-up tests can confirm it. (Sample summary.)'] },
+  { kick: 'Seasonal', title: 'Flu or COVID-19? Know the signs', date: 'Sept. 18, 2026', read: '5 min read', m: 'd',
+    body: ['Both can cause fever, cough, and tiredness, and a test is the only way to know which one you have.', 'Rest, drink fluids, and stay home while you are sick.', 'For trouble breathing or chest pain, call 911.'] },
+  { kick: 'Sleep', title: 'Five ways to sleep better this fall', date: 'Sept. 15, 2026', read: '6 min read', m: 'b',
+    body: ['Keep the same bedtime and wake time, even on weekends.', 'Get outside in the morning – daylight helps set your body clock.', 'If you still have trouble sleeping for more than a few weeks, talk with a primary care provider.'] },
+  { kick: 'Patient guide', title: 'Getting ready for your first visit', date: 'Sept. 10, 2026', read: '4 min read', m: 'c',
+    body: ['Bring a photo ID, your insurance card, and a list of the medicines you take.', 'Plan to arrive 15 minutes early so there is time to park and check in.', 'Write down two or three questions before you go. Your care team wants to hear them.'] }
+];
+FEATURED.forEach(f => { f.short = f.date.replace(/, \d{4}$/, ''); f.meta = `MedBlog · ${f.short} · ${f.read}`; });
+
+const BLOG_TOPICS = ['All', ...new Set(FEATURED.map(f => f.kick))];
+
+const RESOURCES = [
+  { k: 'rank', t: 'Nationally recognized care', s: 'See how our specialties are ranked', ic: 'rank' },
+  { k: 'wayres', t: 'Internal and external wayfinding', s: 'Find your way to and around campus', ic: 'wayfinding' },
+  { k: 'video', t: 'Prepare for a video visit', s: 'Test your device and find a quiet spot', ic: 'video' },
+  { k: 'vuc', t: 'Virtual urgent care', s: 'Video visits, 7 a.m. to 11 p.m. daily', ic: 'urgent' },
+  { k: 'aid', t: 'Financial assistance', s: 'See if you qualify for help with costs', ic: 'aid' }
+];
+const ANN = [
+  { k: 'ann1', m: 'Oct.', d: '10', t: 'Price estimates are now online', s: 'See costs before your visit' },
+  { k: 'ann2', m: 'Oct.', d: '6', t: 'New visitor hours start Nov. 1', s: 'Two visitors at a time, 8 a.m. to 8 p.m.' },
+  { k: 'ann3', m: 'Sept.', d: '29', t: 'MyCare now speaks Spanish', s: 'Change it under MyChart, then Language' }
+];
+const PAGES = {
+  rank: { kick: 'UTSW resources', title: 'Nationally recognized care', body: ['UT Southwestern specialties are ranked each year by national publications. See the current rankings and what they measure.', 'Rankings shown in the live app come from the CMS and carry their source and year.'], cta: 'See rankings', done: 'Opening rankings' },
+  video: { kick: 'Video visits', title: 'Prepare for a video visit', body: ['Many UT Southwestern providers offer video visits, so you can get care where you are.', 'Test your camera and microphone, find a quiet, well-lit spot, and join up to 15 minutes early. You need a MyChart account to join.'], cta: 'Test my device', done: 'Opening the device test' },
+  vuc: { kick: 'Service', title: 'Virtual urgent care', body: ['Get care for minor illnesses and injuries by video, 7 a.m. to 11 p.m. every day. No appointment needed.', 'For chest pain, trouble breathing, or other emergencies, call 911.'], cta: 'Start a visit', done: 'Opening virtual urgent care' },
+  urgent: { kick: 'Urgent care', title: 'Urgent care near you', body: ['Walk-in clinics for minor illnesses and injuries. Live wait times update every 15 minutes (sample).', 'For chest pain, trouble breathing, or other emergencies, call 911.'], cta: 'See wait times', done: 'Opening wait times' },
+  aid: { kick: 'Service', title: 'Financial assistance', body: ['You may qualify for help paying for care based on household income and size.', 'Applications take about 15 minutes.'], cta: 'Check if you qualify', done: 'Opening the application' },
+  ann1: { kick: 'Announcement · Oct. 10', title: 'Price estimates are now online', body: ['See an estimate of your costs before a visit or procedure, based on your insurance.'], cta: 'Get an estimate', done: 'Opening price estimates' },
+  ann2: { kick: 'Announcement · Oct. 6', title: 'New visitor hours start Nov. 1', body: ['Patients may have two visitors at a time from 8 a.m. to 8 p.m. Some units have different rules.'], cta: 'See visitor guidelines', done: 'Opening visitor guidelines' },
+  ann3: { kick: 'Announcement · Sept. 29', title: 'MyCare now speaks Spanish', body: ['Switch the app language under MyChart, then Language.'], cta: 'Change language', done: 'Opening language settings' },
+  news: { kick: 'Announcements', title: 'All announcements', list: 'ann' },
+  flu: { kick: 'Seasonal campaign', title: 'Flu shots are here', body: ['Get yours at any UT Southwestern primary care clinic. Walk in on Saturdays, 8 a.m. to noon.', 'Flu shots are covered by most insurance plans.'], cta: 'Find a flu shot', done: 'Opening flu shot locations' },
+  help: { kick: 'MyChart', title: 'Help and contact us', body: ['For appointments and help finding a doctor, call 214-648-3266.', 'For technical help with MyCare, use Send feedback.'], cta: 'Send feedback', done: 'Opening the feedback form' },
+  privacy: { kick: 'MyChart', title: 'Privacy and terms', body: ['Read how UT Southwestern protects your information and how MyCare uses it.', 'As a guest, your saved providers and recent searches stay on this device. Location is used only when you tap near me.'], cta: 'Read the privacy notice', done: 'Opening the privacy notice' },
+  lang: { kick: 'MyChart', title: 'Language', body: ['MyCare is available in English and Spanish. The app follows your phone’s language unless you choose one here.'], cta: 'Use Spanish', done: 'Switching to Spanish' },
+  why: { kick: 'About UT Southwestern', title: 'Why UT Southwestern', body: ['Care, research, and education in one academic medical center, with specialists who work together on hard cases.', 'This page is CMS content; the live app shows the approved copy.'], cta: 'Read more on the website', done: 'Opening utswmed.org in the browser' },
+  guide: { kick: 'About UT Southwestern', title: 'Patient resource guide', body: ['What to bring, how to check in, parking, visitor rules, interpreters, and billing – in one guide.'], cta: 'Open the guide', done: 'Opening the patient resource guide' },
+  presources: { kick: 'About UT Southwestern', title: 'Patient resources', body: ['Interpreter services, financial assistance, advance care planning, patient rights, and support groups.'], cta: 'See all resources', done: 'Opening patient resources' },
+  covid: { kick: 'About UT Southwestern', title: 'COVID-19 resources', body: ['Testing, vaccines, and when to seek care. Admins can retire this item from the menu in the CMS when it is no longer needed.'], cta: 'See COVID-19 resources', done: 'Opening COVID-19 resources' },
+  welcome: { kick: 'Inbox · Sept. 30', title: 'Welcome to MyCare', body: ['Find a doctor, get directions, and save providers – no account needed.', 'Sign in to MyChart any time for visits, messages, results, and bills.'] },
+  guestpay: { kick: 'Billing', title: 'Pay as a guest', body: ['Pay a bill without signing in. You need the account number and amount on your statement.'], cta: 'Continue to payment', done: 'Opening guest payment' }
+};
+const TOP = [['Primary care', 'Providers'], ['Knee pain doctor near Frisco', 'Providers'], ['Urgent care wait times', 'All'], ['Spanish-speaking dermatologist', 'Providers'], ['Parking', 'Locations'], ['Flu shots', 'All']];
+
+/* Top searches that lead somewhere in this prototype (the guest list's provider searches need the full directory) */
+const TOP_HERE = ['Heart clinic', 'Parking', 'Pharmacy', 'Lab', 'Urgent care', 'Flu shots'];
+const ALERTS = [
+  { id: 'a1', title: 'Severe weather: Some clinics close at 3 p.m. today', summary: 'Outpatient clinics close early because of an ice storm warning. Emergency departments stay open.',
+    full: ['Because of an ice storm warning for North Texas, outpatient clinics close at 3 p.m. today, Tuesday, Oct. 27. If your appointment is affected, a care team member will call you to reschedule.', 'Emergency departments and inpatient units stay open. For questions, call 214-648-3266.'], window: 'Active Oct. 27, 7:45 a.m. – 11:59 p.m. Issued by UT Southwestern Emergency Management (sample).' },
+  { id: 'a2', title: 'Water main repair: Use the east entrance', summary: 'The west lobby doors at the sample Pavilion are closed until 6 p.m.',
+    full: ['Crews are repairing a water main near the west lobby of the sample Pavilion. Use the east entrance until 6 p.m. today.', 'Valet parking has moved to the east drive. For help, call 214-648-3266.'], window: 'Active Oct. 27, 6 a.m. – 6 p.m. (sample).' }
+];
+const ALERT = Object.fromEntries(ALERTS.map(a => [a.id, a]));
+
+/* ---------- Common homepage modules (same CMS content and order as the guest home, below the location layer) ---------- */
+function alertBanner() {
+  if (!S.alert) return '';
+  const list = S.alertsAll ? ALERTS : ALERTS.slice(0, 1);
+  return `<section class="alerts" role="region" aria-label="Emergency alerts" aria-live="polite">${list.map(a => `<button class="alert" data-act="page" data-page="alert-${a.id}">
+      <span class="al-ic">${ico('alert', 20)}</span><span class="txt"><span class="al-k">Alert</span><span class="al-t">${a.title}</span></span>${ico('next', 20)}</button>`).join('')}
+    ${ALERTS.length > 1 ? `<button class="link-btn al-more" data-act="alerts-all" aria-expanded="${S.alertsAll}">${S.alertsAll ? 'Show fewer alerts' : `Show all alerts (${ALERTS.length})`}</button>` : ''}</section>`;
+}
+const topSearches = () => `<div class="ts-row" role="group" aria-label="Top searches"><span class="ts-k">Top searches</span>${TOP_HERE.map(t => `<button class="chip" data-act="search" data-q="${t}">${t}</button>`).join('')}</div>`;
+function signInPrompt() {
+  if (S.signed) return '';
+  return `<section class="sec"><div class="card signin-card">${dot('lock')}<h2>Already a patient? Sign in to MyChart</h2><p class="sub">Visits, messages, test results, and bills</p>
+    <div class="btn-row two"><button class="btn pri" data-act="tab" data-tab="4">Sign in</button><button class="btn" data-act="info" data-msg="Opens MyChart sign-up – simulated">Create account</button></div></div></section>`;
+}
+function medBlog() {
+  return `<section class="sec" aria-labelledby="blog-h"><div class="near-h"><h2 class="sec-h" id="blog-h">MedBlog</h2><button class="link-btn" data-act="page" data-page="blog" aria-label="See all MedBlog articles">See all</button></div>
+    <div class="car" id="car" role="group" aria-roledescription="carousel" aria-label="Latest MedBlog articles">${[0, 1, 2, 3].map(i => { const f = FEATURED[i]; return `
+      <button class="feat" data-act="page" data-page="art-${i}" aria-roledescription="slide" aria-label="${f.kick}: ${f.title}. ${f.meta}. ${i + 1} of 4">
+        <span class="art">${artSVG(f.m)}</span><span class="feat-b"><span class="kick">${f.kick}</span><span class="feat-t">${f.title}</span><span class="feat-m">${f.meta}</span></span></button>`; }).join('')}</div>
+    <div class="car-ctl"><span class="car-track" aria-hidden="true"><span class="car-thumb" id="car-thumb"></span></span><button class="icon-btn" data-act="car" data-dir="-1" aria-label="Previous article">${ico('prev')}</button><button class="icon-btn" data-act="car" data-dir="1" aria-label="Next article">${ico('next')}</button></div></section>`;
+}
+const resourcesMod = () => `<section class="sec" aria-labelledby="res-h"><h2 class="sec-h" id="res-h">UTSW resources</h2><ul class="rows">${RESOURCES.map(r => `<li><button class="row" ${r.k === 'wayres' ? 'data-act="tab" data-tab="3"' : `data-act="page" data-page="${r.k}"`}>${dot(r.ic)}<span class="txt"><span class="rt">${r.t}</span><span class="rs">${r.s}</span></span>${ico('next', 20, 'chev')}</button></li>`).join('')}</ul></section>`;
+function campaignMod() {
+  return `<section class="sec" aria-label="Campaigns"><div class="camp" aria-labelledby="camp-h">
+      <div class="camp-top"><div><p class="camp-tag">Flu season</p><h2 id="camp-h">Flu shots are here</h2></div><span class="camp-dot" aria-hidden="true">${ico('vaccine')}</span></div>
+      <p class="camp-p">About 10 minutes, and most plans cover it.</p>
+      <ul class="camp-facts"><li>${ico('time', 20)}<span>Walk in Saturdays, 8 a.m. to noon</span></li><li>${ico('place', 20)}<span>Any primary care clinic</span></li></ul>
+      <div class="camp-cta"><button class="btn light" data-act="page" data-page="flu">Find a flu shot${ico('go', 20)}</button><button class="camp-cal" data-act="flu-cal" aria-pressed="${S.fluCal}" aria-label="${S.fluCal ? 'Added to calendar' : 'Add Saturday walk-in hours to calendar'}">${ico(S.fluCal ? 'added' : 'calAdd')}</button></div></div>
+    <button class="promo" data-act="page" data-page="vuc">${dot('video', 'solid')}<span class="txt"><span class="rt">Virtual urgent care</span><span class="rs">Video visits, 7 a.m. to 11 p.m. daily</span></span>${ico('next', 20, 'chev')}</button></section>`;
+}
+const annRow = a => `<li><button class="row" data-act="page" data-page="${a.k}"><span class="date-b" aria-hidden="true"><span>${a.m}</span><b>${a.d}</b></span><span class="txt"><span class="rt">${a.t}</span><span class="rs">${a.s}</span></span>${ico('next', 20, 'chev')}</button></li>`;
+const newsMod = () => `<section class="sec" aria-labelledby="ann-h"><div class="near-h"><h2 class="sec-h" id="ann-h">Announcements</h2><button class="link-btn" data-act="page" data-page="news" aria-label="See all announcements">See all</button></div><ul class="rows">${ANN.map(annRow).join('')}</ul></section>`;
+const commonModules = () => signInPrompt() + quickLinks() + medBlog() + resourcesMod() + campaignMod() + newsMod();
+function carSync() {
+  const car = $('#car', home), th = $('#car-thumb', home); if (!car || !th) return;
+  const max = car.scrollWidth - car.clientWidth, w = car.clientWidth / car.scrollWidth;
+  th.style.width = (w * 100) + '%'; th.style.transform = `translateX(${max > 0 ? (car.scrollLeft / max) * ((1 - w) / w) * 100 : 0}%)`;
+  const prev = $('[data-act="car"][data-dir="-1"]', home), next = $('[data-act="car"][data-dir="1"]', home);
+  if (prev) prev.disabled = car.scrollLeft < 4; if (next) next.disabled = car.scrollLeft > max - 4;
+}
+
+/* ---------- Info page: articles, resources, announcements, alerts, and the MedBlog list ---------- */
+let INFO = null, blogTopic = 'All';
+function openInfo(k) { INFO = k; renderInfo(); if (!$('#pg-info').classList.contains('on')) openPage('#pg-info'); else $('#pg-info .page-body').scrollTop = 0; }
+function renderInfo() {
+  const k = INFO, body = $('#in-body');
+  let title = '', h = '';
+  if (k === 'blog') {
+    title = 'MedBlog';
+    const list = FEATURED.map((f, i) => [f, i]).filter(([f]) => blogTopic === 'All' || f.kick === blogTopic);
+    h = `<div class="choose" role="group" aria-label="Topic">${BLOG_TOPICS.map(t => `<button class="chip" data-act="blog-topic" data-v="${t}" aria-pressed="${blogTopic === t}">${t}</button>`).join('')}</div>
+      <ul class="rows">${list.map(([f, i]) => `<li><button class="row blog-row" data-act="page" data-page="art-${i}"><span class="art thumb">${artSVG(f.m)}</span><span class="txt"><span class="rt">${f.title}</span><span class="rs">${f.short} · ${f.read}</span></span></button></li>`).join('')}</ul>`;
+  } else if (k === 'news') {
+    title = 'Announcements'; h = `<ul class="rows">${ANN.map(annRow).join('')}</ul>`;
+  } else if (k.startsWith('art-')) {
+    const f = FEATURED[+k.slice(4)]; title = 'MedBlog';
+    h = `<span class="art hero-art">${artSVG(f.m)}</span><p class="kick">${f.kick}</p><h2 class="in-t">${f.title}</h2><p class="in-m">${f.date} · ${f.read}</p>${f.body.map(t => `<p class="in-p">${t}</p>`).join('')}<span class="tag" style="justify-self:start">Sample article</span>`;
+  } else if (k.startsWith('alert-')) {
+    const a = ALERT[k.slice(6)]; title = 'Emergency alert';
+    h = `<p class="urgent">${ico('alert', 20)}Alert</p><h2 class="in-t">${a.title}</h2>${a.full.map(t => `<p class="in-p">${t}</p>`).join('')}<p class="in-m">${a.window}</p>`;
+  } else {
+    const p = PAGES[k]; title = p.kick.replace(/ · .*/, '');
+    h = `<p class="kick">${p.kick}</p><h2 class="in-t">${p.title}</h2>${(p.body || []).map(t => `<p class="in-p">${t}</p>`).join('')}${p.cta ? `<button class="btn pri" data-act="info" data-msg="${p.done} – simulated">${p.cta}${ico('go', 20)}</button>` : ''}<span class="tag" style="justify-self:start">Sample content</span>`;
+  }
+  $('#in-title').textContent = title; body.innerHTML = h;
 }
 
 /* ---------- Why you're here, and what's near you (no visit today) ---------- */
@@ -1330,7 +1551,7 @@ function quickLinks() {
 
 function renderHome(force) {
   const c = ctx(), L = lineModel(c), pass = passFor(c);
-  const key = JSON.stringify([c, S.signed, S.appt, S.guestDest, S.askHidden, S.showPassed, S.reason, S.booked]);
+  const key = JSON.stringify([c, S.signed, S.appt, S.guestDest, S.askHidden, S.showPassed, S.reason, S.booked, S.alert, S.alertsAll, S.fluCal]);
   const changed = key !== last.key;
   if (!changed && !force) return;
   const ckey = JSON.stringify([c, S.signed, S.appt, S.guestDest, S.reason, S.booked]);
@@ -1338,8 +1559,8 @@ function renderHome(force) {
   const [cIco, cTxt, live] = chipFor(c);
   const p = placeOf(c);
   const chipLabel = p ? `Location: ${cTxt.replace(PLACES[p].short, PLACES[p].full)}. Options` : `Location: ${cTxt}. Options`;
-  let h = `<div class="where"><button class="chip-loc" data-act="loc" aria-label="${chipLabel}" aria-haspopup="dialog">${live && p ? '<span class="live" aria-hidden="true"></span>' : cIco}<span class="cl-t">${cTxt}</span></button><span class="sp"></span>${isActive(c) && p ? `<button class="link-btn" data-act="picker">Not here?</button>` : ''}</div>`;
-  h += `<button class="search-field" data-act="search">${ico('search', 20)}<span>Search doctors, places, and more</span></button>`;
+  let h = alertBanner() + `<div class="where"><button class="chip-loc" data-act="loc" aria-label="${chipLabel}" aria-haspopup="dialog">${live && p ? '<span class="live" aria-hidden="true"></span>' : cIco}<span class="cl-t">${cTxt}</span></button><span class="sp"></span>${isActive(c) && p ? `<button class="link-btn" data-act="picker">Not here?</button>` : ''}</div>`;
+  h += `<button class="search-field" data-act="search">${ico('search', 20)}<span>Search doctors, places, and more</span></button>` + topSearches();
   h += `<div class="today"><h1>Today</h1><p>Tuesday, Oct. 27</p></div>`;
   h += noticeFor(c);
   const noVisit = !hasVisits() && p && isActive(c);
@@ -1358,7 +1579,7 @@ function renderHome(force) {
   }
   if (noVisit) h += nearbyFor(c);
   h += sectionsFor(c);
-  h += quickLinks();
+  h += commonModules();
   const prevCkey = last.ckey, prevIdx = last.idx, prevPass = last.pass, prevFloor = last.floor, prevKey = last.key;
   home.innerHTML = h;
   last = { key, ckey, idx: L ? L.idx : -1, pass: pass ? pass.key : null, floor: c.zone === 'inside' ? c.floor : null };
@@ -1374,6 +1595,7 @@ function renderHome(force) {
   }
   layoutLine(animate ? prevIdx : -1);
   runMapMotion(animate);
+  const car = $('#car', home); if (car) { car.addEventListener('scroll', carSync, { passive: true }); carSync(); }
   if (animate && prevFloor && last.floor && prevFloor !== last.floor) rollLift(prevFloor, last.floor);
   if (prevCkey && prevCkey !== ckey) say(L && L.active ? `Home updated: ${L.stops[L.idx].t}` : `Home updated: ${cTxt}`);
 }
@@ -1505,17 +1727,31 @@ function renderWF(anim) {
 }
 
 /* ---------- Search ---------- */
+/* Global search: doctors, places, articles, resources, and announcements in one field, narrowed by scope */
+const SCOPES = ['All', 'Doctors', 'Places', 'Articles', 'Resources'];
 function searchIndex() {
-  const rooms = Object.values(ROOMS).filter(r => r.kind !== 'core' && r.kind !== 'other').map(r => ({ ic: r.ic || 'clinic', t: r.name, s: `${DEPT[r.id] ? DEPT[r.id].spec + ' · ' : ''}${PLACES[r.b].short} · Floor ${r.floor}`, a: DEPT[r.id] ? `data-act="dept" data-room="${r.id}"` : `data-act="wf" data-room="${r.id}"` }));
-  const docs = DOCS.map(d => ({ ic: 'person', t: d.name, s: `${DEPT[d.room].spec} · Sample`, a: `data-act="book" data-room="${d.room}" data-doc="${d.id}"${d.today[0] ? ` data-slot="${d.today[0]}"` : ''}` }));
-  const places = ['clem', 'simm'].map(b => ({ ic: PLACES[b].ic, t: PLACES[b].full, s: 'Location', a: `data-act="tab" data-tab="2"` }));
-  const ql = QUICK.map(([ic, t, to]) => ({ ic, t, s: to === 'mc' ? 'MyChart' : 'In MyCare', a: to === 'mc' ? (S.signed ? `data-act="ext" data-label="${t}"` : `data-act="tab" data-tab="4"`) : `data-act="tab" data-tab="${to}"` }));
-  return [...places, ...rooms, ...docs, ...ql];
+  const rooms = Object.values(ROOMS).filter(r => r.kind !== 'core' && r.kind !== 'other').map(r => ({ type: 'Places', ic: r.ic || 'clinic', t: r.name, s: `${DEPT[r.id] ? DEPT[r.id].spec + ' · ' : ''}${PLACES[r.b].short} · Floor ${r.floor}`, a: DEPT[r.id] ? `data-act="dept" data-room="${r.id}"` : `data-act="wf" data-room="${r.id}"` }));
+  const places = ['clem', 'simm'].flatMap(b => [{ type: 'Places', ic: PLACES[b].ic, t: PLACES[b].full, s: 'Location', a: `data-act="tab" data-tab="2"` },
+    { type: 'Places', ic: 'parking', t: PLACES[b].garage, s: `Parking · ${PLACES[b].short} · ${PLACES[b].open} spaces open (sample)`, a: `data-act="tab" data-tab="2"` }]);
+  const flu = { type: 'Resources', ic: 'vaccine', t: 'Flu shots are here', s: 'Seasonal campaign · Walk in Saturdays', a: 'data-act="page" data-page="flu"' };
+  const docs = DOCS.map(d => ({ type: 'Doctors', ic: 'person', t: d.name, s: `${DEPT[d.room].spec} · Sample`, a: `data-act="book" data-room="${d.room}" data-doc="${d.id}"${d.today[0] ? ` data-slot="${d.today[0]}"` : ''}` }));
+  const arts = FEATURED.map((f, i) => ({ type: 'Articles', ic: 'article', t: f.title, s: `MedBlog · ${f.kick}`, a: `data-act="page" data-page="art-${i}"` }));
+  const res = RESOURCES.map(r => ({ type: 'Resources', ic: r.ic, t: r.t, s: r.s, a: r.k === 'wayres' ? 'data-act="tab" data-tab="3"' : `data-act="page" data-page="${r.k}"` }));
+  const news = ANN.map(a => ({ type: 'Resources', ic: 'news', t: a.t, s: `Announcement · ${a.m} ${a.d}`, a: `data-act="page" data-page="${a.k}"` }));
+  const ql = QUICK.map(([ic, t, to]) => ({ type: 'Resources', ic, t, s: to === 'mc' ? 'MyChart' : 'In MyCare', a: to === 'mc' ? (S.signed ? `data-act="ext" data-label="${t}"` : `data-act="tab" data-tab="4"`) : `data-act="tab" data-tab="${to}"` }));
+  return [...places, ...rooms, ...docs, ...arts, ...res, flu, ...news, ...ql];
 }
 function renderSearch() {
-  const q = $('#so-q').value.trim().toLowerCase();
-  const all = searchIndex(), res = q ? all.filter(x => (x.t + ' ' + x.s).toLowerCase().includes(q)) : all.filter(x => ['Heart clinic', 'Pharmacy', 'Restrooms', 'Find my Care'].includes(x.t)).slice(0, 5);
-  $('#so-body').innerHTML = `<h2 class="sec-h">${q ? (res.length ? 'Results' : `No results for “${esc(q)}”`) : 'Popular'}</h2>${res.length ? `<ul class="rows">${res.slice(0, 12).map(x => `<li><button class="row" ${x.a}>${dot(x.ic)}<span class="txt"><span class="rt">${x.t}</span><span class="rs">${x.s}</span></span>${ico('next', 20, 'chev')}</button></li>`).join('')}</ul>` : `<p class="sh-label">Try a department, a building, or “pharmacy”.</p>`}`;
+  const raw = $('#so-q').value.trim(), q = raw.toLowerCase();
+  const words = q.split(/\s+/).filter(Boolean);
+  const all = searchIndex().filter(x => S.soScope === 'All' || x.type === S.soScope);
+  const res = words.length ? all.filter(x => words.every(w => (x.t + ' ' + x.s).toLowerCase().includes(w))) : [];
+  const scopes = `<div class="so-scopes" role="group" aria-label="Search in">${SCOPES.map(k => `<button class="chip" data-act="so-scope" data-v="${k}" aria-pressed="${S.soScope === k}">${k}</button>`).join('')}</div>`;
+  const rowsOf = list => `<ul class="rows">${list.slice(0, 12).map(x => `<li><button class="row" ${x.a}>${dot(x.ic)}<span class="txt"><span class="rt">${x.t}</span><span class="rs">${x.s}</span></span>${ico('next', 20, 'chev')}</button></li>`).join('')}</ul>`;
+  $('#so-body').innerHTML = scopes + (words.length
+    ? `<h2 class="sec-h">${res.length ? `${res.length} result${res.length > 1 ? 's' : ''}` : `No results for “${esc(raw)}”`}</h2>${res.length ? rowsOf(res) : `<p class="sh-label">Try a doctor, a department, “pharmacy”, or a MedBlog topic.</p>`}`
+    : `<h2 class="sec-h">Top searches</h2><div class="choose">${TOP_HERE.map(t => `<button class="chip" data-act="so-q" data-q="${t}">${t}</button>`).join('')}</div>
+       <h2 class="sec-h">Popular</h2>${rowsOf(all.filter(x => ['Heart clinic', 'Pharmacy', 'Restrooms', 'Virtual urgent care', 'Find my Care'].includes(x.t) || x.t === FEATURED[0].title))}`);
 }
 $('#so-q').addEventListener('input', renderSearch);
 
@@ -1630,6 +1866,8 @@ function openMenu() {
   const opts = [['system', 'System', 'appearance'], ['light', 'Light', 'light'], ['dark', 'Dark', 'dark']];
   openSheet('Menu', `<p class="sh-label" id="ap-h">Appearance</p><div class="appear" role="radiogroup" aria-labelledby="ap-h">${opts.map(([k, t, ic]) => `<button role="radio" aria-checked="${S.theme === k}" tabindex="${S.theme === k ? 0 : -1}" data-act="theme" data-v="${k}">${ico(ic)}<span>${t}</span></button>`).join('')}</div>
     <ul class="rows"><li><button class="row" data-act="loc">${dot('place')}<span class="txt"><span class="rt">Location</span><span class="rs">${chipFor(ctx())[1]}</span></span>${ico('next', 20, 'chev')}</button></li>
+    <li><button class="row" data-act="page" data-page="why">${dot('rank')}<span class="txt"><span class="rt">Why UT&nbsp;Southwestern</span></span>${ico('next', 20, 'chev')}</button></li>
+    <li><button class="row" data-act="page" data-page="guide">${dot('article')}<span class="txt"><span class="rt">Patient resource guide</span></span>${ico('next', 20, 'chev')}</button></li>
     <li><button class="row" data-act="info" data-msg="Privacy – sample content">${dot('privacy')}<span class="txt"><span class="rt">Privacy</span></span>${ico('next', 20, 'chev')}</button></li>
     <li><button class="row" data-act="info" data-msg="Call 214-648-3266">${dot('help')}<span class="txt"><span class="rt">Help and contact</span><span class="rs">214-648-3266</span></span>${ico('next', 20, 'chev')}</button></li>
     <li><button class="row" data-act="info" data-msg="Opens utswmed.org – simulated">${dot('website')}<span class="txt"><span class="rt">Full website</span></span>${ico('external', 20, 'ext')}</button></li></ul>`);
@@ -1648,7 +1886,14 @@ phone.addEventListener('click', e => {
     case 'tab': closeSheet(true); closePage(); setTab(d.tab, true); break;
     case 'menu': openMenu(); break;
     case 'passed': S.showPassed = true; renderHome(true); $('#line-h', home).focus({ preventScroll: true }); break;
-    case 'search': openPage('#pg-search'); break;
+    case 'search': openPage('#pg-search'); if (d.q) { $('#so-q').value = d.q; renderSearch(); } break;
+    case 'so-q': $('#so-q').value = d.q; renderSearch(); $('#so-q').focus({ preventScroll: true }); break;
+    case 'so-scope': S.soScope = d.v; renderSearch(); $(`[data-act="so-scope"][data-v="${d.v}"]`).focus({ preventScroll: true }); break;
+    case 'page': closeSheet(true); if ($('.page.on') && !$('#pg-info').classList.contains('on')) while ($('.page.on')) closePage(); openInfo(d.page); break;
+    case 'blog-topic': blogTopic = d.v; renderInfo(); $(`[data-act="blog-topic"][data-v="${d.v}"]`).focus({ preventScroll: true }); break;
+    case 'alerts-all': S.alertsAll = !S.alertsAll; renderHome(true); $('.al-more', home).focus({ preventScroll: true }); break;
+    case 'flu-cal': S.fluCal = !S.fluCal; renderHome(true); $('.camp-cal', home).focus({ preventScroll: true }); toast(S.fluCal ? 'Added Saturday walk-in hours to your calendar' : 'Removed from your calendar'); break;
+    case 'car': { const car = $('#car', home), card = $('.feat', car); car.scrollBy({ left: +d.dir * (card.offsetWidth + 12), behavior: S.rm ? 'auto' : 'smooth' }); break; }
     case 'loc': openLocSheet(); break;
     case 'picker': S.pickB = S.pickB || placeOf(ctx()); openPicker(); break;
     case 'mb': S.pickB = d.place; openPicker(); break;
@@ -1815,7 +2060,7 @@ function renderJourney() {
   $('#j-sub').textContent = S.manual ? 'Manual choice is overriding the simulated location' : S.paused ? 'Paused – common homepage for today' : c.src === 'ask' ? 'Location not on yet – the home explains before it asks' : c.src === 'approx' ? 'Approximate – the home asks which building' : sc.steps[i].sub;
 }
 function syncControls() {
-  const val = { zone: S.zone, floor: String(S.floor), perm: S.perm, acc: S.acc, signed: S.signed ? '1' : '0', appt: S.appt ? '1' : '0', width: String(S.width), ts: String(S.ts), theme: S.theme, rm: S.rm ? '1' : '0' };
+  const val = { alert: S.alert ? '1' : '0', zone: S.zone, floor: String(S.floor), perm: S.perm, acc: S.acc, signed: S.signed ? '1' : '0', appt: S.appt ? '1' : '0', width: String(S.width), ts: String(S.ts), theme: S.theme, rm: S.rm ? '1' : '0' };
   $$('[data-ctl]').forEach(gp => $$('button', gp).forEach(b => b.setAttribute('aria-pressed', b.dataset.v === val[gp.dataset.ctl])));
   $$('[data-ctl="floor"] button').forEach(b => { b.disabled = S.zone !== 'inside'; });
   $('#floor-note').hidden = S.zone === 'inside';
@@ -1836,6 +2081,7 @@ $('#controls').addEventListener('click', e => {
   if (k === 'acc') S.acc = v;
   if (k === 'signed') { S.signed = v === '1'; if (S.tab === 4) renderMC(); }
   if (k === 'appt') S.appt = v === '1';
+  if (k === 'alert') { S.alert = v === '1'; S.alertsAll = false; }
   if (k === 'width') S.width = +v;
   if (k === 'ts') S.ts = +v;
   if (k === 'theme') { S.theme = v; applyTheme(true); }
