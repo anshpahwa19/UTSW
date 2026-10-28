@@ -30,6 +30,50 @@ Inside Clements, “In this building” (departments by floor) and “Hospital r
 
 Precedence: your choice → paused → permission → signal → accuracy → place and floor. A journey step on the board turns location on if it was never asked.
 
+## Scenarios (board switch above the journey)
+
+Each scenario has its own Back / Next steps. People, hours, waits, conditions, and times are sample data.
+
+**1. Guest nearby.** Not signed in, at a campus. Below a "Here for: Looking around" bar, the home shows:
+- **Care near you:** departments in this building, sorted by walking time from where you stand. They re-sort when you change floors.
+- **Doctors available today:** each with its next open time as a 44.0 button that starts a booking.
+- **Facilities:** the tiles for this floor.
+
+Any department opens a **section page** with:
+- Its floor plan.
+- Floor and suite, walking time, and hours.
+- Directions (primary) and Book a visit.
+- The walk-in wait for lab and imaging.
+- Doctors available.
+- Conditions we treat, or Tests here and Services here (sample).
+- What's near it.
+
+Steps: Away → Arriving → Floor 1 → Heart clinic → Floor 2 → Simmons → No location.
+
+**2. Book a visit.** Signed in with no visit today. "I need care" puts "Chest pain or trouble breathing? Call 911." first, then doctors free today. The booking page runs Care → Time → Details → Review → Booked:
+- **Care:** bookable care, nearest first.
+- **Time:** Today or Tomorrow, with time chips per doctor.
+- **Details:** MyChart fills in the patient when signed in. Guests enter name, date of birth, and phone, and Next stays disabled until all three are filled.
+- **Review:** a visit pass.
+- **Booked:** if the visit is today and here, the primary action is Start wayfinding, and the booking joins the home's pass and line. Otherwise it's Add to calendar.
+
+Booking is simulated; real booking uses MyChart (Epic) scheduling.
+
+**3. Why you're here.** With no visit today, the home asks once on arrival, "What brings you to Clements University Hospital today?", with eight answers. "Your answer stays on this phone" and Not now are on the card. A "Here for …" bar with Change replaces the question afterwards.
+
+| Answer | Home shows |
+|---|---|
+| An appointment | Sign in to MyChart, or choose where it is → pass and line |
+| Visiting someone | Visiting hours, Go to the information desk, café, restrooms, chapel |
+| Lab or imaging | Pick Lab or Imaging with walk-in waits → pass and line lead there |
+| Pharmacy | Straight to the pharmacy (pass and line), hours, prescription status (MyChart) |
+| I need care | 911 note, doctors free today, Book a visit |
+| Pick up or drop off | Pickup at the North entrance, door parking, Go to the lobby |
+| Looking around | Everything near you (scenario 1) |
+| Something else | Search, classes, billing help, lost and found, talk to someone |
+
+A focused answer keeps the home short: it shows only Facilities below. Looking around and Not now show Care near you and the doctors too. The Location sheet lists the answer as a reason ("Your answer"), next to the simulated location.
+
 ## Trust and control
 
 - Never asks on launch. “Help when you arrive” explains first (sample map, Parking, Best entrance, Your floor, one privacy line), then the simulated system prompt.
@@ -90,6 +134,9 @@ One builder for every route: Drive to the garage (campus) → Walk to the entran
 | Arriving, entrance, campus | Geofences around campuses, garages, and doors, with dwell time |
 | Floor and indoor route | Indoor positioning (BLE or Wi-Fi RTT) and a wayfinding SDK with floor plans |
 | Today's visits, check-in | Epic MyChart integration; MyCare hands off |
+| Doctors free today, booking | Epic scheduling (open slots by department and provider, direct or open scheduling) |
+| Walk-in waits | Lab and imaging queue feed |
+| Conditions treated, hours | Department content in the CMS, approved by each department |
 | Floor, suite, entrance | Department directory mapped to buildings |
 | Spaces open, rate | Garage occupancy and pricing feed |
 | Amenities, support, education | CMS content per building, approved by each center |

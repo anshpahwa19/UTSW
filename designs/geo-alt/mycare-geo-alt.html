@@ -3,7 +3,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..800&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=accessible,apartment,arrow_back,arrow_forward,arrow_upward,assistant_navigation,calendar_month,chat,check,check_circle,chevron_right,close,contrast,dark_mode,directions_bus,directions_car,directions_walk,diversity_3,domain,door_front,door_open,edit_location_alt,elevator,handshake,help,home,how_to_reg,info,lab_profile,light_mode,local_atm,local_parking,local_pharmacy,location_off,location_on,location_searching,lock,login,logout,map,menu,navigation,near_me,nutrition,open_in_new,pause_circle,payments,pin_drop,privacy_tip,psychology,public,receipt_long,restaurant,school,search,self_improvement,settings,stethoscope,support_agent,translate,visibility,visibility_off,wc,wifi&display=block">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=accessible,apartment,arrow_back,arrow_forward,arrow_upward,assistant_navigation,biotech,calendar_add_on,calendar_month,chat,check,check_circle,chevron_right,close,contrast,dark_mode,directions_bus,directions_car,directions_walk,diversity_1,diversity_3,domain,door_front,door_open,edit_calendar,edit_location_alt,elevator,emergency,explore,hail,handshake,help,home,hourglass_top,how_to_reg,info,lab_profile,layers,light_mode,local_atm,local_parking,local_pharmacy,location_off,location_on,location_searching,lock,login,logout,map,menu,more_horiz,navigation,near_me,nutrition,open_in_new,pause_circle,payments,person,pin_drop,privacy_tip,psychology,public,receipt_long,restaurant,schedule,school,search,self_improvement,settings,stethoscope,support_agent,translate,visibility,visibility_off,wc,wifi&display=block">
 <style>
 /* Layout: presentation board – a journey scrubber across the top (Back / Next), the 390 × 844 phone beside its prototype
    controls, then concise visual docs. Concept: the home is the patient's day drawn as a transit line with a visit pass.
@@ -21,6 +21,7 @@
   --inverse:#333333; --on-inverse:#FFFFFF;
   --map-bg:#E6EDF3; --map-block:#FFFFFF; --map-wall:#A9B8C6; --map-road:#FFFFFF; --map-road-edge:#C9D5E0; --map-walk:#D6E4F0;
   --dest-fill:rgba(0,66,120,.12);
+  --alert-ink:#B0003A; --alert-bg:#FBEFF2;
 
   --ts:1;
   --font:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
@@ -98,14 +99,20 @@ html:not(.ms-ready) .m-ico{fill:transparent!important}
 .bbtn:disabled{opacity:.4; cursor:default}
 .bbtn:focus-visible,.seg button:focus-visible,.jn:focus-visible,.bd-link:focus-visible{outline:3px solid var(--bd-accent); outline-offset:2px}
 .jwrap{position:relative; min-width:0}
-.jline{list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); position:relative; z-index:1}
-.jwrap::before{content:""; position:absolute; left:calc(100% / 14); right:calc(100% / 14); top:22px; height:4px; border-radius:2px; background:var(--bd-chip)}
-.jfill{position:absolute; left:calc(100% / 14); top:22px; height:4px; border-radius:2px; background:var(--bd-accent); width:calc((100% - 100% / 7) * var(--p,0)); transition:width var(--d-travel) var(--ease-in-out)}
+.jline{list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(var(--n,7),minmax(0,1fr)); position:relative; z-index:1}
+.jwrap::before{content:""; position:absolute; left:calc(100% / (2 * var(--n,7))); right:calc(100% / (2 * var(--n,7))); top:22px; height:4px; border-radius:2px; background:var(--bd-chip)}
+.jfill{position:absolute; left:calc(100% / (2 * var(--n,7))); top:22px; height:4px; border-radius:2px; background:var(--bd-accent); width:calc((100% - 100% / var(--n,7)) * var(--p,0)); transition:width var(--d-travel) var(--ease-in-out)}
 .jn{position:relative; display:grid; justify-items:center; gap:4.0px; background:none; border:0; padding:0 2.0px; cursor:pointer; color:var(--bd-muted); font-size:12.0px; font-weight:600; text-align:center; min-height:48px; border-radius:8.0px}
 .jn .jd{width:48px; height:48px; border-radius:50%; display:grid; place-items:center; background:var(--bd-panel); border:2px solid var(--bd-line); color:var(--bd-muted); transition:background-color var(--d-base), border-color var(--d-base), color var(--d-base), transform var(--d-base) var(--spring)}
 .jn.done .jd{border-color:var(--bd-accent); color:var(--bd-accent)}
 .jn[aria-current="step"]{color:var(--bd-ink)}
 .jn[aria-current="step"] .jd{background:var(--bd-accent); border-color:var(--bd-accent); color:var(--bd-on-accent); transform:scale(1.08)}
+.scn{display:flex; flex-wrap:wrap; gap:8.0px; margin:0 0 16.0px}
+.scn button{min-height:44px; padding:0 16.0px; border-radius:12.0px; border:1px solid var(--bd-line); background:var(--bd-panel); color:var(--bd-ink); font-size:14.0px; font-weight:600; display:inline-flex; align-items:center; gap:8.0px; cursor:pointer}
+.scn button[aria-pressed="true"]{background:var(--bd-accent); border-color:var(--bd-accent); color:var(--bd-on-accent)}
+.scn button:focus-visible{outline:3px solid var(--bd-accent); outline-offset:2px}
+.scn .sn{width:24px; height:24px; border-radius:50%; display:grid; place-items:center; font-size:12.0px; font-weight:700; background:var(--bd-chip); color:var(--bd-ink)}
+.scn button[aria-pressed="true"] .sn{background:var(--bd-on-accent); color:var(--bd-accent)}
 .jcap{display:flex; flex-wrap:wrap; gap:4.0px 16.0px; align-items:baseline; margin-top:12.0px; font-size:14.0px; color:var(--bd-muted)}
 .jcap b{color:var(--bd-ink); font-size:16.0px}
 @media (max-width:700px){
@@ -183,6 +190,7 @@ code{font-size:12.0px; background:var(--bd-chip); padding:2px 4px; border-radius
   --inverse:#E6EDF3; --on-inverse:#0D1620;
   --map-bg:#132130; --map-block:#1C2F42; --map-wall:#4A6178; --map-road:#2E4760; --map-road-edge:#3A5470; --map-walk:#24405C;
   --dest-fill:rgba(140,192,234,.18);
+  --alert-ink:#FF8AA8; --alert-bg:#3A1A24;
   --shadow-1:0 1px 2px rgba(0,0,0,.4), 0 2px 6px rgba(0,0,0,.3);
   --shadow-2:0 8px 24px rgba(0,0,0,.5);
   --focus:0 0 0 2px #0D1620, 0 0 0 5px #8CC0EA;
@@ -274,7 +282,7 @@ code{font-size:12.0px; background:var(--bd-chip); padding:2px 4px; border-radius
 .pass .tag{justify-self:start; white-space:normal; padding-block:2px; line-height:1.3}
 .pass.mini .pass-main{padding:var(--s2) var(--s4) var(--s3)}
 .pass.mini .time{font-size:var(--t20)}
-.pass.mini .bld{display:none}
+.pass.mini .bld:not(.keep){display:none}
 .pass.mini .pass-stub .big{font-size:var(--t28)}
 .pass.mini{--stub:calc(88px * var(--ts))}
 .tag{display:inline-flex; align-items:center; min-height:24px; padding:0 var(--s2); border-radius:var(--r-sm); background:var(--tint); color:var(--ink-2); font-size:var(--t12); font-weight:600; white-space:nowrap}
@@ -446,7 +454,7 @@ button.map{border:0; padding:0; width:100%; text-align:left; color:inherit}
 .phone.rm .page{transform:none; opacity:0; transition:opacity var(--d-base) var(--ease-out), visibility 0s linear var(--d-base)}
 .phone.rm .page.on{opacity:1; transition:opacity var(--d-base) var(--ease-out)}
 .page .page-bar{position:relative}
-.page-body{flex:1; overflow-y:auto; padding:var(--s4); display:grid; gap:var(--s4); align-content:start}
+.page-body{flex:1; overflow-y:auto; padding:var(--s4); display:grid; gap:var(--s4); align-content:start; grid-auto-rows:max-content}
 .wf-steps{display:grid; grid-template-columns:repeat(var(--n),minmax(0,1fr)); gap:var(--s1)}
 .wf-steps i{height:6px; border-radius:3px; background:var(--tint-2); transition:background-color var(--d-base)}
 .wf-steps i.on{background:var(--ctl)}
@@ -509,6 +517,47 @@ button.map{border:0; padding:0; width:100%; text-align:left; color:inherit}
 .toast.on{transform:none; opacity:1}
 .toast button{margin-left:auto; min-height:var(--hit); border:0; background:none; color:var(--on-inverse); font-weight:700; text-decoration:underline; padding:0 var(--s2)}
 .phone.rm .you,.phone.rm .rail-fill{transition:opacity var(--d-base)}
+/* ===================== Scenarios: guest nearby, booking, why you're here ===================== */
+/* Why you're here: asked once on arrival when there's no visit; the answer shapes the home */
+.ask{margin:0 var(--s4) var(--s4); background:var(--surface); border:1px solid var(--line); border-radius:var(--r-md); padding:var(--s4); display:grid; gap:var(--s3)}
+.ask h2,.focus h2{font-size:var(--t18); font-weight:700; line-height:1.3; color:var(--ink)}
+.reasons{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,calc(144px * var(--ts))),1fr)); gap:var(--s2)}
+/* Two answers a row; one when large text would cut a word */
+.reasons button{width:100%; height:100%; min-height:calc(56px * var(--ts)); border:1px solid var(--line-strong); border-radius:var(--r-md); background:var(--surface); display:flex; align-items:center; gap:var(--s2); padding:var(--s2); text-align:left; font-size:var(--t14); font-weight:600; color:var(--ink); line-height:1.3}
+.reasons button .dot{width:var(--dot32); height:var(--dot32)}
+.ask-foot{display:flex; align-items:center; justify-content:space-between; gap:var(--s2); flex-wrap:wrap; font-size:var(--t14); color:var(--ink-2)}
+.ask-foot > span{display:inline-flex; align-items:center; gap:var(--s1)}
+.here-for{margin:0 var(--s4) var(--s3); display:flex; align-items:center; gap:var(--s2); font-size:var(--t14); color:var(--ink-2); line-height:1.3}
+.here-for b{color:var(--ink)}
+.here-for .sp{flex:1}
+.focus{margin:0 var(--s4) var(--s4)}
+.focus .sub{font-size:var(--t14); color:var(--ink-2); line-height:1.4}
+.urgent{display:flex; align-items:center; gap:var(--s2); padding:var(--s3); border-radius:var(--r-sm); background:var(--alert-bg); color:var(--alert-ink); font-size:var(--t14); font-weight:600; line-height:1.4}
+.urgent .ms{flex:none}
+.phone:not(.rm) .rise{animation:riseIn 420ms var(--spring) both}
+/* Near you */
+.near-h{display:flex; align-items:baseline; justify-content:space-between; gap:var(--s2)}
+.near-h .tag{flex:none}
+.avatar-d{width:var(--dot40); height:var(--dot40); border-radius:50%; background:var(--tint); color:var(--blue); display:grid; place-items:center; font-size:var(--t14); font-weight:700; flex:none}
+.slot{flex:none; font-variant-numeric:tabular-nums; border-color:var(--blue); color:var(--blue)}
+.slot.later{border-color:var(--line-strong); color:var(--ink-2)}
+.rows .row .tag{flex:none}
+.conds{display:flex; flex-wrap:wrap; gap:var(--s2)}
+.conds li{min-height:32px; display:inline-flex; align-items:center; padding:var(--s1) var(--s3); border-radius:var(--r-pill); background:var(--tint); color:var(--ink); font-size:var(--t14); line-height:1.3}
+/* Booking */
+.bk-q{font-size:var(--t20); font-weight:700; line-height:1.3}
+.row[aria-pressed="true"]{background:var(--tint); box-shadow:inset 0 0 0 2px var(--blue)}
+.row[aria-pressed="true"] .rt{color:var(--blue)}
+.rows .row.opt{min-height:calc(64px * var(--ts))}
+.docs-slots{display:grid; gap:var(--s2)}
+.doc-card{background:var(--surface); border:1px solid var(--line); border-radius:var(--r-md); padding:var(--s3); display:grid; gap:var(--s3)}
+.doc-card .who{display:flex; align-items:center; gap:var(--s3)}
+.doc-card .who b{font-size:var(--t16); display:block; line-height:1.3}
+.doc-card .who span{font-size:var(--t14); color:var(--ink-2)}
+.done-hero{display:grid; justify-items:center; gap:var(--s2); text-align:center; padding:var(--s2) 0}
+.done-hero .dot{width:calc(56px * var(--ts)); height:calc(56px * var(--ts))}
+.phone:not(.rm) .done-hero .dot{animation:pop 520ms var(--spring)}
+.bk-note{font-size:var(--t14); color:var(--ink-2); display:flex; gap:var(--s2); align-items:center}
 @media (prefers-reduced-motion: reduce){ .jfill,.jn .jd{transition:none} }
 </style>
 
@@ -519,7 +568,8 @@ button.map{border:0; padding:0; width:100%; text-align:left; color:inherit}
   </header>
 
   <section class="panel" aria-labelledby="jr-h">
-    <p class="kicker" id="jr-h">Journey</p>
+    <p class="kicker" id="jr-h">Scenario and journey</p>
+    <div class="scn" id="scn" role="group" aria-label="Scenario"></div>
     <div class="scrub">
       <button class="bbtn" id="j-back" aria-label="Back to the previous step"><span class="ms s20" aria-hidden="true">arrow_back</span><span>Back</span></button>
       <div class="jwrap">
@@ -560,6 +610,14 @@ button.map{border:0; padding:0; width:100%; text-align:left; color:inherit}
             <div class="page-bar"><button class="icon-btn" data-act="close-page" aria-label="Close directions"><span class="ms" aria-hidden="true">arrow_back</span></button><h1 id="wf-title">Directions</h1></div>
             <div class="page-body" id="wf-body"></div>
           </div>
+          <div class="page" id="pg-dept" role="dialog" aria-modal="true" aria-labelledby="dp-title">
+            <div class="page-bar"><button class="icon-btn" data-act="close-page" aria-label="Close"><span class="ms" aria-hidden="true">arrow_back</span></button><h1 id="dp-title">Department</h1></div>
+            <div class="page-body" id="dp-body"></div>
+          </div>
+          <div class="page" id="pg-book" role="dialog" aria-modal="true" aria-labelledby="bk-title">
+            <div class="page-bar"><button class="icon-btn" data-act="close-page" aria-label="Close booking"><span class="ms" aria-hidden="true">close</span></button><h1 id="bk-title">Book a visit</h1></div>
+            <div class="page-body" id="bk-body"></div>
+          </div>
           <div class="page" id="pg-search" role="dialog" aria-modal="true" aria-label="Search">
             <div class="page-bar">
               <button class="icon-btn" data-act="close-page" aria-label="Close search"><span class="ms" aria-hidden="true">arrow_back</span></button>
@@ -591,6 +649,7 @@ button.map{border:0; padding:0; width:100%; text-align:left; color:inherit}
         <div class="ctl wide"><span id="l-perm">Location permission</span><div class="seg" role="group" aria-labelledby="l-perm" data-ctl="perm"><button data-v="ask">Ask</button><button data-v="allowed">Allowed</button><button data-v="denied">Denied</button><button data-v="nosignal">No signal</button></div></div>
         <div class="ctl"><span id="l-acc">Accuracy</span><div class="seg" role="group" aria-labelledby="l-acc" data-ctl="acc"><button data-v="precise">Precise</button><button data-v="approx">Approximate</button></div></div>
         <div class="ctl"><span id="l-acct">MyChart</span><div class="seg" role="group" aria-labelledby="l-acct" data-ctl="signed"><button data-v="1">Signed in</button><button data-v="0">Guest</button></div></div>
+        <div class="ctl"><span id="l-appt">Visit today (signed in)</span><div class="seg" role="group" aria-labelledby="l-appt" data-ctl="appt"><button data-v="1">Yes</button><button data-v="0">No</button></div></div>
         <div class="ctl"><span id="l-w">Width</span><div class="seg" role="group" aria-labelledby="l-w" data-ctl="width"><button data-v="390">390</button><button data-v="360">360</button></div></div>
         <div class="ctl"><span id="l-ts">Text size</span><div class="seg" role="group" aria-labelledby="l-ts" data-ctl="ts"><button data-v="1">Default</button><button data-v="1.3">Large</button></div></div>
         <div class="ctl"><span id="l-th">Theme</span><div class="seg" role="group" aria-labelledby="l-th" data-ctl="theme"><button data-v="system">System</button><button data-v="light">Light</button><button data-v="dark">Dark</button></div></div>
@@ -601,6 +660,11 @@ button.map{border:0; padding:0; width:100%; text-align:left; color:inherit}
   </div>
 
   <div class="docs" id="docs">
+    <section class="panel wide">
+      <h2>Three scenarios on one home</h2>
+      <p>Pick a scenario above the journey. <b>1 Guest nearby:</b> at a campus, the home lists care near you sorted by walking time, doctors free today, and facilities; each section opens with directions, its doctors, and what it treats. <b>2 Book a visit:</b> care, time, details, review – the booking joins the pass and the line, with directions from where you stand. <b>3 Why you're here:</b> with no visit today, the home asks once on arrival; each answer reshapes the top of the home, and Change is always there.</p>
+      <ul class="states" id="doc-scn"></ul>
+    </section>
     <section class="panel wide">
       <h2>One line, many places</h2>
       <p>The home is the day: a line of stops from leaving home to the last visit. The cyan ring is you. As the simulated location changes, the ring travels down the line, the passed stops turn to checks, and the next stop opens with only what that place needs. Search, Quick links, the tabs, and the menu sit in the same place in every state.</p>
@@ -653,6 +717,8 @@ button.map{border:0; padding:0; width:100%; text-align:left; color:inherit}
         <tr><td>Arriving, entrance</td><td>Geofences around campus, garages, doors</td></tr>
         <tr><td>Floor, indoor route</td><td>Indoor positioning and a wayfinding SDK</td></tr>
         <tr><td>Today's visits</td><td>Epic MyChart integration</td></tr>
+        <tr><td>Doctors free, booking</td><td>Epic scheduling</td></tr>
+        <tr><td>Walk-in waits</td><td>Lab and imaging queue feed</td></tr>
         <tr><td>Floor, suite</td><td>Department directory by building</td></tr>
         <tr><td>Spaces open</td><td>Garage occupancy feed</td></tr>
         <tr><td>Amenities, support</td><td>CMS content per building</td></tr>
@@ -660,7 +726,7 @@ button.map{border:0; padding:0; width:100%; text-align:left; color:inherit}
     </section>
     <section class="panel wide">
       <h2>Glyphs</h2>
-      <p>One concept, one glyph – 64 glyphs from Material Symbols Rounded, served as a subset (about 100 KB).</p>
+      <p>One concept, one glyph – 76 glyphs from Material Symbols Rounded, served as a subset (about 100 KB).</p>
       <ul class="gmap" id="gmap"></ul>
     </section>
   </div>
@@ -712,6 +778,18 @@ const ICON_MAP = [
   ['up', 'arrow_upward', 'Ride up', 'Directions', 'Places'],
   ['car', 'directions_car', 'Drive', 'Line, directions', 'Places'],
   ['clinic', 'door_front', 'Department or suite', 'Directory, directions', 'Places'],
+  ['floor', 'layers', 'Floor', 'Department page', 'Places'],
+  ['visitor', 'diversity_1', 'Visiting someone', 'Why you are here', 'Why you are here'],
+  ['lab', 'biotech', 'Lab or imaging', 'Why you are here, care near you', 'Why you are here'],
+  ['explore', 'explore', 'Looking around', 'Why you are here', 'Why you are here'],
+  ['more', 'more_horiz', 'Something else', 'Why you are here', 'Why you are here'],
+  ['pickup', 'hail', 'Pick up or drop off', 'Why you are here', 'Why you are here'],
+  ['emergency', 'emergency', 'Emergency – call 911', 'I need care', 'Why you are here'],
+  ['book', 'edit_calendar', 'Book a visit', 'Doctors, department page, booking', 'Booking'],
+  ['time', 'schedule', 'Hours and times', 'Department page, booking', 'Booking'],
+  ['wait', 'hourglass_top', 'Walk-in wait', 'Lab and imaging', 'Booking'],
+  ['person', 'person', 'Who the visit is for', 'Booking', 'Booking'],
+  ['calAdd', 'calendar_add_on', 'Add to calendar', 'Booked', 'Booking'],
   ['navigate', 'navigation', 'Start wayfinding', 'Stop card', 'Wayfinding'],
   ['mapApp', 'map', 'Open in your map app', 'Directions', 'Wayfinding'],
   ['arrived', 'check_circle', 'Arrived or done', 'Line, directions', 'Wayfinding', 'f1'],
@@ -801,6 +879,51 @@ const VISITS = { clem: { id: 'v1', room: 'c7-heart', time: '10:30 a.m.' }, simm:
 const GUEST_DEST = { clem: ['c7-heart', 'c1-img', 'c2-lab', 'c1-pharm'], simm: ['s1-onc', 's1-res', 's1-pharm'] };
 const SUPPORT = [['navigator', 'Navigators'], ['counsel', 'Counseling'], ['nutrition', 'Nutrition'], ['groups', 'Groups'], ['education', 'Classes'], ['caregiver', 'Caregivers']];
 
+/* Departments and doctors near you (all sample: hours, waits, conditions, and people are fictional) */
+const DEPT = {
+  'c7-heart': { spec: 'Cardiology', hours: '8 a.m. – 5 p.m.', book: true, careLabel: 'Conditions we treat', care: ['Heart rhythm problems', 'High blood pressure', 'Heart failure', 'Heart valve disease'] },
+  'c1-img': { spec: 'Imaging', hours: '7 a.m. – 7 p.m.', wait: 'About 15 min wait', careLabel: 'Tests here', care: ['X-ray', 'CT', 'MRI', 'Ultrasound'] },
+  'c2-lab': { spec: 'Lab', hours: '7 a.m. – 6 p.m.', wait: 'About 10 min wait', careLabel: 'Tests here', care: ['Blood tests', 'Urine tests', 'Glucose tests'] },
+  'c2-rehab': { spec: 'Physical therapy', hours: '8 a.m. – 6 p.m.', book: true, careLabel: 'Conditions we treat', care: ['Back and neck pain', 'Recovery after surgery', 'Sports injuries', 'Balance problems'] },
+  's1-onc': { spec: 'Oncology', hours: '8 a.m. – 5 p.m.', book: true, careLabel: 'Conditions we treat', care: ['Breast cancer', 'Lung cancer', 'Blood cancers', 'Second opinions'] },
+  's1-res': { spec: 'Support services', hours: '9 a.m. – 5 p.m.', careLabel: 'Services here', care: ['Patient navigators', 'Counseling', 'Nutrition', 'Support groups'] }
+};
+const DOCS = [
+  { id: 'd1', name: 'Avery Chen, M.D.', ini: 'AC', room: 'c7-heart', today: ['1:30 p.m.', '3:30 p.m.'], tomorrow: ['9 a.m.', '11:15 a.m.'] },
+  { id: 'd2', name: 'Morgan Ellis, M.D.', ini: 'ME', room: 'c7-heart', today: ['4 p.m.'], tomorrow: ['10 a.m.', '2 p.m.'] },
+  { id: 'd3', name: 'Riley Patel, D.P.T.', ini: 'RP', room: 'c2-rehab', today: ['11 a.m.', '2:15 p.m.'], tomorrow: ['8:30 a.m.'] },
+  { id: 'd4', name: 'Sam Ortiz, M.D.', ini: 'SO', room: 's1-onc', today: ['3 p.m.'], tomorrow: ['9:30 a.m.', '1 p.m.'] },
+  { id: 'd5', name: 'Taylor Kim, M.D.', ini: 'TK', room: 's1-onc', today: [], tomorrow: ['10:30 a.m.'] }
+];
+const DOC = Object.fromEntries(DOCS.map(d => [d.id, d]));
+const DAYS = { today: 'Today, Tuesday, Oct. 27', tomorrow: 'Wednesday, Oct. 28' };
+// [key, icon, label]
+const REASONS = [
+  ['appt', 'visits', 'An appointment'], ['visit', 'visitor', 'Visiting someone'],
+  ['lab', 'lab', 'Lab or imaging'], ['pharm', 'pharmacy', 'Pharmacy'],
+  ['care', 'findCare', 'I need care'], ['pickup', 'pickup', 'Pick up or drop off'],
+  ['look', 'explore', 'Looking around'], ['other', 'more', 'Something else']
+];
+const REASON = Object.fromEntries(REASONS.map(r => [r[0], r]));
+const hasVisits = () => S.signed && S.appt;
+/* Where this person is going here today, outside their MyChart visits: a booking made here, or a place they chose */
+function destRoom(p) {
+  if (!p) return null;
+  if (S.booked && S.booked.day === 'today' && ROOMS[S.booked.room].b === p) return S.booked.room;
+  return S.guestDest[p] || null;
+}
+/* Walking minutes from where you are (sample estimate: 80 map units a minute, plus the elevator) */
+function walkMin(c, r) {
+  const p = placeOf(c);
+  if (p !== r.b) return 8;
+  const inside = c.zone === 'inside', fromFloor = inside ? c.floor : 1, fromX = inside ? youOnFloor(c, null)[0] : 12;
+  const base = c.zone === 'arriving' ? 4 : inside ? 0 : 1, ev = PLAN_META[r.plan].elev;
+  const d = fromFloor === r.floor ? Math.abs(r.cx - fromX) : Math.abs(fromX - ev) + Math.abs(r.cx - ev) + 120;
+  return Math.max(1, base + Math.round(d / 80));
+}
+const whereLabel = (c, r) => placeOf(c) === r.b ? `Floor ${r.floor} · ${walkMin(c, r)} min` : `${PLACES[r.b].short} · ${walkMin(c, r)} min`;
+const deptsNear = (c, onlyBook) => Object.keys(DEPT).map(id => ROOMS[id]).filter(r => (!onlyBook || DEPT[r.id].book) && (onlyBook || r.b === placeOf(c))).sort((a, b) => walkMin(c, a) - walkMin(c, b));
+
 /* Campus routes (map units). You and the route stay on roads, walkways, and corridors */
 const DRIVE = { clem: [[0, 100], [76, 100], [76, 64]], simm: [[0, 100], [76, 100], [76, 136]] };
 const WALK = { clem: [[76, 64], [76, 50], [160, 50]], simm: [[76, 136], [76, 150], [160, 150]] };
@@ -859,7 +982,7 @@ function mapBox({ plan, label, foot, btn, ...o }) {
 /* ---------- State ---------- */
 const mqRM = matchMedia('(prefers-reduced-motion: reduce)');
 const mqDark = matchMedia('(prefers-color-scheme: dark)');
-const S = { zone: 'away', floor: 1, perm: 'ask', acc: 'precise', signed: true, width: 390, ts: 1, theme: 'system', rm: mqRM.matches, manual: null, paused: false, askHidden: false, guestDest: { clem: null, simm: null }, tab: 0, pickB: null, showPassed: false };
+const S = { zone: 'away', floor: 1, perm: 'ask', acc: 'precise', signed: true, width: 390, ts: 1, theme: 'system', rm: mqRM.matches, manual: null, paused: false, askHidden: false, guestDest: { clem: null, simm: null }, tab: 0, pickB: null, showPassed: false, appt: true, reason: null, booked: null, book: null, scn: 'guest', step: 0 };
 
 /* Precedence: your choice → paused → permission → signal → accuracy → place and floor */
 function ctx() {
@@ -910,7 +1033,7 @@ function startIndex(c, roomId, steps) {
 /* ---------- The line ---------- */
 function lineModel(c) {
   const p = placeOf(c), active = isActive(c);
-  if (S.signed) {
+  if (hasVisits()) {
     const stops = [
       { k: 'leave', ic: 'car', t: 'Leave home', m: '9:50 a.m.' },
       { k: 'park', ic: 'parking', t: 'Park in Garage A' },
@@ -923,13 +1046,15 @@ function lineModel(c) {
     return { title: 'Your day', stops, idx, active, room: idx === 5 ? VISITS.simm.room : VISITS.clem.room };
   }
   if (!p) return null;
-  const P = PLACES[p], dId = S.guestDest[p], d = dId && ROOMS[dId];
+  const P = PLACES[p], dId = destRoom(p), d = dId && ROOMS[dId];
+  if (!d) return null;
+  const bk = S.booked && S.booked.room === dId ? S.booked : null;
   const stops = [{ k: 'park', ic: 'parking', t: `Park in ${P.garage}` }, { k: 'enter', ic: 'entrance', t: `Enter at the ${P.door}` }];
   if (d && d.floor !== 1) stops.push({ k: 'lift', ic: 'elevator', t: `${P.lift === 'Elevator B' ? 'Elevator B' : 'Elevator'} to Floor ${d.floor}` });
-  stops.push({ k: 'dest', ic: d ? 'clinic' : 'pick', t: d ? d.name : 'Your destination' });
+  stops.push({ k: 'dest', ic: 'clinic', t: d.name, m: bk ? bk.slot : '' });
   let idx = { arriving: 0, entrance: 1, simmons: 1 }[c.zone];
   if (c.zone === 'inside') idx = d && d.floor !== 1 && c.floor !== d.floor ? 2 : stops.length - 1;
-  return { title: 'Your way in', stops, idx, active, room: dId || (p === 'clem' ? 'c1-lobby' : 's1-info') };
+  return { title: 'Your way in', stops, idx, active, room: dId };
 }
 
 function liftPanel(from, to) {
@@ -953,7 +1078,7 @@ const btnExt = (label, key) => `<button class="btn" data-act="ext" data-label="$
 
 function stopPanel(k, c, L) {
   const p = placeOf(c) || 'clem', P = PLACES[p], room = L.room, r = ROOMS[room];
-  const checkIn = S.signed ? btnExt('Check in', 'checkin') : '';
+  const checkIn = S.signed && (hasVisits() || (S.booked && S.booked.room === room)) ? btnExt('Check in', 'checkin') : '';
   switch (k) {
     case 'leave':
       return mapBox({ plan: 'campus', label: 'Sample map: the drive to Garage A, then the walkway to the North entrance', routes: [[DRIVE.clem, 'plan'], [WALK.clem, 'plan']], destB: 'clem', btn: `data-act="wf" data-room="${room}" aria-label="Open directions"` }) +
@@ -973,7 +1098,7 @@ function stopPanel(k, c, L) {
         `<p class="sh-label">On Floor ${c.floor}</p>` + tileList(amenityTiles(plan, you[0]));
     }
     case 'visit': case 'dest': {
-      if (!r || (k === 'dest' && !S.guestDest[p])) {
+      if (!r) {
         return `<p class="one">${ico('pick', 20)}Choose your destination on the pass</p>` + (c.zone === 'inside' ? tileList(amenityTiles(planOf('clem', c.floor), youOnFloor(c)[0])) : '');
       }
       const here = c.zone === 'inside' && c.floor === r.floor;
@@ -992,6 +1117,145 @@ function stopPanel(k, c, L) {
         `<p class="sh-label">Support for you</p>` + tileList(SUPPORT.map(([ic, n]) => ({ ic, name: n, attrs: `data-act="info" data-msg="${n} – sample content approved by the center"` })));
   }
   return '';
+}
+
+/* ---------- Why you're here, and what's near you (no visit today) ---------- */
+function askCard(c, anim) {
+  const P = PLACES[placeOf(c)];
+  return `<section class="ask${anim ? ' rise' : ''}" aria-labelledby="ask-h"><h2 id="ask-h">What brings you to ${P.short} today?</h2>
+    <ul class="reasons">${REASONS.map(([k, ic, t]) => `<li><button data-act="reason" data-r="${k}">${dot(ic)}<span>${t}</span></button></li>`).join('')}</ul>
+    <div class="ask-foot"><span>${ico('privacy', 16)}Your answer stays on this phone</span><button class="link-btn" data-act="reason" data-r="skip">Not now</button></div></section>`;
+}
+function hereFor() {
+  if (S.reason === 'skip') return `<div class="here-for"><span class="sp"></span><button class="link-btn" data-act="reason-change">${ico('pick', 16)}What brings you here?</button></div>`;
+  const [, ic, t] = REASON[S.reason];
+  return `<div class="here-for">${ico(ic, 20)}<span>Here for <b>${t}</b></span><span class="sp"></span><button class="link-btn" data-act="reason-change" aria-label="Change why you're here">Change</button></div>`;
+}
+const docRow = (c, d) => {
+  const r = ROOMS[d.room], slot = d.today[0];
+  return `<li><div class="row"><span class="avatar-d" aria-hidden="true">${d.ini}</span><span class="txt"><span class="rt">${d.name}</span><span class="rs">${DEPT[d.room].spec} · ${walkMin(c, r)} min</span></span>${slot
+    ? `<button class="chip slot" data-act="book" data-room="${d.room}" data-doc="${d.id}" data-slot="${slot}" aria-label="Book ${d.name} today at ${slot}">${slot}</button>`
+    : `<button class="chip slot later" data-act="book" data-room="${d.room}" data-doc="${d.id}" data-day="tomorrow" data-slot="${d.tomorrow[0]}" aria-label="Book ${d.name} tomorrow at ${d.tomorrow[0]}">Tomorrow</button>`}</div></li>`;
+};
+function focusFor(c, anim) {
+  const p = placeOf(c), P = PLACES[p], cls = `card focus${anim ? ' rise' : ''}`;
+  const info = p === 'clem' ? 'c1-info' : 's1-info';
+  switch (S.reason) {
+    case 'appt':
+      if (destRoom(p)) return '';
+      return `<div class="${cls}"><h2>${S.signed ? 'No visits today in MyChart' : 'Sign in to see your visit'}</h2>
+        ${S.signed ? '' : `<button class="btn pri" data-act="tab" data-tab="4">${ico('signIn', 20)}<span>Sign in to MyChart</span></button>`}
+        <p class="sub">Or choose where it is</p><div class="choose">${GUEST_DEST[p].map(id => `<button class="chip" data-act="dest" data-room="${id}">${ROOMS[id].name}</button>`).join('')}</div></div>`;
+    case 'visit':
+      return `<div class="${cls}"><h2>Visiting hours 9 a.m. – 9 p.m.</h2><p class="sub">Ask for a patient's room at the ${ROOMS[info].name.toLowerCase()}, Floor 1</p>
+        <div class="btn-row">${btnWF(info, `Go to the ${ROOMS[info].name.toLowerCase()}`)}</div>
+        ${tileList(roomsOn(planOf(p, 1)).filter(r => ['food', 'chapel', 'restroom'].includes(r.ic)).map(r => ({ ic: r.ic, name: r.name, sub: `${walkMin(c, r)} min`, attrs: `data-act="wf" data-room="${r.id}"` })))}<span class="tag" style="justify-self:start">Sample hours</span></div>`;
+    case 'lab':
+      if (destRoom(p)) return '';
+      return `<div class="${cls}"><h2>Lab or imaging?</h2><ul class="rows">${['c2-lab', 'c1-img'].map(id => { const r = ROOMS[id]; return `<li><button class="row opt" data-act="dest" data-room="${id}">${dot(id === 'c2-lab' ? 'lab' : 'clinic')}<span class="txt"><span class="rt">${r.name}</span><span class="rs">Floor ${r.floor} · ${DEPT[id].wait}</span></span>${ico('next', 20, 'chev')}</button></li>`; }).join('')}</ul>
+        <span class="tag" style="justify-self:start">Walk-in · Sample wait times</span></div>`;
+    case 'pharm':
+      return `<div class="${cls}"><h2>Pharmacy open until 7 p.m.</h2><p class="sub">Floor 1 · No appointment needed</p>
+        <div class="btn-row">${S.signed ? btnExt('Prescription status', 'pharmacy') : `<button class="btn" data-act="tab" data-tab="4">${ico('lock', 20)}<span>Sign in for prescription status</span></button>`}</div><span class="tag" style="justify-self:start">Sample hours</span></div>`;
+    case 'care': {
+      if (S.booked && destRoom(p)) return '';
+      const docs = DOCS.filter(d => ROOMS[d.room].b === p);
+      return `<div class="${cls}"><p class="urgent">${ico('emergency', 20)}Chest pain or trouble breathing? Call 911.</p>
+        <h2>Doctors available today</h2><ul class="rows">${docs.map(d => docRow(c, d)).join('')}</ul>
+        <div class="btn-row"><button class="btn pri" data-act="book">${ico('book', 20)}<span>Book a visit</span></button></div></div>`;
+    }
+    case 'pickup':
+      return `<div class="${cls}"><h2>Pick up at the ${P.door}</h2><p class="sub">Wait in the lobby – drivers stop at the door</p>
+        <div class="stats"><div class="stat">${ico('parking', 20)}<b>${P.open}</b><span>spaces open</span></div><div class="stat">${ico('time', 20)}<b>15 min</b><span>free at the door</span></div><div class="stat">${ico('accessible', 20)}<b>Valet</b><span>at the door</span></div></div>
+        <div class="btn-row">${btnWF(p === 'clem' ? 'c1-lobby' : info, 'Go to the lobby')}</div><span class="tag" style="justify-self:start">Sample</span></div>`;
+    case 'other':
+      return `<div class="${cls}"><h2>What do you need?</h2><button class="search-field" style="margin:0;width:100%" data-act="search">${ico('search', 20)}<span>Search this hospital</span></button>
+        <ul class="rows">${[['education', 'Classes and events', 'info', 'Classes and events – sample content'], ['bill', 'Billing help', 'ext', 'Billing help'], ['infoDesk', 'Lost and found', 'wf', info], ['help', 'Talk to someone', 'info', 'Call 214-648-3266']].map(([ic, t, a, v]) =>
+          `<li><button class="row" data-act="${a}" ${a === 'wf' ? `data-room="${v}"` : a === 'ext' ? `data-label="${v}" aria-label="${t}, opens in MyChart"` : `data-msg="${v}"`}>${dot(ic)}<span class="txt"><span class="rt">${t}</span></span>${ico(a === 'ext' ? 'external' : 'next', 20, 'chev')}</button></li>`).join('')}</ul></div>`;
+  }
+  return '';
+}
+/* Near you: care sorted by walking time, doctors free today, and facilities on this floor */
+function nearbyFor(c) {
+  const p = placeOf(c), depts = deptsNear(c), docs = DOCS.filter(d => ROOMS[d.room].b === p);
+  const plan = c.zone === 'inside' ? planOf('clem', c.floor) : planOf(p, 1), youX = c.zone === 'inside' ? youOnFloor(c, null)[0] : 12;
+  // Looking around gets everything; a focused answer keeps only what supports it
+  const showCare = ['look', 'skip', 'care'].includes(S.reason), showDocs = ['look', 'skip'].includes(S.reason);
+  const care = `<section class="sec" aria-labelledby="near-h"><div class="near-h"><h2 class="sec-h" id="near-h">Care near you</h2><span class="tag">Sample</span></div>
+    <ul class="rows">${depts.map(r => `<li><button class="row" data-act="dept" data-room="${r.id}" aria-label="${r.name}, ${DEPT[r.id].spec}, ${whereLabel(c, r)}">${dot(r.id === 'c2-lab' ? 'lab' : 'clinic')}<span class="txt"><span class="rt">${r.name}</span><span class="rs">${whereLabel(c, r)}</span></span>${ico('next', 20, 'chev')}</button></li>`).join('')}</ul></section>`;
+  const docList = `<section class="sec" aria-labelledby="docs-h"><div class="near-h"><h2 class="sec-h" id="docs-h">Doctors available today</h2><span class="tag">Sample</span></div><ul class="rows">${docs.map(d => docRow(c, d)).join('')}</ul></section>`;
+  const fac = `<section class="sec" aria-labelledby="fac-h"><h2 class="sec-h" id="fac-h">Facilities${c.zone === 'inside' ? ` on Floor ${c.floor}` : ''}</h2>${tileList(amenityTiles(plan, youX).slice(0, 6))}</section>`;
+  return (showCare ? care : '') + (showDocs ? docList : '') + fac;
+}
+
+/* ---------- Department page: how to get there, who is free, what they treat ---------- */
+let DEPT_ID = null;
+function openDept(id) { DEPT_ID = id; renderDept(); if (!$('#pg-dept').classList.contains('on')) openPage('#pg-dept'); }
+function renderDept() {
+  const r = ROOMS[DEPT_ID], D = DEPT[DEPT_ID], c = ctx(), docs = DOCS.filter(d => d.room === r.id);
+  const here = c.zone === 'inside' && placeOf(c) === r.b && c.floor === r.floor;
+  $('#dp-title').textContent = r.name;
+  $('#dp-body').innerHTML = mapBox({ plan: r.plan, label: `Sample map of Floor ${r.floor}: ${r.name}`, dest: r.id, flag: [r.cx, 100], you: here ? youOnFloor(c, null) : null, routes: here ? [[[youOnFloor(c, null), [r.cx, 100]]]] : [] }) +
+    `<div class="stats"><div class="stat">${ico('floor', 20)}<b>Floor ${r.floor}</b><span>Suite ${r.suite}</span></div><div class="stat">${ico('wayfinding', 20)}<b>${walkMin(c, r)} min</b><span>from you</span></div><div class="stat">${ico('time', 20)}<b>Open</b><span>${D.hours}</span></div></div>
+    <div class="btn-row">${btnWF(r.id, 'Directions')}${D.book ? `<button class="btn" data-act="book" data-room="${r.id}">${ico('book', 20)}<span>Book a visit</span></button>` : ''}</div>
+    ${D.wait ? `<p class="bk-note">${ico('wait', 20)}Walk-in · ${D.wait}</p>` : ''}
+    ${docs.length ? `<section class="sec" style="padding:0"><h2 class="sec-h">Doctors available</h2><ul class="rows">${docs.map(d => docRow(c, d)).join('')}</ul></section>` : ''}
+    <section class="sec" style="padding:0"><div class="near-h"><h2 class="sec-h">${D.careLabel}</h2><span class="tag">Sample</span></div><ul class="conds">${D.care.map(t => `<li>${t}</li>`).join('')}</ul></section>
+    <section class="sec" style="padding:0"><h2 class="sec-h">Near ${r.name}</h2>${tileList(amenityTiles(r.plan, r.cx))}</section>`;
+}
+
+/* ---------- Booking: care → time → details → review → booked (simulated; real booking goes through MyChart scheduling) ---------- */
+const BK_STEPS = ['Care', 'Time', 'Details', 'Review'];
+function openBook(o = {}) {
+  S.book = { step: o.step ?? (o.room ? 1 : 0), room: o.room || null, doc: o.doc || null, day: o.day || 'today', slot: o.slot || null, why: null, name: '', dob: '', phone: '' };
+  if (!$('#pg-book').classList.contains('on')) openPage('#pg-book');
+  renderBook(false);
+}
+const bkValid = B => [!!B.room, !!(B.doc && B.slot), S.signed || !!(B.name.trim() && B.dob.trim() && B.phone.trim()), true][B.step];
+function renderBook(anim) {
+  const B = S.book, c = ctx(), body = $('#bk-body');
+  let q = '', h = '';
+  if (B.step === 0) {
+    q = 'What kind of care?';
+    h = `<ul class="rows">${deptsNear(c, true).map((r, i) => `<li><button class="row opt" data-act="bk-room" data-room="${r.id}" aria-pressed="${B.room === r.id}">${dot('clinic')}<span class="txt"><span class="rt">${DEPT[r.id].spec}</span><span class="rs">${r.name} · ${whereLabel(c, r)}</span></span>${i === 0 && placeOf(c) ? '<span class="tag">Nearest</span>' : ''}</button></li>`).join('')}</ul>`;
+  } else if (B.step === 1) {
+    q = 'Pick a time';
+    const docs = DOCS.filter(d => d.room === B.room);
+    h = `<div class="seg-in" role="group" aria-label="Day">${['today', 'tomorrow'].map(k => `<button data-act="bk-day" data-day="${k}" aria-pressed="${B.day === k}">${k === 'today' ? 'Today' : 'Tomorrow'}</button>`).join('')}</div>
+      <div class="docs-slots">${docs.map(d => `<div class="doc-card"><div class="who"><span class="avatar-d" aria-hidden="true">${d.ini}</span><span><b>${d.name}</b><span>${ROOMS[d.room].name} · Floor ${ROOMS[d.room].floor}</span></span></div>
+        ${d[B.day].length ? `<div class="choose" role="group" aria-label="Times with ${d.name}">${d[B.day].map(t => `<button class="chip" data-act="bk-slot" data-doc="${d.id}" data-slot="${t}" aria-pressed="${B.doc === d.id && B.slot === t}">${t}</button>`).join('')}</div>` : `<p class="bk-note">No times ${B.day === 'today' ? 'today' : 'tomorrow'}</p>`}</div>`).join('')}</div>`;
+  } else if (B.step === 2) {
+    q = S.signed ? 'Booking for you' : 'Your details';
+    h = S.signed
+      ? `<ul class="rows"><li><div class="row"><span class="avatar-d" aria-hidden="true">JR</span><span class="txt"><span class="rt">Jordan Rivera</span><span class="rs">Sample patient · From MyChart</span></span></div></li></ul>
+        <p class="sh-label" id="bk-why-h">Reason for the visit (optional)</p><div class="choose" role="group" aria-labelledby="bk-why-h">${['New problem', 'Follow-up', 'Second opinion'].map(t => `<button class="chip" data-act="bk-why" data-v="${t}" aria-pressed="${B.why === t}">${t}</button>`).join('')}</div>`
+      : `<div class="field"><label for="bk-name">Full name</label><div class="zip"><input id="bk-name" autocomplete="name" value="${esc(B.name)}"></div></div>
+        <div class="field"><label for="bk-dob">Date of birth</label><div class="zip"><input id="bk-dob" inputmode="numeric" placeholder="MM/DD/YYYY" value="${esc(B.dob)}"></div></div>
+        <div class="field"><label for="bk-phone">Phone</label><div class="zip"><input id="bk-phone" type="tel" autocomplete="tel" value="${esc(B.phone)}"></div></div>
+        <button class="link-btn" data-act="bk-signin">${ico('signIn', 16)}Have MyChart? Sign in instead</button>`;
+  } else if (B.step === 3) {
+    q = 'Check and book';
+    h = bookedPass(B, false) + `<p class="bk-note">${ico('info', 20)}Simulated – real booking goes through MyChart scheduling</p>`;
+  } else {
+    const r = ROOMS[B.room], hereNow = B.day === 'today' && placeOf(c) === r.b;
+    body.innerHTML = `<div class="done-hero">${dot('arrived', 'solid')}<h2 class="bk-q">You're booked</h2></div>${bookedPass(B, false)}
+      <div class="btn-row">${hereNow ? btnWF(r.id, 'Start wayfinding') : `<button class="btn pri" data-act="info" data-msg="Added to your calendar – simulated">${ico('calAdd', 20)}<span>Add to calendar</span></button>`}<button class="btn" data-act="close-page">Done</button></div>`;
+    say(`You're booked: ${DOC[B.doc].name}, ${B.slot}`);
+    return;
+  }
+  const n = BK_STEPS.length;
+  body.innerHTML = `<div class="wf-steps" style="--n:${n}" aria-hidden="true">${BK_STEPS.map((_, k) => `<i class="${k < B.step ? 'on' : k === B.step ? 'here' : ''}"></i>`).join('')}</div>
+    <div class="${anim ? 'wf-anim' : ''}" style="display:grid;gap:16px"><p class="wf-n">Step ${B.step + 1} of ${n} · ${BK_STEPS[B.step]}</p><h2 class="bk-q" id="bk-q" tabindex="-1">${q}</h2>${h}</div>
+    <div class="wf-nav"><button class="btn" data-act="bk-back" ${B.step === 0 ? 'disabled' : ''}>${ico('back', 20)}<span>Back</span></button>
+    <button class="btn pri" data-act="bk-next" ${bkValid(B) ? '' : 'disabled'}>${B.step === 3 ? `${ico('book', 20)}<span>Book visit</span>` : `<span>Next</span>${ico('go', 20)}`}</button></div>`;
+  if (B.step === 2 && !S.signed) ['name', 'dob', 'phone'].forEach(k => $('#bk-' + k).addEventListener('input', e => { B[k] = e.target.value; $('[data-act="bk-next"]').disabled = !bkValid(B); }));
+  if (anim) { say(`Step ${B.step + 1} of ${n}: ${q}`); $('#bk-q').focus({ preventScroll: true }); }
+}
+function bookedPass(B, mini) {
+  const r = ROOMS[B.room], d = DOC[B.doc];
+  return `<article class="pass${mini ? ' mini' : ''}" aria-label="Booked visit, sample"><div class="pass-main"><div class="p-top"><p class="time">${B.slot}</p></div>
+    <p class="dept">${r.name} · ${d.name}</p><p class="bld">${DAYS[B.day]} · ${PLACES[r.b].full}</p><span class="tag">Booked · Sample</span></div>
+    <div class="pass-stub"><span class="lbl">Floor</span><span class="big"><span>${r.floor}</span></span><span class="sub">Suite ${r.suite}</span></div></article>`;
 }
 
 /* ---------- Home ---------- */
@@ -1022,28 +1286,26 @@ function noticeFor(c) {
 function passFor(c) {
   const p = placeOf(c);
   const mini = isActive(c) && !!p;
-  if (S.signed) {
+  if (hasVisits()) {
     const v = p === 'simm' ? VISITS.simm : VISITS.clem, r = ROOMS[v.room], P = PLACES[r.b];
     return { key: v.id, html: `<article class="pass${mini ? ' mini' : ''}" aria-label="Visit pass, sample">
       <div class="pass-main"><div class="p-top"><p class="time">${v.time}</p><button class="link-btn" data-act="ext" data-label="Visit details" aria-label="Visit details, opens in MyChart">Details${ico('external', 16)}</button></div><p class="dept">${r.name}</p><p class="bld">${P.full}</p>
         <span class="tag">Sample · From MyChart</span></div>
       <div class="pass-stub"><span class="lbl">Floor</span><span class="big"><span>${r.floor}</span></span><span class="sub">Suite ${r.suite}</span></div></article>` };
   }
-  if (!p) return null;
-  const P = PLACES[p], d = S.guestDest[p] && ROOMS[S.guestDest[p]];
+  if (!p || !isActive(c)) return null;
+  const P = PLACES[p], dId = destRoom(p), d = dId && ROOMS[dId];
+  if (S.booked && S.booked.room === dId) return { key: 'bk-' + dId, html: bookedPass(S.booked, mini) };
   if (d) return { key: d.id, html: `<article class="pass${mini ? ' mini' : ''}" aria-label="Destination pass, sample">
-      <div class="pass-main"><p class="dept">${d.name}</p><p class="bld">${P.full}</p>
+      <div class="pass-main"><p class="dept">${d.name}</p>${DEPT[d.id] && DEPT[d.id].wait ? `<p class="bld keep">Walk-in · ${DEPT[d.id].wait}</p>` : `<p class="bld">${P.full}</p>`}
         <div class="pfoot"><span class="tag">Sample</span><button class="link-btn" data-act="clear-dest" aria-label="Change destination">Change</button></div></div>
       <div class="pass-stub"><span class="lbl">Floor</span><span class="big"><span>${d.floor}</span></span>${d.suite ? `<span class="sub">Suite ${d.suite}</span>` : ''}</div></article>` };
-  return { key: 'empty-' + p, html: `<article class="pass empty" aria-label="Destination pass">
-      <div class="pass-main"><p class="dept">Where are you going?</p><p class="bld">${P.full}</p>
-        <div class="choose">${GUEST_DEST[p].map(id => `<button class="chip" data-act="dest" data-room="${id}">${ROOMS[id].name}</button>`).join('')}</div></div>
-      <div class="pass-stub"><span class="lbl">Floor</span><span class="big"><span>–</span></span></div></article>` };
+  return null;
 }
 function sectionsFor(c) {
   const p = placeOf(c), active = isActive(c);
   let s = '';
-  if (active && c.zone === 'inside') {
+  if (active && c.zone === 'inside' && hasVisits()) {
     const depts = ROOM_ROWS.filter(r => r[5] === 'dept' && r[1].startsWith('clem')).map(r => ROOMS[r[0]]).sort((a, b) => a.floor - b.floor);
     s += `<section class="sec" aria-labelledby="sec-dir"><h2 class="sec-h" id="sec-dir">In this building</h2><ul class="rows">${depts.map(r => `<li><button class="row" data-act="wf" data-room="${r.id}" aria-label="${r.name}, Floor ${r.floor}, Suite ${r.suite}, directions"><span class="fnum" aria-hidden="true">${r.floor}</span><span class="txt"><span class="rt">${r.name}</span><span class="rs">Suite ${r.suite}</span></span>${ico('next', 20, 'chev')}</button></li>`).join('')}</ul></section>`;
     s += `<section class="sec" aria-labelledby="sec-res"><h2 class="sec-h" id="sec-res">Hospital resources</h2><ul class="rows">${[['wifi', 'Guest Wi-Fi'], ['language', 'Interpreters'], ['shuttle', 'Campus shuttle'], ['help', 'Patient relations']].map(([ic, t]) => `<li><button class="row" data-act="info" data-msg="${t} – sample content">${dot(ic)}<span class="txt"><span class="rt">${t}</span></span>${ico('next', 20, 'chev')}</button></li>`).join('')}</ul></section>`;
@@ -1068,10 +1330,10 @@ function quickLinks() {
 
 function renderHome(force) {
   const c = ctx(), L = lineModel(c), pass = passFor(c);
-  const key = JSON.stringify([c, S.signed, S.guestDest, S.askHidden, S.showPassed]);
+  const key = JSON.stringify([c, S.signed, S.appt, S.guestDest, S.askHidden, S.showPassed, S.reason, S.booked]);
   const changed = key !== last.key;
   if (!changed && !force) return;
-  const ckey = JSON.stringify([c, S.signed, S.guestDest]);
+  const ckey = JSON.stringify([c, S.signed, S.appt, S.guestDest, S.reason, S.booked]);
   const animate = !S.rm && last.key !== null && ckey !== last.ckey;
   const [cIco, cTxt, live] = chipFor(c);
   const p = placeOf(c);
@@ -1080,6 +1342,9 @@ function renderHome(force) {
   h += `<button class="search-field" data-act="search">${ico('search', 20)}<span>Search doctors, places, and more</span></button>`;
   h += `<div class="today"><h1>Today</h1><p>Tuesday, Oct. 27</p></div>`;
   h += noticeFor(c);
+  const noVisit = !hasVisits() && p && isActive(c);
+  const reasonMoved = animate && last.ckey && JSON.parse(last.ckey)[4] !== S.reason;
+  if (noVisit) h += S.reason === null ? askCard(c, animate) : hereFor() + focusFor(c, reasonMoved);
   if (pass) h += `<div class="pass-wrap">${pass.html}</div>`;
   if (L) {
     const n = L.stops.length, collapse = L.active && L.idx >= 3 && !S.showPassed;
@@ -1091,6 +1356,7 @@ function renderHome(force) {
       return `<li class="stop ${st}" data-from="${i}" data-to="${i}" ${st === 'now' ? 'aria-current="step"' : ''}><span class="node" aria-hidden="true">${ico(st === 'done' ? 'stepDone' : s.ic, 20)}</span><div class="st-row"><span class="st-t"><span class="vh">${label}</span><span aria-hidden="true">${s.t}</span></span>${s.m ? `<span class="st-m" aria-hidden="true">${s.m}</span>` : ''}</div>${st === 'now' ? `<div class="st-panel"><div><div class="card">${stopPanel(s.k, c, L)}</div></div></div>` : ''}</li>`;
     }).join('')}</ol></div>`;
   }
+  if (noVisit) h += nearbyFor(c);
   h += sectionsFor(c);
   h += quickLinks();
   const prevCkey = last.ckey, prevIdx = last.idx, prevPass = last.pass, prevFloor = last.floor, prevKey = last.key;
@@ -1240,10 +1506,11 @@ function renderWF(anim) {
 
 /* ---------- Search ---------- */
 function searchIndex() {
-  const rooms = Object.values(ROOMS).filter(r => r.kind !== 'core' && r.kind !== 'other').map(r => ({ ic: r.ic || 'clinic', t: r.name, s: `${PLACES[r.b].short} · Floor ${r.floor}`, a: `data-act="wf" data-room="${r.id}"` }));
+  const rooms = Object.values(ROOMS).filter(r => r.kind !== 'core' && r.kind !== 'other').map(r => ({ ic: r.ic || 'clinic', t: r.name, s: `${DEPT[r.id] ? DEPT[r.id].spec + ' · ' : ''}${PLACES[r.b].short} · Floor ${r.floor}`, a: DEPT[r.id] ? `data-act="dept" data-room="${r.id}"` : `data-act="wf" data-room="${r.id}"` }));
+  const docs = DOCS.map(d => ({ ic: 'person', t: d.name, s: `${DEPT[d.room].spec} · Sample`, a: `data-act="book" data-room="${d.room}" data-doc="${d.id}"${d.today[0] ? ` data-slot="${d.today[0]}"` : ''}` }));
   const places = ['clem', 'simm'].map(b => ({ ic: PLACES[b].ic, t: PLACES[b].full, s: 'Location', a: `data-act="tab" data-tab="2"` }));
   const ql = QUICK.map(([ic, t, to]) => ({ ic, t, s: to === 'mc' ? 'MyChart' : 'In MyCare', a: to === 'mc' ? (S.signed ? `data-act="ext" data-label="${t}"` : `data-act="tab" data-tab="4"`) : `data-act="tab" data-tab="${to}"` }));
-  return [...places, ...rooms, ...ql];
+  return [...places, ...rooms, ...docs, ...ql];
 }
 function renderSearch() {
   const q = $('#so-q').value.trim().toLowerCase();
@@ -1263,7 +1530,7 @@ function openPage(sel) {
 }
 function closePage() {
   const pg = $('.page.on'); if (!pg) return;
-  pg.classList.remove('on'); WF = null; chrome();
+  pg.classList.remove('on'); if (pg.id === 'pg-way') WF = null; chrome();
   const f = returnFocus.pop(); if (f && f.isConnected) f.focus({ preventScroll: true });
 }
 function openSheet(title, html, bind) {
@@ -1284,7 +1551,9 @@ function openLocSheet() {
   const status = chipFor(c)[1];
   const why = active && p ? `<p class="sh-label">Why you see this</p><ul class="why">
       <li>${dot(c.src === 'manual' ? 'pick' : 'place')}<span>${c.src === 'manual' ? 'You chose this place' : `You're at ${PLACES[p].full}`}</span><span class="tag">${c.src === 'manual' ? 'Your choice' : 'Simulated'}</span></li>
-      ${S.signed ? `<li>${dot('visits')}<span>Your visit at ${VISITS[p].time}</span><span class="tag">MyChart</span></li>` : ''}
+      ${hasVisits() ? `<li>${dot('visits')}<span>Your visit at ${VISITS[p].time}</span><span class="tag">MyChart</span></li>` : ''}
+      ${!hasVisits() && S.reason && S.reason !== 'skip' ? `<li>${dot(REASON[S.reason][1])}<span>You said: ${REASON[S.reason][2].toLowerCase()}</span><span class="tag">Your answer</span></li>` : ''}
+      ${S.booked ? `<li>${dot('book')}<span>Your booking at ${S.booked.slot}</span><span class="tag">Sample</span></li>` : ''}
       <li>${dot('parking')}<span>Parking and floors</span><span class="tag">Sample data</span></li></ul>` : '';
   openSheet('Location', `<p class="one" style="font-weight:700;font-size:var(--t18);color:var(--ink)">${status}</p>${why}
     <div style="display:grid;gap:8px">
@@ -1324,7 +1593,7 @@ function showSys() {
 function lockRoute() {
   const c = ctx(), p = placeOf(c);
   if (!isActive(c) || !p) return null;
-  const room = WF ? WF.roomId : S.signed ? VISITS[p].room : (S.guestDest[p] || (p === 'clem' ? 'c1-lobby' : 's1-info'));
+  const room = WF ? WF.roomId : hasVisits() ? VISITS[p].room : (destRoom(p) || (p === 'clem' ? 'c1-lobby' : 's1-info'));
   const r = ROOMS[room], steps = routeSteps(room);
   const i = WF && WF.roomId === room ? WF.i : startIndex(c, room, steps);
   const arrived = c.zone === 'inside' && r.b === 'clem' && c.floor === r.floor && i === steps.length - 1;
@@ -1394,7 +1663,18 @@ phone.addEventListener('click', e => {
     case 'settings': toast("Opens your phone's Settings – simulated"); break;
     case 'retry': toast('Still no signal – simulated'); break;
     case 'precise': S.acc = 'precise'; renderAll(); break;
-    case 'wf': closeSheet(true); if ($('#pg-search').classList.contains('on')) closePage(); openWF(d.room); break;
+    case 'wf': closeSheet(true); while ($('.page.on')) closePage(); openWF(d.room); break;
+    case 'dept': closeSheet(true); while ($('.page.on')) closePage(); openDept(d.room); break;
+    case 'book': closeSheet(true); while ($('.page.on')) closePage(); openBook({ room: d.room, doc: d.doc, slot: d.slot, day: d.day }); break;
+    case 'bk-room': S.book.room = d.room; S.book.doc = null; S.book.slot = null; renderBook(false); $(`[data-act="bk-room"][data-room="${d.room}"]`).focus({ preventScroll: true }); break;
+    case 'bk-day': S.book.day = d.day; S.book.doc = null; S.book.slot = null; renderBook(false); $(`[data-act="bk-day"][data-day="${d.day}"]`).focus({ preventScroll: true }); break;
+    case 'bk-slot': S.book.doc = d.doc; S.book.slot = d.slot; renderBook(false); $(`[data-act="bk-slot"][data-doc="${d.doc}"][data-slot="${d.slot}"]`).focus({ preventScroll: true }); break;
+    case 'bk-why': S.book.why = S.book.why === d.v ? null : d.v; renderBook(false); $(`[data-act="bk-why"][data-v="${d.v}"]`).focus({ preventScroll: true }); break;
+    case 'bk-signin': S.signed = true; toast('Signed in – sample account'); renderAll(true); renderBook(false); break;
+    case 'bk-back': if (S.book.step > 0) { S.book.step--; renderBook(true); } break;
+    case 'bk-next': if (!bkValid(S.book)) break; if (S.book.step === 3) { const B = S.book; S.booked = { room: B.room, doc: B.doc, day: B.day, slot: B.slot }; if (S.reason === null) S.reason = 'care'; } S.book.step++; renderBook(true); renderAll(); if (S.book.step === 4) { const f = $('#bk-body .btn.pri'); if (f) f.focus({ preventScroll: true }); } break;
+    case 'reason': { const p = placeOf(ctx()); S.reason = d.r; if (d.r === 'pharm') S.guestDest[p] = p === 'clem' ? 'c1-pharm' : 's1-pharm'; renderAll(); say(d.r === 'skip' ? 'Showing what is near you' : `Home updated for ${REASON[d.r][2]}`); const f = $('.here-for .link-btn', home); if (f) f.focus({ preventScroll: true }); break; }
+    case 'reason-change': { S.reason = null; S.guestDest = { clem: null, simm: null }; renderAll(); const f = $('.reasons button', home); if (f) f.focus({ preventScroll: true }); break; }
     case 'wf-prev': if (WF.i > 0) { WF.i--; renderWF(true); $('[data-act="wf-prev"]').disabled ? $('[data-act="wf-next"]').focus({ preventScroll: true }) : $('[data-act="wf-prev"]').focus({ preventScroll: true }); } break;
     case 'wf-next': if (WF.i < WF.steps.length - 1) { WF.i++; renderWF(true); ($('[data-act="wf-next"]') || $('#wf-body [data-act="close-page"]')).focus({ preventScroll: true }); } break;
     case 'close-page': closePage(); break;
@@ -1451,54 +1731,102 @@ function chrome() {
   $('#toast').style.bottom = (tb + 8) + 'px';
 }
 
-/* ---------- Board: journey and controls ---------- */
-const STEPS = [
-  { t: 'Away', ic: 'home', sub: 'Common homepage with today\'s plan – nothing location-based yet', set: { zone: 'away' } },
-  { t: 'Arriving', ic: 'car', sub: 'Parking at Clements University Hospital, the car follows the route in', set: { zone: 'arriving' } },
-  { t: 'Entrance', ic: 'entrance', sub: 'Best entrance, wayfinding, and check-in in MyChart', set: { zone: 'entrance' } },
-  { t: 'Floor 1', ic: 'elevator', sub: 'Way to the elevator and what is on this floor', set: { zone: 'inside', floor: 1 } },
-  { t: 'Floor 7', ic: 'arrived', sub: 'Arrived – the primary action is Check in, in MyChart', set: { zone: 'inside', floor: 7 } },
-  { t: 'Simmons', ic: 'building', sub: 'The pass flips to the next visit; support and education move up', set: { zone: 'simmons' } },
-  { t: 'No location', ic: 'locOff', sub: 'Permission denied – choose a place and everything still works', set: { perm: 'denied' } }
-];
+/* ---------- Board: scenarios, each with its own Back / Next journey ---------- */
+const at = (zone, floor) => () => { S.zone = zone; if (floor) S.floor = floor; };
+const SCN = {
+  guest: { n: '1', t: 'Guest nearby', set: { signed: false, appt: false, reason: 'look' }, steps: [
+    { t: 'Away', ic: 'home', sub: 'Common homepage – nothing nearby yet', run: at('away') },
+    { t: 'Arriving', ic: 'car', sub: 'At Clements University Hospital: care near you, doctors free today, and facilities', run: at('arriving') },
+    { t: 'Floor 1', ic: 'elevator', sub: 'Inside: everything re-sorts by walking time from this floor', run: at('inside', 1) },
+    { t: 'Heart clinic', ic: 'clinic', sub: 'A section near you: how to get there, doctors, and conditions treated', run: () => { at('inside', 1)(); return () => openDept('c7-heart'); } },
+    { t: 'Floor 2', ic: 'lab', sub: 'Walk-in lab and imaging waits, rehab, and Floor 2 facilities', run: at('inside', 2) },
+    { t: 'Simmons', ic: 'building', sub: 'Near the cancer center: oncology, support services, and facilities', run: at('simmons') },
+    { t: 'No location', ic: 'locOff', sub: 'Choose a place – nearby still works without location', run: () => { S.zone = 'arriving'; S.perm = 'denied'; } }
+  ] },
+  book: { n: '2', t: 'Book a visit', set: { signed: true, appt: false, reason: 'care' }, steps: [
+    { t: 'Need care', ic: 'findCare', sub: 'No visit today: 911 first for emergencies, then doctors free near you', run: at('inside', 1) },
+    { t: 'Care', ic: 'clinic', sub: 'Choose the care – nearest first, from where you stand', run: () => { at('inside', 1)(); return () => openBook({}); } },
+    { t: 'Time', ic: 'time', sub: 'Doctors and open times today or tomorrow', run: () => { at('inside', 1)(); return () => openBook({ room: 'c7-heart', doc: 'd1', slot: '1:30 p.m.' }); } },
+    { t: 'Details', ic: 'person', sub: 'Signed in, so MyChart fills in who it is for; guests add three details', run: () => { at('inside', 1)(); return () => openBook({ room: 'c7-heart', doc: 'd1', slot: '1:30 p.m.', step: 2 }); } },
+    { t: 'Review', ic: 'visits', sub: 'Check the pass, then book – simulated', run: () => { at('inside', 1)(); return () => openBook({ room: 'c7-heart', doc: 'd1', slot: '1:30 p.m.', step: 3 }); } },
+    { t: 'Booked', ic: 'arrived', sub: 'Booked today, here – so the primary action is Start wayfinding', run: () => { at('inside', 1)(); S.booked = { room: 'c7-heart', doc: 'd1', day: 'today', slot: '1:30 p.m.' }; return () => openBook({ room: 'c7-heart', doc: 'd1', slot: '1:30 p.m.', step: 4 }); } },
+    { t: 'On your way', ic: 'navigate', sub: 'Home shows the new visit on the pass and the line', run: () => { at('inside', 1)(); S.booked = { room: 'c7-heart', doc: 'd1', day: 'today', slot: '1:30 p.m.' }; } }
+  ] },
+  why: { n: '3', t: "Why you're here", set: { signed: false, appt: false, reason: null }, steps: [
+    { t: 'Arriving', ic: 'car', sub: 'No appointment – the home asks what brings you here', run: at('arriving') },
+    { t: 'Visiting', ic: 'visitor', sub: 'Visiting someone: hours, the information desk, café, and quiet rooms', run: () => { at('entrance')(); S.reason = 'visit'; } },
+    { t: 'Lab', ic: 'lab', sub: 'Lab or imaging: pick one and the line leads there', run: () => { at('entrance')(); S.reason = 'lab'; } },
+    { t: 'Lab chosen', ic: 'arrived', sub: 'The pass and the line now lead to the lab, with the walk-in wait', run: () => { at('entrance')(); S.reason = 'lab'; S.guestDest.clem = 'c2-lab'; } },
+    { t: 'Pharmacy', ic: 'pharmacy', sub: 'Pharmacy: straight to Floor 1, hours, prescription status in MyChart', run: () => { at('entrance')(); S.reason = 'pharm'; S.guestDest.clem = 'c1-pharm'; } },
+    { t: 'Need care', ic: 'findCare', sub: 'I need care: 911 first, then doctors free today and Book a visit', run: () => { at('entrance')(); S.reason = 'care'; } },
+    { t: 'Other', ic: 'more', sub: 'Something else: search and other common reasons', run: () => { at('entrance')(); S.reason = 'other'; } }
+  ] },
+  visit: { n: '', t: 'With an appointment', set: { signed: true, appt: true, reason: null }, steps: [
+    { t: 'Away', ic: 'home', sub: 'Common homepage with today\'s plan – nothing location-based yet', run: at('away') },
+    { t: 'Arriving', ic: 'car', sub: 'Parking at Clements University Hospital, the car follows the route in', run: at('arriving') },
+    { t: 'Entrance', ic: 'entrance', sub: 'Best entrance, wayfinding, and check-in in MyChart', run: at('entrance') },
+    { t: 'Floor 1', ic: 'elevator', sub: 'Way to the elevator and what is on this floor', run: at('inside', 1) },
+    { t: 'Floor 7', ic: 'arrived', sub: 'Arrived – the primary action is Check in, in MyChart', run: at('inside', 7) },
+    { t: 'Simmons', ic: 'building', sub: 'The pass flips to the next visit; support and education move up', run: at('simmons') },
+    { t: 'No location', ic: 'locOff', sub: 'Permission denied – choose a place and everything still works', run: () => { S.perm = 'denied'; } }
+  ] }
+};
+const SCN_ORDER = ['guest', 'book', 'why', 'visit'];
+const scn = () => SCN[S.scn];
+/* With an appointment, the highlighted step follows the controls; the other scenarios remember the step pressed */
 function currentStep() {
+  if (S.scn !== 'visit') return S.step;
   if (S.perm === 'denied' || S.perm === 'nosignal') return 6;
   return { away: 0, arriving: 1, entrance: 2, inside: S.floor === 7 ? 4 : 3, simmons: 5 }[S.zone];
 }
 function goStep(i) {
-  i = Math.max(0, Math.min(STEPS.length - 1, i));
-  const st = STEPS[i].set;
-  S.manual = null; S.paused = false; S.acc = 'precise'; S.showPassed = false; closeSheet(true); closePage(); $('#sys').hidden = true;
-  if (st.perm) S.perm = st.perm; else { if (S.perm !== 'allowed') S.perm = 'allowed'; S.zone = st.zone; if (st.floor) S.floor = st.floor; }
+  const sc = scn(); i = Math.max(0, Math.min(sc.steps.length - 1, i));
+  closeSheet(true); closePage(); $('#sys').hidden = true;
+  // Each step starts clean, but keeps the account choices from the controls (set once per scenario)
+  Object.assign(S, { manual: null, paused: false, acc: 'precise', showPassed: false, perm: 'allowed', askHidden: true, booked: null, book: null, guestDest: { clem: null, simm: null }, reason: sc.set.reason });
+  S.step = i;
+  const after = sc.steps[i].run();
   if (S.tab !== 0) setTab(0);
   $('#home-scroll').scrollTo({ top: 0, behavior: S.rm ? 'auto' : 'smooth' });
   renderAll();
+  if (typeof after === 'function') after();
 }
-$('#jline').innerHTML = STEPS.map((s, i) => `<li style="display:grid"><button class="jn" data-step="${i}" aria-label="${i + 1} of ${STEPS.length}: ${s.t}"><span class="jd">${ico(s.ic, 20)}</span><span class="jl">${s.t}</span></button></li>`).join('');
+function setScenario(k) {
+  S.scn = k;
+  const sc = scn();
+  Object.assign(S, sc.set);
+  $('#jline').style.setProperty('--n', sc.steps.length); $('.jwrap').style.setProperty('--n', sc.steps.length);
+  $('#jline').innerHTML = sc.steps.map((s, i) => `<li style="display:grid"><button class="jn" data-step="${i}" aria-label="${i + 1} of ${sc.steps.length}: ${s.t}"><span class="jd">${ico(s.ic, 20)}</span><span class="jl">${s.t}</span></button></li>`).join('');
+  $$('#scn button').forEach(b => b.setAttribute('aria-pressed', b.dataset.scn === k));
+  goStep(0);
+}
+$('#scn').innerHTML = SCN_ORDER.map(k => `<button data-scn="${k}" aria-pressed="false">${SCN[k].n ? `<span class="sn">${SCN[k].n}</span>` : ''}${SCN[k].t}</button>`).join('');
+$('#scn').addEventListener('click', e => { const b = e.target.closest('[data-scn]'); if (b) setScenario(b.dataset.scn); });
 $('#jline').addEventListener('click', e => { const b = e.target.closest('[data-step]'); if (b) goStep(+b.dataset.step); });
 $('#j-back').addEventListener('click', () => goStep(currentStep() - 1));
 $('#j-next').addEventListener('click', () => goStep(currentStep() + 1));
 function renderJourney() {
-  const i = currentStep();
+  const sc = scn(), N = sc.steps.length, i = currentStep();
   $$('.jn').forEach((b, k) => { b.classList.toggle('done', k < i); if (k === i) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current'); });
-  $('#jfill').style.setProperty('--p', i / (STEPS.length - 1));
-  $('#j-back').disabled = i === 0; $('#j-next').disabled = i === STEPS.length - 1;
-  $('#j-title').textContent = `${i + 1} of ${STEPS.length} · ${STEPS[i].t}`;
+  $('#jfill').style.setProperty('--p', i / (N - 1));
+  $('#j-back').disabled = i === 0; $('#j-next').disabled = i === N - 1;
+  $('#j-title').textContent = `${i + 1} of ${N} · ${sc.steps[i].t}`;
   const c = ctx();
-  $('#j-sub').textContent = S.manual ? 'Manual choice is overriding the simulated location' : S.paused ? 'Paused – common homepage for today' : c.src === 'ask' ? 'Location not on yet – the home explains before it asks' : c.src === 'approx' ? 'Approximate – the home asks which building' : STEPS[i].sub;
+  $('#j-sub').textContent = S.manual ? 'Manual choice is overriding the simulated location' : S.paused ? 'Paused – common homepage for today' : c.src === 'ask' ? 'Location not on yet – the home explains before it asks' : c.src === 'approx' ? 'Approximate – the home asks which building' : sc.steps[i].sub;
 }
 function syncControls() {
-  const val = { zone: S.zone, floor: String(S.floor), perm: S.perm, acc: S.acc, signed: S.signed ? '1' : '0', width: String(S.width), ts: String(S.ts), theme: S.theme, rm: S.rm ? '1' : '0' };
+  const val = { zone: S.zone, floor: String(S.floor), perm: S.perm, acc: S.acc, signed: S.signed ? '1' : '0', appt: S.appt ? '1' : '0', width: String(S.width), ts: String(S.ts), theme: S.theme, rm: S.rm ? '1' : '0' };
   $$('[data-ctl]').forEach(gp => $$('button', gp).forEach(b => b.setAttribute('aria-pressed', b.dataset.v === val[gp.dataset.ctl])));
   $$('[data-ctl="floor"] button').forEach(b => { b.disabled = S.zone !== 'inside'; });
   $('#floor-note').hidden = S.zone === 'inside';
+  $$('[data-ctl="appt"] button').forEach(b => { b.disabled = !S.signed; });
   $('[data-moment="lock"]').setAttribute('aria-pressed', !$('#lock').hidden);
 }
 $('#controls').addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b || b.disabled) return;
   const gp = b.closest('[data-ctl]');
   if (b.dataset.moment === 'lock') { if ($('#lock').hidden) showLock(); else { $('#lock').hidden = true; chrome(); } syncControls(); return; }
-  if (b.dataset.moment === 'reset') { Object.assign(S, { zone: 'away', floor: 1, perm: 'ask', acc: 'precise', signed: true, manual: null, paused: false, askHidden: false, guestDest: { clem: null, simm: null } }); closeSheet(true); closePage(); $('#lock').hidden = true; $('#sys').hidden = true; setTab(0); renderAll(); return; }
+  if (b.dataset.moment === 'reset') { $('#lock').hidden = true; goStep(0); return; }
   if (!gp) return;
   const k = gp.dataset.ctl, v = b.dataset.v;
   if (k === 'zone' || k === 'floor') S.showPassed = false;
@@ -1507,6 +1835,7 @@ $('#controls').addEventListener('click', e => {
   if (k === 'perm') { S.perm = v; if (v === 'ask') S.askHidden = false; $('#sys').hidden = true; }
   if (k === 'acc') S.acc = v;
   if (k === 'signed') { S.signed = v === '1'; if (S.tab === 4) renderMC(); }
+  if (k === 'appt') S.appt = v === '1';
   if (k === 'width') S.width = +v;
   if (k === 'ts') S.ts = +v;
   if (k === 'theme') { S.theme = v; applyTheme(true); }
@@ -1519,6 +1848,7 @@ function renderAll(force) {
   $('#ab-signin').hidden = S.signed; $('#ab-acct').hidden = !S.signed;
   renderHome(force);
   if (S.tab === 4) renderMC();
+  if ($('#pg-dept').classList.contains('on')) renderDept();
   if (WF) { const keep = WF.i; WF = { ...WF, steps: routeSteps(WF.roomId) }; WF.here = startIndex(ctx(), WF.roomId, WF.steps); WF.i = Math.min(keep, WF.steps.length - 1); renderWF(false); }
   renderJourney(); syncControls();
   if (!$('#lock').hidden) showLock();
@@ -1526,13 +1856,14 @@ function renderAll(force) {
 }
 
 /* ---------- Docs ---------- */
-$('#doc-states').innerHTML = STEPS.map((s, i) => `<li><b>${i + 1}. ${s.t}</b><span>${s.sub}</span></li>`).join('') + `<li><b>Approximate</b><span>Asks which building</span></li><li><b>Guest</b><span>A blank pass asks where you're going</span></li>`;
+$('#doc-states').innerHTML = SCN.visit.steps.map((s, i) => `<li><b>${i + 1}. ${s.t}</b><span>${s.sub}</span></li>`).join('') + `<li><b>Approximate</b><span>Asks which building</span></li><li><b>No visit today</b><span>Asks why you're here, then shows what's near you</span></li>`;
+$('#doc-scn').innerHTML = ['guest', 'book', 'why'].map(k => `<li><b>${SCN[k].n}. ${SCN[k].t}</b><span>${SCN[k].steps.map(s => s.t).join(' → ')}</span></li>`).join('');
 $('#doc-map').innerHTML = `<div style="display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">${mapBox({ plan: 'campus', label: 'Sample campus map', routes: [[DRIVE.clem, ''], [WALK.clem, 'plan']], you: DRIVE.clem[2] })}${mapBox({ plan: 'clem7', label: 'Sample plan of Floor 7', routes: [[[[156, 100], [104, 100]]]], you: [156, 100], flag: [104, 100], dest: 'c7-heart' })}</div>`;
 $('#gmap').innerHTML = ICON_MAP.map(r => `<li>${ico(r[0], 20)}<span>${r[2]}</span><code>${r[1]}</code></li>`).join('');
 
 applyTheme(false);
 renderTabs();
-renderAll();
+setScenario('guest');
 /* Fit the device to the window height on wide screens (the board scrolls; the phone stays whole) */
 function fitDevice() {
   const dev = $('.device'), wide = innerWidth >= 1000;
