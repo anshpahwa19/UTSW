@@ -40,6 +40,18 @@ The guest prototype's sign-in, on this prototype's tokens:
 - **Empty fields:** Sign in says "Enter your MyChart username and password" and focuses the empty field.
 - **Signed in:** a Blue card with Jordan Rivera (sample), the MyChart hand-offs (each opens in MyChart ↗), and Sign out.
 
+## Device mockups
+
+Drawn in CSS to the real devices' shapes, with no logos or photos. The Device control switches between them; the app adapts its status bar height, screen height, and system bars.
+
+| | iPhone 15 (390 × 844) | Samsung Galaxy S24 (360 × 780) |
+|---|---|---|
+| Frame | Titanium rim, 11 px black bezel, 51 px screen corners | Flat aluminum rim, 7 px bezel, 36 px screen corners |
+| Camera | Dynamic Island, 124 × 36 | Centred punch-hole, 12 px |
+| Buttons | Action button and two volume buttons on the left, side button on the right | Volume and power on the right |
+| Status bar | 54 px: time left of the island; signal, Wi-Fi, battery | 36 px: time left; Wi-Fi, signal, battery, 85% |
+| Bottom | Home indicator, 134 × 5 | Gesture bar, 108 × 4 |
+
 ## Common homepage modules (from `designs/guest`)
 
 The location layer sits on top; the guest home's modules follow in their usual CMS order in every state, so the common homepage is always there:

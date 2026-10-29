@@ -165,16 +165,36 @@ html:not(.ms-ready) .m-ico{fill:transparent!important}
 code{font-size:12.0px; background:var(--bd-chip); padding:2px 4px; border-radius:4px; color:var(--bd-ink)}
 
 /* ===================== Device ===================== */
-.device{background:var(--bd-bezel); padding:12.0px; border-radius:56px; box-shadow:0 24px 64px rgba(0,30,60,.28)}
+.device{position:relative; box-shadow:0 24px 64px rgba(0,30,60,.28)}
+/* Device mockups drawn to the real shapes – no logos. iPhone 15: titanium rim, thin black bezel, Dynamic Island, home indicator.
+   Galaxy S24: flat aluminum rim, slimmer bezel, squarer corners, centred punch-hole camera, gesture bar */
+.device.ios{padding:4px; border-radius:66px; background:linear-gradient(145deg,#8a8d92 0%,#3b3d41 18%,#5d6065 50%,#2c2e31 82%,#74777c 100%)}
+.device.ios .bezel{padding:11px; border-radius:62px; background:#030304}
+.device.ios .phone{border-radius:51px}
+.device.android{padding:3px; border-radius:46px; background:linear-gradient(145deg,#54575c 0%,#26282b 25%,#43464b 55%,#1f2023 100%)}
+.device.android .bezel{padding:7px; border-radius:43px; background:#030304}
+.device.android .phone{border-radius:36px}
+.hw{position:absolute; width:4px; border-radius:2px; background:linear-gradient(90deg,#1f2023,#6a6d72 60%,#2c2e31)}
+.hw.l{left:-3px} .hw.r{right:-3px}
+.device.ios .hw-1{top:136px; height:34px} .device.ios .hw-2{top:200px; height:64px} .device.ios .hw-3{top:280px; height:64px} .device.ios .hw-4{top:230px; height:104px}
+.device.android .hw-1,.device.android .hw-2{display:none}
+.device.android .hw-3{left:auto; right:-3px; top:178px; height:96px} .device.android .hw-4{top:298px; height:56px}
+.island{position:absolute; top:11px; left:50%; transform:translateX(-50%); width:124px; height:36px; border-radius:20px; background:#000; z-index:95; pointer-events:none}
+.device.android .island{top:12px; width:12px; height:12px; border-radius:50%; box-shadow:0 0 0 2px #111}
+.home-ind{position:absolute; bottom:8px; left:50%; transform:translateX(-50%); width:134px; height:5px; border-radius:3px; background:var(--ink); z-index:95; pointer-events:none; transition:background-color var(--d-base)}
+.device.android .home-ind{width:108px; height:4px; bottom:9px}
+.phone.on-lock .home-ind{background:#FFFFFF}
 .phone{
-  --pw:390px;
-  width:var(--pw); height:844px; position:relative; overflow:hidden; border-radius:44px; background:var(--bg); color:var(--ink);
+  --pw:390px; --ph:844px; --top:54px;
+  width:var(--pw); height:var(--ph); position:relative; overflow:hidden; border-radius:44px; background:var(--bg); color:var(--ink);
   font-family:var(--font); font-size:var(--t16); line-height:1.5; isolation:isolate;
-  transition:width var(--d-slow) var(--ease-in-out); -webkit-tap-highlight-color:transparent;
+  transition:width var(--d-slow) var(--ease-in-out), height var(--d-slow) var(--ease-in-out); -webkit-tap-highlight-color:transparent;
 }
 @media (max-width:460px){
-  .device{padding:0; background:none; box-shadow:none; border-radius:0; width:100%}
-  .phone{width:100%; max-width:var(--pw); border-radius:24.0px; border:1px solid var(--bd-line)}
+  .device,.device.ios,.device.android{padding:0; background:none; box-shadow:none; border-radius:0; width:100%}
+  .device .bezel,.device.ios .bezel,.device.android .bezel{padding:0; background:none; border-radius:0}
+  .hw{display:none}
+  .phone,.device.ios .phone,.device.android .phone{width:100%; max-width:var(--pw); border-radius:24.0px; border:1px solid var(--bd-line)}
 }
 :where(.phone) :where(h1,h2,h3,p,ol,ul){margin:0}
 :where(.phone) :where(ol,ul){padding:0; list-style:none}
@@ -200,11 +220,12 @@ code{font-size:12.0px; background:var(--bd-chip); padding:2px 4px; border-radius
 }
 .phone.theme-anim, .phone.theme-anim *{transition:background-color 320ms var(--ease-out), color 320ms var(--ease-out), border-color 320ms var(--ease-out), fill 320ms var(--ease-out), stroke 320ms var(--ease-out)!important}
 
-.statusbar{position:absolute; inset:0 0 auto 0; height:48.0px; z-index:70; display:flex; align-items:center; justify-content:space-between; padding:0 32.0px; font-size:14.0px; font-weight:600; color:#FFFFFF; pointer-events:none}
+.statusbar{position:absolute; inset:0 0 auto 0; height:var(--top); z-index:70; display:flex; align-items:center; justify-content:space-between; padding:6px 36px 0 44px; font-size:16.0px; font-weight:600; color:#FFFFFF; pointer-events:none; font-variant-numeric:tabular-nums}
+.device.android .statusbar{padding:2px 22px 0 24px; font-size:14.0px; font-weight:500}
 .statusbar.dk{color:var(--ink)}
-.sb-r{display:flex; gap:4.0px}
-.sb-r i{display:block; width:18px; height:10px; border-radius:3px; border:1.5px solid currentColor}
-.sb-r i:first-child{width:14px; border-radius:2px; background:currentColor}
+.sb-r{display:flex; align-items:center; gap:6px}
+.sb-r svg{display:block; fill:currentColor}
+.sb-pct{font-size:12.0px; font-weight:500}
 
 .screens{position:absolute; inset:0}
 .screen{position:absolute; inset:0}
@@ -212,13 +233,13 @@ code{font-size:12.0px; background:var(--bd-chip); padding:2px 4px; border-radius
 .scroller::-webkit-scrollbar{display:none}
 
 /* App bar: slim Blue band with the reversed logo (no hero) */
-.appbar{position:sticky; top:0; z-index:20; display:flex; align-items:center; gap:var(--s2); padding:48.0px var(--s4) var(--s2); background:var(--brand); --grad:-25}
+.appbar{position:sticky; top:0; z-index:20; display:flex; align-items:center; gap:var(--s2); padding:calc(var(--top) - 4px) var(--s4) var(--s2); background:var(--brand); --grad:-25}
 .appbar .logo{display:block; width:200px; height:auto; margin-left:calc(-1 * var(--s4)); flex:none}
 .appbar .sp{flex:1}
 .ab-btn{min-width:var(--hit); height:var(--hit); border-radius:var(--r-pill); border:0; background:rgba(255,255,255,.12); color:#FFFFFF; display:inline-flex; align-items:center; justify-content:center; gap:var(--s1); padding:0 var(--s3); font-size:var(--t14); font-weight:600; white-space:nowrap}
 .ab-btn.round{padding:0; width:var(--hit)}
 .avatar{width:32px; height:32px; border-radius:50%; background:#FFFFFF; color:#004278; display:grid; place-items:center; font-size:12.0px; font-weight:700}
-.page-bar{position:sticky; top:0; z-index:20; display:flex; align-items:center; gap:var(--s2); padding:48.0px var(--s2) var(--s2); background:var(--bg); border-bottom:1px solid var(--line)}
+.page-bar{position:sticky; top:0; z-index:20; display:flex; align-items:center; gap:var(--s2); padding:calc(var(--top) - 4px) var(--s2) var(--s2); background:var(--bg); border-bottom:1px solid var(--line)}
 .page-bar h1{font-size:var(--t18); font-weight:700; line-height:1.3; flex:1; min-width:0}
 .icon-btn{width:var(--hit); height:var(--hit); border-radius:50%; border:0; background:none; color:var(--ink); display:grid; place-items:center; flex:none}
 
@@ -522,7 +543,7 @@ button.map{border:0; padding:0; width:100%; text-align:left; color:inherit}
 .toast button{margin-left:auto; min-height:var(--hit); border:0; background:none; color:var(--on-inverse); font-weight:700; text-decoration:underline; padding:0 var(--s2)}
 .phone.rm .you,.phone.rm .rail-fill{transition:opacity var(--d-base)}
 /* ===================== MyChart sign-in (the guest prototype's Blue panel) ===================== */
-.page-h{padding:48.0px var(--s4) var(--s4); display:grid; gap:var(--s1)}
+.page-h{padding:calc(var(--top) - 4px) var(--s4) var(--s4); display:grid; gap:var(--s1)}
 .page-h h1{font-size:var(--t28); font-weight:800; letter-spacing:-.02em; line-height:1.15}
 .page-h p{font-size:var(--t16); color:var(--ink-2); line-height:1.4}
 .mc-panel{margin:0 var(--s4); padding:var(--s6) var(--s4) var(--s4); border-radius:var(--r-lg); color:#FFFFFF; background:var(--glow), var(--brand); display:grid; grid-template-columns:minmax(0,1fr); gap:var(--s3); --grad:-25}
@@ -690,9 +711,13 @@ button.map{border:0; padding:0; width:100%; text-align:left; color:inherit}
 
   <div class="main">
     <div class="stage">
-      <div class="device">
+      <div class="device ios" id="device">
+        <span class="hw l hw-1" aria-hidden="true"></span><span class="hw l hw-2" aria-hidden="true"></span><span class="hw l hw-3" aria-hidden="true"></span><span class="hw r hw-4" aria-hidden="true"></span>
+        <div class="bezel">
         <div class="phone" id="phone" lang="en">
-          <div class="statusbar" id="statusbar" aria-hidden="true"><span>9:41</span><span class="sb-r"><i></i><i></i></span></div>
+          <div class="statusbar" id="statusbar" aria-hidden="true"></div>
+          <div class="island" aria-hidden="true"></div>
+          <div class="home-ind" aria-hidden="true"></div>
           <div class="screens">
             <section class="screen" id="scr-0" aria-label="Home">
               <div class="scroller" id="home-scroll">
@@ -745,8 +770,9 @@ button.map{border:0; padding:0; width:100%; text-align:left; color:inherit}
           <div class="toast" id="toast" role="status" aria-live="polite"><span id="toast-t"></span></div>
           <div class="vh" aria-live="polite" id="sr"></div>
         </div>
+        </div>
       </div>
-      <p class="caption" id="cap">Simulated location – nothing is read from this device.</p>
+      <p class="caption" id="cap"><b id="dev-name">iPhone 15 · 390 × 844</b> · Simulated location – nothing is read from this device.</p>
     </div>
 
     <aside class="panel" aria-labelledby="pc-h">
@@ -758,7 +784,7 @@ button.map{border:0; padding:0; width:100%; text-align:left; color:inherit}
         <div class="ctl"><span id="l-acc">Accuracy</span><div class="seg" role="group" aria-labelledby="l-acc" data-ctl="acc"><button data-v="precise">Precise</button><button data-v="approx">Approximate</button></div></div>
         <div class="ctl"><span id="l-acct">MyChart</span><div class="seg" role="group" aria-labelledby="l-acct" data-ctl="signed"><button data-v="1">Signed in</button><button data-v="0">Guest</button></div></div>
         <div class="ctl"><span id="l-appt">Visit today (signed in)</span><div class="seg" role="group" aria-labelledby="l-appt" data-ctl="appt"><button data-v="1">Yes</button><button data-v="0">No</button></div></div>
-        <div class="ctl"><span id="l-w">Width</span><div class="seg" role="group" aria-labelledby="l-w" data-ctl="width"><button data-v="390">390</button><button data-v="360">360</button></div></div>
+        <div class="ctl"><span id="l-w">Device</span><div class="seg" role="group" aria-labelledby="l-w" data-ctl="width"><button data-v="390">390 · iPhone</button><button data-v="360">360 · Samsung</button></div></div>
         <div class="ctl"><span id="l-ts">Text size</span><div class="seg" role="group" aria-labelledby="l-ts" data-ctl="ts"><button data-v="1">Default</button><button data-v="1.3">Large</button></div></div>
         <div class="ctl"><span id="l-th">Theme</span><div class="seg" role="group" aria-labelledby="l-th" data-ctl="theme"><button data-v="system">System</button><button data-v="light">Light</button><button data-v="dark">Dark</button></div></div>
         <div class="ctl"><span id="l-m">Motion</span><div class="seg" role="group" aria-labelledby="l-m" data-ctl="rm"><button data-v="0">Full</button><button data-v="1">Reduced</button></div></div>
@@ -2024,6 +2050,17 @@ mqRM.addEventListener('change', () => { S.rm = mqRM.matches; chrome(); syncContr
 function chrome() {
   phone.classList.toggle('rm', S.rm);
   phone.style.setProperty('--pw', S.width + 'px'); phone.style.setProperty('--ts', S.ts);
+  const ios = S.width === 390, dev = $('#device');
+  if (dev.classList.contains('ios') !== ios || !$('#statusbar').innerHTML) {
+    dev.classList.toggle('ios', ios); dev.classList.toggle('android', !ios);
+    phone.style.setProperty('--ph', ios ? '844px' : '780px'); phone.style.setProperty('--top', ios ? '54px' : '36px');
+    $('#statusbar').innerHTML = ios
+      ? `<span>9:41</span><span class="sb-r"><svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg width="16" height="12" viewBox="0 0 16 12"><path d="M8 2.2c2.4 0 4.6.9 6.3 2.5l1.2-1.3C13.5 1.5 10.9.4 8 .4S2.5 1.5.5 3.4l1.2 1.3C3.4 3.1 5.6 2.2 8 2.2zm0 3.5c1.5 0 2.8.5 3.8 1.5L13 6c-1.4-1.3-3.1-2-5-2s-3.6.7-5 2l1.2 1.2c1-1 2.3-1.5 3.8-1.5zM8 9.2c.6 0 1.1.2 1.5.6L8 11.5 6.5 9.8c.4-.4.9-.6 1.5-.6z"/></svg><svg width="27" height="13" viewBox="0 0 27 13"><rect x=".5" y=".5" width="23" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2" y="2" width="20" height="9" rx="2"/><rect x="25" y="4.5" width="1.5" height="4" rx=".75" opacity=".45"/></svg></span>`
+      : `<span>9:41</span><span class="sb-r"><svg width="15" height="12" viewBox="0 0 16 12"><path d="M8 2.2c2.4 0 4.6.9 6.3 2.5l1.2-1.3C13.5 1.5 10.9.4 8 .4S2.5 1.5.5 3.4l1.2 1.3C3.4 3.1 5.6 2.2 8 2.2zm0 3.5c1.5 0 2.8.5 3.8 1.5L13 6c-1.4-1.3-3.1-2-5-2s-3.6.7-5 2l1.2 1.2c1-1 2.3-1.5 3.8-1.5zM8 9.2c.6 0 1.1.2 1.5.6L8 11.5 6.5 9.8c.4-.4.9-.6 1.5-.6z"/></svg><svg width="13" height="13" viewBox="0 0 13 13"><path d="M13 0v13H0z"/></svg><svg width="9" height="14" viewBox="0 0 9 14"><rect x="3" y="0" width="3" height="1.5" rx=".5"/><rect x=".75" y="1.5" width="7.5" height="12" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="2.25" y="4" width="4.5" height="8" rx=".5"/></svg><span class="sb-pct">85%</span></span>`;
+    $('#dev-name').textContent = ios ? 'iPhone 15 · 390 × 844' : 'Samsung Galaxy S24 · 360 × 780';
+    setTimeout(fitDevice, 450);
+  }
+  phone.classList.toggle('on-lock', !$('#lock').hidden);
   const onBlue = S.tab === 0 && !$('.page.on') || !$('#lock').hidden;
   $('#statusbar').classList.toggle('dk', !onBlue);
   const tb = $('.tabbar').offsetHeight;
