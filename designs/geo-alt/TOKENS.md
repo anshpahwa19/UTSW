@@ -45,34 +45,48 @@ The location layer sits on top; the guest home's modules follow in their usual C
 
 The menu adds "Why UT Southwestern" and "Patient resource guide". Article, resource, announcement, and campaign copy is copied unchanged from the guest prototype; all of it is sample CMS content.
 
+## Places near you: menus, prices, and times (for everyone at a campus)
+
+Care near you and Facilities show for every user at a campus, guests and patients alike. A facility with something to show opens a **place page** instead of going straight to directions. The page has the floor plan, floor, walking time, hours, and Directions (primary), then what is there:
+
+| Place | Shows |
+|---|---|
+| Café (Clements, Simmons) | Menu by meal with prices and Vegetarian or Gluten-free tags – "nothing to order in the app" |
+| Snacks (Floor 2) | Grab-and-go items and prices |
+| Lab | Walk-in wait, common tests with self-pay prices (Fasting tag), Get a price estimate |
+| Imaging | Walk-in wait, exams with self-pay prices, Get a price estimate |
+| Pharmacy | Services (flu shot, pickup, questions) and common items with prices |
+| Chapel, quiet rooms | Gathering times and what is in the room |
+| Parking (from the Park stop and search) | Spaces open, valet, and the rate table |
+
+Prices sit in a right-aligned tabular column and wrap rather than clip. Every list is tagged Sample. Restrooms, the ATM, and the information desk still go straight to directions.
+
 ## Scenarios (board switch above the journey)
 
 Each scenario has its own Back / Next steps. People, hours, waits, conditions, and times are sample data.
 
 **1. Guest nearby.** Not signed in, at a campus. Below a "Here for: Looking around" bar, the home shows:
 - **Care near you:** departments in this building, sorted by walking time from where you stand. They re-sort when you change floors.
-- **Doctors available today:** each with its next open time as a 44.0 button that starts a booking.
-- **Facilities:** the tiles for this floor.
+- **Open times today:** each doctor with today's open times as plain chips (information only). The row opens the section page.
+- **Facilities:** the tiles for this floor. Café, snacks, pharmacy, chapel, and quiet rooms open their place page.
 
 Any department opens a **section page** with:
 - Its floor plan.
 - Floor and suite, walking time, and hours.
-- Directions (primary) and Book a visit.
-- The walk-in wait for lab and imaging.
-- Doctors available.
-- Conditions we treat, or Tests here and Services here (sample).
+- Directions (primary).
+- The walk-in wait, plus test or exam prices, for lab and imaging.
+- Open times for today or tomorrow.
+- Conditions we treat or Services here (sample).
 - What's near it.
 
-Steps: Away → Arriving → Floor 1 → Heart clinic → Floor 2 → Simmons → No location.
+Steps: Away → Arriving → Floor 1 → Café menu → Floor 2 → Lab prices → Simmons → No location.
 
-**2. Book a visit.** Signed in with no visit today. "I need care" puts "Chest pain or trouble breathing? Call 911." first, then doctors free today. The booking page runs Care → Time → Details → Review → Booked:
-- **Care:** bookable care, nearest first.
-- **Time:** Today or Tomorrow, with time chips per doctor.
-- **Details:** MyChart fills in the patient when signed in. Guests enter name, date of birth, and phone, and Next stays disabled until all three are filled.
-- **Review:** a visit pass.
-- **Booked:** if the visit is today and here, the primary action is Start wayfinding, and the booking joins the home's pass and line. Otherwise it's Add to calendar.
+**2. Appointments – nothing is booked in the app.**
+- **With a visit in MyChart:** it leads the home. Care near you marks its section ("Your visit · 10:30 a.m."). On the section page, the visit comes first with Check in ↗, and the visit's doctor shows "Your visit" instead of times.
+- **Without a visit:** doctors show their open times today or tomorrow, as plain chips, never buttons. Below them: "Open times are for information. To schedule, call 214-648-3266."
+- **Guests:** see the same open times, plus "Sign in to see your visits".
 
-Booking is simulated; real booking uses MyChart (Epic) scheduling.
+Steps: Your visit → Heart clinic → No visit → Open times → Tomorrow → Guest.
 
 **3. Why you're here.** With no visit today, the home asks once on arrival, "What brings you to Clements University Hospital today?", with eight answers. "Your answer stays on this phone" and Not now are on the card. A "Here for …" bar with Change replaces the question afterwards.
 
@@ -82,7 +96,7 @@ Booking is simulated; real booking uses MyChart (Epic) scheduling.
 | Visiting someone | Visiting hours, Go to the information desk, café, restrooms, chapel |
 | Lab or imaging | Pick Lab or Imaging with walk-in waits → pass and line lead there |
 | Pharmacy | Straight to the pharmacy (pass and line), hours, prescription status (MyChart) |
-| I need care | 911 note, doctors free today, Book a visit |
+| I need care | 911 note, open times near you (for information) |
 | Pick up or drop off | Pickup at the North entrance, door parking, Go to the lobby |
 | Looking around | Everything near you (scenario 1) |
 | Something else | Search, classes, billing help, lost and found, talk to someone |
@@ -149,7 +163,8 @@ One builder for every route: Drive to the garage (campus) → Walk to the entran
 | Arriving, entrance, campus | Geofences around campuses, garages, and doors, with dwell time |
 | Floor and indoor route | Indoor positioning (BLE or Wi-Fi RTT) and a wayfinding SDK with floor plans |
 | Today's visits, check-in | Epic MyChart integration; MyCare hands off |
-| Doctors free today, booking | Epic scheduling (open slots by department and provider, direct or open scheduling) |
+| Your visits, open times | MyChart visits; Epic scheduling read-only (open slots by department and provider) – no booking in MyCare |
+| Menus, prices | Food service menus, pharmacy items, lab and imaging self-pay price lists (CMS or feeds) |
 | Walk-in waits | Lab and imaging queue feed |
 | Conditions treated, hours | Department content in the CMS, approved by each department |
 | Floor, suite, entrance | Department directory mapped to buildings |

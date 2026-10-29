@@ -3,7 +3,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..800&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=accessible,acute,apartment,arrow_back,arrow_forward,arrow_upward,article,assistant_navigation,biotech,calendar_add_on,calendar_month,campaign,chat,check,check_circle,chevron_left,chevron_right,close,contrast,dark_mode,directions_bus,directions_car,directions_walk,diversity_1,diversity_3,domain,door_front,door_open,edit_calendar,edit_location_alt,elevator,emergency,event_available,explore,hail,handshake,help,home,hourglass_top,how_to_reg,info,lab_profile,layers,light_mode,local_atm,local_parking,local_pharmacy,location_off,location_on,location_searching,lock,login,logout,map,menu,more_horiz,navigation,near_me,nutrition,open_in_new,pause_circle,payments,person,pin_drop,privacy_tip,psychology,public,receipt_long,restaurant,schedule,school,search,self_improvement,settings,stethoscope,support_agent,translate,vaccines,videocam,visibility,visibility_off,volunteer_activism,warning,wc,wifi,workspace_premium&display=block">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=accessible,acute,apartment,arrow_back,arrow_forward,arrow_upward,article,assistant_navigation,biotech,calendar_add_on,calendar_month,campaign,chat,check,check_circle,chevron_left,chevron_right,close,contrast,dark_mode,directions_bus,directions_car,directions_walk,diversity_1,diversity_3,domain,door_front,door_open,edit_location_alt,elevator,emergency,event_available,explore,hail,handshake,help,home,hourglass_top,how_to_reg,info,lab_profile,layers,light_mode,local_atm,local_parking,local_pharmacy,location_off,location_on,location_searching,lock,login,logout,map,menu,more_horiz,navigation,near_me,nutrition,open_in_new,pause_circle,payments,person,pin_drop,privacy_tip,psychology,public,receipt_long,restaurant,schedule,school,search,self_improvement,settings,stethoscope,support_agent,translate,vaccines,videocam,visibility,visibility_off,volunteer_activism,warning,wc,wifi,workspace_premium&display=block">
 <style>
 /* Layout: presentation board – a journey scrubber across the top (Back / Next), the 390 × 844 phone beside its prototype
    controls, then concise visual docs. Concept: the home is the patient's day drawn as a transit line with a visit pass.
@@ -603,20 +603,23 @@ button.map{border:0; padding:0; width:100%; text-align:left; color:inherit}
 .rows .row .tag{flex:none}
 .conds{display:flex; flex-wrap:wrap; gap:var(--s2)}
 .conds li{min-height:32px; display:inline-flex; align-items:center; padding:var(--s1) var(--s3); border-radius:var(--r-pill); background:var(--tint); color:var(--ink); font-size:var(--t14); line-height:1.3}
-/* Booking */
-.bk-q{font-size:var(--t20); font-weight:700; line-height:1.3}
-.row[aria-pressed="true"]{background:var(--tint); box-shadow:inset 0 0 0 2px var(--blue)}
-.row[aria-pressed="true"] .rt{color:var(--blue)}
+/* Open times (information only) and catalogs */
 .rows .row.opt{min-height:calc(64px * var(--ts))}
-.docs-slots{display:grid; gap:var(--s2)}
-.doc-card{background:var(--surface); border:1px solid var(--line); border-radius:var(--r-md); padding:var(--s3); display:grid; gap:var(--s3)}
-.doc-card .who{display:flex; align-items:center; gap:var(--s3)}
-.doc-card .who b{font-size:var(--t16); display:block; line-height:1.3}
-.doc-card .who span{font-size:var(--t14); color:var(--ink-2)}
-.done-hero{display:grid; justify-items:center; gap:var(--s2); text-align:center; padding:var(--s2) 0}
-.done-hero .dot{width:calc(56px * var(--ts)); height:calc(56px * var(--ts))}
-.phone:not(.rm) .done-hero .dot{animation:pop 520ms var(--spring)}
-.bk-note{font-size:var(--t14); color:var(--ink-2); display:flex; gap:var(--s2); align-items:center}
+.slots{display:flex; flex-wrap:wrap; gap:var(--s1); margin-top:var(--s1)}
+.slots span{display:inline-flex; align-items:center; min-height:24px; padding:0 var(--s2); border-radius:var(--r-sm); background:var(--tint); color:var(--ink); font-size:var(--t12); font-weight:600; font-variant-numeric:tabular-nums}
+.your-visit{display:inline-flex; align-items:center; gap:var(--s1); margin-top:var(--s1); padding:2px var(--s2); border-radius:var(--r-sm); background:var(--ctl); color:var(--on-ctl); font-size:var(--t12); font-weight:700; justify-self:start; width:max-content; max-width:100%; --grad:-25}
+.doc-row{align-items:flex-start}
+.doc-row .avatar-d{margin-top:2px}
+.doc-row .chev{align-self:center}
+.cat{display:grid; gap:var(--s2)}
+.cat h3{font-size:var(--t14); font-weight:700; color:var(--ink-2); text-transform:uppercase; letter-spacing:.06em}
+.cat-row{align-items:center; min-height:calc(48px * var(--ts))}
+.cat-row .txt{gap:var(--s1)}
+.cat-row .tag{justify-self:start}
+.price{flex:none; max-width:45%; text-align:right; font-size:var(--t16); font-weight:700; font-variant-numeric:tabular-nums; color:var(--ink); line-height:1.3}
+.visit-card{display:grid; gap:var(--s3)}
+.bk-note{font-size:var(--t14); color:var(--ink-2); display:flex; gap:var(--s2); align-items:flex-start; line-height:1.4}
+.bk-note .ms{flex:none}
 @media (prefers-reduced-motion: reduce){ .jfill,.jn .jd{transition:none} }
 </style>
 
@@ -673,10 +676,6 @@ button.map{border:0; padding:0; width:100%; text-align:left; color:inherit}
             <div class="page-bar"><button class="icon-btn" data-act="close-page" aria-label="Close"><span class="ms" aria-hidden="true">arrow_back</span></button><h1 id="dp-title">Department</h1></div>
             <div class="page-body" id="dp-body"></div>
           </div>
-          <div class="page" id="pg-book" role="dialog" aria-modal="true" aria-labelledby="bk-title">
-            <div class="page-bar"><button class="icon-btn" data-act="close-page" aria-label="Close booking"><span class="ms" aria-hidden="true">close</span></button><h1 id="bk-title">Book a visit</h1></div>
-            <div class="page-body" id="bk-body"></div>
-          </div>
           <div class="page" id="pg-info" role="dialog" aria-modal="true" aria-labelledby="in-title">
             <div class="page-bar"><button class="icon-btn" data-act="close-page" aria-label="Back"><span class="ms" aria-hidden="true">arrow_back</span></button><h1 id="in-title">MedBlog</h1></div>
             <div class="page-body" id="in-body"></div>
@@ -726,7 +725,7 @@ button.map{border:0; padding:0; width:100%; text-align:left; color:inherit}
   <div class="docs" id="docs">
     <section class="panel wide">
       <h2>Three scenarios on one home</h2>
-      <p>Pick a scenario above the journey. <b>1 Guest nearby:</b> at a campus, the home lists care near you sorted by walking time, doctors free today, and facilities; each section opens with directions, its doctors, and what it treats. <b>2 Book a visit:</b> care, time, details, review – the booking joins the pass and the line, with directions from where you stand. <b>3 Why you're here:</b> with no visit today, the home asks once on arrival; each answer reshapes the top of the home, and Change is always there.</p>
+      <p>Pick a scenario above the journey. <b>1 Guest nearby:</b> at a campus, everyone sees care near you sorted by walking time, open times, and facilities; each place opens with directions and what is there – the café menu, lab and imaging prices, pharmacy items, chapel times, parking rates. <b>2 Appointments:</b> nothing is booked in the app – a visit already in MyChart shows first; otherwise doctors show open times, for information. <b>3 Why you're here:</b> with no visit today, the home asks once on arrival; each answer reshapes the top of the home, and Change is always there.</p>
       <ul class="states" id="doc-scn"></ul>
     </section>
     <section class="panel wide">
@@ -781,7 +780,8 @@ button.map{border:0; padding:0; width:100%; text-align:left; color:inherit}
         <tr><td>Arriving, entrance</td><td>Geofences around campus, garages, doors</td></tr>
         <tr><td>Floor, indoor route</td><td>Indoor positioning and a wayfinding SDK</td></tr>
         <tr><td>Today's visits</td><td>Epic MyChart integration</td></tr>
-        <tr><td>Doctors free, booking</td><td>Epic scheduling</td></tr>
+        <tr><td>Open times, your visits</td><td>Epic scheduling (read only) and MyChart</td></tr>
+        <tr><td>Menus, prices</td><td>Food service, pharmacy, lab, and imaging price feeds</td></tr>
         <tr><td>Walk-in waits</td><td>Lab and imaging queue feed</td></tr>
         <tr><td>Floor, suite</td><td>Department directory by building</td></tr>
         <tr><td>Spaces open</td><td>Garage occupancy feed</td></tr>
@@ -790,7 +790,7 @@ button.map{border:0; padding:0; width:100%; text-align:left; color:inherit}
     </section>
     <section class="panel wide">
       <h2>Glyphs</h2>
-      <p>One concept, one glyph – 86 glyphs from Material Symbols Rounded, served as a subset (about 100 KB).</p>
+      <p>One concept, one glyph – 85 glyphs from Material Symbols Rounded, served as a subset (about 100 KB).</p>
       <ul class="gmap" id="gmap"></ul>
     </section>
   </div>
@@ -859,11 +859,10 @@ const ICON_MAP = [
   ['more', 'more_horiz', 'Something else', 'Why you are here', 'Why you are here'],
   ['pickup', 'hail', 'Pick up or drop off', 'Why you are here', 'Why you are here'],
   ['emergency', 'emergency', 'Emergency – call 911', 'I need care', 'Why you are here'],
-  ['book', 'edit_calendar', 'Book a visit', 'Doctors, department page, booking', 'Booking'],
-  ['time', 'schedule', 'Hours and times', 'Department page, booking', 'Booking'],
-  ['wait', 'hourglass_top', 'Walk-in wait', 'Lab and imaging', 'Booking'],
-  ['person', 'person', 'Who the visit is for', 'Booking', 'Booking'],
-  ['calAdd', 'calendar_add_on', 'Add to calendar', 'Booked', 'Booking'],
+  ['time', 'schedule', 'Hours and open times', 'Place pages, campaign', 'Places near you'],
+  ['wait', 'hourglass_top', 'Walk-in wait', 'Lab and imaging', 'Places near you'],
+  ['person', 'person', 'Doctor', 'Search results', 'Places near you'],
+  ['calAdd', 'calendar_add_on', 'Add to calendar', 'Flu campaign', 'Common homepage'],
   ['navigate', 'navigation', 'Start wayfinding', 'Stop card', 'Wayfinding'],
   ['mapApp', 'map', 'Open in your map app', 'Directions', 'Wayfinding'],
   ['arrived', 'check_circle', 'Arrived or done', 'Line, directions', 'Wayfinding', 'f1'],
@@ -949,17 +948,19 @@ ROOM_ROWS.forEach(([id, plan, side, x0, x1, kind, name, suite, ic]) => {
 });
 const roomsOn = plan => ROOM_ROWS.filter(r => r[1] === plan).map(r => ROOMS[r[0]]);
 const planOf = (b, f) => b + f;
-const VISITS = { clem: { id: 'v1', room: 'c7-heart', time: '10:30 a.m.' }, simm: { id: 'v2', room: 's1-onc', time: '2 p.m.' } };
+const VISITS = { clem: { id: 'v1', room: 'c7-heart', doc: 'd1', time: '10:30 a.m.' }, simm: { id: 'v2', room: 's1-onc', doc: 'd4', time: '2 p.m.' } };
 const GUEST_DEST = { clem: ['c7-heart', 'c1-img', 'c2-lab', 'c1-pharm'], simm: ['s1-onc', 's1-res', 's1-pharm'] };
 const SUPPORT = [['navigator', 'Navigators'], ['counsel', 'Counseling'], ['nutrition', 'Nutrition'], ['groups', 'Groups'], ['education', 'Classes'], ['caregiver', 'Caregivers']];
 
 /* Departments and doctors near you (all sample: hours, waits, conditions, and people are fictional) */
 const DEPT = {
-  'c7-heart': { spec: 'Cardiology', hours: '8 a.m. – 5 p.m.', book: true, careLabel: 'Conditions we treat', care: ['Heart rhythm problems', 'High blood pressure', 'Heart failure', 'Heart valve disease'] },
-  'c1-img': { spec: 'Imaging', hours: '7 a.m. – 7 p.m.', wait: 'About 15 min wait', careLabel: 'Tests here', care: ['X-ray', 'CT', 'MRI', 'Ultrasound'] },
-  'c2-lab': { spec: 'Lab', hours: '7 a.m. – 6 p.m.', wait: 'About 10 min wait', careLabel: 'Tests here', care: ['Blood tests', 'Urine tests', 'Glucose tests'] },
-  'c2-rehab': { spec: 'Physical therapy', hours: '8 a.m. – 6 p.m.', book: true, careLabel: 'Conditions we treat', care: ['Back and neck pain', 'Recovery after surgery', 'Sports injuries', 'Balance problems'] },
-  's1-onc': { spec: 'Oncology', hours: '8 a.m. – 5 p.m.', book: true, careLabel: 'Conditions we treat', care: ['Breast cancer', 'Lung cancer', 'Blood cancers', 'Second opinions'] },
+  'c7-heart': { spec: 'Cardiology', hours: '8 a.m. – 5 p.m.', careLabel: 'Conditions we treat', care: ['Heart rhythm problems', 'High blood pressure', 'Heart failure', 'Heart valve disease'] },
+  'c1-img': { spec: 'Imaging', hours: '7 a.m. – 7 p.m.', wait: 'About 15 min wait', estimate: true, catLabel: 'Exams and self-pay prices', note: 'Exams need an order from your care team. X-rays are walk-in. What you pay depends on your insurance.', cat: [
+    ['Exams', [['Chest X-ray', '$65', 'Walk-in'], ['Ultrasound, abdomen', '$240', ''], ['Screening mammogram', '$150', ''], ['CT, head', '$350', ''], ['MRI, knee', '$650', '']]]] },
+  'c2-lab': { spec: 'Lab', hours: '7 a.m. – 6 p.m.', wait: 'About 10 min wait', estimate: true, catLabel: 'Tests and self-pay prices', note: 'Most tests need an order from your care team. What you pay depends on your insurance.', cat: [
+    ['Common tests', [['Complete blood count', '$18', ''], ['Basic metabolic panel', '$24', ''], ['Lipid panel', '$22', 'Fasting'], ['Hemoglobin A1c', '$20', ''], ['Thyroid (TSH)', '$26', ''], ['Vitamin D', '$35', ''], ['Urinalysis', '$12', '']]]] },
+  'c2-rehab': { spec: 'Physical therapy', hours: '8 a.m. – 6 p.m.', careLabel: 'Conditions we treat', care: ['Back and neck pain', 'Recovery after surgery', 'Sports injuries', 'Balance problems'] },
+  's1-onc': { spec: 'Oncology', hours: '8 a.m. – 5 p.m.', careLabel: 'Conditions we treat', care: ['Breast cancer', 'Lung cancer', 'Blood cancers', 'Second opinions'] },
   's1-res': { spec: 'Support services', hours: '9 a.m. – 5 p.m.', careLabel: 'Services here', care: ['Patient navigators', 'Counseling', 'Nutrition', 'Support groups'] }
 };
 const DOCS = [
@@ -970,7 +971,6 @@ const DOCS = [
   { id: 'd5', name: 'Taylor Kim, M.D.', ini: 'TK', room: 's1-onc', today: [], tomorrow: ['10:30 a.m.'] }
 ];
 const DOC = Object.fromEntries(DOCS.map(d => [d.id, d]));
-const DAYS = { today: 'Today, Tuesday, Oct. 27', tomorrow: 'Wednesday, Oct. 28' };
 // [key, icon, label]
 const REASONS = [
   ['appt', 'visits', 'An appointment'], ['visit', 'visitor', 'Visiting someone'],
@@ -980,10 +980,9 @@ const REASONS = [
 ];
 const REASON = Object.fromEntries(REASONS.map(r => [r[0], r]));
 const hasVisits = () => S.signed && S.appt;
-/* Where this person is going here today, outside their MyChart visits: a booking made here, or a place they chose */
+/* Where this person is going here today, outside their MyChart visits: a place they chose */
 function destRoom(p) {
   if (!p) return null;
-  if (S.booked && S.booked.day === 'today' && ROOMS[S.booked.room].b === p) return S.booked.room;
   return S.guestDest[p] || null;
 }
 /* Walking minutes from where you are (sample estimate: 80 map units a minute, plus the elevator) */
@@ -996,7 +995,53 @@ function walkMin(c, r) {
   return Math.max(1, base + Math.round(d / 80));
 }
 const whereLabel = (c, r) => placeOf(c) === r.b ? `Floor ${r.floor} · ${walkMin(c, r)} min` : `${PLACES[r.b].short} · ${walkMin(c, r)} min`;
-const deptsNear = (c, onlyBook) => Object.keys(DEPT).map(id => ROOMS[id]).filter(r => (!onlyBook || DEPT[r.id].book) && (onlyBook || r.b === placeOf(c))).sort((a, b) => walkMin(c, a) - walkMin(c, b));
+const deptsNear = c => Object.keys(DEPT).map(id => ROOMS[id]).filter(r => r.b === placeOf(c)).sort((a, b) => walkMin(c, a) - walkMin(c, b));
+/* Catalogs for places near you – to show what is there, never to order or pay. Every item, price, and time is sample. */
+const QUIET = { spec: 'Quiet room', hours: 'Open 24 hours', catLabel: 'In this room', note: 'Open to patients, families, and staff', cat: [['Here for you', [['Seating for six', '', ''], ['Dimmable lights', '', ''], ['A chaplain on call', 'Ask the desk', '24 hours']]]] };
+const PLACEINFO = {
+  'c1-cafe': { spec: 'Café', hours: '6:30 a.m. – 7 p.m.', catLabel: 'Menu', note: 'Menu changes daily. Pay at the register – nothing to order in the app.', cat: [
+    ['Breakfast', [['Egg and cheese sandwich', '$4.50', ''], ['Oatmeal with fruit', '$3.25', 'Vegetarian'], ['Yogurt parfait', '$3.75', 'Vegetarian']]],
+    ['Lunch', [['Grilled chicken salad', '$8.95', 'Gluten-free'], ['Turkey wrap', '$7.50', ''], ['Soup of the day', '$4.25', ''], ['Veggie grain bowl', '$8.25', 'Vegetarian']]],
+    ['Drinks', [['Coffee', '$2.25', ''], ['Iced tea', '$2.00', ''], ['Fruit smoothie', '$4.95', 'Vegetarian']]]] },
+  'c2-snack': { spec: 'Snacks', hours: 'Open 24 hours', catLabel: 'Grab and go', note: 'Vending and a self-serve cooler. Cards accepted.', cat: [
+    ['Grab and go', [['Fresh fruit cup', '$2.75', 'Vegetarian'], ['Trail mix', '$2.25', 'Vegetarian'], ['Sandwich of the day', '$5.95', ''], ['Bottled water', '$1.50', '']]]] },
+  's1-cafe': { spec: 'Café', hours: '7 a.m. – 3 p.m.', catLabel: 'Menu', note: 'Menu changes daily. Pay at the register – nothing to order in the app.', cat: [
+    ['All day', [['Turkey and avocado sandwich', '$7.25', ''], ['Hummus and vegetable plate', '$5.50', 'Vegetarian'], ['Chicken noodle soup', '$4.25', ''], ['Ginger tea', '$2.00', ''], ['Coffee', '$2.25', '']]]] },
+  'c1-pharm': { spec: 'Pharmacy', hours: '8 a.m. – 7 p.m.', catLabel: 'Services and common items', note: 'What you pay for a prescription depends on your insurance.', cat: [
+    ['Services', [['Prescription pickup', 'Varies', ''], ['Flu shot', '$0 with most plans', 'No appointment'], ['Questions for a pharmacist', 'Free', '']]],
+    ['Common items', [['Pain reliever, 100 tablets', '$6.99', ''], ['Allergy relief, 30 tablets', '$9.99', ''], ['Adhesive bandages, 30', '$4.49', ''], ['Digital thermometer', '$12.99', '']]]] },
+  's1-pharm': { spec: 'Pharmacy', hours: '8:30 a.m. – 5 p.m.', catLabel: 'Services and common items', note: 'What you pay for a prescription depends on your insurance.', cat: [
+    ['Services', [['Prescription pickup', 'Varies', ''], ['Questions for a pharmacist', 'Free', '']]],
+    ['Common items', [['Lip balm', '$3.49', ''], ['Unscented lotion', '$7.99', ''], ['Dry mouth rinse', '$8.49', '']]]] },
+  'c1-chapel': { spec: 'Chapel', hours: 'Open 24 hours', catLabel: 'This week', note: 'All faiths welcome.', cat: [
+    ['Gatherings', [['Morning prayer', 'Weekdays, 8 a.m.', ''], ['Interfaith service', 'Tuesdays, noon', ''], ['A chaplain on call', 'Ask the desk', '24 hours']]]] },
+  'c2-quiet': QUIET, 's1-quiet': QUIET
+};
+const PARKING = {
+  clem: { title: 'Garage A', rates: [['Up to 1 hour', '$2'], ['1 to 3 hours', '$6'], ['3 to 6 hours', '$10'], ['Daily maximum', '$12'], ['Valet at the North entrance', '$15'], ['Patients with a validated ticket', 'First 2 hours free']] },
+  simm: { title: 'Simmons garage', rates: [['Up to 1 hour', '$2'], ['1 to 3 hours', '$6'], ['Daily maximum', '$12'], ['Patients in treatment', 'Free with validation']] }
+};
+const placeData = id => DEPT[id] || PLACEINFO[id] || null;
+function catalogHTML(D) {
+  return `<section class="sec" style="padding:0" aria-labelledby="cat-h"><div class="near-h"><h2 class="sec-h" id="cat-h">${D.catLabel}</h2><span class="tag">Sample</span></div>
+    ${D.cat.map(([h, items]) => `<div class="cat"><h3>${h}</h3><ul class="rows">${items.map(([n, pr, tag]) => `<li><div class="row cat-row"><span class="txt"><span class="rt">${n}</span>${tag ? `<span class="tag">${tag}</span>` : ''}</span>${pr ? `<span class="price">${pr}</span>` : ''}</div></li>`).join('')}</ul></div>`).join('')}
+    ${D.note ? `<p class="bk-note">${ico('info', 20)}<span>${D.note}</span></p>` : ''}
+    ${D.estimate ? `<button class="btn" data-act="page" data-page="ann1">${ico('money', 20)}<span>Get a price estimate</span></button>` : ''}</section>`;
+}
+/* Open times: information only. A visit already in MyChart shows instead of times; nothing is booked here */
+const visitWith = d => hasVisits() ? Object.values(VISITS).find(v => v.doc === d.id) || null : null;
+const visitIn = id => hasVisits() ? Object.values(VISITS).find(v => v.room === id) || null : null;
+function docRow(c, d, day = 'today', link = true) {
+  const r = ROOMS[d.room], v = visitWith(d), list = d[day];
+  const what = v ? `<span class="your-visit">${ico('visits', 16)}Your visit · ${v.time}</span>`
+    : list.length ? `<span class="slots">${list.map(t => `<span>${t}</span>`).join('')}</span>` : `<span class="rs">No open times ${day === 'today' ? 'today' : 'tomorrow'}</span>`;
+  const label = `${d.name}, ${DEPT[d.room].spec}. ${v ? `Your visit at ${v.time}, from MyChart` : list.length ? `Open times ${day}: ${list.join(', ')}` : `No open times ${day}`}`;
+  const inner = `<span class="avatar-d" aria-hidden="true">${d.ini}</span><span class="txt"${link ? ' aria-hidden="true"' : ''}><span class="rt">${d.name}</span><span class="rs">${DEPT[d.room].spec} · ${walkMin(c, r)} min</span>${what}</span>`;
+  return link ? `<li><button class="row doc-row" data-act="dept" data-room="${d.room}" aria-label="${label}. Opens ${r.name}">${inner}${ico('next', 20, 'chev')}</button></li>`
+    : `<li><div class="row doc-row" role="group" aria-label="${label}">${inner}</div></li>`;
+}
+const slotNote = () => `<p class="bk-note">${ico('info', 20)}<span>Open times are for information. To schedule, call 214-648-3266.</span></p>`;
+
 
 /* Campus routes (map units). You and the route stay on roads, walkways, and corridors */
 const DRIVE = { clem: [[0, 100], [76, 100], [76, 64]], simm: [[0, 100], [76, 100], [76, 136]] };
@@ -1056,7 +1101,7 @@ function mapBox({ plan, label, foot, btn, ...o }) {
 /* ---------- State ---------- */
 const mqRM = matchMedia('(prefers-reduced-motion: reduce)');
 const mqDark = matchMedia('(prefers-color-scheme: dark)');
-const S = { zone: 'away', floor: 1, perm: 'ask', acc: 'precise', signed: true, width: 390, ts: 1, theme: 'system', rm: mqRM.matches, manual: null, paused: false, askHidden: false, guestDest: { clem: null, simm: null }, tab: 0, pickB: null, showPassed: false, appt: true, reason: null, booked: null, book: null, scn: 'guest', step: 0, alert: false, alertsAll: false, fluCal: false, soScope: 'All' };
+const S = { zone: 'away', floor: 1, perm: 'ask', acc: 'precise', signed: true, width: 390, ts: 1, theme: 'system', rm: mqRM.matches, manual: null, paused: false, askHidden: false, guestDest: { clem: null, simm: null }, tab: 0, pickB: null, showPassed: false, appt: true, reason: null, scn: 'guest', step: 0, alert: false, alertsAll: false, fluCal: false, soScope: 'All' };
 
 /* Precedence: your choice → paused → permission → signal → accuracy → place and floor */
 function ctx() {
@@ -1122,10 +1167,9 @@ function lineModel(c) {
   if (!p) return null;
   const P = PLACES[p], dId = destRoom(p), d = dId && ROOMS[dId];
   if (!d) return null;
-  const bk = S.booked && S.booked.room === dId ? S.booked : null;
   const stops = [{ k: 'park', ic: 'parking', t: `Park in ${P.garage}` }, { k: 'enter', ic: 'entrance', t: `Enter at the ${P.door}` }];
   if (d && d.floor !== 1) stops.push({ k: 'lift', ic: 'elevator', t: `${P.lift === 'Elevator B' ? 'Elevator B' : 'Elevator'} to Floor ${d.floor}` });
-  stops.push({ k: 'dest', ic: 'clinic', t: d.name, m: bk ? bk.slot : '' });
+  stops.push({ k: 'dest', ic: 'clinic', t: d.name });
   let idx = { arriving: 0, entrance: 1, simmons: 1 }[c.zone];
   if (c.zone === 'inside') idx = d && d.floor !== 1 && c.floor !== d.floor ? 2 : stops.length - 1;
   return { title: 'Your way in', stops, idx, active, room: dId };
@@ -1143,8 +1187,9 @@ function tileList(items) {
   return `<ul class="tiles">${items.map((t, i) => `<li style="display:contents"><button class="tile" style="--i:${i}" ${t.attrs}>${ico(t.ic)}<b>${t.name}</b>${t.sub ? `<span>${t.sub}</span>` : ''}</button></li>`).join('')}</ul>`;
 }
 function amenityTiles(plan, youX) {
-  const items = roomsOn(plan).filter(r => r.kind === 'amen').map(r => ({ ic: r.ic, name: r.name, sub: `${Math.max(1, Math.round(Math.abs(r.cx - youX) / 80))} min`, attrs: `data-act="wf" data-room="${r.id}" aria-label="${r.name}, ${Math.max(1, Math.round(Math.abs(r.cx - youX) / 80))} minute walk, directions"` }));
-  if (items.length < 3 && plan !== 'clem1') ['c1-cafe', 'c1-pharm'].slice(0, 3 - items.length).forEach(id => { const r = ROOMS[id]; items.push({ ic: r.ic, name: r.name, sub: 'Floor 1', attrs: `data-act="wf" data-room="${id}" aria-label="${r.name}, Floor 1, directions"` }); });
+  const act = id => PLACEINFO[id] ? `data-act="dept" data-room="${id}"` : `data-act="wf" data-room="${id}"`;
+  const items = roomsOn(plan).filter(r => r.kind === 'amen').map(r => ({ ic: r.ic, name: r.name, sub: `${Math.max(1, Math.round(Math.abs(r.cx - youX) / 80))} min`, attrs: `${act(r.id)} aria-label="${r.name}, ${Math.max(1, Math.round(Math.abs(r.cx - youX) / 80))} minute walk, ${PLACEINFO[r.id] ? 'what is here' : 'directions'}"` }));
+  if (items.length < 3 && plan !== 'clem1') ['c1-cafe', 'c1-pharm'].slice(0, 3 - items.length).forEach(id => { const r = ROOMS[id]; items.push({ ic: r.ic, name: r.name, sub: 'Floor 1', attrs: `${act(id)} aria-label="${r.name}, Floor 1, what is here"` }); });
   return items;
 }
 const btnWF = (room, label = 'Start wayfinding') => `<button class="btn pri" data-act="wf" data-room="${room}">${ico('navigate', 20)}<span>${label}</span></button>`;
@@ -1152,7 +1197,7 @@ const btnExt = (label, key) => `<button class="btn" data-act="ext" data-label="$
 
 function stopPanel(k, c, L) {
   const p = placeOf(c) || 'clem', P = PLACES[p], room = L.room, r = ROOMS[room];
-  const checkIn = S.signed && (hasVisits() || (S.booked && S.booked.room === room)) ? btnExt('Check in', 'checkin') : '';
+  const checkIn = hasVisits() ? btnExt('Check in', 'checkin') : '';
   switch (k) {
     case 'leave':
       return mapBox({ plan: 'campus', label: 'Sample map: the drive to Garage A, then the walkway to the North entrance', routes: [[DRIVE.clem, 'plan'], [WALK.clem, 'plan']], destB: 'clem', btn: `data-act="wf" data-room="${room}" aria-label="Open directions"` }) +
@@ -1160,6 +1205,7 @@ function stopPanel(k, c, L) {
     case 'park':
       return mapBox({ plan: 'campus', label: `Sample map: you are parking in ${P.garage}`, routes: [[DRIVE[p], 'draw'], [WALK[p], 'plan']], you: DRIVE[p][DRIVE[p].length - 1], destB: p, drive: p, btn: `data-act="wf" data-room="${room}" aria-label="Open directions"` }) +
         `<div class="stats"><div class="stat">${ico('parking', 20)}<b>${P.open}</b><span>spaces open</span></div><div class="stat">${ico('money', 20)}<b>$2</b><span>per hour</span></div><div class="stat">${ico('accessible', 20)}<b>Valet</b><span>at the door</span></div></div>` +
+        `<button class="link-btn" data-act="page" data-page="parking-${p}">${ico('money', 16)}All parking rates</button>` +
         `<div class="btn-row">${btnWF(room)}</div>`;
     case 'enter':
       return mapBox({ plan: 'campus', label: `Sample map: you are at the ${P.door}`, routes: [[DRIVE[p], 'done'], [WALK[p], 'done']], you: WALK[p][2], pulse: true, destB: p, btn: `data-act="wf" data-room="${room}" aria-label="Open directions"` }) +
@@ -1325,6 +1371,12 @@ function renderInfo() {
     const list = FEATURED.map((f, i) => [f, i]).filter(([f]) => blogTopic === 'All' || f.kick === blogTopic);
     h = `<div class="choose" role="group" aria-label="Topic">${BLOG_TOPICS.map(t => `<button class="chip" data-act="blog-topic" data-v="${t}" aria-pressed="${blogTopic === t}">${t}</button>`).join('')}</div>
       <ul class="rows">${list.map(([f, i]) => `<li><button class="row blog-row" data-act="page" data-page="art-${i}"><span class="art thumb">${artSVG(f.m)}</span><span class="txt"><span class="rt">${f.title}</span><span class="rs">${f.short} · ${f.read}</span></span></button></li>`).join('')}</ul>`;
+  } else if (k.startsWith('parking-')) {
+    const b = k.slice(8), G = PARKING[b], P = PLACES[b]; title = 'Parking';
+    h = `<h2 class="in-t">${G.title}</h2><p class="in-m">${P.full}</p>
+      <div class="stats"><div class="stat">${ico('parking', 20)}<b>${P.open}</b><span>spaces open</span></div><div class="stat">${ico('accessible', 20)}<b>Valet</b><span>at the door</span></div><div class="stat">${ico('time', 20)}<b>24 hours</b><span>open</span></div></div>
+      <section class="sec" style="padding:0"><div class="near-h"><h2 class="sec-h">Rates</h2><span class="tag">Sample</span></div><ul class="rows">${G.rates.map(([n, pr]) => `<li><div class="row cat-row"><span class="txt"><span class="rt">${n}</span></span><span class="price">${pr}</span></div></li>`).join('')}</ul>
+      <p class="bk-note">${ico('info', 20)}<span>Pay at the exit with a card. Ask your clinic to validate your ticket.</span></p></section>`;
   } else if (k === 'news') {
     title = 'Announcements'; h = `<ul class="rows">${ANN.map(annRow).join('')}</ul>`;
   } else if (k.startsWith('art-')) {
@@ -1352,12 +1404,6 @@ function hereFor() {
   const [, ic, t] = REASON[S.reason];
   return `<div class="here-for">${ico(ic, 20)}<span>Here for <b>${t}</b></span><span class="sp"></span><button class="link-btn" data-act="reason-change" aria-label="Change why you're here">Change</button></div>`;
 }
-const docRow = (c, d) => {
-  const r = ROOMS[d.room], slot = d.today[0];
-  return `<li><div class="row"><span class="avatar-d" aria-hidden="true">${d.ini}</span><span class="txt"><span class="rt">${d.name}</span><span class="rs">${DEPT[d.room].spec} · ${walkMin(c, r)} min</span></span>${slot
-    ? `<button class="chip slot" data-act="book" data-room="${d.room}" data-doc="${d.id}" data-slot="${slot}" aria-label="Book ${d.name} today at ${slot}">${slot}</button>`
-    : `<button class="chip slot later" data-act="book" data-room="${d.room}" data-doc="${d.id}" data-day="tomorrow" data-slot="${d.tomorrow[0]}" aria-label="Book ${d.name} tomorrow at ${d.tomorrow[0]}">Tomorrow</button>`}</div></li>`;
-};
 function focusFor(c, anim) {
   const p = placeOf(c), P = PLACES[p], cls = `card focus${anim ? ' rise' : ''}`;
   const info = p === 'clem' ? 'c1-info' : 's1-info';
@@ -1370,7 +1416,7 @@ function focusFor(c, anim) {
     case 'visit':
       return `<div class="${cls}"><h2>Visiting hours 9 a.m. – 9 p.m.</h2><p class="sub">Ask for a patient's room at the ${ROOMS[info].name.toLowerCase()}, Floor 1</p>
         <div class="btn-row">${btnWF(info, `Go to the ${ROOMS[info].name.toLowerCase()}`)}</div>
-        ${tileList(roomsOn(planOf(p, 1)).filter(r => ['food', 'chapel', 'restroom'].includes(r.ic)).map(r => ({ ic: r.ic, name: r.name, sub: `${walkMin(c, r)} min`, attrs: `data-act="wf" data-room="${r.id}"` })))}<span class="tag" style="justify-self:start">Sample hours</span></div>`;
+        ${tileList(roomsOn(planOf(p, 1)).filter(r => ['food', 'chapel', 'restroom'].includes(r.ic)).map(r => ({ ic: r.ic, name: r.name, sub: `${walkMin(c, r)} min`, attrs: PLACEINFO[r.id] ? `data-act="dept" data-room="${r.id}"` : `data-act="wf" data-room="${r.id}"` })))}<span class="tag" style="justify-self:start">Sample hours</span></div>`;
     case 'lab':
       if (destRoom(p)) return '';
       return `<div class="${cls}"><h2>Lab or imaging?</h2><ul class="rows">${['c2-lab', 'c1-img'].map(id => { const r = ROOMS[id]; return `<li><button class="row opt" data-act="dest" data-room="${id}">${dot(id === 'c2-lab' ? 'lab' : 'clinic')}<span class="txt"><span class="rt">${r.name}</span><span class="rs">Floor ${r.floor} · ${DEPT[id].wait}</span></span>${ico('next', 20, 'chev')}</button></li>`; }).join('')}</ul>
@@ -1379,11 +1425,9 @@ function focusFor(c, anim) {
       return `<div class="${cls}"><h2>Pharmacy open until 7 p.m.</h2><p class="sub">Floor 1 · No appointment needed</p>
         <div class="btn-row">${S.signed ? btnExt('Prescription status', 'pharmacy') : `<button class="btn" data-act="tab" data-tab="4">${ico('lock', 20)}<span>Sign in for prescription status</span></button>`}</div><span class="tag" style="justify-self:start">Sample hours</span></div>`;
     case 'care': {
-      if (S.booked && destRoom(p)) return '';
       const docs = DOCS.filter(d => ROOMS[d.room].b === p);
       return `<div class="${cls}"><p class="urgent">${ico('emergency', 20)}Chest pain or trouble breathing? Call 911.</p>
-        <h2>Doctors available today</h2><ul class="rows">${docs.map(d => docRow(c, d)).join('')}</ul>
-        <div class="btn-row"><button class="btn pri" data-act="book">${ico('book', 20)}<span>Book a visit</span></button></div></div>`;
+        <h2>Open times today</h2><ul class="rows">${docs.map(d => docRow(c, d)).join('')}</ul>${slotNote()}</div>`;
     }
     case 'pickup':
       return `<div class="${cls}"><h2>Pick up at the ${P.door}</h2><p class="sub">Wait in the lobby – drivers stop at the door</p>
@@ -1396,87 +1440,39 @@ function focusFor(c, anim) {
   }
   return '';
 }
-/* Near you: care sorted by walking time, doctors free today, and facilities on this floor */
+/* Near you, for everyone at a campus: care sorted by walking time, open times, and facilities with what they offer */
 function nearbyFor(c) {
   const p = placeOf(c), depts = deptsNear(c), docs = DOCS.filter(d => ROOMS[d.room].b === p);
   const plan = c.zone === 'inside' ? planOf('clem', c.floor) : planOf(p, 1), youX = c.zone === 'inside' ? youOnFloor(c, null)[0] : 12;
-  // Looking around gets everything; a focused answer keeps only what supports it
-  const showCare = ['look', 'skip', 'care'].includes(S.reason), showDocs = ['look', 'skip'].includes(S.reason);
+  // A visit or Looking around gets the full picture; a focused answer keeps only what supports it
+  const showCare = hasVisits() || ['look', 'skip', 'care'].includes(S.reason), showDocs = !hasVisits() && ['look', 'skip'].includes(S.reason);
+  const sub = r => { const v = visitIn(r.id); return v ? `Your visit · ${v.time}` : `${whereLabel(c, r)}${DEPT[r.id].wait ? ' · Walk-in' : ''}${DEPT[r.id].cat ? ' · Prices' : ''}`; };
   const care = `<section class="sec" aria-labelledby="near-h"><div class="near-h"><h2 class="sec-h" id="near-h">Care near you</h2><span class="tag">Sample</span></div>
-    <ul class="rows">${depts.map(r => `<li><button class="row" data-act="dept" data-room="${r.id}" aria-label="${r.name}, ${DEPT[r.id].spec}, ${whereLabel(c, r)}">${dot(r.id === 'c2-lab' ? 'lab' : 'clinic')}<span class="txt"><span class="rt">${r.name}</span><span class="rs">${whereLabel(c, r)}</span></span>${ico('next', 20, 'chev')}</button></li>`).join('')}</ul></section>`;
-  const docList = `<section class="sec" aria-labelledby="docs-h"><div class="near-h"><h2 class="sec-h" id="docs-h">Doctors available today</h2><span class="tag">Sample</span></div><ul class="rows">${docs.map(d => docRow(c, d)).join('')}</ul></section>`;
+    <ul class="rows">${depts.map(r => `<li><button class="row" data-act="dept" data-room="${r.id}" aria-label="${r.name}, ${DEPT[r.id].spec}, ${sub(r)}">${dot(r.id === 'c2-lab' ? 'lab' : 'clinic')}<span class="txt"><span class="rt">${r.name}</span><span class="rs">${sub(r)}</span></span>${ico('next', 20, 'chev')}</button></li>`).join('')}</ul></section>`;
+  const docList = `<section class="sec" aria-labelledby="docs-h"><div class="near-h"><h2 class="sec-h" id="docs-h">Open times today</h2><span class="tag">Sample</span></div><ul class="rows">${docs.map(d => docRow(c, d)).join('')}</ul>${slotNote()}</section>`;
   const fac = `<section class="sec" aria-labelledby="fac-h"><h2 class="sec-h" id="fac-h">Facilities${c.zone === 'inside' ? ` on Floor ${c.floor}` : ''}</h2>${tileList(amenityTiles(plan, youX).slice(0, 6))}</section>`;
   return (showCare ? care : '') + (showDocs ? docList : '') + fac;
 }
 
-/* ---------- Department page: how to get there, who is free, what they treat ---------- */
-let DEPT_ID = null;
-function openDept(id) { DEPT_ID = id; renderDept(); if (!$('#pg-dept').classList.contains('on')) openPage('#pg-dept'); }
+/* ---------- Place page: departments and facilities – how to get there, what is there, who is free ---------- */
+let DEPT_ID = null, DEPT_DAY = 'today';
+function openDept(id) { DEPT_ID = id; renderDept(); if (!$('#pg-dept').classList.contains('on')) openPage('#pg-dept'); else $('#dp-body').scrollTop = 0; }
 function renderDept() {
-  const r = ROOMS[DEPT_ID], D = DEPT[DEPT_ID], c = ctx(), docs = DOCS.filter(d => d.room === r.id);
+  const r = ROOMS[DEPT_ID], D = placeData(DEPT_ID), c = ctx(), docs = DOCS.filter(d => d.room === r.id), v = visitIn(r.id);
   const here = c.zone === 'inside' && placeOf(c) === r.b && c.floor === r.floor;
   $('#dp-title').textContent = r.name;
+  const visitCard = v ? `<div class="card visit-card"><p class="sh-label">Your visit · From MyChart</p><p class="rt" style="font-size:var(--t20);font-weight:800;color:var(--blue)">${v.time} · ${DOC[v.doc].name}</p><div class="btn-row">${btnExt('Check in', 'checkin')}</div></div>` : '';
+  const times = docs.length ? `<section class="sec" style="padding:0" aria-labelledby="ot-h"><h2 class="sec-h" id="ot-h">${v ? 'Other open times' : 'Open times'}</h2>
+      <div class="seg-in" role="group" aria-label="Day">${['today', 'tomorrow'].map(k => `<button data-act="dept-day" data-day="${k}" aria-pressed="${DEPT_DAY === k}">${k === 'today' ? 'Today' : 'Tomorrow'}</button>`).join('')}</div>
+      <ul class="rows">${docs.map(d => docRow(c, d, DEPT_DAY, false)).join('')}</ul>${slotNote()}
+      ${S.signed ? '' : `<button class="link-btn" data-act="tab" data-tab="4">${ico('signIn', 16)}Sign in to see your visits</button>`}</section>` : '';
   $('#dp-body').innerHTML = mapBox({ plan: r.plan, label: `Sample map of Floor ${r.floor}: ${r.name}`, dest: r.id, flag: [r.cx, 100], you: here ? youOnFloor(c, null) : null, routes: here ? [[[youOnFloor(c, null), [r.cx, 100]]]] : [] }) +
-    `<div class="stats"><div class="stat">${ico('floor', 20)}<b>Floor ${r.floor}</b><span>Suite ${r.suite}</span></div><div class="stat">${ico('wayfinding', 20)}<b>${walkMin(c, r)} min</b><span>from you</span></div><div class="stat">${ico('time', 20)}<b>Open</b><span>${D.hours}</span></div></div>
-    <div class="btn-row">${btnWF(r.id, 'Directions')}${D.book ? `<button class="btn" data-act="book" data-room="${r.id}">${ico('book', 20)}<span>Book a visit</span></button>` : ''}</div>
-    ${D.wait ? `<p class="bk-note">${ico('wait', 20)}Walk-in · ${D.wait}</p>` : ''}
-    ${docs.length ? `<section class="sec" style="padding:0"><h2 class="sec-h">Doctors available</h2><ul class="rows">${docs.map(d => docRow(c, d)).join('')}</ul></section>` : ''}
-    <section class="sec" style="padding:0"><div class="near-h"><h2 class="sec-h">${D.careLabel}</h2><span class="tag">Sample</span></div><ul class="conds">${D.care.map(t => `<li>${t}</li>`).join('')}</ul></section>
-    <section class="sec" style="padding:0"><h2 class="sec-h">Near ${r.name}</h2>${tileList(amenityTiles(r.plan, r.cx))}</section>`;
-}
-
-/* ---------- Booking: care → time → details → review → booked (simulated; real booking goes through MyChart scheduling) ---------- */
-const BK_STEPS = ['Care', 'Time', 'Details', 'Review'];
-function openBook(o = {}) {
-  S.book = { step: o.step ?? (o.room ? 1 : 0), room: o.room || null, doc: o.doc || null, day: o.day || 'today', slot: o.slot || null, why: null, name: '', dob: '', phone: '' };
-  if (!$('#pg-book').classList.contains('on')) openPage('#pg-book');
-  renderBook(false);
-}
-const bkValid = B => [!!B.room, !!(B.doc && B.slot), S.signed || !!(B.name.trim() && B.dob.trim() && B.phone.trim()), true][B.step];
-function renderBook(anim) {
-  const B = S.book, c = ctx(), body = $('#bk-body');
-  let q = '', h = '';
-  if (B.step === 0) {
-    q = 'What kind of care?';
-    h = `<ul class="rows">${deptsNear(c, true).map((r, i) => `<li><button class="row opt" data-act="bk-room" data-room="${r.id}" aria-pressed="${B.room === r.id}">${dot('clinic')}<span class="txt"><span class="rt">${DEPT[r.id].spec}</span><span class="rs">${r.name} · ${whereLabel(c, r)}</span></span>${i === 0 && placeOf(c) ? '<span class="tag">Nearest</span>' : ''}</button></li>`).join('')}</ul>`;
-  } else if (B.step === 1) {
-    q = 'Pick a time';
-    const docs = DOCS.filter(d => d.room === B.room);
-    h = `<div class="seg-in" role="group" aria-label="Day">${['today', 'tomorrow'].map(k => `<button data-act="bk-day" data-day="${k}" aria-pressed="${B.day === k}">${k === 'today' ? 'Today' : 'Tomorrow'}</button>`).join('')}</div>
-      <div class="docs-slots">${docs.map(d => `<div class="doc-card"><div class="who"><span class="avatar-d" aria-hidden="true">${d.ini}</span><span><b>${d.name}</b><span>${ROOMS[d.room].name} · Floor ${ROOMS[d.room].floor}</span></span></div>
-        ${d[B.day].length ? `<div class="choose" role="group" aria-label="Times with ${d.name}">${d[B.day].map(t => `<button class="chip" data-act="bk-slot" data-doc="${d.id}" data-slot="${t}" aria-pressed="${B.doc === d.id && B.slot === t}">${t}</button>`).join('')}</div>` : `<p class="bk-note">No times ${B.day === 'today' ? 'today' : 'tomorrow'}</p>`}</div>`).join('')}</div>`;
-  } else if (B.step === 2) {
-    q = S.signed ? 'Booking for you' : 'Your details';
-    h = S.signed
-      ? `<ul class="rows"><li><div class="row"><span class="avatar-d" aria-hidden="true">JR</span><span class="txt"><span class="rt">Jordan Rivera</span><span class="rs">Sample patient · From MyChart</span></span></div></li></ul>
-        <p class="sh-label" id="bk-why-h">Reason for the visit (optional)</p><div class="choose" role="group" aria-labelledby="bk-why-h">${['New problem', 'Follow-up', 'Second opinion'].map(t => `<button class="chip" data-act="bk-why" data-v="${t}" aria-pressed="${B.why === t}">${t}</button>`).join('')}</div>`
-      : `<div class="field"><label for="bk-name">Full name</label><div class="zip"><input id="bk-name" autocomplete="name" value="${esc(B.name)}"></div></div>
-        <div class="field"><label for="bk-dob">Date of birth</label><div class="zip"><input id="bk-dob" inputmode="numeric" placeholder="MM/DD/YYYY" value="${esc(B.dob)}"></div></div>
-        <div class="field"><label for="bk-phone">Phone</label><div class="zip"><input id="bk-phone" type="tel" autocomplete="tel" value="${esc(B.phone)}"></div></div>
-        <button class="link-btn" data-act="bk-signin">${ico('signIn', 16)}Have MyChart? Sign in instead</button>`;
-  } else if (B.step === 3) {
-    q = 'Check and book';
-    h = bookedPass(B, false) + `<p class="bk-note">${ico('info', 20)}Simulated – real booking goes through MyChart scheduling</p>`;
-  } else {
-    const r = ROOMS[B.room], hereNow = B.day === 'today' && placeOf(c) === r.b;
-    body.innerHTML = `<div class="done-hero">${dot('arrived', 'solid')}<h2 class="bk-q">You're booked</h2></div>${bookedPass(B, false)}
-      <div class="btn-row">${hereNow ? btnWF(r.id, 'Start wayfinding') : `<button class="btn pri" data-act="info" data-msg="Added to your calendar – simulated">${ico('calAdd', 20)}<span>Add to calendar</span></button>`}<button class="btn" data-act="close-page">Done</button></div>`;
-    say(`You're booked: ${DOC[B.doc].name}, ${B.slot}`);
-    return;
-  }
-  const n = BK_STEPS.length;
-  body.innerHTML = `<div class="wf-steps" style="--n:${n}" aria-hidden="true">${BK_STEPS.map((_, k) => `<i class="${k < B.step ? 'on' : k === B.step ? 'here' : ''}"></i>`).join('')}</div>
-    <div class="${anim ? 'wf-anim' : ''}" style="display:grid;gap:16px"><p class="wf-n">Step ${B.step + 1} of ${n} · ${BK_STEPS[B.step]}</p><h2 class="bk-q" id="bk-q" tabindex="-1">${q}</h2>${h}</div>
-    <div class="wf-nav"><button class="btn" data-act="bk-back" ${B.step === 0 ? 'disabled' : ''}>${ico('back', 20)}<span>Back</span></button>
-    <button class="btn pri" data-act="bk-next" ${bkValid(B) ? '' : 'disabled'}>${B.step === 3 ? `${ico('book', 20)}<span>Book visit</span>` : `<span>Next</span>${ico('go', 20)}`}</button></div>`;
-  if (B.step === 2 && !S.signed) ['name', 'dob', 'phone'].forEach(k => $('#bk-' + k).addEventListener('input', e => { B[k] = e.target.value; $('[data-act="bk-next"]').disabled = !bkValid(B); }));
-  if (anim) { say(`Step ${B.step + 1} of ${n}: ${q}`); $('#bk-q').focus({ preventScroll: true }); }
-}
-function bookedPass(B, mini) {
-  const r = ROOMS[B.room], d = DOC[B.doc];
-  return `<article class="pass${mini ? ' mini' : ''}" aria-label="Booked visit, sample"><div class="pass-main"><div class="p-top"><p class="time">${B.slot}</p></div>
-    <p class="dept">${r.name} · ${d.name}</p><p class="bld">${DAYS[B.day]} · ${PLACES[r.b].full}</p><span class="tag">Booked · Sample</span></div>
-    <div class="pass-stub"><span class="lbl">Floor</span><span class="big"><span>${r.floor}</span></span><span class="sub">Suite ${r.suite}</span></div></article>`;
+    `<div class="stats"><div class="stat">${ico('floor', 20)}<b>Floor ${r.floor}</b><span>${r.suite ? 'Suite ' + r.suite : D.spec}</span></div><div class="stat">${ico('wayfinding', 20)}<b>${walkMin(c, r)} min</b><span>from you</span></div><div class="stat">${ico('time', 20)}<b>Open</b><span>${D.hours}</span></div></div>
+    ${visitCard}<div class="btn-row">${btnWF(r.id, 'Directions')}</div>
+    ${D.wait ? `<p class="bk-note">${ico('wait', 20)}<span>Walk-in · ${D.wait}</span></p>` : ''}
+    ${D.cat ? catalogHTML(D) : ''}${times}
+    ${D.care ? `<section class="sec" style="padding:0"><div class="near-h"><h2 class="sec-h">${D.careLabel}</h2><span class="tag">Sample</span></div><ul class="conds">${D.care.map(t => `<li>${t}</li>`).join('')}</ul></section>` : ''}
+    <section class="sec" style="padding:0"><h2 class="sec-h">Near ${r.name.toLowerCase() === r.name ? r.name : 'the ' + r.name.toLowerCase()}</h2>${tileList(amenityTiles(r.plan, r.cx).filter(t => !t.attrs.includes(`"${r.id}"`)).slice(0, 3))}</section>`;
 }
 
 /* ---------- Home ---------- */
@@ -1516,7 +1512,6 @@ function passFor(c) {
   }
   if (!p || !isActive(c)) return null;
   const P = PLACES[p], dId = destRoom(p), d = dId && ROOMS[dId];
-  if (S.booked && S.booked.room === dId) return { key: 'bk-' + dId, html: bookedPass(S.booked, mini) };
   if (d) return { key: d.id, html: `<article class="pass${mini ? ' mini' : ''}" aria-label="Destination pass, sample">
       <div class="pass-main"><p class="dept">${d.name}</p>${DEPT[d.id] && DEPT[d.id].wait ? `<p class="bld keep">Walk-in · ${DEPT[d.id].wait}</p>` : `<p class="bld">${P.full}</p>`}
         <div class="pfoot"><span class="tag">Sample</span><button class="link-btn" data-act="clear-dest" aria-label="Change destination">Change</button></div></div>
@@ -1526,9 +1521,7 @@ function passFor(c) {
 function sectionsFor(c) {
   const p = placeOf(c), active = isActive(c);
   let s = '';
-  if (active && c.zone === 'inside' && hasVisits()) {
-    const depts = ROOM_ROWS.filter(r => r[5] === 'dept' && r[1].startsWith('clem')).map(r => ROOMS[r[0]]).sort((a, b) => a.floor - b.floor);
-    s += `<section class="sec" aria-labelledby="sec-dir"><h2 class="sec-h" id="sec-dir">In this building</h2><ul class="rows">${depts.map(r => `<li><button class="row" data-act="wf" data-room="${r.id}" aria-label="${r.name}, Floor ${r.floor}, Suite ${r.suite}, directions"><span class="fnum" aria-hidden="true">${r.floor}</span><span class="txt"><span class="rt">${r.name}</span><span class="rs">Suite ${r.suite}</span></span>${ico('next', 20, 'chev')}</button></li>`).join('')}</ul></section>`;
+  if (active && c.zone === 'inside') {
     s += `<section class="sec" aria-labelledby="sec-res"><h2 class="sec-h" id="sec-res">Hospital resources</h2><ul class="rows">${[['wifi', 'Guest Wi-Fi'], ['language', 'Interpreters'], ['shuttle', 'Campus shuttle'], ['help', 'Patient relations']].map(([ic, t]) => `<li><button class="row" data-act="info" data-msg="${t} – sample content">${dot(ic)}<span class="txt"><span class="rt">${t}</span></span>${ico('next', 20, 'chev')}</button></li>`).join('')}</ul></section>`;
   }
   if (active && p === 'simm') {
@@ -1551,10 +1544,10 @@ function quickLinks() {
 
 function renderHome(force) {
   const c = ctx(), L = lineModel(c), pass = passFor(c);
-  const key = JSON.stringify([c, S.signed, S.appt, S.guestDest, S.askHidden, S.showPassed, S.reason, S.booked, S.alert, S.alertsAll, S.fluCal]);
+  const key = JSON.stringify([c, S.signed, S.appt, S.guestDest, S.askHidden, S.showPassed, S.reason, S.alert, S.alertsAll, S.fluCal]);
   const changed = key !== last.key;
   if (!changed && !force) return;
-  const ckey = JSON.stringify([c, S.signed, S.appt, S.guestDest, S.reason, S.booked]);
+  const ckey = JSON.stringify([c, S.signed, S.appt, S.guestDest, S.reason]);
   const animate = !S.rm && last.key !== null && ckey !== last.ckey;
   const [cIco, cTxt, live] = chipFor(c);
   const p = placeOf(c);
@@ -1577,7 +1570,7 @@ function renderHome(force) {
       return `<li class="stop ${st}" data-from="${i}" data-to="${i}" ${st === 'now' ? 'aria-current="step"' : ''}><span class="node" aria-hidden="true">${ico(st === 'done' ? 'stepDone' : s.ic, 20)}</span><div class="st-row"><span class="st-t"><span class="vh">${label}</span><span aria-hidden="true">${s.t}</span></span>${s.m ? `<span class="st-m" aria-hidden="true">${s.m}</span>` : ''}</div>${st === 'now' ? `<div class="st-panel"><div><div class="card">${stopPanel(s.k, c, L)}</div></div></div>` : ''}</li>`;
     }).join('')}</ol></div>`;
   }
-  if (noVisit) h += nearbyFor(c);
+  if (p && isActive(c)) h += nearbyFor(c);
   h += sectionsFor(c);
   h += commonModules();
   const prevCkey = last.ckey, prevIdx = last.idx, prevPass = last.pass, prevFloor = last.floor, prevKey = last.key;
@@ -1730,11 +1723,11 @@ function renderWF(anim) {
 /* Global search: doctors, places, articles, resources, and announcements in one field, narrowed by scope */
 const SCOPES = ['All', 'Doctors', 'Places', 'Articles', 'Resources'];
 function searchIndex() {
-  const rooms = Object.values(ROOMS).filter(r => r.kind !== 'core' && r.kind !== 'other').map(r => ({ type: 'Places', ic: r.ic || 'clinic', t: r.name, s: `${DEPT[r.id] ? DEPT[r.id].spec + ' · ' : ''}${PLACES[r.b].short} · Floor ${r.floor}`, a: DEPT[r.id] ? `data-act="dept" data-room="${r.id}"` : `data-act="wf" data-room="${r.id}"` }));
+  const rooms = Object.values(ROOMS).filter(r => r.kind !== 'core' && r.kind !== 'other').map(r => ({ type: 'Places', ic: r.ic || 'clinic', t: r.name, s: `${placeData(r.id) && placeData(r.id).cat ? (r.ic === 'food' ? 'Menu · ' : 'Prices · ') : ''}${DEPT[r.id] ? DEPT[r.id].spec + ' · ' : ''}${PLACES[r.b].short} · Floor ${r.floor}`, a: placeData(r.id) ? `data-act="dept" data-room="${r.id}"` : `data-act="wf" data-room="${r.id}"` }));
   const places = ['clem', 'simm'].flatMap(b => [{ type: 'Places', ic: PLACES[b].ic, t: PLACES[b].full, s: 'Location', a: `data-act="tab" data-tab="2"` },
-    { type: 'Places', ic: 'parking', t: PLACES[b].garage, s: `Parking · ${PLACES[b].short} · ${PLACES[b].open} spaces open (sample)`, a: `data-act="tab" data-tab="2"` }]);
+    { type: 'Places', ic: 'parking', t: PLACES[b].garage, s: `Parking · ${PLACES[b].short} · ${PLACES[b].open} spaces open (sample)`, a: `data-act="page" data-page="parking-${b}"` }]);
   const flu = { type: 'Resources', ic: 'vaccine', t: 'Flu shots are here', s: 'Seasonal campaign · Walk in Saturdays', a: 'data-act="page" data-page="flu"' };
-  const docs = DOCS.map(d => ({ type: 'Doctors', ic: 'person', t: d.name, s: `${DEPT[d.room].spec} · Sample`, a: `data-act="book" data-room="${d.room}" data-doc="${d.id}"${d.today[0] ? ` data-slot="${d.today[0]}"` : ''}` }));
+  const docs = DOCS.map(d => ({ type: 'Doctors', ic: 'person', t: d.name, s: `${DEPT[d.room].spec} · ${d.today.length ? 'Open today' : 'Open tomorrow'} · Sample`, a: `data-act="dept" data-room="${d.room}"` }));
   const arts = FEATURED.map((f, i) => ({ type: 'Articles', ic: 'article', t: f.title, s: `MedBlog · ${f.kick}`, a: `data-act="page" data-page="art-${i}"` }));
   const res = RESOURCES.map(r => ({ type: 'Resources', ic: r.ic, t: r.t, s: r.s, a: r.k === 'wayres' ? 'data-act="tab" data-tab="3"' : `data-act="page" data-page="${r.k}"` }));
   const news = ANN.map(a => ({ type: 'Resources', ic: 'news', t: a.t, s: `Announcement · ${a.m} ${a.d}`, a: `data-act="page" data-page="${a.k}"` }));
@@ -1789,7 +1782,6 @@ function openLocSheet() {
       <li>${dot(c.src === 'manual' ? 'pick' : 'place')}<span>${c.src === 'manual' ? 'You chose this place' : `You're at ${PLACES[p].full}`}</span><span class="tag">${c.src === 'manual' ? 'Your choice' : 'Simulated'}</span></li>
       ${hasVisits() ? `<li>${dot('visits')}<span>Your visit at ${VISITS[p].time}</span><span class="tag">MyChart</span></li>` : ''}
       ${!hasVisits() && S.reason && S.reason !== 'skip' ? `<li>${dot(REASON[S.reason][1])}<span>You said: ${REASON[S.reason][2].toLowerCase()}</span><span class="tag">Your answer</span></li>` : ''}
-      ${S.booked ? `<li>${dot('book')}<span>Your booking at ${S.booked.slot}</span><span class="tag">Sample</span></li>` : ''}
       <li>${dot('parking')}<span>Parking and floors</span><span class="tag">Sample data</span></li></ul>` : '';
   openSheet('Location', `<p class="one" style="font-weight:700;font-size:var(--t18);color:var(--ink)">${status}</p>${why}
     <div style="display:grid;gap:8px">
@@ -1910,14 +1902,7 @@ phone.addEventListener('click', e => {
     case 'precise': S.acc = 'precise'; renderAll(); break;
     case 'wf': closeSheet(true); while ($('.page.on')) closePage(); openWF(d.room); break;
     case 'dept': closeSheet(true); while ($('.page.on')) closePage(); openDept(d.room); break;
-    case 'book': closeSheet(true); while ($('.page.on')) closePage(); openBook({ room: d.room, doc: d.doc, slot: d.slot, day: d.day }); break;
-    case 'bk-room': S.book.room = d.room; S.book.doc = null; S.book.slot = null; renderBook(false); $(`[data-act="bk-room"][data-room="${d.room}"]`).focus({ preventScroll: true }); break;
-    case 'bk-day': S.book.day = d.day; S.book.doc = null; S.book.slot = null; renderBook(false); $(`[data-act="bk-day"][data-day="${d.day}"]`).focus({ preventScroll: true }); break;
-    case 'bk-slot': S.book.doc = d.doc; S.book.slot = d.slot; renderBook(false); $(`[data-act="bk-slot"][data-doc="${d.doc}"][data-slot="${d.slot}"]`).focus({ preventScroll: true }); break;
-    case 'bk-why': S.book.why = S.book.why === d.v ? null : d.v; renderBook(false); $(`[data-act="bk-why"][data-v="${d.v}"]`).focus({ preventScroll: true }); break;
-    case 'bk-signin': S.signed = true; toast('Signed in – sample account'); renderAll(true); renderBook(false); break;
-    case 'bk-back': if (S.book.step > 0) { S.book.step--; renderBook(true); } break;
-    case 'bk-next': if (!bkValid(S.book)) break; if (S.book.step === 3) { const B = S.book; S.booked = { room: B.room, doc: B.doc, day: B.day, slot: B.slot }; if (S.reason === null) S.reason = 'care'; } S.book.step++; renderBook(true); renderAll(); if (S.book.step === 4) { const f = $('#bk-body .btn.pri'); if (f) f.focus({ preventScroll: true }); } break;
+    case 'dept-day': DEPT_DAY = d.day; renderDept(); $(`[data-act="dept-day"][data-day="${d.day}"]`).focus({ preventScroll: true }); break;
     case 'reason': { const p = placeOf(ctx()); S.reason = d.r; if (d.r === 'pharm') S.guestDest[p] = p === 'clem' ? 'c1-pharm' : 's1-pharm'; renderAll(); say(d.r === 'skip' ? 'Showing what is near you' : `Home updated for ${REASON[d.r][2]}`); const f = $('.here-for .link-btn', home); if (f) f.focus({ preventScroll: true }); break; }
     case 'reason-change': { S.reason = null; S.guestDest = { clem: null, simm: null }; renderAll(); const f = $('.reasons button', home); if (f) f.focus({ preventScroll: true }); break; }
     case 'wf-prev': if (WF.i > 0) { WF.i--; renderWF(true); $('[data-act="wf-prev"]').disabled ? $('[data-act="wf-next"]').focus({ preventScroll: true }) : $('[data-act="wf-prev"]').focus({ preventScroll: true }); } break;
@@ -1983,19 +1968,19 @@ const SCN = {
     { t: 'Away', ic: 'home', sub: 'Common homepage – nothing nearby yet', run: at('away') },
     { t: 'Arriving', ic: 'car', sub: 'At Clements University Hospital: care near you, doctors free today, and facilities', run: at('arriving') },
     { t: 'Floor 1', ic: 'elevator', sub: 'Inside: everything re-sorts by walking time from this floor', run: at('inside', 1) },
-    { t: 'Heart clinic', ic: 'clinic', sub: 'A section near you: how to get there, doctors, and conditions treated', run: () => { at('inside', 1)(); return () => openDept('c7-heart'); } },
-    { t: 'Floor 2', ic: 'lab', sub: 'Walk-in lab and imaging waits, rehab, and Floor 2 facilities', run: at('inside', 2) },
+    { t: 'Café menu', ic: 'food', sub: 'A facility near you: directions, hours, and the menu – to look, not to order', run: () => { at('inside', 1)(); return () => openDept('c1-cafe'); } },
+    { t: 'Floor 2', ic: 'floor', sub: 'Everything re-sorts from Floor 2: lab, rehab, and Floor 2 facilities', run: at('inside', 2) },
+    { t: 'Lab prices', ic: 'lab', sub: 'The lab: walk-in wait, common tests with self-pay prices, and a price estimate', run: () => { at('inside', 2)(); return () => openDept('c2-lab'); } },
     { t: 'Simmons', ic: 'building', sub: 'Near the cancer center: oncology, support services, and facilities', run: at('simmons') },
     { t: 'No location', ic: 'locOff', sub: 'Choose a place – nearby still works without location', run: () => { S.zone = 'arriving'; S.perm = 'denied'; } }
   ] },
-  book: { n: '2', t: 'Book a visit', set: { signed: true, appt: false, reason: 'care' }, steps: [
-    { t: 'Need care', ic: 'findCare', sub: 'No visit today: 911 first for emergencies, then doctors free near you', run: at('inside', 1) },
-    { t: 'Care', ic: 'clinic', sub: 'Choose the care – nearest first, from where you stand', run: () => { at('inside', 1)(); return () => openBook({}); } },
-    { t: 'Time', ic: 'time', sub: 'Doctors and open times today or tomorrow', run: () => { at('inside', 1)(); return () => openBook({ room: 'c7-heart', doc: 'd1', slot: '1:30 p.m.' }); } },
-    { t: 'Details', ic: 'person', sub: 'Signed in, so MyChart fills in who it is for; guests add three details', run: () => { at('inside', 1)(); return () => openBook({ room: 'c7-heart', doc: 'd1', slot: '1:30 p.m.', step: 2 }); } },
-    { t: 'Review', ic: 'visits', sub: 'Check the pass, then book – simulated', run: () => { at('inside', 1)(); return () => openBook({ room: 'c7-heart', doc: 'd1', slot: '1:30 p.m.', step: 3 }); } },
-    { t: 'Booked', ic: 'arrived', sub: 'Booked today, here – so the primary action is Start wayfinding', run: () => { at('inside', 1)(); S.booked = { room: 'c7-heart', doc: 'd1', day: 'today', slot: '1:30 p.m.' }; return () => openBook({ room: 'c7-heart', doc: 'd1', slot: '1:30 p.m.', step: 4 }); } },
-    { t: 'On your way', ic: 'navigate', sub: 'Home shows the new visit on the pass and the line', run: () => { at('inside', 1)(); S.booked = { room: 'c7-heart', doc: 'd1', day: 'today', slot: '1:30 p.m.' }; } }
+  appts: { n: '2', t: 'Appointments', set: { signed: true, appt: true, reason: null }, steps: [
+    { t: 'Your visit', ic: 'visits', sub: 'Your 10:30 a.m. visit leads the home; Care near you marks the Heart clinic with it', run: () => { S.signed = true; S.appt = true; at('inside', 1)(); } },
+    { t: 'Heart clinic', ic: 'clinic', sub: 'Your visit first, from MyChart – other doctors show open times only', run: () => { S.signed = true; S.appt = true; at('inside', 1)(); return () => openDept('c7-heart'); } },
+    { t: 'No visit', ic: 'time', sub: 'No visit today: open times near you, for information – nothing to book', run: () => { S.signed = true; S.appt = false; S.reason = 'care'; at('inside', 1)(); } },
+    { t: 'Open times', ic: 'person', sub: "A section's doctors and their open times today", run: () => { S.signed = true; S.appt = false; at('inside', 2)(); return () => openDept('c2-rehab'); } },
+    { t: 'Tomorrow', ic: 'time', sub: 'The same doctors, tomorrow', run: () => { S.signed = true; S.appt = false; at('inside', 2)(); DEPT_DAY = 'tomorrow'; return () => openDept('c2-rehab'); } },
+    { t: 'Guest', ic: 'signIn', sub: 'Guests see open times, with Sign in to see your visits', run: () => { S.signed = false; S.appt = false; at('inside', 1)(); return () => openDept('c7-heart'); } }
   ] },
   why: { n: '3', t: "Why you're here", set: { signed: false, appt: false, reason: null }, steps: [
     { t: 'Arriving', ic: 'car', sub: 'No appointment – the home asks what brings you here', run: at('arriving') },
@@ -2003,7 +1988,7 @@ const SCN = {
     { t: 'Lab', ic: 'lab', sub: 'Lab or imaging: pick one and the line leads there', run: () => { at('entrance')(); S.reason = 'lab'; } },
     { t: 'Lab chosen', ic: 'arrived', sub: 'The pass and the line now lead to the lab, with the walk-in wait', run: () => { at('entrance')(); S.reason = 'lab'; S.guestDest.clem = 'c2-lab'; } },
     { t: 'Pharmacy', ic: 'pharmacy', sub: 'Pharmacy: straight to Floor 1, hours, prescription status in MyChart', run: () => { at('entrance')(); S.reason = 'pharm'; S.guestDest.clem = 'c1-pharm'; } },
-    { t: 'Need care', ic: 'findCare', sub: 'I need care: 911 first, then doctors free today and Book a visit', run: () => { at('entrance')(); S.reason = 'care'; } },
+    { t: 'Need care', ic: 'findCare', sub: 'I need care: 911 first, then open times near you, for information', run: () => { at('entrance')(); S.reason = 'care'; } },
     { t: 'Other', ic: 'more', sub: 'Something else: search and other common reasons', run: () => { at('entrance')(); S.reason = 'other'; } }
   ] },
   visit: { n: '', t: 'With an appointment', set: { signed: true, appt: true, reason: null }, steps: [
@@ -2016,7 +2001,7 @@ const SCN = {
     { t: 'No location', ic: 'locOff', sub: 'Permission denied – choose a place and everything still works', run: () => { S.perm = 'denied'; } }
   ] }
 };
-const SCN_ORDER = ['guest', 'book', 'why', 'visit'];
+const SCN_ORDER = ['guest', 'appts', 'why', 'visit'];
 const scn = () => SCN[S.scn];
 /* With an appointment, the highlighted step follows the controls; the other scenarios remember the step pressed */
 function currentStep() {
@@ -2028,8 +2013,8 @@ function goStep(i) {
   const sc = scn(); i = Math.max(0, Math.min(sc.steps.length - 1, i));
   closeSheet(true); closePage(); $('#sys').hidden = true;
   // Each step starts clean, but keeps the account choices from the controls (set once per scenario)
-  Object.assign(S, { manual: null, paused: false, acc: 'precise', showPassed: false, perm: 'allowed', askHidden: true, booked: null, book: null, guestDest: { clem: null, simm: null }, reason: sc.set.reason });
-  S.step = i;
+  Object.assign(S, { manual: null, paused: false, acc: 'precise', showPassed: false, perm: 'allowed', askHidden: true, guestDest: { clem: null, simm: null }, reason: sc.set.reason });
+  S.step = i; DEPT_DAY = 'today';
   const after = sc.steps[i].run();
   if (S.tab !== 0) setTab(0);
   $('#home-scroll').scrollTo({ top: 0, behavior: S.rm ? 'auto' : 'smooth' });
@@ -2103,7 +2088,7 @@ function renderAll(force) {
 
 /* ---------- Docs ---------- */
 $('#doc-states').innerHTML = SCN.visit.steps.map((s, i) => `<li><b>${i + 1}. ${s.t}</b><span>${s.sub}</span></li>`).join('') + `<li><b>Approximate</b><span>Asks which building</span></li><li><b>No visit today</b><span>Asks why you're here, then shows what's near you</span></li>`;
-$('#doc-scn').innerHTML = ['guest', 'book', 'why'].map(k => `<li><b>${SCN[k].n}. ${SCN[k].t}</b><span>${SCN[k].steps.map(s => s.t).join(' → ')}</span></li>`).join('');
+$('#doc-scn').innerHTML = ['guest', 'appts', 'why'].map(k => `<li><b>${SCN[k].n}. ${SCN[k].t}</b><span>${SCN[k].steps.map(s => s.t).join(' → ')}</span></li>`).join('');
 $('#doc-map').innerHTML = `<div style="display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">${mapBox({ plan: 'campus', label: 'Sample campus map', routes: [[DRIVE.clem, ''], [WALK.clem, 'plan']], you: DRIVE.clem[2] })}${mapBox({ plan: 'clem7', label: 'Sample plan of Floor 7', routes: [[[[156, 100], [104, 100]]]], you: [156, 100], flag: [104, 100], dest: 'c7-heart' })}</div>`;
 $('#gmap').innerHTML = ICON_MAP.map(r => `<li>${ico(r[0], 20)}<span>${r[2]}</span><code>${r[1]}</code></li>`).join('');
 
