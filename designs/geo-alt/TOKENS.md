@@ -154,6 +154,8 @@ A focused answer keeps the home short: it shows only Facilities below. Looking a
 
 **4. 3D wayfinding.** Signed in with a visit on Floor 7, standing on Floor 1. Steps: All floors (the route through the pulled-apart building) → Tap Dining (the map flies to the café, with Start navigation) → Turn by turn (follow camera, Next walks the dot) → Elevator (the dot rides the shaft) → Live view (simulated, out of the elevator) → Overview (every floor of the way) → Arrived.
 
+**5. Section guides** (like a theme park's land guides). Walk into a section and its guide unlocks: a toast, the map frames that section with a tinted floor and rising walls of light plus its name, and the home leads with a themed card – what's happening now (sample), four quick actions (show on the map, Check in in MyChart, or call the desk), Only here, and a tip. Sections: Main lobby, Imaging and pharmacy (Floor 1), Lab, Rehab (Floor 2), Heart and Vascular Center (Floor 7), Simmons main floor. In directions, stepping into a section shows "Entering · Section guide unlocked". All guides lists every section – unlocked as you go, preview the rest. Steps: Main lobby → Imaging wing → Lab → Rehab → Stepping in → Heart center → All guides → Simmons.
+
 ## Trust and control
 
 - Never asks on launch. “Help when you arrive” explains first (sample map, Parking, Best entrance, Your floor, one privacy line), then the simulated system prompt.

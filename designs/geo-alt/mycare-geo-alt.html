@@ -4,7 +4,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..800&display=swap">
 <script async src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous" referrerpolicy="no-referrer" onload="window.__m3 && window.__m3()"></script>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=accessible,acute,apartment,arrow_back,arrow_forward,arrow_upward,article,assistant_navigation,biotech,calendar_add_on,calendar_month,campaign,chat,check,check_circle,chevron_left,chevron_right,close,contrast,dark_mode,directions_bus,directions_car,directions_walk,diversity_1,diversity_3,domain,door_front,door_open,edit_location_alt,elevator,emergency,event_available,expand_more,explore,explore_nearby,flag,hail,handshake,help,home,hourglass_top,how_to_reg,info,lab_profile,layers,light_mode,local_atm,local_parking,local_pharmacy,location_off,location_on,location_searching,lock,login,logout,map,menu,more_horiz,navigation,near_me,nutrition,open_in_new,pause_circle,payments,person,pin_drop,play_arrow,privacy_tip,psychology,public,receipt_long,restaurant,schedule,school,search,self_improvement,settings,stethoscope,straight,support_agent,translate,turn_left,turn_right,vaccines,videocam,view_in_ar,visibility,visibility_off,volume_off,volume_up,volunteer_activism,warning,wc,wifi,workspace_premium&display=block">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=accessible,acute,apartment,arrow_back,arrow_forward,arrow_upward,article,assistant_navigation,biotech,calendar_add_on,calendar_month,campaign,cardiology,chat,check,check_circle,chevron_left,chevron_right,close,contrast,dark_mode,directions_bus,directions_car,directions_walk,diversity_1,diversity_3,domain,door_front,door_open,edit_location_alt,elevator,emergency,event_available,expand_more,explore,explore_nearby,family_restroom,flag,hail,handshake,help,home,hourglass_top,how_to_reg,info,lab_profile,layers,light_mode,local_atm,local_parking,local_pharmacy,location_off,location_on,location_searching,lock,lock_open,login,logout,map,menu,more_horiz,navigation,near_me,nutrition,oncology,open_in_new,pause_circle,payments,person,physical_therapy,pin_drop,play_arrow,privacy_tip,psychology,public,radiology,receipt_long,restaurant,schedule,school,search,self_improvement,settings,stethoscope,straight,support_agent,translate,turn_left,turn_right,vaccines,videocam,view_in_ar,visibility,visibility_off,volume_off,volume_up,volunteer_activism,warning,water_drop,wc,wifi,workspace_premium&display=block">
 <style>
 /* Layout: presentation board – a journey scrubber across the top (Back / Next), the 390 × 844 phone beside its prototype
    controls, then concise visual docs. Concept: the home is the patient's day drawn as a transit line with a visit pass.
@@ -683,6 +683,42 @@ button.map{border:0; padding:0; width:100%; text-align:left; color:inherit}
 /* All floors: each floor's name rides on its edge */
 .m3-fl{display:inline-flex; align-items:center; min-height:24px; padding:0 var(--s2); border-radius:var(--r-pill); background:var(--surface); color:var(--ink); font-size:12.0px; font-weight:700; white-space:nowrap; box-shadow:0 2px 8px rgba(16,38,60,.18)}
 .m3-fl.you{background:var(--ctl); color:var(--on-ctl)}
+.m3-zone{display:inline-flex; align-items:center; min-height:24px; padding:0 var(--s3); border-radius:var(--r-pill); background:var(--g); color:#FFFFFF; font-size:12.0px; font-weight:700; white-space:nowrap; box-shadow:0 0 0 2px rgba(255,255,255,.7), 0 4px 12px rgba(16,38,60,.25)}
+/* Section guide: unlocks when you walk into a section, themed by its tone */
+.guide{margin:0 var(--s3) var(--s4); border-radius:var(--r-lg); background:var(--surface); border:1px solid var(--line); overflow:hidden; padding-bottom:var(--s2)}
+.guide.in-sheet{margin:0}
+.gd-hero{position:relative; overflow:hidden; display:grid; gap:var(--s1); padding:var(--s4); color:#FFFFFF; background:radial-gradient(120% 100% at 100% 0%, rgba(0,169,224,.32) 0, rgba(0,169,224,0) 62%), var(--g)}
+.gd-hero > *{position:relative}
+.gd-art{position:absolute !important; right:4px; bottom:-28px; opacity:.18; pointer-events:none}
+.gd-art .ms{font-size:128.0px; --opsz:48}
+.gd-k{display:flex; align-items:center; gap:var(--s1); font-size:12.0px; font-weight:700; letter-spacing:.04em; text-transform:uppercase}
+.gd-hero h2{font-size:var(--t24); font-weight:800; line-height:1.2; letter-spacing:-.01em; max-width:85%}
+.gd-s{font-size:var(--t14); font-weight:600; line-height:1.4}
+.gd-now{display:flex; flex-wrap:wrap; gap:var(--s2); padding:var(--s3) var(--s4) 0}
+.gd-now li{display:inline-flex; align-items:center; gap:var(--s2); min-height:32px; padding:var(--s1) var(--s3); border-radius:var(--r-pill); background:var(--tint); color:var(--ink); font-size:var(--t12); font-weight:600; line-height:1.3}
+.gd-acts{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:var(--s2) var(--s1); padding:var(--s4) var(--s3) var(--s1)}
+.gd-act{width:100%; border:0; background:none; display:grid; justify-items:center; gap:var(--s1); padding:2px 0; color:var(--ink); font-size:var(--t12); font-weight:600; line-height:1.25; text-align:center; border-radius:var(--r-md)}
+.gd-c{width:calc(48px * var(--ts)); height:calc(48px * var(--ts)); border-radius:50%; display:grid; place-items:center; background:var(--g); color:#FFFFFF; box-shadow:0 0 0 3px var(--surface), 0 0 0 4px var(--line)}
+.gd-h3{padding:var(--s3) var(--s4) var(--s1); font-size:var(--t16); font-weight:800; color:var(--ink)}
+.gd-only li{display:flex; align-items:flex-start; gap:var(--s3); padding:var(--s2) var(--s4)}
+.gd-only b{display:block; font-size:var(--t14); font-weight:700; line-height:1.3; color:var(--ink)}
+.gd-only small{display:block; font-size:var(--t12); font-weight:600; line-height:1.4; color:var(--ink-2)}
+.gd-tip{display:flex; align-items:flex-start; gap:var(--s2); margin:var(--s2) var(--s4) 0; padding:var(--s3); border-radius:var(--r-md); background:var(--tint); color:var(--ink); font-size:var(--t14); line-height:1.4}
+.gd-tip .ms{color:var(--blue); flex:none}
+.gd-foot{display:flex; align-items:center; justify-content:space-between; gap:var(--s2); padding:var(--s1) var(--s4) 0}
+.gd-dot{width:40px; height:40px; border-radius:50%; flex:none; display:grid; place-items:center; background:var(--g); color:#FFFFFF}
+.tag.on{background:var(--ctl); color:var(--on-ctl)}
+.phone:not(.rm) .guide.fresh{animation:riseIn 520ms var(--spring) both}
+.phone:not(.rm) .guide.fresh .gd-hero::after{content:""; position:absolute; inset:0; background:linear-gradient(105deg, rgba(255,255,255,0) 30%, rgba(255,255,255,.38) 50%, rgba(255,255,255,0) 70%); transform:translateX(-100%); animation:gdShine 1400ms var(--ease-out) 300ms both}
+.phone:not(.rm) .guide.fresh .gd-k .ms{animation:pop 520ms var(--spring) 500ms both}
+@keyframes gdShine{to{transform:translateX(100%)}}
+/* Directions: stepping into a section */
+.nc-guide{display:flex; align-items:center; gap:var(--s3); width:100%; min-height:56px; padding:var(--s2) var(--s3) var(--s2) var(--s2); border:0; border-radius:var(--r-md); background:var(--tint); color:var(--ink); text-align:left}
+.nc-guide .gd-dot{background:var(--g)}
+.nc-guide > span:nth-child(2){flex:1; min-width:0}
+.nc-guide small{display:block; font-size:var(--t12); font-weight:700; color:var(--ink-2)}
+.nc-guide b{display:block; font-size:var(--t16); font-weight:700; line-height:1.3}
+.phone:not(.rm) .nc-guide{animation:riseIn 420ms var(--spring) both}
 .m3-fl.dest{box-shadow:0 0 0 2px var(--blue), 0 2px 8px rgba(16,38,60,.18)}
 .nearest{display:grid; gap:var(--s3)}
 .nearest .nr-top{display:flex; align-items:center; gap:var(--s3)}
@@ -975,8 +1011,8 @@ button.map{border:0; padding:0; width:100%; text-align:left; color:inherit}
 
   <div class="docs" id="docs">
     <section class="panel wide">
-      <h2>Four scenarios on one home</h2>
-      <p>Pick a scenario above the journey. <b>1 Guest nearby:</b> at a campus, everyone sees care near you sorted by walking time, open times, and facilities; each place opens with directions and what is there – the café menu, lab and imaging prices, pharmacy items, chapel times, parking rates. <b>2 Appointments:</b> nothing is booked in the app – a visit already in MyChart shows first; otherwise doctors show open times, for information. <b>3 Why you're here:</b> with no visit today, the home asks once on arrival; each answer reshapes the top of the home, and Change is always there. <b>4 3D wayfinding:</b> inside a building the app becomes the map – all floors pulled apart with your route through them, categories that fly to the nearest place with Start navigation, and turn-by-turn that walks you, rides the elevator, and switches to Live view.</p>
+      <h2>Five scenarios on one home</h2>
+      <p>Pick a scenario above the journey. <b>1 Guest nearby:</b> at a campus, everyone sees care near you sorted by walking time, open times, and facilities; each place opens with directions and what is there – the café menu, lab and imaging prices, pharmacy items, chapel times, parking rates. <b>2 Appointments:</b> nothing is booked in the app – a visit already in MyChart shows first; otherwise doctors show open times, for information. <b>3 Why you're here:</b> with no visit today, the home asks once on arrival; each answer reshapes the top of the home, and Change is always there. <b>4 3D wayfinding:</b> inside a building the app becomes the map – all floors pulled apart with your route through them, categories that fly to the nearest place with Start navigation, and turn-by-turn that walks you, rides the elevator, and switches to Live view. <b>5 Section guides:</b> walk into a section – the lobby, imaging, the lab, rehab, the heart center – and its guide unlocks: the map lights up that section and the home leads with what is only there.</p>
       <ul class="states" id="doc-scn"></ul>
     </section>
     <section class="panel wide">
@@ -1045,7 +1081,7 @@ button.map{border:0; padding:0; width:100%; text-align:left; color:inherit}
     </section>
     <section class="panel wide">
       <h2>Glyphs</h2>
-      <p>One concept, one glyph – 95 glyphs from Material Symbols Rounded, served as a subset (about 150 KB).</p>
+      <p>One concept, one glyph – 102 glyphs from Material Symbols Rounded, served as a subset (about 150 KB).</p>
       <ul class="gmap" id="gmap"></ul>
     </section>
   </div>
@@ -1161,7 +1197,14 @@ const ICON_MAP = [
   ['website', 'public', 'Full website', 'Menu', 'Controls'],
   ['appearance', 'contrast', 'Appearance – system', 'Menu', 'Controls'],
   ['light', 'light_mode', 'Light appearance', 'Menu', 'Controls'],
-  ['dark', 'dark_mode', 'Dark appearance', 'Menu', 'Controls']
+  ['dark', 'dark_mode', 'Dark appearance', 'Menu', 'Controls'],
+  ['unlock', 'lock_open', 'Section guide unlocked', 'Section guide', 'Places'],
+  ['heart', 'cardiology', 'Heart and Vascular Center', 'Section guide', 'Places'],
+  ['imaging', 'radiology', 'Imaging', 'Section guide', 'Places'],
+  ['rehab', 'physical_therapy', 'Rehab', 'Section guide', 'Places'],
+  ['oncology', 'oncology', 'Cancer center', 'Section guide', 'Places'],
+  ['family', 'family_restroom', 'Family lounge', 'Section guide', 'Amenities'],
+  ['water', 'water_drop', 'Water station', 'Section guide', 'Amenities']
 ];
 const ICONS = Object.fromEntries(ICON_MAP.map(r => [r[0], r]));
 const g = k => ICONS[k][1];
@@ -1212,6 +1255,41 @@ ROOM_ROWS.forEach(([id, plan, side, x0, x1, kind, name, suite, ic]) => {
   ROOMS[id] = { id, plan, side, x0, x1, kind, name, suite, ic, cx: (x0 + x1) / 2, b: PLAN_META[plan].b, floor: PLAN_META[plan].floor };
 });
 const roomsOn = plan => ROOM_ROWS.filter(r => r[1] === plan).map(r => ROOMS[r[0]]);
+/* Section guides: walk into a section and its guide unlocks – the map and the home re-theme to what is only there (sample content).
+   Each section is a stretch of one floor [x0, x1). Actions: a room id shows it on the map; 'mychart' and 'desk' are hand-offs. */
+const GUIDES = {
+  'c1-lobby': { plan: 'clem1', x0: 12, x1: 176, name: 'Main lobby', ic: 'infoDesk', tone: '#004278', glow: '#4FA8EE', line: 'Floor 1 · Information, café, chapel', hours: 'Open 24 hours',
+    now: ['Volunteers at the desk until 5 p.m.', 'Café line about 5 min', 'Valet open'],
+    acts: [['infoDesk', 'Information', 'c1-info'], ['food', 'Café menu', 'c1-cafe'], ['accessible', 'Wheelchair', 'desk:A volunteer is bringing a wheelchair – simulated'], ['chapel', 'Chapel', 'c1-chapel']],
+    only: [['accessible', 'Wheelchairs at the North entrance', 'Free to borrow; a volunteer can push'], ['wifi', 'Free Wi-Fi: UTSW Guest', 'No password – accept the terms'], ['help', 'Lost and found', 'At the information desk']],
+    tip: 'Some visits include parking validation – ask at the information desk.' },
+  'c1-east': { plan: 'clem1', x0: 176, x1: 309, name: 'Imaging and pharmacy', ic: 'imaging', tone: '#5B2C83', glow: '#B58CE0', line: 'Floor 1 · Suite 1300, pharmacy, restrooms', hours: 'Imaging 7 a.m. – 7 p.m.',
+    now: ['Imaging walk-in wait about 20 min', 'Pharmacy line about 5 min'],
+    acts: [['checkin', 'Check in', 'mychart'], ['pharmacy', 'Pharmacy', 'c1-pharm'], ['imaging', 'Imaging', 'c1-img'], ['restroom', 'Restrooms', 'c1-wc']],
+    only: [['imaging', 'Changing rooms with lockers', 'Inside Suite 1300 – leave metal in the locker'], ['pharmacy', 'Prescription pickup', 'Bring a photo ID'], ['time', 'Prep reminders', 'MRI and CT prep, in MyChart']],
+    tip: 'Having a CT with contrast? Drink water unless your care team said not to.' },
+  'c2-lab': { plan: 'clem2', x0: 12, x1: 176, name: 'Lab', ic: 'lab', tone: '#00665E', glow: '#3CC7B5', line: 'Floor 2 · Suite 2100, snacks, quiet room', hours: '6:30 a.m. – 6 p.m.',
+    now: ['Walk-in wait about 15 min', 'Take a number at the kiosk'],
+    acts: [['lab', 'Lab', 'c2-lab'], ['food', 'Snacks', 'c2-snack'], ['chapel', 'Quiet room', 'c2-quiet'], ['restroom', 'Restrooms', 'c2-wc']],
+    only: [['wait', 'Number kiosk', 'Your number shows on the screens'], ['food', 'Snacks after a fasting test', 'Next door, on Floor 2'], ['water', 'Water station', 'By the waiting chairs']],
+    tip: 'Fasting? Water is fine – save coffee for after your draw.' },
+  'c2-rehab': { plan: 'clem2', x0: 176, x1: 309, name: 'Rehab', ic: 'rehab', tone: '#8A3B12', glow: '#F0A040', line: 'Floor 2 · Suite 2400, waiting area', hours: '7 a.m. – 6 p.m.',
+    now: ['Therapy gym open', 'Therapists on time'],
+    acts: [['rehab', 'Rehab', 'c2-rehab'], ['person', 'Waiting', 'c2-wait'], ['restroom', 'Restrooms', 'c2-wc'], ['infoDesk', 'Call the desk', 'desk:Calling the Rehab desk – simulated']],
+    only: [['rehab', 'Therapy gym', 'Wear shoes you can walk in'], ['accessible', 'Practice stairs and car', 'Learn to get in and out of a car safely'], ['water', 'Water station', 'Inside the gym']],
+    tip: 'Bring your walker or cane – therapists can adjust it.' },
+  'c7-heart': { plan: 'clem7', x0: 12, x1: 309, name: 'Heart and Vascular Center', ic: 'heart', tone: '#A6093D', glow: '#FF5A7E', line: 'Floor 7 · Suite 7200', hours: '7 a.m. – 6 p.m.',
+    now: ['Check-in desk open', 'Running about 10 min behind', 'Seats in the family lounge'],
+    acts: [['checkin', 'Check in', 'mychart'], ['family', 'Family lounge', 'c7-wait'], ['restroom', 'Restrooms', 'c7-wc'], ['infoDesk', 'Call the desk', 'desk:Calling the Heart clinic desk – simulated']],
+    only: [['heart', 'EKG and echo rooms', 'Inside Suite 7200 – wear a top that opens'], ['family', 'Family lounge', 'Charging spots and a screen with updates'], ['education', 'Heart health videos', 'Short videos while you wait']],
+    tip: 'Bring a list of your medicines – the desk will ask.' },
+  's1-main': { plan: 'simm1', x0: 12, x1: 309, name: 'Simmons main floor', ic: 'oncology', tone: '#3F4D9B', glow: '#8C9BFF', line: 'Floor 1 · Oncology, resource center, café', hours: '7 a.m. – 7 p.m.',
+    now: ['Resource center open', 'Navigators here until 4 p.m.'],
+    acts: [['navigator', 'Navigator', 's1-res'], ['food', 'Café', 's1-cafe'], ['pharmacy', 'Pharmacy', 's1-pharm'], ['chapel', 'Quiet room', 's1-quiet']],
+    only: [['education', 'Resource center library', 'Books, plus free wigs and scarves'], ['caregiver', 'Caregiver corner', 'Coffee and a place to work'], ['navigator', 'Patient navigators', 'Help with visits, rides, and costs']],
+    tip: 'Ask at the welcome desk about parking for treatment visits.' }
+};
+const guideOn = (plan, x) => Object.keys(GUIDES).find(k => GUIDES[k].plan === plan && x >= GUIDES[k].x0 && x < GUIDES[k].x1) || null;
 const planOf = (b, f) => b + f;
 const VISITS = { clem: { id: 'v1', room: 'c7-heart', doc: 'd1', time: '10:30 a.m.' }, simm: { id: 'v2', room: 's1-onc', doc: 'd4', time: '2 p.m.' } };
 const GUEST_DEST = { clem: ['c7-heart', 'c1-img', 'c2-lab', 'c1-pharm'], simm: ['s1-onc', 's1-res', 's1-pharm'] };
@@ -1493,16 +1571,27 @@ const M3 = (() => {
     if (head) setHeading(head, p);
   }
   function setHeading(head, p) { if (!youObj || !youObj.userData.cone) return; const [x0, z0] = W(...p), [x1, z1] = W(...head); youObj.userData.cone.rotation.z = -Math.atan2(z1 - z0, x1 - x0); }
+  function beamTexture() { if (!beamTex) beamTex = tex(4, 128, (c) => { const gr = c.createLinearGradient(0, 0, 0, 128); gr.addColorStop(0, 'rgba(255,255,255,0)'); gr.addColorStop(1, 'rgba(255,255,255,.9)'); c.fillStyle = gr; c.fillRect(0, 0, 4, 128); }); return beamTex; }
   function beacon(g, p, lift, k = 1) {
     const P = pal, [x, z] = W(...p);
-    if (!beamTex) beamTex = tex(4, 128, (c) => { const gr = c.createLinearGradient(0, 0, 0, 128); gr.addColorStop(0, 'rgba(255,255,255,0)'); gr.addColorStop(1, 'rgba(255,255,255,.9)'); c.fillStyle = gr; c.fillRect(0, 0, 4, 128); });
-    const beam = new THREE.Mesh(new THREE.CylinderGeometry(4.5, 4.5, 70, 24, 1, true), new THREE.MeshBasicMaterial({ color: P.glow, map: beamTex, transparent: true, opacity: .55, depthWrite: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending }));
+    const beam = new THREE.Mesh(new THREE.CylinderGeometry(4.5, 4.5, 70, 24, 1, true), new THREE.MeshBasicMaterial({ color: P.glow, map: beamTexture(), transparent: true, opacity: .55, depthWrite: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending }));
     beam.position.set(x, lift + 35, z); g.add(beam);
     const pin = new THREE.Group(), pm = new THREE.MeshStandardMaterial({ color: P.pin, emissive: P.pin, emissiveIntensity: .25, roughness: .35 });
     const ball = new THREE.Mesh(new THREE.SphereGeometry(4, 20, 16), pm); ball.position.y = 7; pin.add(ball);
     const tip = new THREE.Mesh(new THREE.ConeGeometry(2.6, 6, 16), pm); tip.rotation.x = Math.PI; tip.position.y = 2.6; pin.add(tip);
     const core = new THREE.Mesh(new THREE.SphereGeometry(1.5, 12, 10), mat('#FFFFFF')); core.position.set(0, 7, 3.2); pin.add(core);
     pin.scale.setScalar(k); pin.position.set(x, lift + 8 * k, z); pin.userData.bob = lift + 8 * k; pin.traverse(n => { n.castShadow = true; }); g.add(pin);
+  }
+  /* the section you are in: a tinted floor and walls of light that rise around it */
+  function zoneLayer(g, z, lift) {
+    const dark = palKey === 'dark', col = dark ? z.glow : z.tone, [ax, az] = W(z.x0 + 1, 13), [bx, bz] = W(z.x1 - 1, 187), w = bx - ax, d = bz - az, cx = (ax + bx) / 2, cz = (az + bz) / 2;
+    const fill = new THREE.Mesh(new THREE.PlaneGeometry(w, d), new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: dark ? .16 : .1, depthWrite: false }));
+    fill.rotation.x = -Math.PI / 2; fill.position.set(cx, lift + 0.2, cz); g.add(fill);
+    const wallM = new THREE.MeshBasicMaterial({ color: col, map: beamTexture(), transparent: true, opacity: dark ? .6 : .32, depthWrite: false, side: THREE.DoubleSide, blending: dark ? THREE.AdditiveBlending : THREE.NormalBlending });
+    const H = 16, walls = new THREE.Group();
+    [[w, cx, az, 0], [w, cx, bz, 0], [d, ax, cz, Math.PI / 2], [d, bx, cz, Math.PI / 2]].forEach(([len, x, zz, r]) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(len, H), wallM); m.position.set(x, H / 2, zz); m.rotation.y = r; walls.add(m); });
+    walls.position.y = lift; g.add(walls);
+    if (!S.rm) { walls.scale.y = 0.01; tweens.push({ dur: 900, f: t => { walls.scale.y = Math.max(.01, ease(t)); } }); }
   }
   let upTex = null;
   function riser(g, p, y0, y1) {
@@ -1521,6 +1610,7 @@ const M3 = (() => {
   /* ---------- labels: Gozio-style callouts and badges, projected each frame, never overlapping ---------- */
   function labelList(s) {
     const out = [];
+    if (s.zoneG && (s.plan === s.zoneG.plan || (s.stack && s.stack.includes(s.zoneG.plan)))) out.push({ p: [(s.zoneG.x0 + s.zoneG.x1) / 2, 100], y: levelOf(s, s.zoneG.plan) + 20, html: `<span>${s.zoneG.name}</span>`, cls: 'm3-zone', style: `--g:${s.zoneG.tone}`, pri: 2.5 });
     if (s.xray) {
       s.stack.forEach(pl => out.push({ p: [-24, 100], y: levelOf(s, pl) + 2, html: `<span>Floor ${PLAN_META[pl].floor}</span>`, cls: 'm3-fl' + (pl === s.youPlan ? ' you' : '') + (s.stackFlag && pl === s.stackFlag.plan ? ' dest' : ''), pri: 3 }));
       if (s.dest) { const r = ROOMS[s.dest]; out.push({ p: [r.cx, r.side === 'n' ? 50 : 150], y: levelOf(s, r.plan) + 16, html: `<span class="m3-dot"></span><span><b>${r.name}</b><small>${r.suite ? `Suite ${r.suite} · ` : ''}Floor ${r.floor}</small></span>`, cls: 'm3-call dest', aria: `${r.name}, Floor ${r.floor}`, room: r.id, pri: 4 }); }
@@ -1546,6 +1636,7 @@ const M3 = (() => {
     if (s.mode === 'live') return;
     labelList(s).forEach(L => {
       const el = document.createElement(L.room && s.labelsTab !== false ? 'button' : 'span');
+      if (L.style) el.setAttribute('style', L.style);
       el.className = L.cls; el.innerHTML = L.html; el.style.visibility = 'hidden';
       if (L.room && s.labelsTab !== false) { el.dataset.act = 'peek'; el.dataset.room = L.room; el.setAttribute('aria-label', `${L.aria}. Show options`); el.tabIndex = s.labelsTab === false ? -1 : 0; }
       else el.setAttribute('aria-hidden', 'true');
@@ -1606,6 +1697,7 @@ const M3 = (() => {
         const shaft = new THREE.Mesh(new THREE.CylinderGeometry(6, 6, top + 12, 24, 1, true), new THREE.MeshBasicMaterial({ color: pal.glow, transparent: true, opacity: .28, depthWrite: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending }));
         shaft.position.set(sx, (top + 12) / 2, sz - 6); dyn.add(shaft); }
     }
+    if (s.zoneG && (s.plan === s.zoneG.plan || (s.stack && s.stack.includes(s.zoneG.plan)))) zoneLayer(dyn, s.zoneG, lv(s.zoneG.plan));
     if (s.xray) {
       Object.entries(s.stackRoutes || {}).forEach(([pl, rs]) => routeLayer(dyn, rs, lv(pl), true, 1.7));
       if (s.riser) riser(dyn, s.riser.p, lv(s.riser.from), lv(s.riser.to));
@@ -1853,7 +1945,7 @@ function mapBox({ plan, label, foot, btn, ...o }) {
 /* ---------- State ---------- */
 const mqRM = matchMedia('(prefers-reduced-motion: reduce)');
 const mqDark = matchMedia('(prefers-color-scheme: dark)');
-const S = { zone: 'away', floor: 1, perm: 'ask', acc: 'precise', signed: true, width: 390, ts: 1, theme: 'system', rm: mqRM.matches, manual: null, paused: false, askHidden: false, guestDest: { clem: null, simm: null }, tab: 0, pickB: null, showPassed: false, appt: true, reason: null, scn: 'guest', step: 0, cat: null, viewFloor: null, peek: null, map2d: false, guideOpen: false, navLive: false, navAll: false, voice: false, navPlay: false, alert: false, alertsAll: false, fluCal: false, soScope: 'All' };
+const S = { zone: 'away', floor: 1, perm: 'ask', acc: 'precise', signed: true, width: 390, ts: 1, theme: 'system', rm: mqRM.matches, manual: null, paused: false, askHidden: false, guestDest: { clem: null, simm: null }, tab: 0, pickB: null, showPassed: false, appt: true, reason: null, scn: 'guest', step: 0, cat: null, viewFloor: null, peek: null, map2d: false, guideOpen: false, navLive: false, navAll: false, voice: false, spot: null, unlocked: [], navPlay: false, alert: false, alertsAll: false, fluCal: false, soScope: 'All' };
 
 /* Precedence: your choice → paused → permission → signal → accuracy → place and floor */
 function ctx() {
@@ -1868,6 +1960,7 @@ const isActive = c => c.src === 'live' || c.src === 'manual';
 
 /* Where you stand on each floor plan (sample positions for the simulation) */
 function youOnFloor(c, destRoom) {
+  if (S.spot && GUIDES[S.spot] && GUIDES[S.spot].plan === planOf('clem', c.floor)) { const g = GUIDES[S.spot]; return [Math.round((g.x0 + g.x1) / 2), 100]; }
   if (destRoom && destRoom.floor === c.floor && destRoom.b === 'clem') return [destRoom.cx, 100];
   return c.floor === 1 ? [28, 100] : [PLAN_META.clem1.elev, 100];
 }
@@ -2280,7 +2373,7 @@ function zoneLine(c) {
 function xrayOn(c, L) {
   if (!M3.ok() || S.map2d || c.zone !== 'inside') return false;
   if (S.viewFloor === 'all') return true;
-  if (S.viewFloor != null || S.peek || S.cat) return false;
+  if (S.viewFloor != null || S.peek || S.cat || S.spot) return false;
   const t = L && L.room ? ROOMS[L.room] : null;
   return !!(t && t.b === 'clem' && t.floor !== c.floor);
 }
@@ -2296,10 +2389,15 @@ function xraySpec(b, youFloor, you, t, extra = {}) {
   return s;
 }
 function heroSpec(c, L) {
-  if (xrayOn(c, L)) { const t = L && L.room ? ROOMS[L.room] : null; return xraySpec('clem', c.floor, youOnFloor(c, t), t && t.b === 'clem' ? t : null); }
+  const gid = guideAt(c), G = gid && GUIDES[gid], zoneG = G ? { plan: G.plan, x0: G.x0, x1: Math.min(G.x1, 308), glow: G.glow, tone: G.tone, name: G.name } : null;
+  if (xrayOn(c, L)) { const t = L && L.room ? ROOMS[L.room] : null; return { ...xraySpec('clem', c.floor, youOnFloor(c, t), t && t.b === 'clem' ? t : null), zoneG }; }
+  return { ...heroSpec0(c, L), zoneG };
+}
+function heroSpec0(c, L) {
   const o = heroOpts(c, L);
   const s = { plan: o.plan, routes: o.routes || [], you: o.you || null, head: o.head || null, flag: o.flag || null, dest: o.dest || null, destB: o.destB || null, drive: o.drive || null, cat: S.cat || null, mode: S.map2d ? '2d' : 'overview' };
   if (S.peek && ROOMS[S.peek] && o.plan !== 'campus' && ROOMS[S.peek].plan === o.plan) { const r = ROOMS[S.peek]; s.focus = [r.cx, r.side === 'n' ? 50 : 150]; }
+  else { const g = GUIDES[guideAt(c)]; if (g && g.plan === o.plan && g.x1 - g.x0 < 250) s.focus = [(g.x0 + g.x1) / 2, 100]; }
   return s;
 }
 function guideHTML(L) {
@@ -2341,6 +2439,48 @@ function mountHero(c, L, animate, intro) {
   const hTop = top ? top.offsetTop + top.offsetHeight + 8 : 120, hBot = Math.max(30, ...low.map(el => H - el.offsetTop + 8));
   const avoid = side ? [[side.offsetLeft - 6, side.offsetTop - 6, side.offsetLeft + side.offsetWidth + 6, side.offsetTop + side.offsetHeight + 6]] : [];
   M3.mount(hostEl, heroSpec(c, L), { top: hTop, bottom: hBot, animate, intro, avoid });
+}
+
+/* ---------- Section guides ---------- */
+function guideAt(c) {
+  const p = placeOf(c); if (!p || !isActive(c)) return null;
+  if (c.zone === 'simmons') return 's1-main';
+  if (c.zone !== 'inside') return null;
+  const L = lineModel(c), t = L && L.room ? ROOMS[L.room] : null;
+  return guideOn(planOf('clem', c.floor), youOnFloor(c, t)[0]);
+}
+function guideAct([ic, t, a], inSheet) {
+  const look = `<span class="gd-c" aria-hidden="true">${ico(ic)}</span><span>${t}</span>`;
+  if (a === 'mychart') return S.signed ? `<button class="gd-act" data-act="ext" data-label="${t}" aria-label="${t}, opens in MyChart">${look}</button>` : `<button class="gd-act" data-act="tab" data-tab="4" aria-label="${t}, sign in to MyChart">${look}</button>`;
+  if (a.startsWith('desk:')) return `<button class="gd-act" data-act="info" data-msg="${a.slice(5)}">${look}</button>`;
+  return `<button class="gd-act" data-act="${inSheet ? 'wf' : 'peek'}" data-room="${a}" aria-label="${t}, ${inSheet ? 'start navigation' : 'show on the map'}">${look}</button>`;
+}
+function guideBody(gid, here, inSheet) {
+  const G = GUIDES[gid], hid = `gd-h-${inSheet ? 's' : 'h'}`;
+  return `<div class="gd-hero"><span class="gd-art" aria-hidden="true">${ico(G.ic)}</span>
+      <p class="gd-k">${ico(here ? 'unlock' : 'lock', 16)}<span>${here ? "Section guide · You're here" : 'Section guide · Preview'}</span></p>
+      <h2 id="${hid}">${G.name}</h2><p class="gd-s">${G.line} · ${G.hours}</p></div>
+    <ul class="gd-now" aria-label="Here now, sample">${G.now.map(t => `<li>${here ? '<span class="live" aria-hidden="true"></span>' : ''}${t}</li>`).join('')}</ul>
+    <ul class="gd-acts">${G.acts.map(x => `<li>${guideAct(x, inSheet)}</li>`).join('')}</ul>
+    <h3 class="gd-h3">Only here</h3>
+    <ul class="gd-only">${G.only.map(([ic, t, sub]) => `<li>${dot(ic)}<span><b>${t}</b><small>${sub}</small></span></li>`).join('')}</ul>
+    <p class="gd-tip">${ico('info', 20)}<span>${G.tip}</span></p>`;
+}
+function guideCard(gid, fresh) {
+  const n = S.unlocked.length, all = Object.keys(GUIDES).length;
+  return `<section class="guide${fresh ? ' fresh' : ''}" style="--g:${GUIDES[gid].tone}" aria-labelledby="gd-h-h">${guideBody(gid, true, false)}
+    <div class="gd-foot"><span class="tag">Sample</span><button class="link-btn" data-act="guides">All guides · ${n} of ${all} unlocked</button></div></section>`;
+}
+function openGuide(gid) {
+  const here = guideAt(ctx()) === gid;
+  openSheet(here ? 'Section guide' : 'Section guide preview', `<section class="guide in-sheet" style="--g:${GUIDES[gid].tone}" aria-labelledby="gd-h-s">${guideBody(gid, here, true)}<div class="gd-foot"><span class="tag">Sample</span></div></section>`);
+}
+function openGuides() {
+  const here = guideAt(ctx());
+  openSheet('Section guides', `<p class="one">Each section's guide unlocks when you walk in. You can preview the rest.</p><ul class="rows">${Object.entries(GUIDES).map(([k, G]) => {
+    const st = k === here ? "You're here" : S.unlocked.includes(k) ? 'Unlocked' : 'Preview';
+    return `<li><button class="row" data-act="guide-open" data-g="${k}"><span class="gd-dot" style="--g:${G.tone}" aria-hidden="true">${ico(G.ic, 20)}</span><span class="txt"><span class="rt">${G.name}</span><span class="rs">${PLACES[PLAN_META[G.plan].b].short} · ${G.line.split(' · ')[0]}</span></span><span class="tag${st === 'Preview' ? '' : ' on'}">${st}</span>${ico('next', 20, 'chev')}</button></li>`;
+  }).join('')}</ul>`);
 }
 
 function catsHTML(c) {
@@ -2429,10 +2569,10 @@ function quickLinks() {
 
 function renderHome(force) {
   const c = ctx(), L = lineModel(c), pass = passFor(c);
-  const key = JSON.stringify([c, S.signed, S.appt, S.guestDest, S.askHidden, S.showPassed, S.reason, S.alert, S.alertsAll, S.fluCal, S.cat, S.viewFloor, S.peek, S.map2d, S.guideOpen, M3.ok()]);
+  const key = JSON.stringify([c, S.spot, S.signed, S.appt, S.guestDest, S.askHidden, S.showPassed, S.reason, S.alert, S.alertsAll, S.fluCal, S.cat, S.viewFloor, S.peek, S.map2d, S.guideOpen, M3.ok()]);
   const changed = key !== last.key;
   if (!changed && !force) return;
-  const ckey = JSON.stringify([c, S.signed, S.appt, S.guestDest, S.reason]);
+  const ckey = JSON.stringify([c, S.spot, S.signed, S.appt, S.guestDest, S.reason]);
   const animate = !S.rm && last.key !== null && ckey !== last.ckey;
   if (last.ckey && ckey !== last.ckey) { S.cat = null; S.viewFloor = null; S.peek = null; S.guideOpen = false; }
   const [cIco, cTxt, live] = chipFor(c);
@@ -2444,7 +2584,10 @@ function renderHome(force) {
   let h;
   if (PM_ON) {
     // The app becomes the place: a full-bleed map, then a sheet with what is here and the rest of the home
-    h = pmHero(c, L) + `<div class="pm-sheet"><div class="grab" aria-hidden="true"></div><div class="pm-head"><div class="where pm-where"><button class="chip-loc pm-loc" data-act="loc" aria-label="Location: ${PLACES[p].full}, ${zoneLine(c)}, ${c.src === 'manual' ? 'your choice' : 'simulated'}. Options" aria-haspopup="dialog">${c.src === 'manual' ? ico('pick', 16) : '<span class="live" aria-hidden="true"></span>'}<span class="cl-t">${zoneLine(c)}</span><span class="tag">${c.src === 'manual' ? 'Your choice' : 'Simulated'}</span></button><span class="sp"></span><button class="link-btn" data-act="picker">Not here?</button></div><h1>${PLACES[p].full}</h1></div>` + catsHTML(c) + alertBanner();
+    const gid = guideAt(c), fresh = !!gid && !S.unlocked.includes(gid);
+    if (fresh) S.unlocked.push(gid);
+    if (fresh && last.key !== null) { toast(`Section guide unlocked: ${GUIDES[gid].name}`); }
+    h = pmHero(c, L) + `<div class="pm-sheet"><div class="grab" aria-hidden="true"></div><div class="pm-head"><div class="where pm-where"><button class="chip-loc pm-loc" data-act="loc" aria-label="Location: ${PLACES[p].full}, ${zoneLine(c)}, ${c.src === 'manual' ? 'your choice' : 'simulated'}. Options" aria-haspopup="dialog">${c.src === 'manual' ? ico('pick', 16) : '<span class="live" aria-hidden="true"></span>'}<span class="cl-t">${zoneLine(c)}</span><span class="tag">${c.src === 'manual' ? 'Your choice' : 'Simulated'}</span></button><span class="sp"></span><button class="link-btn" data-act="picker">Not here?</button></div><h1>${PLACES[p].full}</h1></div>` + (gid ? guideCard(gid, fresh && last.key !== null && !S.rm) : '') + catsHTML(c) + alertBanner();
   } else {
     h = alertBanner() + `<div class="where">${chip}<span class="sp"></span></div>`;
     h += `<button class="search-field" data-act="search">${ico('search', 20)}<span>Search doctors, places, and more</span></button>` + topSearches();
@@ -2678,6 +2821,9 @@ function renderWF(anim) {
   const { steps, i, here, roomId } = WF, s = steps[i], r = ROOMS[roomId], rem = remaining(steps, i), live3d = M3.ok();
   const target = stepView(s), from = navVB && anim && !S.rm ? navVB : target;
   const inner = s.plan === 'campus' ? campusSVG({ routes: s.routes, you: s.you, head: s.head, flag: s.flag, destB: s.destB, pulse: i === here }) : planSVG(s.plan, { routes: s.routes, you: s.you, head: s.head, flag: s.flag, dest: s.dest, pulse: i === here });
+  const stepG = st => st && st.plan !== 'campus' && st.k !== 'ride' && st.you ? guideOn(st.plan, st.you[0]) : null;
+  const gIn = stepG(s) && stepG(s) !== stepG(steps[i - 1]) ? stepG(s) : null;
+  if (gIn && !S.unlocked.includes(gIn)) S.unlocked.push(gIn);
   const where = s.k === 'ride' ? 'Elevator' : S.navAll && live3d ? 'Route overview' : s.plan === 'campus' ? 'Campus' : 'Floor ' + PLAN_META[s.plan].floor;
   const side = live3d ? `<div class="nav-side" id="nav-side"><button class="pm-btn" data-act="nav-all" aria-pressed="${!!S.navAll}" aria-label="Route overview">${ico('floor', 20)}</button><button class="pm-btn" data-act="nav-live" aria-pressed="${!!S.navLive}" aria-label="Live view – simulated">${ico('liveView', 20)}</button><button class="pm-btn" data-act="nav-voice" aria-pressed="${!!S.voice}" aria-label="${S.voice ? 'Voice guidance on' : 'Voice guidance off'}">${ico(S.voice ? 'voiceOn' : 'voiceOff', 20)}</button><button class="pm-btn" data-act="map-reset" aria-label="Recenter">${ico('compass', 20)}</button></div>` : '';
   const hostOk = live3d && $('#nav-map .m3-host');
@@ -2687,6 +2833,7 @@ function renderWF(anim) {
   $('#nav-banner').classList.toggle('arrived', !!s.last);
   $('#nav-card').innerHTML = `<div class="nc-top"><span class="nc-eta"><b>${s.last ? 'Arrived' : `${rem.min} min`}</b><span>${s.last ? (r.suite ? 'Suite ' + r.suite : 'You are here') : `${rem.dist} · Arrive ${rem.arrive}`}</span></span><button class="nc-end" data-act="close-page" aria-label="End directions">${ico('close', 20)}<span>End</span></button></div>
     <p class="nc-dest">${ico('flag', 16)}<span>${r.name}${r.suite ? ', Suite ' + r.suite : ''} · Floor ${r.floor}</span>${i === here && isActive(ctx()) ? '<span class="tag">You\'re here</span>' : ''}</p>
+    ${gIn ? `<button class="nc-guide" data-act="guide-open" data-g="${gIn}" style="--g:${GUIDES[gIn].tone}"><span class="gd-dot" aria-hidden="true">${ico('unlock', 20)}</span><span><small>Entering · Section guide unlocked</small><b>${GUIDES[gIn].name}</b></span>${ico('next', 20, 'chev')}</button>` : ''}
     <div class="wf-steps" style="--n:${steps.length}" aria-hidden="true">${steps.map((_, k) => `<i class="${k < i ? 'on' : k === i ? 'here' : ''}"></i>`).join('')}</div>
     ${s.lift ? `<div class="nc-lift">${liftPanel(1, s.lift)}</div>` : ''}
     ${s.ext ? `<button class="btn" data-act="info" data-msg="Opens your map app – simulated">${ico('mapApp', 20)}<span>Open in your map app</span>${ico('external', 16)}</button>` : ''}
@@ -2871,6 +3018,8 @@ phone.addEventListener('click', e => {
     case 'map-reset': M3.reset(); if ($('#pg-way').classList.contains('on')) { S.navLive = false; S.navAll = false; renderWF(false); } else { S.peek = null; S.viewFloor = null; renderHome(true); } break;
     case 'guide': S.guideOpen = !S.guideOpen; renderHome(true); { const f = $('[data-act="guide"]', home); if (f) f.focus({ preventScroll: true }); } break;
     case 'nav-play': navPlay(); break;
+    case 'guides': openGuides(); break;
+    case 'guide-open': openGuide(d.g); break;
     case 'nav-all': S.navAll = !S.navAll; if (S.navAll) S.navLive = false; renderWF(false); { const f = $('[data-act="nav-all"]'); if (f) f.focus({ preventScroll: true }); } say(S.navAll ? 'Route overview: the whole way, all floors' : 'Following you again'); break;
     case 'nav-live': S.navLive = !S.navLive; if (S.navLive) S.navAll = false; renderWF(false); { const f = $('[data-act="nav-live"]'); if (f) f.focus({ preventScroll: true }); } say(S.navLive ? 'Live view on – simulated' : 'Live view off'); break;
     case 'nav-voice': S.voice = !S.voice; renderWF(false); { const f = $('[data-act="nav-voice"]'); if (f) f.focus({ preventScroll: true }); } if (S.voice && WF) speak(WF.steps[WF.i].t); break;
@@ -3017,6 +3166,16 @@ const SCN = {
     { t: 'Overview', ic: 'explore', sub: 'Route overview: every floor of the way in one view, any time during directions', run: () => { at('inside', 1)(); return () => navAt('c7-heart', 'hall', { all: true }); } },
     { t: 'Arrived', ic: 'arrived', sub: 'Arrived at the Heart clinic – check in from MyChart', run: () => { at('inside', 1)(); return () => navAt('c7-heart', 'arrive'); } }
   ] },
+  guides: { n: '5', t: 'Section guides', set: { signed: true, appt: true, reason: null }, steps: [
+    { t: 'Main lobby', ic: 'infoDesk', sub: 'Walk in and the lobby guide unlocks: the desk, café line, wheelchairs, Wi-Fi', run: () => { at('inside', 1)(); S.spot = 'c1-lobby'; } },
+    { t: 'Imaging wing', ic: 'imaging', sub: 'A few steps east, the home re-themes: imaging wait, changing rooms, pharmacy pickup', run: () => { at('inside', 1)(); S.spot = 'c1-east'; } },
+    { t: 'Lab', ic: 'lab', sub: 'Floor 2, by the elevator: the number kiosk, fasting tips, snacks after your draw', run: () => { at('inside', 2)(); S.spot = 'c2-lab'; } },
+    { t: 'Rehab', ic: 'rehab', sub: 'Down the hall: the therapy gym, practice stairs and car, the desk', run: () => { at('inside', 2)(); S.spot = 'c2-rehab'; } },
+    { t: 'Stepping in', ic: 'navigate', sub: 'In directions, stepping out of the elevator unlocks the Heart and Vascular Center guide', run: () => { at('inside', 1)(); return () => navAt('c7-heart', 'exit'); } },
+    { t: 'Heart center', ic: 'heart', sub: 'Your visit floor: check in, the family lounge, EKG and echo rooms', run: at('inside', 7) },
+    { t: 'All guides', ic: 'unlock', sub: 'Every section guide, unlocked as you go – preview the rest any time', run: () => { at('inside', 7)(); return () => openGuides(); } },
+    { t: 'Simmons', ic: 'oncology', sub: 'At the cancer center: navigators, the resource center, the caregiver corner', run: at('simmons') }
+  ] },
   visit: { n: '', t: 'With an appointment', set: { signed: true, appt: true, reason: null }, steps: [
     { t: 'Away', ic: 'home', sub: 'Common homepage with today\'s plan – nothing location-based yet', run: at('away') },
     { t: 'Arriving', ic: 'car', sub: 'Parking at Clements University Hospital, the car follows the route in', run: at('arriving') },
@@ -3027,7 +3186,7 @@ const SCN = {
     { t: 'No location', ic: 'locOff', sub: 'Permission denied – choose a place and everything still works', run: () => { S.perm = 'denied'; } }
   ] }
 };
-const SCN_ORDER = ['guest', 'appts', 'why', 'nav', 'visit'];
+const SCN_ORDER = ['guest', 'appts', 'why', 'nav', 'guides', 'visit'];
 /* Open directions at a given step (board scenario 4) */
 function navAt(room, k, o = {}) { openWF(room); const i = WF.steps.findIndex(x => x.k === k); if (i >= 0) WF.i = i; S.navLive = !!o.live; S.navAll = !!o.all; renderWF(false); }
 const scn = () => SCN[S.scn];
@@ -3041,7 +3200,7 @@ function goStep(i) {
   const sc = scn(); i = Math.max(0, Math.min(sc.steps.length - 1, i));
   closeSheet(true); closePage(); $('#sys').hidden = true;
   // Each step starts clean, but keeps the account choices from the controls (set once per scenario)
-  Object.assign(S, { manual: null, paused: false, acc: 'precise', showPassed: false, perm: 'allowed', askHidden: true, guestDest: { clem: null, simm: null }, reason: sc.set.reason, navLive: false, navAll: false, navPlay: false });
+  Object.assign(S, { manual: null, paused: false, acc: 'precise', showPassed: false, perm: 'allowed', askHidden: true, guestDest: { clem: null, simm: null }, reason: sc.set.reason, navLive: false, navAll: false, navPlay: false, spot: null });
   S.step = i; DEPT_DAY = 'today';
   const after = sc.steps[i].run();
   if (S.tab !== 0) setTab(0);
@@ -3087,7 +3246,7 @@ $('#controls').addEventListener('click', e => {
   if (b.dataset.moment === 'reset') { $('#lock').hidden = true; goStep(0); return; }
   if (!gp) return;
   const k = gp.dataset.ctl, v = b.dataset.v;
-  if (k === 'zone' || k === 'floor') S.showPassed = false;
+  if (k === 'zone' || k === 'floor') { S.showPassed = false; S.spot = null; }
   if (k === 'zone') { S.zone = v; S.manual = null; S.paused = false; }
   if (k === 'floor') { S.floor = +v; S.manual = null; }
   if (k === 'perm') { S.perm = v; if (v === 'ask') S.askHidden = false; $('#sys').hidden = true; }
@@ -3116,7 +3275,7 @@ function renderAll(force) {
 
 /* ---------- Docs ---------- */
 $('#doc-states').innerHTML = SCN.visit.steps.map((s, i) => `<li><b>${i + 1}. ${s.t}</b><span>${s.sub}</span></li>`).join('') + `<li><b>Approximate</b><span>Asks which building</span></li><li><b>No visit today</b><span>Asks why you're here, then shows what's near you</span></li>`;
-$('#doc-scn').innerHTML = ['guest', 'appts', 'why', 'nav'].map(k => `<li><b>${SCN[k].n}. ${SCN[k].t}</b><span>${SCN[k].steps.map(s => s.t).join(' → ')}</span></li>`).join('');
+$('#doc-scn').innerHTML = ['guest', 'appts', 'why', 'nav', 'guides'].map(k => `<li><b>${SCN[k].n}. ${SCN[k].t}</b><span>${SCN[k].steps.map(s => s.t).join(' → ')}</span></li>`).join('');
 $('#doc-map').innerHTML = `<div style="display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">${mapBox({ plan: 'campus', label: 'Sample campus map', routes: [[DRIVE.clem, ''], [WALK.clem, 'plan']], you: DRIVE.clem[2] })}${mapBox({ plan: 'clem7', label: 'Sample plan of Floor 7', routes: [[[[156, 100], [104, 100]]]], you: [156, 100], flag: [104, 100], dest: 'c7-heart' })}</div>`;
 $('#gmap').innerHTML = ICON_MAP.map(r => `<li>${ico(r[0], 20)}<span>${r[2]}</span><code>${r[1]}</code></li>`).join('');
 
