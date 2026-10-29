@@ -30,6 +30,16 @@ Inside Clements, “In this building” (departments by floor) and “Hospital r
 
 Precedence: your choice → paused → permission → signal → accuracy → place and floor. A journey step on the board turns location on if it was never asked.
 
+## MyChart tab
+
+The guest prototype's sign-in, on this prototype's tokens:
+- **Header:** "MyChart" with "Sign in for visits, messages, results, and bills."
+- **Blue panel** (with the cyan glow): "Sign in to MyChart", then fields on the panel. They are white in light mode and deep navy in dark, with the show-password eye inside the field.
+- **Buttons:** a white Sign in button with three loading dots, "Forgot username or password?", a "New to MyChart?" divider, and an outlined Create an account.
+- **Below the panel:** a "Simulated sign-in" note, then "Without signing in": Pay as a guest, and More (opens the menu).
+- **Empty fields:** Sign in says "Enter your MyChart username and password" and focuses the empty field.
+- **Signed in:** a Blue card with Jordan Rivera (sample), the MyChart hand-offs (each opens in MyChart ↗), and Sign out.
+
 ## Common homepage modules (from `designs/guest`)
 
 The location layer sits on top; the guest home's modules follow in their usual CMS order in every state, so the common homepage is always there:

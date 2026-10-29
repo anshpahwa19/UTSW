@@ -22,6 +22,8 @@
   --map-bg:#E6EDF3; --map-block:#FFFFFF; --map-wall:#A9B8C6; --map-road:#FFFFFF; --map-road-edge:#C9D5E0; --map-walk:#D6E4F0;
   --dest-fill:rgba(0,66,120,.12);
   --alert-ink:#B0003A; --alert-bg:#FBEFF2;
+  --field-on-brand:#FFFFFF; --on-blue-2:#D6E4F0; --on-blue-3:#A9C7E0;
+  --glow:radial-gradient(90% 70% at 100% 20%, rgba(0,169,224,.30) 0, rgba(0,169,224,0) 70%);
 
   --ts:1;
   --font:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
@@ -191,6 +193,7 @@ code{font-size:12.0px; background:var(--bd-chip); padding:2px 4px; border-radius
   --map-bg:#132130; --map-block:#1C2F42; --map-wall:#4A6178; --map-road:#2E4760; --map-road-edge:#3A5470; --map-walk:#24405C;
   --dest-fill:rgba(140,192,234,.18);
   --alert-ink:#FF8AA8; --alert-bg:#3A1A24;
+  --field-on-brand:#0D1620;
   --shadow-1:0 1px 2px rgba(0,0,0,.4), 0 2px 6px rgba(0,0,0,.3);
   --shadow-2:0 8px 24px rgba(0,0,0,.5);
   --focus:0 0 0 2px #0D1620, 0 0 0 5px #8CC0EA;
@@ -518,6 +521,37 @@ button.map{border:0; padding:0; width:100%; text-align:left; color:inherit}
 .toast.on{transform:none; opacity:1}
 .toast button{margin-left:auto; min-height:var(--hit); border:0; background:none; color:var(--on-inverse); font-weight:700; text-decoration:underline; padding:0 var(--s2)}
 .phone.rm .you,.phone.rm .rail-fill{transition:opacity var(--d-base)}
+/* ===================== MyChart sign-in (the guest prototype's Blue panel) ===================== */
+.page-h{padding:48.0px var(--s4) var(--s4); display:grid; gap:var(--s1)}
+.page-h h1{font-size:var(--t28); font-weight:800; letter-spacing:-.02em; line-height:1.15}
+.page-h p{font-size:var(--t16); color:var(--ink-2); line-height:1.4}
+.mc-panel{margin:0 var(--s4); padding:var(--s6) var(--s4) var(--s4); border-radius:var(--r-lg); color:#FFFFFF; background:var(--glow), var(--brand); display:grid; grid-template-columns:minmax(0,1fr); gap:var(--s3); --grad:-25}
+.mc-panel h2{font-size:var(--t24); line-height:1.2; font-weight:800; letter-spacing:-.01em}
+.mc-field{display:grid; gap:var(--s1)}
+.mc-field > span:first-child{font-size:var(--t14); font-weight:600; color:var(--on-blue-2)}
+.mc-in{display:flex; align-items:center; min-height:calc(52px * var(--ts)); border-radius:var(--r-md); background:var(--field-on-brand); padding:0 var(--s1) 0 var(--s4); --grad:0}
+.mc-in input{flex:1; width:0; min-width:0; border:0; outline:0; background:none; font:inherit; font-size:var(--t16); color:var(--ink); min-height:var(--hit)}
+.mc-in:focus-within{box-shadow:var(--focus-on-blue)}
+.phone .mc-in input:focus-visible{box-shadow:none}
+.mc-in .icon-btn{color:var(--blue)}
+.mc-panel .btn.light{width:100%; margin-top:var(--s1); background:#FFFFFF; color:#004278; border-color:#FFFFFF; --grad:0}
+.mc-panel .btn.ghost-w{width:100%; background:transparent; color:#FFFFFF; border:1.5px solid rgba(255,255,255,.6)}
+.mc-link{justify-self:center; min-height:var(--hit); border:0; background:none; color:#FFFFFF; font-weight:600; font-size:var(--t14); text-decoration:underline; text-underline-offset:3px; border-radius:var(--r-sm); padding:0 var(--s2)}
+.mc-panel :focus-visible{box-shadow:var(--focus-on-blue)!important}
+.mc-or{display:flex; align-items:center; gap:var(--s3); font-size:var(--t14); color:var(--on-blue-2)}
+.mc-or::before,.mc-or::after{content:""; flex:1; height:1px; background:rgba(255,255,255,.24)}
+.mc-note{margin:var(--s3) var(--s4) 0; font-size:var(--t14); color:var(--ink-2); display:flex; gap:var(--s2); align-items:center}
+.btn .dots{display:none; gap:4px}
+.btn .dots i{width:6px; height:6px; border-radius:50%; background:currentColor; animation:dotHop 900ms var(--ease-in-out) infinite}
+.btn .dots i:nth-child(2){animation-delay:120ms} .btn .dots i:nth-child(3){animation-delay:240ms}
+.btn.loading .lbl{display:none} .btn.loading .dots{display:inline-flex}
+.phone.rm .btn .dots i{animation:none}
+@keyframes dotHop{0%,100%{transform:none} 40%{transform:translateY(-4px)}}
+.mc-hello{margin:0 var(--s4); padding:var(--s4); border-radius:var(--r-lg); background:var(--glow), var(--brand); color:#FFFFFF; display:flex; align-items:center; gap:var(--s3); --grad:-25}
+.mc-hello .avatar{width:48px; height:48px; font-size:16.0px}
+.mc-hello b{font-size:var(--t20); font-weight:800; display:block; line-height:1.2}
+.mc-hello .who span{font-size:var(--t14); color:var(--on-blue-2)}
+
 /* ===================== Common homepage modules (from the guest home) ===================== */
 .alerts{margin:var(--s3) var(--s4) 0; display:grid; gap:var(--s2)}
 .alert{width:100%; min-height:var(--btn); display:flex; align-items:center; gap:var(--s3); padding:var(--s3); border-radius:var(--r-md); border:1px solid var(--alert-ink); background:var(--alert-bg); color:var(--alert-ink); text-align:left}
@@ -1705,19 +1739,32 @@ let pwShown = false;
 function renderMC() {
   const el = $('#mc-body');
   if (S.signed) {
-    el.innerHTML = pageBar('MyChart') + `<section class="sec" style="margin-top:12px"><ul class="rows"><li><div class="row"><span class="dot solid" aria-hidden="true"><span class="avatar" style="background:none;color:inherit">JR</span></span><span class="txt"><span class="rt">Jordan Rivera</span><span class="rs">Sample patient</span></span></div></li></ul>
-      <ul class="rows">${[['checkin', 'Check in'], ['visits', 'Manage Your Visits'], ['messages', 'Message your doctor'], ['results', 'Get your test results'], ['bill', 'Manage Billing']].map(([ic, t]) => `<li><button class="row" data-act="ext" data-label="${t}" aria-label="${t}, opens in MyChart">${dot(ic)}<span class="txt"><span class="rt">${t}</span></span>${ico('external', 20, 'ext')}</button></li>`).join('')}</ul>
+    el.innerHTML = `<div class="page-h"><h1>MyChart</h1><p>Visits, messages, results, and bills open in MyChart.</p></div>
+      <div class="mc-hello"><span class="avatar" aria-hidden="true">JR</span><span class="who"><b>Jordan Rivera</b><span>Sample patient</span></span></div>
+      <section class="sec" style="margin-top:12px"><ul class="rows">${[['checkin', 'Check in'], ['visits', 'Manage Your Visits'], ['messages', 'Message your doctor'], ['results', 'Get your test results'], ['bill', 'Manage Billing']].map(([ic, t]) => `<li><button class="row" data-act="ext" data-label="${t}" aria-label="${t}, opens in MyChart">${dot(ic)}<span class="txt"><span class="rt">${t}</span></span>${ico('external', 20, 'ext')}</button></li>`).join('')}</ul>
       <button class="btn" data-act="signout">${ico('signOut', 20)}<span>Sign out</span></button></section>`;
-  } else {
-    el.innerHTML = pageBar('MyChart') + `<section class="sec" style="margin-top:12px"><form id="mc-form" class="sh-body" novalidate>
-      <div class="field"><label for="mc-u">MyChart username</label><div class="zip"><input id="mc-u" autocomplete="username"></div></div>
-      <div class="field"><label for="mc-p">Password</label><div class="zip"><input id="mc-p" type="${pwShown ? 'text' : 'password'}" autocomplete="current-password"><button type="button" class="btn" data-act="pw" aria-label="${pwShown ? 'Hide password' : 'Show password'}" style="width:48px;padding:0">${ico(pwShown ? 'hide' : 'show', 20)}</button></div></div>
-      <button class="btn pri full" id="mc-go" type="submit" disabled>${ico('signIn', 20)}<span>Sign in</span></button>
-      <span class="tag" style="justify-self:start">Simulated sign-in – any text works</span></form></section>`;
-    const sync = () => { $('#mc-go').disabled = !($('#mc-u').value.trim() && $('#mc-p').value); };
-    $('#mc-u').addEventListener('input', sync); $('#mc-p').addEventListener('input', sync);
-    $('#mc-form').addEventListener('submit', e => { e.preventDefault(); if ($('#mc-go').disabled) return; S.signed = true; toast('Signed in – sample account'); renderAll(true); });
+    return;
   }
+  el.innerHTML = `<div class="page-h"><h1>MyChart</h1><p>Sign in for visits, messages, results, and bills.</p></div>
+    <form class="mc-panel" id="mc-form" novalidate aria-labelledby="mc-h">
+      <h2 id="mc-h">Sign in to MyChart</h2>
+      <label class="mc-field" for="mc-u"><span>Username</span><span class="mc-in"><input id="mc-u" autocomplete="username" autocapitalize="none" spellcheck="false"></span></label>
+      <label class="mc-field" for="mc-p"><span>Password</span><span class="mc-in"><input id="mc-p" type="${pwShown ? 'text' : 'password'}" autocomplete="current-password"><button type="button" class="icon-btn" data-act="pw" aria-label="${pwShown ? 'Hide' : 'Show'} password" aria-pressed="${pwShown}">${ico(pwShown ? 'hide' : 'show', 20)}</button></span></label>
+      <button class="btn light" id="mc-go" type="submit"><span class="lbl">Sign in</span><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span></button>
+      <button type="button" class="mc-link" data-act="info" data-msg="Opens username and password recovery – simulated">Forgot username or password?</button>
+      <p class="mc-or">New to MyChart?</p>
+      <button type="button" class="btn ghost-w" data-act="info" data-msg="Opens MyChart sign-up – simulated">Create an account</button>
+    </form>
+    <p class="mc-note">${ico('info', 16)}Simulated sign-in – any username and password works</p>
+    <section class="sec" style="margin-top:12px" aria-labelledby="mc-dev"><h2 class="sec-h" id="mc-dev">Without signing in</h2>
+      <ul class="rows"><li><button class="row" data-act="page" data-page="guestpay">${dot('bill')}<span class="txt"><span class="rt">Pay as a guest</span><span class="rs">Pay a bill with your statement number</span></span>${ico('next', 20, 'chev')}</button></li>
+      <li><button class="row" data-act="menu">${dot('menu')}<span class="txt"><span class="rt">More</span><span class="rs">Appearance, location, help, and settings</span></span>${ico('next', 20, 'chev')}</button></li></ul></section>`;
+  $('#mc-form').addEventListener('submit', e => {
+    e.preventDefault(); const b = $('#mc-go'), u = $('#mc-u'), pw = $('#mc-p');
+    if (!u.value.trim() || !pw.value) { toast('Enter your MyChart username and password'); (!u.value.trim() ? u : pw).focus({ preventScroll: true }); return; }
+    b.classList.add('loading'); b.setAttribute('aria-busy', 'true'); say('Signing in');
+    setTimeout(() => { S.signed = true; toast('Signed in – sample account'); renderAll(true); const f = $('#mc-body .mc-hello'); if (f) say('Signed in as Jordan Rivera'); }, S.rm ? 300 : 900);
+  });
 }
 
 /* ---------- Wayfinding page ---------- */
@@ -1939,7 +1986,7 @@ phone.addEventListener('click', e => {
     case 'theme': S.theme = d.v; applyTheme(true); openMenu(); syncControls(); break;
     case 'way-b': WAY.b = d.b; WAY.f = 1; renderWay(); break;
     case 'way-f': WAY.f = +d.f; renderWay(); break;
-    case 'pw': pwShown = !pwShown; { const u = $('#mc-u').value, p = $('#mc-p').value; renderMC(); $('#mc-u').value = u; $('#mc-p').value = p; $('#mc-go').disabled = !(u.trim() && p); $('[data-act="pw"]').focus({ preventScroll: true }); } break;
+    case 'pw': pwShown = !pwShown; { const u = $('#mc-u').value, p = $('#mc-p').value; renderMC(); $('#mc-u').value = u; $('#mc-p').value = p; $('[data-act="pw"]').focus({ preventScroll: true }); } break;
     case 'signout': S.signed = false; toast('Signed out'); renderAll(true); break;
     case 'lock-close': $('#lock').hidden = true; chrome(); syncControls(); break;
     case 'lock-open': { const L = lockRoute(); $('#lock').hidden = true; chrome(); if (L) { if (!WF) openWF(L.r.id); } } break;
