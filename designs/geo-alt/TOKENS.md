@@ -71,22 +71,26 @@ The menu adds "Why UT Southwestern" and "Patient resource guide". Article, resou
 
 When location (live or chosen) puts you at a campus, the Home tab stops being a page and becomes the place. Away, the common homepage returns.
 
-- **Full-bleed 3D map** (sticky; the sheet scrolls over it). Floating on top: search ("Search this hospital"), the menu, the location chip, and Not here?. Inside, a floor bar along the map's bottom edge reads Floor 1 · 2 · 7, with a cyan dot on your floor; viewing another floor shows its plan and your destination.
-- **Bottom sheet:** a "Floor 1 · You're here · Simulated" line and the place's full name, then eight category circles (56.0, solid Blue): Care, Dining, Restrooms, Pharmacy, Information, Parking, Elevators, Quiet rooms. A category ringed in cyan highlights its badges on the map, jumps to the nearest floor that has one, and lists the matches by walking time; each match opens its place page or directions.
-- **Below the categories:** the step-by-step guide (the day line, without small maps – the big map shows it), the visit pass, Care near you, open times, hospital resources, then the common homepage modules.
-- **Motion:** arriving zooms the map in (700 ms) while the sheet slides up on a spring. Floor changes slide the plan up or down (520 ms), like an elevator. The route draws, and the car follows it into the garage. Reduced motion uses cross-fades only.
+- **Full-bleed live 3D map** (520.0 high, sticky; the sheet scrolls over it). Floating on top: search ("Search this hospital"), the menu, and the step-by-step guide pill (Step 4 of 6 · Elevator B to Floor 7; it opens to the whole list). Down the right edge: 2D or 3D, Recenter, and inside a building one stacked floor control – All floors, 7, 2, 1 – with a cyan dot on your floor. Along the bottom edge: your doctor (sample) and the "Sample 3D map" tag share one row, so neither covers the other.
+- **Bottom sheet:** one row – "● Floor 1 · You're here · Simulated" (opens Location) and Not here? – then the place's full name and eight category circles (56.0, solid Blue): Care, Dining, Restrooms, Pharmacy, Information, Parking, Elevators, Quiet rooms.
+- **Every category asks to navigate.** Tapping a circle flies the map to the nearest match (rings pulse on every match) and raises a card over the map: the place, floor, walking time, and hours, with **Start navigation** (primary) and Menu, Prices, or Details. The sheet lists the rest by walking time under a "Nearest" card with the same Start navigation; any row or map label raises the card for that place.
+- **All floors.** When your destination is on another floor, the map opens pulled apart: your floor solid at the bottom, the floors above drawn as light (cyan edges, faint fill), the route running from you to the elevator, up a glowing shaft with arrows flowing up, and on to the pin. Floor names ride beside each floor; the destination callout hangs above or below its place, wherever there is room. All floors is also a button on the floor control.
+- **Below the categories:** the step-by-step guide (the day line), the visit pass, Care near you, open times, hospital resources, then the common homepage modules.
+- **Motion:** arriving at a place, the camera swoops down from above the campus (2.4 s) while the sheet slides up on a spring. Floor changes drop the old floor away and settle the new one (650 ms), like an elevator. The car drives the route into the garage. Reduced motion jumps the camera and keeps cross-fades only.
 
-**3D map system** (one renderer for the hero, the cards, place pages, directions, and docs):
-- A tilted perspective of the same 320 × 200 plan data. Rooms rise 9 units and buildings 16–30, each with a lit top face and a shaded front face.
-- Departments get white callouts with a red dot, name, and suite. Amenities get 22.0 Blue badges with their glyph. Garages get a P badge.
-- The route is a 6.0 line with a 10.0 casing and cyan dashes flowing toward the destination.
-- You are a cyan dot with a halo and a heading cone pointing the way. The destination is a red pin.
-- Light and dark come from tokens (--m3-*). Every map carries "Sample map".
+**Live 3D map** (WebGL, three.js r128 from cdnjs, one renderer moved between the home and directions):
+- **Campus:** glass towers with lit window bands and a helipad, open garage decks on columns with parked cars, the covered walkway and its lit entrance, roads with lane marks, trees, soft shadows.
+- **Floors:** a slab, the corridor, rooms with walls and door gaps, open doors, and furniture by kind (café tables and counter, pharmacy counter, waiting seats, exam bays, chapel pews, elevator cars).
+- **Marks:** the route is a Blue ribbon with a cyan glow and white chevrons flowing toward the destination; outdoors and in All floors it also shows through buildings at 40%. You are a Blue dot with a white ring, a pulsing halo, and a heading cone, always drawn on top. The destination is a bobbing red pin with a light beam.
+- **Labels** are HTML over the canvas, projected every frame: department callouts (white, red dot, name and suite), round Blue amenity badges, P for garages. They never collide with each other or with the map controls; one that does not fit is hidden, and a callout with no room above its place hangs below it. Labels are buttons that raise the place card.
+- **Camera:** framed by the screen's width, so a narrow phone sees the whole floor. Drag to turn; Ctrl or Cmd with the wheel zooms. Card maps (place pages, docs) are still images of the same renderer. Without WebGL, the earlier SVG drawing renders the same scenes.
+- Light and dark come from the --m3-* tokens and the engine palette. Every map carries "Sample 3D map" (or "Sample map").
 
-**Turn-by-turn** (opens from any Start wayfinding, tile, category result, or search result):
-- **Top:** a Blue instruction banner with a 48.0 arrow (straight, turn left or right, walkway, entrance, elevator, flag), the instruction in 20.0/700, and the distance or a hint. It turns green on arrival.
-- **Map:** the 3D map fills the screen, and the camera glides (700 ms) to frame each step.
-- **Bottom card:** minutes left, distance, arrival time, the destination, step dots, the elevator display on the ride step, Open in your map app on the drive, Back and Next, and End.
+**Turn-by-turn** (Start navigation from the map card, a category, a tile, search, or a stop):
+- **Top:** a Blue instruction banner with a 48.0 arrow (straight, turn left or right, walkway, entrance, elevator, flag), the instruction in 20.0/700, and the distance, which counts down while you walk. It turns green on arrival.
+- **Map:** the 3D map fills the screen and follows you heading-up, a little ahead of the dot. **Next** walks the dot along the step (0.9–3.2 s) before the next instruction appears. The elevator step shows the building pulled apart and the dot rides the shaft from Floor 1 to Floor 7 while the elevator display counts up.
+- **Map buttons (right edge):** Route overview (the whole way, every floor), Live view (simulated: eye level, the route ahead on the floor), Voice (reads each step aloud; off by default), Recenter.
+- **Bottom card:** minutes left, distance, arrival time, the destination, step dots, the elevator display on the ride step, Open in your map app on the drive, Simulate the walk (plays every step, Pause to stop), Back and Next, and End.
 - **Example steps:** Head east on Sample Blvd → Turn left into Garage A → Park, then take the covered walkway → Enter at the North entrance → Go straight down the main hall → Turn left to Elevator B → Take Elevator B to Floor 7 → Turn right out of the elevator → Heart clinic is on your left.
 - **Left and right** come from the plan: which way you face and which side of the corridor the room is on.
 
@@ -148,6 +152,8 @@ Steps: Your visit → Heart clinic → No visit → Open times → Tomorrow → 
 
 A focused answer keeps the home short: it shows only Facilities below. Looking around and Not now show Care near you and the doctors too. The Location sheet lists the answer as a reason ("Your answer"), next to the simulated location.
 
+**4. 3D wayfinding.** Signed in with a visit on Floor 7, standing on Floor 1. Steps: All floors (the route through the pulled-apart building) → Tap Dining (the map flies to the café, with Start navigation) → Turn by turn (follow camera, Next walks the dot) → Elevator (the dot rides the shaft) → Live view (simulated, out of the elevator) → Overview (every floor of the way) → Arrived.
+
 ## Trust and control
 
 - Never asks on launch. “Help when you arrive” explains first (sample map, Parking, Best entrance, Your floor, one privacy line), then the simulated system prompt.
@@ -159,7 +165,7 @@ A focused answer keeps the home short: it shows only Facilities below. Looking a
 
 ## Maps (one system)
 
-One renderer and one unit space (320 × 200) for the campus and every floor plan.
+One unit space (320 × 200) for the campus and every floor plan, shared by the live 3D map and its SVG fallback.
 - **Campus:** Sample Blvd east–west, Campus Dr north–south; Garage A and Clements north; Simmons garage and Simmons south; a covered walkway joins each garage to its entrance (Blue door mark).
 - **Floors:** one corridor; rooms north and south, drawn from the same room data as the tiles, directory, search, and directions. Departments show name and suite; amenities show their glyph (the same glyph as their tile).
 - **Marks:** route 5.0 --blue (dashed when planned, 30% when passed); you = cyan dot with a white ring and halo; destination = room outlined 3.0 --blue with a tint, plus a flag in the corridor. You, flags, and routes sit only on roads, walkways, and the corridor centerline, so they never touch a wall or a label. Labels 12.0 units (≥ 12.0 pt on screen at 360). “Sample map” and the floor tag live in a footer band below the drawing.
@@ -178,9 +184,12 @@ One builder for every route: Drive to the garage (campus) → Walk to the entran
 | Entrance | Halo pulses three times at the door |
 | Floor change | Elevator display counts through each floor (140 ms per floor) |
 | Next visit | Pass flips over (560 ms) |
-| Directions step | Step slides in 16.0 (360 ms) |
+| Directions step | Step slides in 16.0 (360 ms); the dot walks the step and the camera follows heading-up |
+| Arriving at a place | Camera swoops down from above the campus (2.4 s), the sheet rises |
+| All floors | Floors pull apart; the floors above turn to light; arrows flow up the elevator shaft |
+| Elevator ride | The dot climbs the shaft (2.2 s) while the display counts floors |
 | Same context | Nothing moves |
-| Reduced motion | Cross-fades only; ring, fill, floor, and car jump to their end |
+| Reduced motion | Cross-fades only; ring, fill, floor, car, camera, and dot jump to their end; nothing idles |
 
 ## Tokens (from `designs/guest`)
 
@@ -207,6 +216,9 @@ One builder for every route: Drive to the garage (campus) → Walk to the entran
 |---|---|
 | Arriving, entrance, campus | Geofences around campuses, garages, and doors, with dwell time |
 | Floor and indoor route | Indoor positioning (BLE or Wi-Fi RTT) and a wayfinding SDK with floor plans |
+| 3D map, All floors, route | Venue map data per floor (IMDF or the wayfinding vendor's SDK, such as Gozio), rendered natively; routes from the vendor's routing service |
+| Live view | Camera-based AR (ARKit or ARCore) anchored to the indoor position; here it is simulated inside the 3D model |
+| Voice | Platform text-to-speech, read from the step list |
 | Today's visits, check-in | Epic MyChart integration; MyCare hands off |
 | Your visits, open times | MyChart visits; Epic scheduling read-only (open slots by department and provider) – no booking in MyCare |
 | Menus, prices | Food service menus, pharmacy items, lab and imaging self-pay price lists (CMS or feeds) |
@@ -221,10 +233,10 @@ Design intent to confirm with UTSW privacy and Epic teams: location is read only
 
 ## Build
 
-`python3 build.py` inlines `../../mycare-logo/reversed.svg` and `icon.svg` unchanged, derives the Material Symbols subset from `ICON_MAP` (64 glyphs, about 100 KB woff2, measured from Google Fonts), and fails if a static glyph is unmapped or a glyph is mapped twice.
+`python3 build.py` inlines `../../mycare-logo/reversed.svg` and `icon.svg` unchanged, derives the Material Symbols subset from `ICON_MAP` (95 glyphs, about 150 KB woff2, measured from Google Fonts), and fails if a static glyph is unmapped or a glyph is mapped twice.
 
 ## Verification
 
-- `build.py` succeeds: 64 glyphs, logo and icon inlined unaltered.
-- Headless Chromium, five configurations (light 390, dark 390, light 360 with large text, dark 360 with large text and reduced motion, light 360 reduced motion): every journey step, floor 2, guest with and without a destination, MyChart sign-in and sign-out, Ask → explainer → system prompt → allowed, approximate, manual choice, Where are you? with ZIP, clear choice, pause and resume, no signal, every directions step, all tabs, search with and without results, menu, lock screen, and every Quick link. No console or page errors.
+- `build.py` succeeds: 95 glyphs, logo and icon inlined unaltered.
+- Headless Chromium, five configurations (light 390, dark 390, light 360 with large text, dark 360 with large text and reduced motion, light 360 reduced motion): every journey step, floor 2, guest with and without a destination, MyChart sign-in and sign-out, Ask → explainer → system prompt → allowed, approximate, manual choice, Where are you? with ZIP, clear choice, pause and resume, no signal, every directions step, every category on the live map, each floor and All floors, a map label, 2D, the guide, Route overview, Live view, Voice, Simulate the walk, scenario 4 step by step, all tabs, search with and without results, menu, lock screen, and every Quick link. No console or page errors. WebGL runs in headless Chromium through SwiftShader, with three.js served from a local copy; a sixth run blocks three.js to check the SVG fallback.
 - Every visible text node meets 4.5:1 (3:1 large) in both themes; no element spills past the phone or its container; every control is at least 44 × 44.

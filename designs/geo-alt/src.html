@@ -3,6 +3,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..800&display=swap">
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous" referrerpolicy="no-referrer" onload="window.__m3 && window.__m3()"></script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=__ICON_NAMES__&display=block">
 <style>
 /* Layout: presentation board – a journey scrubber across the top (Back / Next), the 390 × 844 phone beside its prototype
@@ -576,7 +577,7 @@ button.map{border:0; padding:0; width:100%; text-align:left; color:inherit}
 
 /* ===================== Place mode: the home becomes the place ===================== */
 #scr-0.pm .appbar{display:none}
-.pm-map{position:sticky; top:0; height:476px; overflow:hidden; background:var(--m3-ground); z-index:0}
+.pm-map{position:sticky; top:0; height:520px; overflow:hidden; background:var(--m3-ground); z-index:0}
 .pm-svg{position:absolute; inset:0; width:100%; height:100%; display:block}
 .phone:not(.rm) .pm-map.enter .pm-svg{animation:mapIn 700ms var(--ease-out) both}
 .phone:not(.rm) .pm-map.swap .pm-svg{animation:fadeIn 420ms var(--ease-out) both}
@@ -597,11 +598,18 @@ button.map{border:0; padding:0; width:100%; text-align:left; color:inherit}
 .pm-pill{min-height:var(--hit); border:0; border-radius:var(--r-pill); background:var(--surface); color:var(--blue); font-size:var(--t14); font-weight:600; padding:0 var(--s3); box-shadow:var(--shadow-1); white-space:nowrap; flex:none}
 /* Floors sit along the bottom edge of the map, where no label falls */
 .pm-side{position:absolute; right:var(--s3); bottom:36px; display:flex; gap:var(--s2); align-items:center; z-index:2}
-.pm-fl-k{min-height:var(--hit); display:inline-flex; align-items:center; font-size:12.0px; font-weight:700; color:var(--ink); background:var(--surface); border-radius:var(--r-md); padding:0 var(--s2); box-shadow:var(--shadow-1)}
-.pm-fl{position:relative; width:var(--hit); height:var(--hit); border-radius:var(--r-md); border:0; background:var(--surface); color:var(--ink); font-weight:800; font-size:16.0px; box-shadow:var(--shadow-1)}
+/* One stacked control: all floors, then each floor */
+.pm-fls{display:grid; margin-top:var(--s1); border-radius:var(--r-md); background:var(--surface); box-shadow:var(--shadow-1); overflow:hidden}
+.pm-fl{position:relative; width:var(--hit); height:var(--hit); border:0; background:var(--surface); color:var(--ink); font-weight:800; font-size:16.0px; display:grid; place-items:center}
+.pm-fl + .pm-fl{box-shadow:inset 0 1px 0 var(--line)}
+.pm-fl.all .ms{color:var(--blue)}
+.pm-fl.all[aria-pressed="true"] .ms{color:inherit}
 .pm-fl[aria-pressed="true"]{background:var(--ctl); color:var(--on-ctl)}
 .pm-fl i{position:absolute; right:4px; top:4px; width:8px; height:8px; border-radius:50%; background:var(--cyan); box-shadow:0 0 0 2px var(--surface)}
-.pm-tag{position:absolute; left:var(--s3); bottom:36px; background:var(--surface); z-index:2}
+.pm-foot{position:absolute; left:var(--s3); right:var(--s3); bottom:36px; z-index:2; display:flex; flex-wrap:wrap-reverse; align-items:flex-start; gap:var(--s2); pointer-events:none}
+.pm-foot > *{pointer-events:auto}
+.pm-foot .sp{flex:1}
+.pm-tag{background:var(--surface); flex:none; margin-left:auto}
 .pm-sheet{position:relative; z-index:3; margin-top:-24px; background:var(--bg); border-radius:var(--r-lg) var(--r-lg) 0 0; box-shadow:0 -8px 24px rgba(16,38,60,.14); padding-top:var(--s2); min-height:420px}
 .pm-sheet > .grab{margin-bottom:var(--s2)}
 .phone:not(.rm) .pm-sheet.enter{animation:sheetUp 560ms var(--spring) both 120ms}
@@ -616,11 +624,83 @@ button.map{border:0; padding:0; width:100%; text-align:left; color:inherit}
 .cat-b[aria-pressed="true"]{color:var(--blue)}
 .phone:not(.rm) .cat-res{animation:riseIn 360ms var(--spring) both}
 
+/* ===================== Live 3D map (engine canvas, labels, controls) ===================== */
+.m3-host{position:absolute; inset:0; overflow:hidden; background:var(--m3-ground)}
+.m3-canvas{position:absolute; inset:0; width:100%; height:100%; display:block; touch-action:pan-y; cursor:grab}
+.m3-canvas:active{cursor:grabbing}
+.phone:not(.rm) .m3-canvas.m3-in{animation:fadeIn 480ms var(--ease-out)}
+.phone:not(.rm) .pm-map.enter .m3-canvas{animation:mapIn 800ms var(--ease-out) both}
+.m3-labels{position:absolute; inset:0; pointer-events:none; overflow:hidden}
+.m3-labels > *{position:absolute; left:0; top:0; pointer-events:auto; will-change:transform}
+.m3-call{display:flex; align-items:center; gap:var(--s2); min-height:var(--hit); padding:var(--s1) var(--s3) var(--s1) var(--s2); border-radius:10px; border:0; background:var(--surface); color:var(--ink); box-shadow:0 6px 16px rgba(16,38,60,.2); text-align:left; white-space:nowrap; font-family:var(--font)}
+.m3-call::after{content:""; position:absolute; left:50%; bottom:-5px; width:10px; height:10px; background:var(--surface); transform:translateX(-50%) rotate(45deg); border-radius:2px}
+.m3-call.below::after{bottom:auto; top:-5px}
+.m3-call b{display:block; font-size:12.0px; font-weight:700; line-height:1.25}
+.m3-call small{display:block; font-size:12.0px; font-weight:600; color:var(--ink-2); line-height:1.25}
+.m3-dot{width:8px; height:8px; border-radius:50%; background:#E0004D; flex:none}
+.m3-call.dest{box-shadow:0 0 0 2px var(--blue), 0 6px 16px rgba(16,38,60,.2)}
+.m3-call.hi{box-shadow:0 0 0 3px var(--cyan), 0 6px 16px rgba(16,38,60,.2)}
+.m3-badge{width:var(--hit); height:var(--hit); border:0; background:none; padding:0; display:grid; place-items:center}
+.m3-b{width:30px; height:30px; border-radius:50%; background:var(--ctl); color:#FFFFFF; display:grid; place-items:center; box-shadow:0 0 0 2px #FFFFFF, 0 4px 10px rgba(16,38,60,.3); --grad:-25}
+.m3-b .ms{font-size:18.0px; --opsz:20}
+.m3-badge.hi .m3-b{box-shadow:0 0 0 2px #FFFFFF, 0 0 0 5px var(--cyan)}
+.phone:not(.rm) .m3-badge.hi .m3-b{animation:pop 520ms var(--spring)}
+.m3-img{display:block; width:100%; height:auto; aspect-ratio:360 / 300; max-width:100%}
+.pm-map .m3-host{z-index:0}
+.pm-side{position:absolute; right:var(--s3); top:calc(var(--top) + 60px); bottom:auto; display:grid; gap:var(--s2); justify-items:center; align-content:start; z-index:2}
+.pm-btn.sm{width:var(--hit); height:var(--hit)}
+.mv-t{font-size:14.0px; font-weight:800; letter-spacing:.02em}
+.pm-btn[aria-pressed="true"]{background:var(--ctl); color:var(--on-ctl)}
+.pm-guide{justify-self:start; max-width:calc(100% - 64px); background:var(--surface); color:var(--ink); box-shadow:var(--shadow-2); border:0}
+.pm-guide.pill{min-height:var(--btn); border-radius:var(--r-pill); display:inline-flex; align-items:center; gap:var(--s2); padding:var(--s1) var(--s2) var(--s1) var(--s3); text-align:left}
+.pm-guide.pill small{display:block; font-size:12.0px; font-weight:600; color:var(--ink-2); line-height:1.25}
+.pm-guide.pill b{display:block; font-size:var(--t14); font-weight:700; line-height:1.3}
+.pm-guide .ms{color:var(--ink-2)}
+.g-ring{width:14px; height:14px; border-radius:50%; border:3px solid var(--cyan); flex:none}
+.pm-guide.open{border-radius:var(--r-lg); padding:var(--s3); display:grid; gap:var(--s2); width:min(300px, calc(100% - 64px))}
+.g-head{display:flex; align-items:center; justify-content:space-between; gap:var(--s2)}
+.g-head b{font-size:var(--t16); font-weight:800}
+.pm-guide ol{display:grid; gap:var(--s2)}
+.pm-guide li{display:flex; align-items:center; gap:var(--s2); font-size:var(--t14); font-weight:600; color:var(--ink-2); line-height:1.3}
+.pm-guide li.now{color:var(--ink); font-weight:700}
+.g-mark{width:22px; height:22px; border-radius:50%; flex:none; display:grid; place-items:center; border:2px solid var(--line-strong)}
+.pm-guide li.done .g-mark{background:var(--ctl); border-color:var(--ctl); color:var(--on-ctl); --grad:-25}
+.pm-guide li.now .g-mark{border:4px solid var(--cyan)}
+.phone:not(.rm) .pm-guide.open{animation:riseIn 360ms var(--spring) both}
+.pm-doc{position:relative; min-width:0; flex:0 1 auto; display:flex; align-items:center; gap:var(--s3); min-height:calc(56px * var(--ts)); padding:var(--s2) var(--s4) var(--s2) var(--s2); border-radius:var(--r-lg); border:0; background:var(--surface); color:var(--ink); box-shadow:var(--shadow-2); text-align:left}
+.pm-doc b{display:block; font-size:var(--t14); font-weight:700; line-height:1.3}
+.pm-doc small{display:block; font-size:var(--t12); color:var(--ink-2); font-weight:600}
+.pm-peek{position:absolute; left:var(--s3); right:var(--s3); bottom:36px; z-index:3; display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:var(--s2) var(--s3); align-items:center; padding:var(--s3); border-radius:var(--r-lg); background:var(--surface); box-shadow:var(--shadow-2)}
+.pk-t b{display:block; font-size:var(--t16); font-weight:700; line-height:1.3; color:var(--ink)}
+.pk-t small{display:block; font-size:var(--t14); color:var(--ink-2); line-height:1.4}
+.pk-acts{grid-column:1 / -1; display:flex; flex-wrap:wrap; gap:var(--s2)}
+.pk-acts .btn{flex:1 1 auto; white-space:nowrap}
+.pk-acts .btn.pri{flex:999 1 auto}
+.phone:not(.rm) .pm-peek{animation:riseIn 420ms var(--spring) both}
+.pm-where{padding:0 0 var(--s2); flex-wrap:wrap; row-gap:var(--s1)}
+.pm-loc{color:var(--blue); font-weight:700}
+.pm-loc .tag{font-weight:600}
+/* All floors: each floor's name rides on its edge */
+.m3-fl{display:inline-flex; align-items:center; min-height:24px; padding:0 var(--s2); border-radius:var(--r-pill); background:var(--surface); color:var(--ink); font-size:12.0px; font-weight:700; white-space:nowrap; box-shadow:0 2px 8px rgba(16,38,60,.18)}
+.m3-fl.you{background:var(--ctl); color:var(--on-ctl)}
+.m3-fl.dest{box-shadow:0 0 0 2px var(--blue), 0 2px 8px rgba(16,38,60,.18)}
+.nearest{display:grid; gap:var(--s3)}
+.nearest .nr-top{display:flex; align-items:center; gap:var(--s3)}
+.nearest .nr-top b{display:block; font-size:var(--t16); font-weight:700; line-height:1.3}
+.nearest .nr-top small{display:block; font-size:var(--t14); color:var(--ink-2)}
+.nearest .k{font-size:var(--t12); font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--blue)}
+/* Directions controls on the map */
+.nav-side{position:absolute; right:var(--s3); z-index:2; display:grid; gap:var(--s2)}
+.nav-side .pm-btn[aria-pressed="true"]{background:var(--ctl); color:var(--on-ctl)}
+.nav-tag{max-width:calc(100% - 92px); white-space:normal; padding-block:2px}
+.nc-play{justify-self:stretch}
+.nc-chips{display:flex; gap:var(--s2); flex-wrap:wrap}
+
 /* ===================== Turn-by-turn navigation ===================== */
 #pg-way{background:var(--m3-ground)}
 .nav-map{position:absolute; inset:0}
 .nav-map svg{display:block; width:100%; height:100%}
-.nav-tag{position:absolute; right:var(--s3); top:calc(var(--top) + 112px); background:var(--surface)}
+.nav-tag{position:absolute; left:var(--s3); top:calc(var(--top) + 112px); background:var(--surface)}
 .nav-banner{position:absolute; left:var(--s3); right:var(--s3); top:calc(var(--top) + 4px); z-index:2; display:grid; grid-template-columns:auto minmax(0,1fr); border-radius:var(--r-lg); overflow:hidden; background:#004278; color:#FFFFFF; box-shadow:var(--shadow-2); --grad:-25; min-height:88px}
 .nav-banner.arrived{background:#1F5F2C}
 .nb-arrow{width:84px; display:grid; place-items:center; background:rgba(0,0,0,.22)}
@@ -895,8 +975,8 @@ button.map{border:0; padding:0; width:100%; text-align:left; color:inherit}
 
   <div class="docs" id="docs">
     <section class="panel wide">
-      <h2>Three scenarios on one home</h2>
-      <p>Pick a scenario above the journey. <b>1 Guest nearby:</b> at a campus, everyone sees care near you sorted by walking time, open times, and facilities; each place opens with directions and what is there – the café menu, lab and imaging prices, pharmacy items, chapel times, parking rates. <b>2 Appointments:</b> nothing is booked in the app – a visit already in MyChart shows first; otherwise doctors show open times, for information. <b>3 Why you're here:</b> with no visit today, the home asks once on arrival; each answer reshapes the top of the home, and Change is always there.</p>
+      <h2>Four scenarios on one home</h2>
+      <p>Pick a scenario above the journey. <b>1 Guest nearby:</b> at a campus, everyone sees care near you sorted by walking time, open times, and facilities; each place opens with directions and what is there – the café menu, lab and imaging prices, pharmacy items, chapel times, parking rates. <b>2 Appointments:</b> nothing is booked in the app – a visit already in MyChart shows first; otherwise doctors show open times, for information. <b>3 Why you're here:</b> with no visit today, the home asks once on arrival; each answer reshapes the top of the home, and Change is always there. <b>4 3D wayfinding:</b> inside a building the app becomes the map – all floors pulled apart with your route through them, categories that fly to the nearest place with Start navigation, and turn-by-turn that walks you, rides the elevator, and switches to Live view.</p>
       <ul class="states" id="doc-scn"></ul>
     </section>
     <section class="panel wide">
@@ -926,12 +1006,16 @@ button.map{border:0; padding:0; width:100%; text-align:left; color:inherit}
         <tr><td>Floor change</td><td>Display counts floors one by one, lit floor moves</td></tr>
         <tr><td>Next visit</td><td>Pass flips over to the new visit</td></tr>
         <tr><td>Lock screen</td><td>Live directions: the step slides in, progress fills to the new step</td></tr>
-        <tr><td>Reduced</td><td>Cross-fades only; ring and floor jump</td></tr>
+        <tr><td>Arriving at a place</td><td>Camera swoops down from above the campus (2.4 s), the sheet rises</td></tr>
+        <tr><td>All floors</td><td>Floors pull apart; the floors above turn to light; arrows flow up the elevator</td></tr>
+        <tr><td>Directions</td><td>Next walks the dot to the next turn, the camera follows heading-up; the elevator ride climbs the shaft</td></tr>
+        <tr><td>Reduced</td><td>Cross-fades only; ring, floor, camera, and dot jump</td></tr>
       </tbody></table></div>
     </section>
     <section class="panel">
       <h2>One 3D map system</h2>
-      <p>Campus and floor plans share one tilted, extruded renderer: rooms and buildings rise as blocks, departments get callouts, amenities get round badges, the route is a bold line with moving dashes, you are a blue dot with a heading cone, and the destination gets a pin. Rooms are drawn from the same data as the tiles and directory, so a room on the map always matches its tile. You and the route stay on roads, walkways, and corridors – never on a wall or a label. The “Sample map” tag lives in its own footer band.</p>
+      <p>A live WebGL map (three.js r128, loaded from cdnjs) renders the campus, every floor, and directions: towers with glass facades, layered garages with parked cars, rooms with walls, doors, and furniture, soft shadows, and labels that never collide. Drag to turn it. One renderer moves between the home and directions; card maps are still images of it. If WebGL is not available, the same scenes fall back to the drawing below.</p>
+      <p>The fallback draws campus and floor plans with one tilted, extruded renderer: rooms and buildings rise as blocks, departments get callouts, amenities get round badges, the route is a bold line with moving dashes, you are a blue dot with a heading cone, and the destination gets a pin. Rooms are drawn from the same data as the tiles and directory, so a room on the map always matches its tile. You and the route stay on roads, walkways, and corridors – never on a wall or a label. The “Sample map” tag lives in its own footer band.</p>
       <div id="doc-map"></div>
     </section>
     <section class="panel">
@@ -974,7 +1058,7 @@ const phone = $('#phone');
 const home = $('#home');
 const esc = t => String(t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
-const markIcons = () => document.documentElement.classList.add('ms-ready');
+const markIcons = () => { const had = document.documentElement.classList.contains('ms-ready'); document.documentElement.classList.add('ms-ready'); if (!had && window.THREE && typeof M3 !== 'undefined' && M3.ok()) setTimeout(() => window.__m3(), 0); };
 if (document.fonts && document.fonts.load) {
   document.fonts.load('24px "Material Symbols Rounded"', 'home').then(f => { if (f.length) markIcons(); }).catch(() => {});
   setTimeout(markIcons, 3000);
@@ -1018,6 +1102,12 @@ const ICON_MAP = [
   ['turnL', 'turn_left', 'Turn left', 'Turn-by-turn banner', 'Wayfinding'],
   ['turnR', 'turn_right', 'Turn right', 'Turn-by-turn banner', 'Wayfinding'],
   ['flag', 'flag', 'Destination', 'Turn-by-turn banner, card', 'Wayfinding'],
+  ['compass', 'explore_nearby', 'Recenter the map', '3D map controls', 'Wayfinding'],
+  ['liveView', 'view_in_ar', 'Live view (simulated)', 'Directions', 'Wayfinding'],
+  ['voiceOn', 'volume_up', 'Voice guidance on', 'Directions', 'Wayfinding'],
+  ['voiceOff', 'volume_off', 'Voice guidance off', 'Directions', 'Wayfinding'],
+  ['play', 'play_arrow', 'Simulate the walk', 'Directions', 'Wayfinding'],
+  ['expand', 'expand_more', 'Open', 'Step-by-step guide', 'Wayfinding'],
   ['alert', 'warning', 'Emergency alert', 'Alert banner – always filled, always with the word Alert', 'Common homepage', 'f1'],
   ['prev', 'chevron_left', 'Previous', 'MedBlog carousel', 'Common homepage'],
   ['vaccine', 'vaccines', 'Vaccines', 'Flu campaign only', 'Common homepage'],
@@ -1223,7 +1313,467 @@ const DRIVE = { clem: [[0, 100], [76, 100], [76, 64]], simm: [[0, 100], [76, 100
 const WALK = { clem: [[76, 64], [76, 50], [160, 50]], simm: [[76, 136], [76, 150], [160, 150]] };
 const ENTRY = [12, 100];
 
-/* ---------- One 3D map system: a tilted, extruded view of the same plan data (320 × 200 units → 360 × 300 view) ----------
+/* ---------- Live 3D map engine (Three.js r128 from cdnjs) ----------
+   One WebGL renderer, moved to wherever a live map shows (the home hero or directions); static cards get rendered snapshots.
+   Plan units (320 × 200) map to world X = x − 160, Z = y − 100, with Y up. Without WebGL the SVG renderer above is used. */
+const M3 = (() => {
+  let THREE = null, ok = false, renderer, scene, camera, canvas, host = null, labelsEl = null, raf = 0, lastT = 0, visibleTick = 0;
+  const groups = {};                       // static scene per plan and theme
+  let cur = { key: null, plan: null, group: null }, prevGroup = null, dyn = null, spec = null, specKey = '';
+  const cam = { tx: 0, ty: 0, tz: 0, th: -0.3, ph: 0.95, d: 330, fov: 38 }, want = { ...cam };
+  let insets = { top: 0, bottom: 0, avoid: [] }, user = { th: 0, ph: 0, d: 1 }, labels = [], tweens = [], anims = {}, flyUntil = 0;
+  let youObj = null, carObj = null, pal = null, palKey = '';
+  const W = (x, y) => [x - 160, y - 100], STK = 34;
+  const levelOf = (s, pl) => s.stack && s.stack.includes(pl) ? (s.stack.indexOf(pl) - s.stack.indexOf(s.plan)) * (s.gap || STK) : 0;
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  const slow = () => navigator.webdriver;   // automated tests: fewer frames
+
+  const PAL = {
+    light: { ground: '#DCE4EC', grid: '#C5D2DE', slab: '#E6ECF2', corr: '#FFFFFF', room: '#EEF3F8', dept: '#E2ECF6', destFloor: '#BFD8EE', wall: '#FFFFFF', wallTop: '#9CB0C4', outer: '#F7F9FB', outerTop: '#7F95AB', door: '#C8B29A', glass: '#9ACAE8', furn: '#D5DEE7', seat: '#7BAFD4', metal: '#B7C3CF', lawn: '#CFE1C3', road: '#B6C2CE', line: '#FFFFFF', walkway: '#E9EEF2', tree: '#79B064', trunk: '#8A6E54', facade: '#EEF2F6', win: '#6F9CC4', roof: '#D4DCE4', garage: '#E3E8ED', car: ['#004278', '#E87722', '#8246AF', '#43B02A', '#7B6469', '#CBA052'], route: '#004278', glow: '#00A9E0', you: '#0A84D6', pin: '#E0004D', fog: '#DCE4EC', sky: '#F4F7FA', label: '#333333' },
+    dark: { ground: '#0B141D', grid: '#18293B', slab: '#132131', corr: '#1C2E40', room: '#172738', dept: '#1A3249', destFloor: '#24537C', wall: '#2B425A', wallTop: '#5F7C99', outer: '#30475F', outerTop: '#7D97B0', door: '#7A6754', glass: '#3F7BA6', furn: '#30465C', seat: '#3E7CAF', metal: '#5B6F82', lawn: '#15281C', road: '#26384A', line: '#8094A8', walkway: '#2A3D51', tree: '#2F6340', trunk: '#5A4636', facade: '#26394D', win: '#4C88BC', roof: '#2A3E53', garage: '#24364A', car: ['#8CC0EA', '#E87722', '#B07DDB', '#5CC23F', '#9C8489', '#CBA052'], route: '#4FA8EE', glow: '#00A9E0', you: '#3AB4F2', pin: '#FF4D7D', fog: '#0B141D', sky: '#0B141D', label: '#E6EDF3' }
+  };
+
+  function init() {
+    if (ok) return true;
+    THREE = window.THREE;
+    if (!THREE) return false;
+    try {
+      canvas = document.createElement('canvas');
+      canvas.className = 'm3-canvas';
+      canvas.setAttribute('aria-hidden', 'true');
+      renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false, preserveDrawingBuffer: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.outputEncoding = THREE.sRGBEncoding;
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(cam.fov, 1, 1, 4000);
+      const hemi = new THREE.HemisphereLight('#FFFFFF', '#A9B9C9', 0.85); scene.add(hemi);
+      const sun = new THREE.DirectionalLight('#FFFFFF', 0.75); sun.position.set(-160, 320, 140); sun.castShadow = true;
+      sun.shadow.mapSize.set(1024, 1024); Object.assign(sun.shadow.camera, { left: -260, right: 260, top: 200, bottom: -200, near: 10, far: 900 }); sun.shadow.bias = -0.0008;
+      scene.add(sun); scene.add(sun.target);
+      labelsEl = document.createElement('div'); labelsEl.className = 'm3-labels';
+      bindPointer();
+      ok = true;
+    } catch (e) { ok = false; }
+    return ok;
+  }
+
+  /* ---------- materials and helpers ---------- */
+  function palette() {
+    const dark = phone.classList.contains('dark'), k = dark ? 'dark' : 'light';
+    if (k !== palKey) { palKey = k; pal = PAL[k]; Object.keys(groups).forEach(key => { disposeTree(groups[key]); delete groups[key]; }); cur = { key: null, plan: null, group: null }; }
+    scene.background = new THREE.Color(pal.sky);
+    scene.fog = new THREE.Fog(pal.fog, 520, 1500);
+    return pal;
+  }
+  const mat = (c, o = {}) => new THREE.MeshStandardMaterial({ color: c, roughness: .82, metalness: 0, ...o });
+  function tex(w, h, draw) { const cv = document.createElement('canvas'); cv.width = w; cv.height = h; draw(cv.getContext('2d'), w, h); const t = new THREE.CanvasTexture(cv); t.encoding = THREE.sRGBEncoding; t.anisotropy = 4; return t; }
+  function gridTex(base, line) { const t = tex(128, 128, (c, w, h) => { c.fillStyle = base; c.fillRect(0, 0, w, h); c.strokeStyle = line; c.lineWidth = 1; c.globalAlpha = .7; for (let i = 0; i <= w; i += 32) { c.beginPath(); c.moveTo(i + .5, 0); c.lineTo(i + .5, h); c.stroke(); c.beginPath(); c.moveTo(0, i + .5); c.lineTo(w, i + .5); c.stroke(); } }); t.wrapS = t.wrapT = THREE.RepeatWrapping; return t; }
+  function box(g, w, h, d, x, y, z, m, cast = true) { const me = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); me.position.set(x, y, z); me.castShadow = cast; me.receiveShadow = true; g.add(me); return me; }
+  function flat(g, w, d, x, y, z, m) { const me = new THREE.Mesh(new THREE.PlaneGeometry(w, d), m); me.rotation.x = -Math.PI / 2; me.position.set(x, y, z); me.receiveShadow = true; g.add(me); return me; }
+  function disposeTree(o) { o.traverse(n => { if (n.geometry) n.geometry.dispose(); if (n.material) [].concat(n.material).forEach(m => { if (m.map) m.map.dispose(); m.dispose(); }); }); if (o.parent) o.parent.remove(o); }
+
+  /* ---------- a floor: slab, corridor, rooms with walls and door gaps, doors, furniture ---------- */
+  function buildPlan(plan) {
+    const P = pal, g = new THREE.Group(), m = PLAN_META[plan], rooms = roomsOn(plan), H = 9, T = 1.2;
+    const wallM = [mat(P.wall), mat(P.wall), mat(P.wallTop), mat(P.wall), mat(P.wall), mat(P.wall)];
+    const outM = [mat(P.outer), mat(P.outer), mat(P.outerTop), mat(P.outer), mat(P.outer), mat(P.outer)];
+    const ground = new THREE.Mesh(new THREE.PlaneGeometry(2400, 2400), new THREE.MeshStandardMaterial({ map: (() => { const t = gridTex(P.ground, P.grid); t.repeat.set(75, 75); return t; })(), roughness: 1 }));
+    ground.rotation.x = -Math.PI / 2; ground.position.y = -3.2; ground.receiveShadow = true; g.add(ground);
+    box(g, 300, 3, 180, 0, -1.6, 0, mat(P.slab), false);
+    flat(g, 296, 22, 0, 0.05, 0, mat(P.corr));
+    const wall = (x0, z0, x1, z1, h = H, ms = wallM, t = T) => { const len = Math.hypot(x1 - x0, z1 - z0); if (len < .5) return; const me = box(g, len + t, h, t, (x0 + x1) / 2, h / 2, (z0 + z1) / 2, ms); me.rotation.y = -Math.atan2(z1 - z0, x1 - x0); };
+    rooms.forEach(r => {
+      const north = r.side === 'n', y0 = north ? 12 : 112, y1 = north ? 88 : 188;
+      const [ax, az] = W(r.x0, y0), [bx, bz] = W(r.x1, y1), cx = (ax + bx) / 2, cz = (az + bz) / 2, w = bx - ax, d = bz - az;
+      flat(g, w - 1, d - 1, cx, 0.06, cz, mat(r.kind === 'dept' ? P.dept : P.room));
+      const farZ = north ? az : bz, corZ = north ? bz : az;
+      wall(ax, farZ, bx, farZ); wall(ax, az, ax, bz); wall(bx, az, bx, bz);
+      const [dx] = W(r.cx, 0), gap = Math.min(7, w / 2 - 2);
+      wall(ax, corZ, dx - gap, corZ); wall(dx + gap, corZ, bx, corZ);
+      if (r.kind === 'dept' || r.ic === 'food' || r.kind === 'other' && /Lobby|Waiting/.test(r.name) === false) { const dr = box(g, gap * 1.6, 7, .8, dx - gap * 0.4, 3.5, corZ + (north ? -gap * 0.55 : gap * 0.55), mat(P.door)); dr.rotation.y = north ? 0.75 : -0.75; }
+      furnish(g, r, ax, az, bx, bz, north);
+    });
+    // outer walls, with the glass entrance on Floor 1
+    const [L, Tz] = W(12, 12), [R, B] = W(308, 188), [, ez0] = W(0, 91), [, ez1] = W(0, 109);
+    wall(L, Tz, R, Tz, H + 2, outM, 2); wall(L, B, R, B, H + 2, outM, 2); wall(R, Tz, R, B, H + 2, outM, 2);
+    if (m.floor === 1) { wall(L, Tz, L, ez0, H + 2, outM, 2); wall(L, ez1, L, B, H + 2, outM, 2); const gl = mat(P.glass, { transparent: true, opacity: .45, roughness: .1, metalness: .2 }); box(g, 1, H, 8, L - 3, H / 2, -4.5, gl).rotation.y = .5; box(g, 1, H, 8, L - 3, H / 2, 4.5, gl).rotation.y = -.5; const can = box(g, 16, 1, 26, L - 6, H + 2, 0, mat(P.outerTop)); can.castShadow = true; }
+    else wall(L, Tz, L, B, H + 2, outM, 2);
+    return g;
+  }
+  function furnish(g, r, ax, az, bx, bz, north) {
+    const P = pal, cx = (ax + bx) / 2, cz = (az + bz) / 2, w = bx - ax, d = bz - az, F = mat(P.furn), S = mat(P.seat), farZ = north ? az + 8 : bz - 8;
+    const seats = (rows, cols, sx, sz) => { for (let i = 0; i < rows; i++) for (let j = 0; j < cols; j++) { const x = cx - (cols - 1) * sx / 2 + j * sx, z = cz - (rows - 1) * sz / 2 + i * sz; box(g, 4, 2.4, 3.6, x, 1.2, z, S); box(g, 4, 3.6, 0.8, x, 2.6, z + (north ? -1.6 : 1.6), S); } };
+    if (r.kind === 'core') { const M = mat(P.metal, { metalness: .5, roughness: .35 }); box(g, w / 2 - 3, 9, d / 2, cx - w / 4, 4.5, cz - (north ? 6 : -6), M); box(g, w / 2 - 3, 9, d / 2, cx + w / 4, 4.5, cz - (north ? 6 : -6), M); return; }
+    if (r.ic === 'food') { const n = Math.max(1, Math.floor(w / 24)); for (let i = 0; i < n; i++) { const t = new THREE.Mesh(new THREE.CylinderGeometry(3.4, 3.4, 4, 18), F); t.position.set(ax + 12 + i * 22, 2, cz + (north ? 8 : -8)); t.castShadow = true; g.add(t); } box(g, w - 10, 4, 4, cx, 2, farZ, mat(P.outerTop)); return; }
+    if (r.ic === 'restroom') { for (let i = 0; i < 3; i++) box(g, 0.8, 6, 12, ax + 6 + i * (w - 12) / 2, 3, farZ + (north ? 4 : -4), F); return; }
+    if (r.ic === 'chapel') { for (let i = 0; i < 3; i++) box(g, Math.min(w - 12, 26), 2.6, 3, cx, 1.3, cz - 10 + i * 10, mat(P.door)); return; }
+    if (r.ic === 'infoDesk' || r.ic === 'pharmacy') { box(g, w - 14, 4.5, 4, cx, 2.25, cz + (north ? 10 : -10), mat(P.outerTop)); box(g, w - 10, 7, 3, cx, 3.5, farZ, F); return; }
+    if (r.ic === 'atm') { box(g, 5, 7, 4, cx, 3.5, farZ, mat(P.metal, { metalness: .4 })); return; }
+    if (/Lobby|Waiting/.test(r.name)) { seats(2, Math.max(2, Math.floor(w / 9)), 7, 10); const pl = new THREE.Mesh(new THREE.SphereGeometry(3.4, 14, 10), mat(P.tree)); pl.position.set(ax + 6, 5, farZ); pl.castShadow = true; g.add(pl); return; }
+    if (r.kind === 'dept') { const bays = Math.max(2, Math.floor(w / 30)); for (let i = 1; i < bays; i++) box(g, 0.8, 6, d * 0.45, ax + i * w / bays, 3, farZ + (north ? d * 0.2 : -d * 0.2), F); for (let i = 0; i < bays; i++) box(g, 9, 2.6, 5, ax + (i + .5) * w / bays, 1.3, farZ + (north ? 3 : -3), mat(P.outer)); return; }
+    for (let i = 0; i < Math.max(1, Math.floor(w / 26)); i++) box(g, 10, 3, 6, ax + 10 + i * 24, 1.5, cz, F);
+  }
+
+  /* ---------- the campus: towers with glass facades and a helipad, layered garages, covered walkways, roads, trees ---------- */
+  function buildCampus() {
+    const P = pal, g = new THREE.Group();
+    const lawnT = gridTex(P.lawn, P.grid); lawnT.repeat.set(60, 60);
+    const ground = new THREE.Mesh(new THREE.PlaneGeometry(2400, 2400), new THREE.MeshStandardMaterial({ map: lawnT, roughness: 1 })); ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; g.add(ground);
+    const road = mat(P.road, { roughness: .95 });
+    flat(g, 1200, 18, 0, 0.1, 0, road); flat(g, 18, 1200, -4, 0.12, 0, road);
+    const lineM = new THREE.MeshBasicMaterial({ color: P.line });
+    for (let x = -560; x < 560; x += 18) if (Math.abs(x + 4) > 12) flat(g, 8, 0.8, x, 0.2, 0, lineM);
+    for (let z = -560; z < 560; z += 18) if (Math.abs(z) > 12) flat(g, 0.8, 8, -4, 0.22, z, lineM);
+    // garages: open decks on columns, with parked cars
+    const garage = (y0) => {
+      const [ax, az] = W(12, y0), deck = mat(P.garage), col = mat(P.outerTop);
+      for (let lv = 0; lv < 4; lv++) box(g, 128, 1.6, 76, ax + 64, lv * 7 + 0.8, az + 38, deck);
+      for (let i = 0; i <= 4; i++) for (let j = 0; j <= 2; j++) box(g, 2, 28, 2, ax + 2 + i * 31, 14, az + 2 + j * 36, col);
+      let k = 0; for (let lv = 1; lv < 4; lv++) for (let i = 0; i < 9; i++) if ((i * 7 + lv * 3) % 4 !== 0) { const c = box(g, 8, 3.2, 4.4, ax + 10 + i * 13, lv * 7 + 3.2, az + (i % 2 ? 14 : 62), mat(P.car[k++ % P.car.length], { metalness: .3, roughness: .5 })); }
+    };
+    garage(12); garage(112);
+    // towers
+    const facade = (cols, rows, band) => { const t = tex(256, 256, (c, w, h) => { c.fillStyle = P.facade; c.fillRect(0, 0, w, h); c.fillStyle = P.win; const cw = w / cols, rh = h / rows; for (let i = 0; i < cols; i++) for (let j = 0; j < rows; j++) { if (band) c.fillRect(0, j * rh + rh * .25, w, rh * .5); else c.fillRect(i * cw + cw * .18, j * rh + rh * .2, cw * .64, rh * .6); } }); t.wrapS = t.wrapT = THREE.RepeatWrapping; return t; };
+    const tower = (y0, h, band, heli) => {
+      const [ax, az] = W(172, y0), cx = ax + 68, cz = az + 38;
+      const f1 = facade(8, 6, band); f1.repeat.set(2, h / 24); const f2 = facade(8, 6, band); f2.repeat.set(1.2, h / 24);
+      const side = new THREE.MeshStandardMaterial({ map: f1, roughness: .35, metalness: .15 }), end = new THREE.MeshStandardMaterial({ map: f2, roughness: .35, metalness: .15 }), roof = mat(P.roof);
+      box(g, 140, 6, 80, cx, 3, cz, mat(P.outer));
+      const t = box(g, 136, h, 76, cx, h / 2, cz, [end, end, roof, roof, side, side]);
+      box(g, 22, 6, 18, cx + 40, h + 3, cz - 18, mat(P.metal));
+      if (heli) { const pad = new THREE.Mesh(new THREE.CylinderGeometry(16, 16, 1, 32), new THREE.MeshStandardMaterial({ map: tex(128, 128, (c, w, hh) => { c.fillStyle = '#5D6B78'; c.fillRect(0, 0, w, hh); c.strokeStyle = '#FFFFFF'; c.lineWidth = 6; c.beginPath(); c.arc(64, 64, 52, 0, 7); c.stroke(); c.fillStyle = '#FFFFFF'; c.font = '700 64px Inter, Arial'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('H', 64, 68); }) })); pad.position.set(cx - 28, h + 0.5, cz + 4); g.add(pad); }
+      // covered walkway from the garage and the lit entrance
+      const [wx, wz] = W(140, y0 + 38);
+      box(g, 32, 1, 12, wx + 16, 10, wz, mat(P.glass, { transparent: true, opacity: .55, roughness: .1 }));
+      for (let i = 0; i < 3; i++) { box(g, 1, 10, 1, wx + 2 + i * 14, 5, wz - 5.5, mat(P.outerTop)); box(g, 1, 10, 1, wx + 2 + i * 14, 5, wz + 5.5, mat(P.outerTop)); }
+      box(g, 1.2, 10, 12, ax - 0.4, 5, wz, new THREE.MeshStandardMaterial({ color: P.glow, emissive: P.glow, emissiveIntensity: .6 }));
+    };
+    tower(12, 62, false, true); tower(112, 46, true, false);
+    // trees along the streets
+    const leaf = mat(P.tree), trunk = mat(P.trunk);
+    [[-130, -13], [-90, -13], [-50, -13], [40, -13], [110, -13], [160, -13], [-130, 13], [-70, 13], [40, 13], [100, 13], [150, 13], [-15, -60], [-15, 60], [7, -120], [7, 120]].forEach(([x, z]) => { box(g, 1.2, 5, 1.2, x, 2.5, z, trunk); const s = new THREE.Mesh(new THREE.SphereGeometry(4.6, 14, 10), leaf); s.position.set(x, 8, z); s.castShadow = true; g.add(s); });
+    return g;
+  }
+  function staticGroup(plan) {
+    const key = plan + palKey;
+    if (!groups[key]) groups[key] = plan === 'campus' ? buildCampus() : buildPlan(plan);
+    return groups[key];
+  }
+
+  /* ---------- dynamic layer: route ribbons with flowing arrows, you, the destination beacon, highlights, the car ---------- */
+  let arrowTex = null, beamTex = null;
+  function routeLayer(g, list, lift, xray, k = 1) {
+    const P = pal;
+    if (!arrowTex) { arrowTex = tex(64, 64, (c) => { c.clearRect(0, 0, 64, 64); c.strokeStyle = '#FFFFFF'; c.lineWidth = 9; c.lineCap = 'round'; c.lineJoin = 'round'; c.beginPath(); c.moveTo(20, 14); c.lineTo(40, 32); c.lineTo(20, 50); c.stroke(); }); arrowTex.wrapS = THREE.RepeatWrapping; }
+    (list || []).forEach(([pts, cls = '']) => {
+      if (!pts || pts.length < 2) return;
+      const done = cls === 'done', plan = cls === 'plan', y = lift + 0.4;
+      for (let i = 1; i < pts.length; i++) {
+        const [x0, z0] = W(...pts[i - 1]), [x1, z1] = W(...pts[i]), len = Math.hypot(x1 - x0, z1 - z0); if (len < .5) continue;
+        const ang = Math.atan2(z1 - z0, x1 - x0), mx = (x0 + x1) / 2, mz = (z0 + z1) / 2;
+        const seg = (w, m, yy) => { const me = new THREE.Mesh(new THREE.PlaneGeometry(len + w * 0.9, w), m); me.rotation.x = -Math.PI / 2; me.rotation.z = -ang; me.position.set(mx, yy, mz); g.add(me); return me; };
+        if (!done && !plan) seg(13 * k, new THREE.MeshBasicMaterial({ color: P.glow, transparent: true, opacity: .22, depthWrite: false }), y);
+        seg(6.5 * k, new THREE.MeshBasicMaterial({ color: plan ? P.glow : P.route, transparent: done || plan, opacity: done ? .3 : plan ? .7 : 1 }), y + 0.05);
+        if (xray && !done && !plan) { const ghost = seg(6.5 * k, new THREE.MeshBasicMaterial({ color: P.route, transparent: true, opacity: .4, depthTest: false, depthWrite: false }), y + 0.05); ghost.renderOrder = 4; }
+        if (!done && !plan) { const t = arrowTex.clone(); t.needsUpdate = true; t.repeat.set(len / (7 * k), 1); const a = seg(5.5 * k, new THREE.MeshBasicMaterial({ map: t, transparent: true, depthWrite: false }), y + 0.1); a.userData.flow = t; }
+      }
+    });
+  }
+  function youMarker(g, p, head, lift, k = 1) {
+    const P = pal, me = new THREE.Group(), [x, z] = W(...p);
+    const halo = new THREE.Mesh(new THREE.RingGeometry(4.5, 9, 40), new THREE.MeshBasicMaterial({ color: P.you, transparent: true, opacity: .35, depthWrite: false })); halo.rotation.x = -Math.PI / 2; halo.userData.pulse = true; me.add(halo);
+    if (head) { const cone = new THREE.Mesh(new THREE.CircleGeometry(24, 24, -0.42, 0.84), new THREE.MeshBasicMaterial({ color: P.you, transparent: true, opacity: .28, depthWrite: false, side: THREE.DoubleSide })); cone.rotation.x = -Math.PI / 2; cone.position.y = 0.1; me.add(cone); me.userData.cone = cone; }
+    const ring = new THREE.Mesh(new THREE.CylinderGeometry(4.6, 4.6, 1.6, 32), mat('#FFFFFF', { roughness: .4 })); ring.position.y = 0.8; ring.castShadow = true; me.add(ring);
+    const dotM = new THREE.Mesh(new THREE.CylinderGeometry(3.2, 3.2, 1.8, 32), new THREE.MeshStandardMaterial({ color: P.you, emissive: P.you, emissiveIntensity: .35, roughness: .3 })); dotM.position.y = 0.9; me.add(dotM);
+    me.scale.setScalar(k); me.position.set(x, lift + 0.5, z); g.add(me); youObj = me;
+    me.traverse(n => { if (n.material) { n.material.transparent = true; n.material.depthTest = false; n.renderOrder = n === dotM ? 12 : n === ring ? 11 : 10; } });
+    if (head) setHeading(head, p);
+  }
+  function setHeading(head, p) { if (!youObj || !youObj.userData.cone) return; const [x0, z0] = W(...p), [x1, z1] = W(...head); youObj.userData.cone.rotation.z = -Math.atan2(z1 - z0, x1 - x0); }
+  function beacon(g, p, lift, k = 1) {
+    const P = pal, [x, z] = W(...p);
+    if (!beamTex) beamTex = tex(4, 128, (c) => { const gr = c.createLinearGradient(0, 0, 0, 128); gr.addColorStop(0, 'rgba(255,255,255,0)'); gr.addColorStop(1, 'rgba(255,255,255,.9)'); c.fillStyle = gr; c.fillRect(0, 0, 4, 128); });
+    const beam = new THREE.Mesh(new THREE.CylinderGeometry(4.5, 4.5, 70, 24, 1, true), new THREE.MeshBasicMaterial({ color: P.glow, map: beamTex, transparent: true, opacity: .55, depthWrite: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending }));
+    beam.position.set(x, lift + 35, z); g.add(beam);
+    const pin = new THREE.Group(), pm = new THREE.MeshStandardMaterial({ color: P.pin, emissive: P.pin, emissiveIntensity: .25, roughness: .35 });
+    const ball = new THREE.Mesh(new THREE.SphereGeometry(4, 20, 16), pm); ball.position.y = 7; pin.add(ball);
+    const tip = new THREE.Mesh(new THREE.ConeGeometry(2.6, 6, 16), pm); tip.rotation.x = Math.PI; tip.position.y = 2.6; pin.add(tip);
+    const core = new THREE.Mesh(new THREE.SphereGeometry(1.5, 12, 10), mat('#FFFFFF')); core.position.set(0, 7, 3.2); pin.add(core);
+    pin.scale.setScalar(k); pin.position.set(x, lift + 8 * k, z); pin.userData.bob = lift + 8 * k; pin.traverse(n => { n.castShadow = true; }); g.add(pin);
+  }
+  let upTex = null;
+  function riser(g, p, y0, y1) {
+    const P = pal, [x, z] = W(...p), h = Math.abs(y1 - y0); if (h < 1) return;
+    if (!upTex) { upTex = tex(64, 64, (c) => { c.clearRect(0, 0, 64, 64); c.strokeStyle = '#FFFFFF'; c.lineWidth = 9; c.lineCap = 'round'; c.lineJoin = 'round'; c.beginPath(); c.moveTo(14, 42); c.lineTo(32, 22); c.lineTo(50, 42); c.stroke(); }); upTex.wrapS = upTex.wrapT = THREE.RepeatWrapping; }
+    const y = Math.min(y0, y1) + h / 2;
+    const glow = new THREE.Mesh(new THREE.CylinderGeometry(8, 8, h, 28, 1, true), new THREE.MeshBasicMaterial({ color: P.glow, transparent: true, opacity: .24, depthWrite: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending })); glow.position.set(x, y, z); g.add(glow);
+    const core = new THREE.Mesh(new THREE.CylinderGeometry(3.2, 3.2, h, 20, 1, true), new THREE.MeshBasicMaterial({ color: P.route, transparent: true, opacity: .95, depthTest: false })); core.position.set(x, y, z); core.renderOrder = 5; g.add(core);
+    const t = upTex.clone(); t.needsUpdate = true; t.repeat.set(3, h / 9);
+    const arrows = new THREE.Mesh(new THREE.CylinderGeometry(3.3, 3.3, h, 20, 1, true), new THREE.MeshBasicMaterial({ map: t, transparent: true, depthWrite: false, depthTest: false })); arrows.position.set(x, y, z); arrows.renderOrder = 6; if (y1 < y0) arrows.rotation.z = Math.PI; arrows.userData.flowY = t; g.add(arrows);
+    [y0, y1].forEach(yy => { const d = new THREE.Mesh(new THREE.RingGeometry(5, 8, 32), new THREE.MeshBasicMaterial({ color: P.glow, transparent: true, opacity: .7, depthWrite: false, side: THREE.DoubleSide })); d.rotation.x = -Math.PI / 2; d.position.set(x, yy + 0.6, z); d.userData.pulse = true; g.add(d); });
+  }
+  function rings(g, pts, lift) { pts.forEach(([x, y]) => { const [wx, wz] = W(x, y); const r = new THREE.Mesh(new THREE.RingGeometry(7, 9.5, 36), new THREE.MeshBasicMaterial({ color: pal.glow, transparent: true, opacity: .8, depthWrite: false })); r.rotation.x = -Math.PI / 2; r.position.set(wx, lift + 0.5, wz); r.userData.pulse = true; g.add(r); }); }
+  function car(g, p) { const P = pal, c = new THREE.Group(); const body = mat(P.you, { metalness: .4, roughness: .35 }); const b = new THREE.Mesh(new THREE.BoxGeometry(10, 3.4, 5.4), body); b.position.y = 2.2; b.castShadow = true; c.add(b); const cab = new THREE.Mesh(new THREE.BoxGeometry(5.6, 2.6, 4.8), mat(P.glass, { roughness: .1 })); cab.position.set(-0.6, 5, 0); c.add(cab); const [x, z] = W(...p); c.position.set(x, 0, z); g.add(c); carObj = c; }
+
+  /* ---------- labels: Gozio-style callouts and badges, projected each frame, never overlapping ---------- */
+  function labelList(s) {
+    const out = [];
+    if (s.xray) {
+      s.stack.forEach(pl => out.push({ p: [-24, 100], y: levelOf(s, pl) + 2, html: `<span>Floor ${PLAN_META[pl].floor}</span>`, cls: 'm3-fl' + (pl === s.youPlan ? ' you' : '') + (s.stackFlag && pl === s.stackFlag.plan ? ' dest' : ''), pri: 3 }));
+      if (s.dest) { const r = ROOMS[s.dest]; out.push({ p: [r.cx, r.side === 'n' ? 50 : 150], y: levelOf(s, r.plan) + 16, html: `<span class="m3-dot"></span><span><b>${r.name}</b><small>${r.suite ? `Suite ${r.suite} · ` : ''}Floor ${r.floor}</small></span>`, cls: 'm3-call dest', aria: `${r.name}, Floor ${r.floor}`, room: r.id, pri: 4 }); }
+      return out;
+    }
+    if (s.plan === 'campus') {
+      out.push({ p: [240, 50], y: 70, html: `<span class="m3-dot"></span><span><b>Clements</b><small>University Hospital</small></span>`, cls: 'm3-call' + (s.destB === 'clem' ? ' dest' : ''), pri: 2 });
+      out.push({ p: [240, 150], y: 54, html: `<span class="m3-dot"></span><span><b>Simmons</b><small>Cancer Center</small></span>`, cls: 'm3-call' + (s.destB === 'simm' ? ' dest' : ''), pri: 2 });
+      out.push({ p: [76, 50], y: 32, html: `<span class="m3-b">${ico('parking', 20)}</span>`, cls: 'm3-badge', aria: 'Garage A', pri: 1 });
+      out.push({ p: [76, 150], y: 32, html: `<span class="m3-b">${ico('parking', 20)}</span>`, cls: 'm3-badge', aria: 'Simmons garage', pri: 1 });
+      return out;
+    }
+    const hi = s.cat ? CAT_MATCH[s.cat] : null;
+    roomsOn(s.plan).forEach(r => {
+      const cy = r.side === 'n' ? 50 : 150, isDest = s.dest === r.id;
+      if (r.ic || r.kind === 'core') out.push({ p: [r.cx, cy], y: 12, html: `<span class="m3-b">${ico(r.ic || 'elevator', 20)}</span>`, cls: 'm3-badge' + (hi && hi(r) ? ' hi' : ''), aria: `${r.name}, ${PLACES[r.b].short}, Floor ${r.floor}`, room: r.id, pri: hi && hi(r) ? 3 : 1 });
+      else if (r.kind === 'dept') out.push({ p: [r.cx, cy], y: 14, html: `<span class="m3-dot"></span><span><b>${r.name}</b><small>Suite ${r.suite}</small></span>`, cls: 'm3-call' + (isDest ? ' dest' : '') + (hi && hi(r) ? ' hi' : ''), aria: `${r.name}, Suite ${r.suite}, Floor ${r.floor}`, room: r.id, pri: isDest ? 4 : 2 });
+    });
+    return out;
+  }
+  function makeLabels(s) {
+    labelsEl.innerHTML = ''; labels = [];
+    if (s.mode === 'live') return;
+    labelList(s).forEach(L => {
+      const el = document.createElement(L.room && s.labelsTab !== false ? 'button' : 'span');
+      el.className = L.cls; el.innerHTML = L.html; el.style.visibility = 'hidden';
+      if (L.room && s.labelsTab !== false) { el.dataset.act = 'peek'; el.dataset.room = L.room; el.setAttribute('aria-label', `${L.aria}. Show options`); el.tabIndex = s.labelsTab === false ? -1 : 0; }
+      else el.setAttribute('aria-hidden', 'true');
+      labelsEl.appendChild(el);
+      const [x, z] = W(...L.p); labels.push({ el, v: new THREE.Vector3(x, (s.lift || 0) + L.y, z), pri: L.pri, call: L.cls.startsWith('m3-call') });
+    });
+  }
+  function placeLabels(w, h) {
+    const placed = (insets.avoid || []).slice(), order = labels.slice().sort((a, b) => b.pri - a.pri), v = new THREE.Vector3();
+    order.forEach(L => {
+      v.copy(L.v).project(camera);
+      const lw = L.el.offsetWidth, lh = L.el.offsetHeight, x = (v.x + 1) / 2 * w, y = (1 - v.y) / 2 * h;
+      const bad = r => v.z > 1 || r[0] < 4 || r[2] > w - 4 || r[1] < insets.top || r[3] > h - insets.bottom || placed.some(q => !(r[2] + 4 < q[0] || r[0] - 4 > q[2] || r[3] + 4 < q[1] || r[1] - 4 > q[3]));
+      let r = L.call ? [x - lw / 2, y - lh - 6, x + lw / 2, y - 6] : [x - lw / 2, y - lh / 2, x + lw / 2, y + lh / 2], below = false;
+      // a callout with no room above its place hangs below it instead
+      if (bad(r) && L.call) { const r2 = [x - lw / 2, y + 6, x + lw / 2, y + lh + 6]; if (!bad(r2)) { r = r2; below = true; } }
+      if (bad(r)) { L.el.style.visibility = 'hidden'; return; }
+      L.el.classList.toggle('below', below);
+      placed.push(r); L.el.style.visibility = ''; L.el.style.transform = `translate(${Math.round(r[0])}px, ${Math.round(r[1])}px)`;
+    });
+  }
+
+  /* ---------- scene composition per spec ---------- */
+  const floorOf = plan => plan === 'campus' ? 0 : PLAN_META[plan].floor;
+  function compose(s, animate) {
+    palette();
+    const sg = staticGroup(s.plan);
+    if (cur.group !== sg) {
+      if (cur.group && animate && !S.rm && cur.plan !== 'campus' && s.plan !== 'campus' && PLAN_META[cur.plan].b === PLAN_META[s.plan].b) {
+        // floor change: the old floor drops away, the new one settles in – like an elevator
+        const up = floorOf(s.plan) > floorOf(cur.plan), old = cur.group;
+        tweens.push({ dur: 650, f: t => { old.position.y = (up ? -60 : 60) * ease(t); }, done: () => scene.remove(old) });
+        sg.position.y = up ? 60 : -60; tweens.push({ dur: 650, f: t => { sg.position.y = (up ? 60 : -60) * (1 - ease(t)); } });
+      } else if (cur.group) { scene.remove(cur.group); sg.position.y = 0; if (animate && !S.rm) { canvas.classList.remove('m3-in'); void canvas.offsetWidth; canvas.classList.add('m3-in'); } }
+      else sg.position.y = 0;
+      scene.add(sg); cur = { key: s.plan + palKey, plan: s.plan, group: sg };
+    }
+    // stacked floors: the elevator ride, and the x-ray view of the whole route through the building
+    Object.values(anims.stack || {}).forEach(o => { o.traverse(n => { if (n.isLineSegments) n.geometry.dispose(); if (n.material) [].concat(n.material).forEach(m => m.dispose()); }); scene.remove(o); }); anims.stack = null;
+    if (dyn) { disposeTree(dyn); dyn = null; } youObj = null; carObj = null;
+    dyn = new THREE.Group(); scene.add(dyn);
+    const lv = pl => levelOf(s, pl);
+    if (s.stack) {
+      anims.stack = {};
+      const keep = [s.stackDest, s.youPlan].filter(Boolean);
+      s.stack.forEach(pl => { if (pl === s.plan) return; const gg = staticGroup(pl).clone(); gg.position.y = lv(pl);
+        const key = keep.includes(pl), fill = new THREE.MeshBasicMaterial({ color: pal.glow, transparent: true, opacity: key ? .1 : .04, depthWrite: false }), edge = new THREE.LineBasicMaterial({ color: pal.glow, transparent: true, opacity: key ? .85 : .4, depthWrite: false });
+        gg.traverse(n => {
+          if (!n.isMesh) return;
+          if (n.geometry.type === 'PlaneGeometry' && n.geometry.parameters.width > 1000) { n.visible = false; return; }
+          // the floors above are drawn as light, so nothing hides your floor or the route
+          n.material = fill.clone(); n.castShadow = false; n.receiveShadow = false;
+          if (n.geometry.type === 'BoxGeometry' && n.geometry.parameters.height >= 2.5 && n.geometry.parameters.width + n.geometry.parameters.depth > 14) n.add(new THREE.LineSegments(new THREE.EdgesGeometry(n.geometry), edge.clone()));
+        });
+        fill.dispose(); edge.dispose();
+        scene.add(gg); anims.stack[pl] = gg; });
+      if (!s.xray && s.you) { const [sx, sz] = W(s.you[0], s.you[1]), top = lv(s.stack[s.stack.length - 1]);
+        const shaft = new THREE.Mesh(new THREE.CylinderGeometry(6, 6, top + 12, 24, 1, true), new THREE.MeshBasicMaterial({ color: pal.glow, transparent: true, opacity: .28, depthWrite: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending }));
+        shaft.position.set(sx, (top + 12) / 2, sz - 6); dyn.add(shaft); }
+    }
+    if (s.xray) {
+      Object.entries(s.stackRoutes || {}).forEach(([pl, rs]) => routeLayer(dyn, rs, lv(pl), true, 1.7));
+      if (s.riser) riser(dyn, s.riser.p, lv(s.riser.from), lv(s.riser.to));
+      if (s.stackFlag) beacon(dyn, s.stackFlag.p, lv(s.stackFlag.plan), 1.6);
+    } else {
+      routeLayer(dyn, s.routes, 0, s.plan === 'campus');
+      if (s.flag) beacon(dyn, s.flag, 0, s.mode === 'live' ? .4 : 1);
+      if (s.cat && s.plan !== 'campus') rings(dyn, roomsOn(s.plan).filter(CAT_MATCH[s.cat]).map(r => [r.cx, r.side === 'n' ? 50 : 150]), 0);
+    }
+    if (s.drive) { car(dyn, s.you); }
+    else if (s.you) youMarker(dyn, s.you, s.head, s.xray ? lv(s.youPlan || s.plan) : 0, s.xray ? 2.2 : s.mode === 'overview' || s.mode === '2d' ? 1.3 : 1);
+    makeLabels(s);
+    frameCamera(s, !animate || S.rm);
+    if (s.drive && animate && !S.rm) driveAlong(DRIVE[s.drive]);
+    else if (s.drive) { const e = DRIVE[s.drive][DRIVE[s.drive].length - 1], [x, z] = W(...e); carObj.position.set(x, 0, z); carObj.rotation.y = Math.PI / 2; }
+  }
+  function frameCamera(s, snap) {
+    const aspect = Math.max(.3, (host ? host.clientWidth : 390) / (host ? host.clientHeight : 500));
+    const rad = THREE.MathUtils.degToRad, span = (u, fov) => (u / 2) / (Math.tan(rad(fov) / 2) * aspect);
+    if (s.mode === 'live' && s.you) {
+      const [x, z] = W(...s.you), hd = s.head ? W(...s.head) : [x + 10, z], a = Math.atan2(hd[1] - z, hd[0] - x);
+      Object.assign(want, { live: true, ex: x - Math.cos(a) * 6, ey: s.plan === 'campus' ? 7 : 6, ez: z - Math.sin(a) * 6, lx: x + Math.cos(a) * 80, ly: 4, lz: z + Math.sin(a) * 80, fov: 64 });
+    } else if (s.mode === 'follow' && s.you) {
+      const [x, z] = W(...s.you), hd = s.head ? W(...s.head) : [x + 10, z], a = Math.atan2(hd[1] - z, hd[0] - x);
+      const campus = s.plan === 'campus', ahead = campus ? 34 : 24;
+      Object.assign(want, { live: false, ahead, tx: x + Math.cos(a) * ahead, ty: 0, tz: z + Math.sin(a) * ahead, th: Math.atan2(-Math.cos(a), -Math.sin(a)), ph: campus ? 0.96 : 0.9, d: span(campus ? 300 : 190, 40), fov: 40 });
+    } else if (s.mode === 'xray' || s.mode === 'stack') {
+      const top = levelOf(s, s.stack[s.stack.length - 1]);
+      Object.assign(want, { live: false, tx: 4, ty: top * 0.47, tz: 0, th: -0.36, ph: 1.15, d: span(510, 38), fov: 38 });
+    } else {
+      const flat2d = s.mode === '2d', campus = s.plan === 'campus';
+      const fitW = campus ? 360 : 320, hf = 2 * Math.atan(Math.tan(rad(38) / 2) * aspect);
+      let d = (fitW / 2) / Math.tan(hf / 2) * (flat2d ? 1.0 : 1.08);
+      d = Math.max(d, (campus ? 230 : 200) / (2 * Math.tan(rad(19))) * 0.9);
+      Object.assign(want, { live: false, tx: campus ? 20 : 0, ty: 0, tz: campus ? 0 : 6, th: flat2d ? 0 : campus ? -0.5 : -0.32, ph: flat2d ? 0.001 : 0.92, d, fov: 38 });
+      if (s.focus) { const [fx, fz] = W(...s.focus); Object.assign(want, { tx: fx * 0.75, tz: fz * 0.6, d: d * 0.66, th: flat2d ? 0 : -0.42 }); }
+    }
+    if (snap) Object.assign(cam, want);
+  }
+  function driveAlong(pts) {
+    const total = plen(pts), t0 = performance.now();
+    anims.drive = { t0, dur: 1800, pts, total };
+  }
+  const along = (pts, d) => { let acc = 0; for (let i = 1; i < pts.length; i++) { const seg = Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]); if (acc + seg >= d) { const k = (d - acc) / seg; return { p: [pts[i - 1][0] + (pts[i][0] - pts[i - 1][0]) * k, pts[i - 1][1] + (pts[i][1] - pts[i - 1][1]) * k], a: Math.atan2(pts[i][1] - pts[i - 1][1], pts[i][0] - pts[i - 1][0]) }; } acc += seg; } const n = pts.length; return { p: pts[n - 1], a: Math.atan2(pts[n - 1][1] - pts[n - 2][1], pts[n - 1][0] - pts[n - 2][0]) }; };
+
+  /* ---------- the frame loop ---------- */
+  function frame(now) {
+    raf = requestAnimationFrame(frame);
+    if (!host || !host.isConnected || !host.offsetParent) return;
+    if (slow() && now - lastT < 90) return;
+    const dt = Math.min(64, now - (lastT || now)); lastT = now;
+    if (spec && (phone.classList.contains('dark') ? 'dark' : 'light') !== palKey) compose(spec, false);
+    const w = host.clientWidth, h = host.clientHeight;
+    if (canvas.width !== Math.round(w * renderer.getPixelRatio()) || canvas.height !== Math.round(h * renderer.getPixelRatio())) renderer.setSize(w, h, false);
+    // tweens
+    tweens = tweens.filter(tw => { tw.t0 = tw.t0 || now; const t = Math.min(1, (now - tw.t0) / tw.dur); tw.f(t); if (t >= 1) { tw.done && tw.done(); return false; } return true; });
+    // drive and walk animations
+    if (anims.drive && carObj) { const A = anims.drive, t = Math.min(1, (now - A.t0) / A.dur), q = along(A.pts, A.total * ease(t)); const [x, z] = W(...q.p); carObj.position.set(x, 0, z); carObj.rotation.y = -q.a; if (t >= 1) anims.drive = null; }
+    if (anims.walk && youObj) { const A = anims.walk, t = Math.min(1, (now - A.t0) / A.dur), q = along(A.pts, A.total * t); const [x, z] = W(...q.p); youObj.position.x = x; youObj.position.z = z; if (youObj.userData.cone) youObj.userData.cone.rotation.z = -q.a; if (A.follow) { const a = q.a, k = want.ahead || 22; want.tx = x + Math.cos(a) * k; want.tz = z + Math.sin(a) * k; want.th = Math.atan2(-Math.cos(a), -Math.sin(a)); if (want.live) { want.ex = x - Math.cos(a) * 6; want.ez = z - Math.sin(a) * 6; want.lx = x + Math.cos(a) * 80; want.lz = z + Math.sin(a) * 80; } } A.onT && A.onT(t); if (t >= 1) { anims.walk = null; A.done && A.done(); } }
+    if (anims.ride && youObj) { const A = anims.ride, t = Math.min(1, (now - A.t0) / A.dur), e = ease(t); youObj.position.y = A.y0 + A.dy * e; A.onT && A.onT(t); if (t >= 1) { anims.ride = null; A.done && A.done(); } }
+    // idle motion: pulse, flowing arrows, the pin bobbing (still under reduced motion)
+    if (!S.rm) {
+      const k = (now % 1600) / 1600;
+      if (dyn) dyn.traverse(n => { if (n.userData.pulse) { n.scale.setScalar(1 + k * 0.9); n.material.opacity = .45 * (1 - k); } if (n.userData.flow) n.userData.flow.offset.x -= dt * 0.0016; if (n.userData.flowY) n.userData.flowY.offset.y -= dt * 0.0012; if (n.userData.bob !== undefined) { n.position.y = n.userData.bob + Math.sin(now / 420) * 1.6; n.rotation.y += dt * 0.0012; } });
+    }
+    // camera: ease toward the wanted view (plus the viewer's own drag and zoom)
+    const f = S.rm ? 1 : 1 - Math.pow(now < flyUntil ? 0.12 : 0.0025, dt / 1000);
+    ['tx', 'ty', 'tz', 'ph', 'd', 'fov'].forEach(k => { if (want[k] !== undefined) cam[k] = lerp(cam[k], want[k], f); });
+    let dth = want.th - cam.th; dth = Math.atan2(Math.sin(dth), Math.cos(dth)); cam.th += dth * f;
+    camera.fov = cam.fov; camera.aspect = w / h;
+    const dd = want.live ? 60 : cam.d * user.d; scene.fog.near = dd * 0.8; scene.fog.far = dd * 2.8;
+    if (want.live) {
+      ['ex', 'ey', 'ez', 'lx', 'ly', 'lz'].forEach(k => { cam[k] = cam[k] === undefined ? want[k] : lerp(cam[k], want[k], f); });
+      camera.position.set(cam.ex, cam.ey, cam.ez); camera.lookAt(cam.lx, cam.ly, cam.lz); camera.clearViewOffset();
+    } else {
+      const th = cam.th + user.th, ph = Math.min(1.35, Math.max(0.001, cam.ph + user.ph)), d = cam.d * user.d;
+      camera.position.set(cam.tx + Math.sin(ph) * Math.sin(th) * d, cam.ty + Math.cos(ph) * d, cam.tz + Math.sin(ph) * Math.cos(th) * d);
+      camera.up.set(0, 1, 0); if (ph < 0.01) camera.up.set(-Math.sin(th), 0, -Math.cos(th));
+      camera.lookAt(cam.tx, cam.ty, cam.tz);
+      const off = ((insets.top + (h - insets.bottom)) / 2) - h / 2;
+      camera.setViewOffset(w, h, 0, -off, w, h);
+    }
+    camera.updateProjectionMatrix();
+    renderer.render(scene, camera);
+    placeLabels(w, h);
+  }
+
+  /* ---------- pointer: drag to turn, wheel or pinch to zoom; vertical swipes still scroll the sheet on touch ---------- */
+  function bindPointer() {
+    let drag = null;
+    canvas.addEventListener('pointerdown', e => { drag = { x: e.clientX, y: e.clientY, th: user.th, ph: user.ph, touch: e.pointerType === 'touch' }; canvas.setPointerCapture(e.pointerId); });
+    canvas.addEventListener('pointermove', e => { if (!drag) return; user.th = drag.th - (e.clientX - drag.x) * 0.008; if (!drag.touch) user.ph = Math.max(-0.9, Math.min(0.4, drag.ph - (e.clientY - drag.y) * 0.005)); });
+    const end = () => { drag = null; };
+    canvas.addEventListener('pointerup', end); canvas.addEventListener('pointercancel', end);
+    canvas.addEventListener('wheel', e => { if (!e.ctrlKey && !e.metaKey) return; e.preventDefault(); user.d = Math.max(0.45, Math.min(1.8, user.d * (1 + e.deltaY * 0.001))); }, { passive: false });
+  }
+
+  /* ---------- public API ---------- */
+  function mount(el, s, opt = {}) {
+    if (!init()) return false;
+    insets = { top: opt.top || 0, bottom: opt.bottom || 0, avoid: opt.avoid || [] };
+    if (canvas.parentNode !== el) { el.appendChild(canvas); el.appendChild(labelsEl); }
+    host = el;
+    const key = JSON.stringify(s);
+    if (key !== specKey || opt.force) {
+      const animate = !!spec && opt.animate !== false;
+      if (opt.keepView !== true && (!spec || spec.plan !== s.plan || spec.mode !== s.mode)) user = { th: 0, ph: 0, d: 1 };
+      spec = s; specKey = key; anims.walk = null; anims.ride = null; compose(s, animate);
+      // arriving at a place: the camera swoops down from above the campus
+      if (opt.intro && !S.rm) { Object.assign(cam, want, { d: want.d * 2.4, ph: 0.2, th: want.th + 1.2 }); flyUntil = performance.now() + 2400; }
+    }
+    if (!raf) raf = requestAnimationFrame(frame);
+    return true;
+  }
+  function walk(pts, dur, onT) { return new Promise(res => { if (!youObj || S.rm || !pts || pts.length < 2) return res(); anims.walk = { t0: performance.now(), dur, pts, total: plen(pts), follow: spec && (spec.mode === 'follow' || spec.mode === 'live'), onT, done: res }; }); }
+  function ride(toPlan, dur, onT) { return new Promise(res => { if (!youObj || S.rm || !spec) return res(); anims.ride = { t0: performance.now(), dur, y0: youObj.position.y, dy: levelOf(spec, toPlan) - youObj.position.y + 0.5, onT, done: res }; }); }
+  function reset() { user = { th: 0, ph: 0, d: 1 }; }
+  /* A still picture of a spec, for static cards (same renderer, same scene) */
+  function snapshot(s, w, h) {
+    if (!init()) return null;
+    const keep = { host, spec, specKey, insets: { ...insets }, cam: { ...cam }, want: { ...want }, user: { ...user }, youObj, carObj };
+    const fake = { clientWidth: w, clientHeight: h };
+    host = null; insets = { top: 0, bottom: 0 }; user = { th: 0, ph: 0, d: 1 };
+    palette();
+    const sg = staticGroup(s.plan), was = cur.group, wasDyn = dyn, stack = anims.stack;
+    if (was) scene.remove(was); if (wasDyn) scene.remove(wasDyn); if (stack) Object.values(stack).forEach(o => scene.remove(o));
+    sg.position.y = 0; scene.add(sg);
+    const d0 = new THREE.Group(); scene.add(d0); dyn = d0;
+    routeLayer(d0, s.routes, 0); if (s.flag) beacon(d0, s.flag, 0); if (s.you) youMarker(d0, s.you, s.head, 0);
+    host = fake; frameCamera({ ...s, mode: 'overview' }, true); host = null;
+    const pr = renderer.getPixelRatio(); renderer.setPixelRatio(2); renderer.setSize(w, h, false);
+    camera.aspect = w / h; camera.fov = cam.fov;
+    const th = cam.th, ph = cam.ph, d = cam.d;
+    camera.position.set(cam.tx + Math.sin(ph) * Math.sin(th) * d, cam.ty + Math.cos(ph) * d, cam.tz + Math.sin(ph) * Math.cos(th) * d); camera.up.set(0, 1, 0); camera.lookAt(cam.tx, cam.ty, cam.tz); camera.clearViewOffset(); camera.updateProjectionMatrix();
+    renderer.render(scene, camera);
+    // labels drawn onto a 2D copy
+    const out = document.createElement('canvas'); out.width = w * 2; out.height = h * 2; const c = out.getContext('2d'); c.drawImage(canvas, 0, 0, w * 2, h * 2); c.scale(2, 2);
+    const v = new THREE.Vector3(), placed = [];
+    labelList(s).sort((a, b) => b.pri - a.pri).forEach(L => {
+      const [x, z] = W(...L.p); v.set(x, L.y, z).project(camera); const sx = (v.x + 1) / 2 * w, sy = (1 - v.y) / 2 * h;
+      if (L.cls.startsWith('m3-call')) {
+        const t1 = L.html.match(/<b>(.*?)<\/b>/)[1], t2 = (L.html.match(/<small>(.*?)<\/small>/) || [])[1] || '';
+        c.font = '700 12px Inter, system-ui, sans-serif'; const tw1 = c.measureText(t1).width; c.font = '600 11px Inter, system-ui, sans-serif'; const tw2 = c.measureText(t2).width;
+        const bw = Math.max(tw1, tw2) + 26, bh = t2 ? 34 : 22, r = [sx - bw / 2, sy - bh - 6, sx + bw / 2, sy - 6];
+        if (r[0] < 2 || r[2] > w - 2 || r[1] < 2 || placed.some(q => !(r[2] < q[0] || r[0] > q[2] || r[3] < q[1] || r[1] > q[3]))) return; placed.push(r);
+        c.shadowColor = 'rgba(16,38,60,.25)'; c.shadowBlur = 6; c.fillStyle = pal === PAL.dark ? '#16222E' : '#FFFFFF'; c.beginPath(); c.roundRect ? c.roundRect(r[0], r[1], bw, bh, 7) : c.rect(r[0], r[1], bw, bh); c.fill(); c.shadowBlur = 0;
+        c.fillStyle = PAL.light.pin; c.beginPath(); c.arc(r[0] + 10, r[1] + 11, 3.5, 0, 7); c.fill();
+        c.fillStyle = pal.label; c.font = '700 12px Inter, system-ui, sans-serif'; c.textBaseline = 'middle'; c.fillText(t1, r[0] + 18, r[1] + 11);
+        if (t2) { c.font = '600 11px Inter, system-ui, sans-serif'; c.fillStyle = pal === PAL.dark ? '#A6B4C0' : '#5B6770'; c.fillText(t2, r[0] + 18, r[1] + 25); }
+      } else {
+        const r = [sx - 11, sy - 11, sx + 11, sy + 11]; if (placed.some(q => !(r[2] < q[0] || r[0] > q[2] || r[3] < q[1] || r[1] > q[3]))) return; placed.push(r);
+        c.fillStyle = pal === PAL.dark ? '#2D6CA6' : '#004278'; c.beginPath(); c.arc(sx, sy, 11, 0, 7); c.fill(); c.strokeStyle = '#FFFFFF'; c.lineWidth = 2; c.stroke();
+        const glyph = (L.html.match(/aria-hidden="true">([a-z_]+)</) || [])[1];
+        if (glyph && document.documentElement.classList.contains('ms-ready')) { c.fillStyle = '#FFFFFF'; c.font = '14px "Material Symbols Rounded"'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(glyph, sx, sy + 0.5); c.textAlign = 'start'; }
+      }
+    });
+    const url = out.toDataURL('image/png');
+    // restore the live view
+    scene.remove(sg); disposeTree(d0); dyn = wasDyn;
+    if (was) scene.add(was); if (wasDyn) scene.add(wasDyn); if (stack) Object.values(stack).forEach(o => scene.add(o));
+    renderer.setPixelRatio(pr); host = keep.host; insets = keep.insets; Object.assign(cam, keep.cam); Object.assign(want, keep.want); user = keep.user; youObj = keep.youObj; carObj = keep.carObj;
+    if (host) renderer.setSize(host.clientWidth, host.clientHeight, false);
+    return url;
+  }
+  return { init, ok: () => ok || init(), mount, walk, ride, reset, snapshot, setHeading, view: () => ({ ...user }) };
+})();
+
+/* ---------- One 3D map system (SVG fallback): a tilted, extruded view of the same plan data (320 × 200 units → 360 × 300 view) ----------
    Rooms and buildings rise as blocks; departments get callouts, amenities get badges; the route, you, and the pin draw on top. */
 const plen = pts => pts.slice(1).reduce((a, p, i) => a + Math.hypot(p[0] - pts[i][0], p[1] - pts[i][1]), 0);
 const prj = (x, y, z = 0) => { const s = 0.72 + 0.28 * (y / 200); return [180 + (x - 160) * 1.08 * s, 46 + 1.25 * y * (0.78 + 0.22 * y / 200) - z * s]; };
@@ -1286,8 +1836,15 @@ const CAT_MATCH = {
   care: r => r.kind === 'dept', dining: r => r.ic === 'food', restroom: r => r.ic === 'restroom', pharmacy: r => r.ic === 'pharmacy',
   info: r => r.ic === 'infoDesk', elevator: r => r.kind === 'core', quiet: r => r.ic === 'chapel', parking: () => false
 };
+const SNAP = {};
 function mapBox({ plan, label, foot, btn, ...o }) {
-  const svg = `<svg viewBox="0 0 360 300" role="img" aria-label="${esc(label)}">${plan === 'campus' ? campusSVG(o) : planSVG(plan, o)}</svg>`;
+  let svg;
+  if (M3.ok()) {
+    const sp = { plan, routes: (o.routes || []).map(([pts, cls]) => [pts, cls === 'draw' ? '' : cls || '']), you: o.you || null, head: o.head || null, flag: o.flag || null, dest: o.dest || null, destB: o.destB || null };
+    const key = JSON.stringify(sp) + (phone.classList.contains('dark') ? 'd' : 'l') + (document.documentElement.classList.contains('ms-ready') ? 1 : 0);
+    if (!SNAP[key]) SNAP[key] = M3.snapshot(sp, 360, 300);
+    svg = `<img class="m3-img" src="${SNAP[key]}" alt="${esc(label)}">`;
+  } else svg = `<svg viewBox="0 0 360 300" role="img" aria-label="${esc(label)}">${plan === 'campus' ? campusSVG(o) : planSVG(plan, o)}</svg>`;
   const where = plan === 'campus' ? 'Campus' : `Floor ${PLAN_META[plan].floor}`;
   const ft = `<div class="map-foot"><span class="tag">Sample map</span><span class="sp"></span><span class="tag">${foot || where}</span></div>`;
   return btn ? `<button class="map" ${btn}>${svg}${ft}</button>` : `<div class="map">${svg}${ft}</div>`;
@@ -1296,7 +1853,7 @@ function mapBox({ plan, label, foot, btn, ...o }) {
 /* ---------- State ---------- */
 const mqRM = matchMedia('(prefers-reduced-motion: reduce)');
 const mqDark = matchMedia('(prefers-color-scheme: dark)');
-const S = { zone: 'away', floor: 1, perm: 'ask', acc: 'precise', signed: true, width: 390, ts: 1, theme: 'system', rm: mqRM.matches, manual: null, paused: false, askHidden: false, guestDest: { clem: null, simm: null }, tab: 0, pickB: null, showPassed: false, appt: true, reason: null, scn: 'guest', step: 0, cat: null, viewFloor: null, alert: false, alertsAll: false, fluCal: false, soScope: 'All' };
+const S = { zone: 'away', floor: 1, perm: 'ask', acc: 'precise', signed: true, width: 390, ts: 1, theme: 'system', rm: mqRM.matches, manual: null, paused: false, askHidden: false, guestDest: { clem: null, simm: null }, tab: 0, pickB: null, showPassed: false, appt: true, reason: null, scn: 'guest', step: 0, cat: null, viewFloor: null, peek: null, map2d: false, guideOpen: false, navLive: false, navAll: false, voice: false, navPlay: false, alert: false, alertsAll: false, fluCal: false, soScope: 'All' };
 
 /* Precedence: your choice → paused → permission → signal → accuracy → place and floor */
 function ctx() {
@@ -1323,20 +1880,20 @@ function routeSteps(roomId) {
   const sideOf = east => (east ? (north ? 'left' : 'right') : (north ? 'right' : 'left'));
   const arrive = (east, from) => ({ k: 'arrive', ic: 'flag', t: `${r.name} is on your ${sideOf(east)}`, sub: r.suite ? `Suite ${r.suite} · Floor ${r.floor}` : `Floor ${r.floor}`, plan: r.plan, you: [r.cx, 100], head: [r.cx + (east ? 10 : -10), 100], dest: r.id, flag: [r.cx, 100], routes: [[[from, [r.cx, 100]], 'done']], last: true, u: 0 });
   const steps = [
-    { k: 'drive', ic: 'straight', t: 'Head east on Sample Blvd', sub: '0.2 mi', plan: 'campus', routes: [[D]], you: D[0], head: D[1], destB: b, ext: true, u: 0 },
-    { k: 'turnin', ic: b === 'clem' ? 'turnL' : 'turnR', t: `Turn ${b === 'clem' ? 'left' : 'right'} into ${P.garage}`, sub: `${P.open} spaces open`, plan: 'campus', routes: [[D.slice(1)]], you: D[1], head: D[2], destB: b, u: 0 },
-    { k: 'walk', ic: 'wayfinding', t: 'Park, then take the covered walkway', sub: ft(plen(W)), plan: 'campus', routes: [[D, 'done'], [W]], you: W[0], head: W[1], destB: b, u: plen(W) },
-    { k: 'enter', ic: 'entrance', t: `Enter at the ${P.door}`, sub: 'Straight ahead', plan: 'campus', routes: [[W, 'done']], you: W[2], head: [W[2][0] + 10, W[2][1]], destB: b, flag: [172, W[2][1]], u: 8 }
+    { k: 'drive', ic: 'straight', t: 'Head east on Sample Blvd', sub: '0.2 mi', plan: 'campus', routes: [[D]], you: D[0], head: D[1], destB: b, ext: true, u: 0, walk: [D[0], D[1]] },
+    { k: 'turnin', ic: b === 'clem' ? 'turnL' : 'turnR', t: `Turn ${b === 'clem' ? 'left' : 'right'} into ${P.garage}`, sub: `${P.open} spaces open`, plan: 'campus', routes: [[D.slice(1)]], you: D[1], head: D[2], destB: b, u: 0, walk: [D[1], D[2]] },
+    { k: 'walk', ic: 'wayfinding', t: 'Park, then take the covered walkway', sub: ft(plen(W)), plan: 'campus', routes: [[D, 'done'], [W]], you: W[0], head: W[1], destB: b, u: plen(W), walk: W },
+    { k: 'enter', ic: 'entrance', t: `Enter at the ${P.door}`, sub: 'Straight ahead', plan: 'campus', routes: [[W, 'done']], you: W[2], head: [W[2][0] + 10, W[2][1]], destB: b, flag: [172, W[2][1]], u: 8, walk: [W[2], [W[2][0] + 10, W[2][1]]] }
   ];
   if (r.floor !== 1) {
-    steps.push({ k: 'hall', ic: 'straight', t: 'Go straight down the main hall', sub: ft(e1 - 12), plan: p1, routes: [[[ENTRY, [e1, 100]]]], you: ENTRY, head: [e1, 100], flag: [e1, 100], u: e1 - 12 });
-    steps.push({ k: 'tolift', ic: 'turnL', t: `Turn left to ${P.lift}`, sub: 'Elevators on your left', plan: p1, routes: [[[ENTRY, [e1, 100]], 'done']], you: [e1, 100], head: [e1, 88], flag: [e1, 100], u: 6 });
-    steps.push({ k: 'ride', ic: 'elevator', t: `Take ${P.lift} to Floor ${r.floor}`, sub: `Floor 1 to Floor ${r.floor}`, plan: r.plan, you: [ef, 100], lift: r.floor, u: 60 });
+    steps.push({ k: 'hall', ic: 'straight', t: 'Go straight down the main hall', sub: ft(e1 - 12), plan: p1, routes: [[[ENTRY, [e1, 100]]]], you: ENTRY, head: [e1, 100], flag: [e1, 100], u: e1 - 12, walk: [ENTRY, [e1 - 2, 100]] });
+    steps.push({ k: 'tolift', ic: 'turnL', t: `Turn left to ${P.lift}`, sub: 'Elevators on your left', plan: p1, routes: [[[ENTRY, [e1, 100]], 'done']], you: [e1 - 2, 100], head: [e1, 88], flag: [e1, 100], u: 6, walk: [[e1 - 2, 100], [e1, 96], [e1, 90]] });
+    steps.push({ k: 'ride', ic: 'elevator', t: `Take ${P.lift} to Floor ${r.floor}`, sub: `Floor 1 to Floor ${r.floor}`, plan: r.plan, you: [ef, 100], lift: r.floor, u: 60, rideFrom: [e1, 92] });
     const east = r.cx > ef;
-    steps.push({ k: 'exit', ic: east ? 'turnL' : 'turnR', t: `Turn ${east ? 'left' : 'right'} out of the elevator`, sub: ft(Math.abs(r.cx - ef)), plan: r.plan, routes: [[[[ef, 100], [r.cx, 100]]]], you: [ef, 100], head: [ef + (east ? 10 : -10), 100], flag: [r.cx, 100], dest: r.id, u: Math.abs(r.cx - ef) });
+    steps.push({ k: 'exit', ic: east ? 'turnL' : 'turnR', t: `Turn ${east ? 'left' : 'right'} out of the elevator`, sub: ft(Math.abs(r.cx - ef)), plan: r.plan, routes: [[[[ef, 100], [r.cx, 100]]]], you: [ef, 100], head: [ef + (east ? 10 : -10), 100], flag: [r.cx, 100], dest: r.id, u: Math.abs(r.cx - ef), walk: [[ef, 92], [ef, 100], [r.cx, 100]] });
     steps.push(arrive(east, [ef, 100]));
   } else {
-    steps.push({ k: 'hall', ic: 'straight', t: 'Go straight down the main hall', sub: ft(r.cx - 12), plan: p1, routes: [[[ENTRY, [r.cx, 100]]]], you: ENTRY, head: [ENTRY[0] + 10, 100], flag: [r.cx, 100], dest: r.id, u: r.cx - 12 });
+    steps.push({ k: 'hall', ic: 'straight', t: 'Go straight down the main hall', sub: ft(r.cx - 12), plan: p1, routes: [[[ENTRY, [r.cx, 100]]]], you: ENTRY, head: [ENTRY[0] + 10, 100], flag: [r.cx, 100], dest: r.id, u: r.cx - 12, walk: [ENTRY, [r.cx, 100]] });
     steps.push(arrive(true, ENTRY));
   }
   return steps;
@@ -1705,7 +2262,7 @@ let PM_ON = false;
 function heroOpts(c, L) {
   const p = placeOf(c), target = L && L.room ? ROOMS[L.room] : null;
   if (c.zone === 'inside') {
-    const vf = S.viewFloor || c.floor, plan = planOf('clem', vf), onFloor = vf === c.floor, you = onFloor ? youOnFloor(c, target) : null;
+    const vf = typeof S.viewFloor === 'number' ? S.viewFloor : c.floor, plan = planOf('clem', vf), onFloor = vf === c.floor, you = onFloor ? youOnFloor(c, target) : null;
     let routes = [], flag = null, dest = null;
     if (target && target.b === 'clem' && target.floor === vf) { dest = target.id; flag = [target.cx, 100]; if (onFloor && Math.abs(you[0] - target.cx) > 1) routes = [[[you, [target.cx, 100]]]]; }
     else if (onFloor && target && target.b === 'clem') { const e = PLAN_META[plan].elev; routes = [[[you, [e, 100]]]]; flag = [e, 100]; }
@@ -1718,20 +2275,74 @@ function zoneLine(c) {
   const P = PLACES[placeOf(c)];
   return c.zone === 'arriving' ? `Arriving · ${P.garage}` : c.zone === 'inside' ? `Floor ${c.floor} · You're here` : `At the ${P.door}`;
 }
-function pmHero(c, L, chip) {
-  const p = placeOf(c), P = PLACES[p], o = heroOpts(c, L), inside = c.zone === 'inside';
-  const vf = S.viewFloor || c.floor;
-  const label = `Sample 3D map of ${o.plan === 'campus' ? 'the Dallas campus' : `${P.short}, Floor ${vf}`}${o.you ? ', with where you are' : ''}${o.flag ? ' and your destination' : ''}`;
-  return `<div class="pm-map" id="pm-map">
-    <svg class="pm-svg" viewBox="0 -130 360 440" preserveAspectRatio="xMidYMid slice" role="img" aria-label="${label}">${o.plan === 'campus' ? campusSVG(o) : planSVG(o.plan, o)}</svg>
-    <div class="pm-top">
-      <div class="pm-row"><button class="pm-search" data-act="search">${ico('search', 20)}<span>Search this ${p === 'clem' ? 'hospital' : 'center'}</span></button><button class="pm-btn" data-act="menu" aria-label="Menu" aria-haspopup="dialog">${ico('menu')}</button></div>
-      <div class="pm-row">${chip}<button class="pm-pill" data-act="picker">Not here?</button></div>
-    </div>
-    ${inside ? `<div class="pm-side" role="group" aria-label="Floors"><span class="pm-fl-k" aria-hidden="true">Floor</span>${[1, 2, 7].map(f => `<button class="pm-fl" data-act="view-floor" data-f="${f}" aria-pressed="${vf === f}" aria-label="Floor ${f}${f === c.floor ? ', you are here' : ''}">${f}${f === c.floor ? '<i aria-hidden="true"></i>' : ''}</button>`).join('')}
-      ${vf !== c.floor ? `<button class="pm-btn" data-act="view-floor" data-f="${c.floor}" aria-label="Back to your floor">${ico('nearMe', 20)}</button>` : ''}</div>` : ''}
-    <span class="tag pm-tag">Sample map</span></div>`;
+/* ---------- Place mode hero on the live 3D engine ---------- */
+/* All floors at once, pulled apart: your floor, the elevator leg, and the destination floor in one view */
+function xrayOn(c, L) {
+  if (!M3.ok() || S.map2d || c.zone !== 'inside') return false;
+  if (S.viewFloor === 'all') return true;
+  if (S.viewFloor != null || S.peek || S.cat) return false;
+  const t = L && L.room ? ROOMS[L.room] : null;
+  return !!(t && t.b === 'clem' && t.floor !== c.floor);
 }
+function xraySpec(b, youFloor, you, t, extra = {}) {
+  const stack = PLACES[b].plans, youPlan = planOf(b, youFloor), s = { plan: stack[0], stack, gap: 110, xray: true, youPlan, you, head: null, mode: 'xray', stackRoutes: {}, ...extra };
+  if (t) {
+    const e = PLAN_META[youPlan].elev, ef = PLAN_META[t.plan].elev;
+    Object.assign(s, { dest: t.id, stackDest: t.plan, stackFlag: { plan: t.plan, p: [t.cx, 100] } });
+    if (t.plan === youPlan) s.stackRoutes[youPlan] = [[[you, [t.cx, 100]]]];
+    else { s.stackRoutes[youPlan] = [[[you, [e, 100]]]]; s.stackRoutes[t.plan] = [[[[ef, 100], [t.cx, 100]]]]; s.riser = { p: [e, 100], from: youPlan, to: t.plan }; }
+    s.head = s.stackRoutes[youPlan][0][0][1];
+  }
+  return s;
+}
+function heroSpec(c, L) {
+  if (xrayOn(c, L)) { const t = L && L.room ? ROOMS[L.room] : null; return xraySpec('clem', c.floor, youOnFloor(c, t), t && t.b === 'clem' ? t : null); }
+  const o = heroOpts(c, L);
+  const s = { plan: o.plan, routes: o.routes || [], you: o.you || null, head: o.head || null, flag: o.flag || null, dest: o.dest || null, destB: o.destB || null, drive: o.drive || null, cat: S.cat || null, mode: S.map2d ? '2d' : 'overview' };
+  if (S.peek && ROOMS[S.peek] && o.plan !== 'campus' && ROOMS[S.peek].plan === o.plan) { const r = ROOMS[S.peek]; s.focus = [r.cx, r.side === 'n' ? 50 : 150]; }
+  return s;
+}
+function guideHTML(L) {
+  if (!L || !L.active) return '';
+  const n = L.stops.length, cur = L.stops[L.idx];
+  if (!S.guideOpen) return `<button class="pm-guide pill" data-act="guide" aria-expanded="false"><span class="g-ring" aria-hidden="true"></span><span><small>Step ${L.idx + 1} of ${n}</small><b>${cur.t}</b></span>${ico('expand', 20)}</button>`;
+  return `<div class="pm-guide open"><div class="g-head"><b>Step-by-step guide</b><button class="icon-btn" data-act="guide" aria-expanded="true" aria-label="Close the guide">${ico('close', 20)}</button></div>
+    <ol>${L.stops.map((s, i) => `<li class="${i < L.idx ? 'done' : i === L.idx ? 'now' : ''}"><span class="g-mark" aria-hidden="true">${i < L.idx ? ico('stepDone', 16) : ''}</span><span>${s.t}</span><span class="vh">${i < L.idx ? ', done' : i === L.idx ? ', now' : ''}</span></li>`).join('')}</ol></div>`;
+}
+function doctorCard(c) {
+  if (!hasVisits()) return '';
+  const p = placeOf(c), v = VISITS[p], d = DOC[v.doc];
+  return `<button class="pm-doc" data-act="dept" data-room="${v.room}" aria-label="Your doctor, ${d.name}, ${v.time}, sample. Open ${ROOMS[v.room].name}"><span class="avatar-d" aria-hidden="true">${d.ini}</span><span aria-hidden="true"><b>${d.name}</b><small>${v.time} · Sample</small></span></button>`;
+}
+function peekCard(c) {
+  const r = S.peek && ROOMS[S.peek]; if (!r) return '';
+  const D = placeData(r.id), here = placeOf(c) === r.b;
+  const sub = `${here ? whereLabel(c, r) : PLACES[r.b].short}${D && D.hours ? ` · ${D.hours === 'Open 24 hours' ? 'Open 24 hours' : 'Open ' + D.hours}` : ''}`;
+  return `<div class="pm-peek" role="group" aria-labelledby="pk-h">${dot(r.ic || (r.kind === 'core' ? 'elevator' : 'clinic'), 'solid')}<div class="pk-t"><b id="pk-h">${r.name}${r.suite ? ` · Suite ${r.suite}` : ''}</b><small>${sub}</small></div><button class="icon-btn" data-act="peek-close" aria-label="Close">${ico('close', 20)}</button>
+    <div class="pk-acts"><button class="btn pri" data-act="wf" data-room="${r.id}">${ico('navigate', 20)}<span>Start navigation</span></button>${D ? `<button class="btn" data-act="dept" data-room="${r.id}">${D.cat ? (r.ic === 'food' ? 'Menu' : 'Prices') : 'Details'}</button>` : ''}</div></div>`;
+}
+function pmHero(c, L) {
+  const p = placeOf(c), P = PLACES[p], o = heroOpts(c, L), inside = c.zone === 'inside', vf = typeof S.viewFloor === 'number' ? S.viewFloor : c.floor, live = M3.ok(), xr = xrayOn(c, L), tgt = L && L.room ? ROOMS[L.room] : null;
+  const label = xr ? `Interactive 3D sample map of ${P.short}, all floors pulled apart, with where you are on Floor ${c.floor}${tgt && tgt.b === 'clem' ? ` and your route to ${tgt.name} on Floor ${tgt.floor}` : ''}. Drag to turn it.` : `${live ? 'Interactive 3D' : '3D'} sample map of ${o.plan === 'campus' ? 'the Dallas campus' : `${P.short}, Floor ${vf}`}${o.you ? ', with where you are' : ''}${o.flag ? ' and your destination' : ''}. Drag to turn it.`;
+  return `<div class="pm-map" id="pm-map">
+    <div class="m3-host" role="img" aria-label="${label}">${live ? '' : `<svg class="pm-svg" viewBox="0 -130 360 440" preserveAspectRatio="xMidYMid slice">${o.plan === 'campus' ? campusSVG(o) : planSVG(o.plan, o)}</svg>`}</div>
+    <div class="pm-top"><div class="pm-row"><button class="pm-search" data-act="search">${ico('search', 20)}<span>Search this ${p === 'clem' ? 'hospital' : 'center'}</span></button><button class="pm-btn" data-act="menu" aria-label="Menu" aria-haspopup="dialog">${ico('menu')}</button></div>${guideHTML(L)}</div>
+    <div class="pm-side" role="group" aria-label="Map view">
+      <button class="pm-btn sm" data-act="map2d" aria-pressed="${!!S.map2d}" aria-label="${S.map2d ? 'Show 3D' : 'Show 2D'}"><span class="mv-t">${S.map2d ? '3D' : '2D'}</span></button>
+      <button class="pm-btn sm" data-act="map-reset" aria-label="Recenter the map">${ico('compass', 20)}</button>
+      ${inside ? `<div class="pm-fls" role="group" aria-label="Floors">${live ? `<button class="pm-fl all" data-act="view-floor" data-f="all" aria-pressed="${xr}" aria-label="All floors${tgt && tgt.b === 'clem' ? ', with your route' : ''}">${ico('floor', 20)}</button>` : ''}${[7, 2, 1].map(f => `<button class="pm-fl" data-act="view-floor" data-f="${f}" aria-pressed="${!xr && vf === f}" aria-label="Floor ${f}${f === c.floor ? ', you are here' : ''}">${f}${f === c.floor ? '<i aria-hidden="true"></i>' : ''}</button>`).join('')}</div>` : ''}
+    </div>
+    <div class="pm-foot">${doctorCard(c)}<span class="sp"></span><span class="tag pm-tag">${live ? 'Sample 3D map' : 'Sample map'}</span></div>
+    ${S.peek ? peekCard(c) : ''}</div>`;
+}
+function mountHero(c, L, animate, intro) {
+  const hostEl = $('.m3-host', home); if (!hostEl || !M3.ok()) return;
+  const top = $('.pm-top', home), side = $('.pm-side', home), low = [$('.pm-foot', home), $('.pm-peek', home)].filter(Boolean), H = hostEl.clientHeight;
+  const hTop = top ? top.offsetTop + top.offsetHeight + 8 : 120, hBot = Math.max(30, ...low.map(el => H - el.offsetTop + 8));
+  const avoid = side ? [[side.offsetLeft - 6, side.offsetTop - 6, side.offsetLeft + side.offsetWidth + 6, side.offsetTop + side.offsetHeight + 6]] : [];
+  M3.mount(hostEl, heroSpec(c, L), { top: hTop, bottom: hBot, animate, intro, avoid });
+}
+
 function catsHTML(c) {
   const p = placeOf(c);
   let res = '';
@@ -1739,9 +2350,12 @@ function catsHTML(c) {
     const [, , label] = CATS.find(x => x[0] === S.cat);
     const items = S.cat === 'parking'
       ? [{ ic: 'parking', t: PLACES[p].garage, s: `${PLACES[p].open} spaces open · Rates`, a: `data-act="page" data-page="parking-${p}"` }]
-      : Object.values(ROOMS).filter(r => r.b === p && CAT_MATCH[S.cat](r)).sort((a, b) => walkMin(c, a) - walkMin(c, b)).map(r => ({ ic: r.ic || (r.kind === 'core' ? 'elevator' : 'clinic'), t: r.name, s: `${whereLabel(c, r)}${placeData(r.id) && placeData(r.id).cat ? (r.ic === 'food' ? ' · Menu' : ' · Prices') : ''}`, a: placeData(r.id) ? `data-act="dept" data-room="${r.id}"` : `data-act="wf" data-room="${r.id}"` }));
+      : Object.values(ROOMS).filter(r => r.b === p && CAT_MATCH[S.cat](r)).sort((a, b) => walkMin(c, a) - walkMin(c, b)).map(r => ({ id: r.id, ic: r.ic || (r.kind === 'core' ? 'elevator' : 'clinic'), t: r.name, s: `${whereLabel(c, r)}${placeData(r.id) && placeData(r.id).cat ? (r.ic === 'food' ? ' · Menu' : ' · Prices') : ''}`, detail: placeData(r.id) ? (placeData(r.id).cat ? (r.ic === 'food' ? 'Menu' : 'Prices') : 'Details') : '' }));
+    const near = items[0], more = items.slice(1);
+    const nearAct = S.cat === 'parking' ? `<button class="btn pri" data-act="page" data-page="parking-${p}">${ico('money', 20)}<span>Rates and spaces</span></button>` : `<button class="btn pri" data-act="wf" data-room="${near.id}">${ico('navigate', 20)}<span>Start navigation</span></button>${near.detail ? `<button class="btn" data-act="dept" data-room="${near.id}">${near.detail}</button>` : ''}`;
     res = `<section class="sec cat-res" aria-labelledby="cr-h"><div class="near-h"><h2 class="sec-h" id="cr-h">${label} · ${items.length}</h2><button class="link-btn" data-act="cat" data-k="${S.cat}">Clear</button></div>
-      <ul class="rows">${items.map(x => `<li><button class="row" ${x.a}>${dot(x.ic)}<span class="txt"><span class="rt">${x.t}</span><span class="rs">${x.s}</span></span>${ico('next', 20, 'chev')}</button></li>`).join('')}</ul></section>`;
+      <div class="card nearest"><p class="k">Nearest</p><div class="nr-top">${dot(near.ic, 'solid')}<span><b>${near.t}</b><small>${near.s}</small></span></div><div class="pk-acts">${nearAct}</div></div>
+      ${more.length ? `<ul class="rows">${more.map(x => `<li><button class="row" ${x.id ? `data-act="peek" data-room="${x.id}"` : x.a} aria-label="${x.t}, ${x.s}. Show on the map">${dot(x.ic)}<span class="txt"><span class="rt">${x.t}</span><span class="rs">${x.s}</span></span>${ico('next', 20, 'chev')}</button></li>`).join('')}</ul>` : ''}</section>`;
   }
   return `<ul class="cats" aria-label="What is here">${CATS.map(([k, ic, t]) => `<li><button class="cat-b" data-act="cat" data-k="${k}" aria-pressed="${S.cat === k}"><span class="cat-c" aria-hidden="true">${ico(ic)}</span><span>${t}</span></button></li>`).join('')}</ul>` + res;
 }
@@ -1815,12 +2429,12 @@ function quickLinks() {
 
 function renderHome(force) {
   const c = ctx(), L = lineModel(c), pass = passFor(c);
-  const key = JSON.stringify([c, S.signed, S.appt, S.guestDest, S.askHidden, S.showPassed, S.reason, S.alert, S.alertsAll, S.fluCal, S.cat, S.viewFloor]);
+  const key = JSON.stringify([c, S.signed, S.appt, S.guestDest, S.askHidden, S.showPassed, S.reason, S.alert, S.alertsAll, S.fluCal, S.cat, S.viewFloor, S.peek, S.map2d, S.guideOpen, M3.ok()]);
   const changed = key !== last.key;
   if (!changed && !force) return;
   const ckey = JSON.stringify([c, S.signed, S.appt, S.guestDest, S.reason]);
   const animate = !S.rm && last.key !== null && ckey !== last.ckey;
-  if (last.ckey && ckey !== last.ckey) { S.cat = null; S.viewFloor = null; }
+  if (last.ckey && ckey !== last.ckey) { S.cat = null; S.viewFloor = null; S.peek = null; S.guideOpen = false; }
   const [cIco, cTxt, live] = chipFor(c);
   const p = placeOf(c);
   const chipLabel = p ? `Location: ${cTxt.replace(PLACES[p].short, PLACES[p].full)}. Options` : `Location: ${cTxt}. Options`;
@@ -1830,7 +2444,7 @@ function renderHome(force) {
   let h;
   if (PM_ON) {
     // The app becomes the place: a full-bleed map, then a sheet with what is here and the rest of the home
-    h = pmHero(c, L, chip) + `<div class="pm-sheet"><div class="grab" aria-hidden="true"></div><div class="pm-head"><p class="pm-k">${c.src === 'manual' ? ico('pick', 16) : '<span class="live" aria-hidden="true"></span>'}${zoneLine(c)}<span class="tag">${c.src === 'manual' ? 'Your choice' : 'Simulated'}</span></p><h1>${PLACES[p].full}</h1></div>` + catsHTML(c) + alertBanner();
+    h = pmHero(c, L) + `<div class="pm-sheet"><div class="grab" aria-hidden="true"></div><div class="pm-head"><div class="where pm-where"><button class="chip-loc pm-loc" data-act="loc" aria-label="Location: ${PLACES[p].full}, ${zoneLine(c)}, ${c.src === 'manual' ? 'your choice' : 'simulated'}. Options" aria-haspopup="dialog">${c.src === 'manual' ? ico('pick', 16) : '<span class="live" aria-hidden="true"></span>'}<span class="cl-t">${zoneLine(c)}</span><span class="tag">${c.src === 'manual' ? 'Your choice' : 'Simulated'}</span></button><span class="sp"></span><button class="link-btn" data-act="picker">Not here?</button></div><h1>${PLACES[p].full}</h1></div>` + catsHTML(c) + alertBanner();
   } else {
     h = alertBanner() + `<div class="where">${chip}<span class="sp"></span></div>`;
     h += `<button class="search-field" data-act="search">${ico('search', 20)}<span>Search doctors, places, and more</span></button>` + topSearches();
@@ -1876,6 +2490,7 @@ function renderHome(force) {
   }
   layoutLine(animate ? prevIdx : -1);
   runMapMotion(animate);
+  if (PM_ON) mountHero(c, L, animate || (prevView && last.view !== prevView), !wasPM && !!prevKey);
   const car = $('#car', home); if (car) { car.addEventListener('scroll', carSync, { passive: true }); carSync(); }
   if (animate && prevFloor && last.floor && prevFloor !== last.floor) rollLift(prevFloor, last.floor);
   $('#statusbar').classList.toggle('dk', S.tab !== 0 || !!$('.page.on') || PM_ON);
@@ -2005,7 +2620,7 @@ let WF = null;
 let navVB = null, navRaf = 0;
 function openWF(roomId) {
   const steps = routeSteps(roomId), here = startIndex(ctx(), roomId, steps);
-  WF = { roomId, steps, i: here, here }; navVB = null;
+  WF = { roomId, steps, i: here, here }; navVB = null; S.navAll = false;
   openPage('#pg-way'); renderWF(false);
 }
 function stepView(s) {   // frame the step: the route, you, and the pin, at the screen's shape
@@ -2019,11 +2634,55 @@ function stepView(s) {   // frame the step: the route, you, and the pin, at the 
   const cx = (Math.max(...xs) + Math.min(...xs)) / 2, cy = (Math.max(...ys) + Math.min(...ys)) / 2;
   return [cx - w / 2, cy - h * 0.46, w, h];   // the visible band sits a little above centre (banner on top, card below)
 }
+/* ---------- Turn-by-turn on the 3D engine: walk each step, ride the elevator, live view, simulate the whole trip ---------- */
+function navSpec(s) {
+  const t = ROOMS[WF.roomId];
+  if (s.k === 'ride') return xraySpec(t.b, 1, [PLAN_META[planOf(t.b, 1)].elev, 100], t, { mode: 'stack', labelsTab: false });
+  if (S.navAll) {
+    if (s.plan !== 'campus' && PLACES[t.b].plans.length > 1) return xraySpec(t.b, PLAN_META[s.plan].floor, s.you, t, { labelsTab: false });
+    if (s.plan === 'campus') { const D = DRIVE[t.b], Wk = WALK[t.b]; return { plan: 'campus', routes: [[D, 'done'], [Wk]], you: s.you, head: s.head, destB: t.b, mode: 'overview', labelsTab: false }; }
+  }
+  return { plan: s.plan, routes: s.routes || [], you: s.you || null, head: s.head || null, flag: s.flag || null, dest: s.dest || null, destB: s.destB || null, mode: S.navLive ? 'live' : 'follow', labelsTab: false };
+}
+function mountNav(animate) {
+  if (!M3.ok() || !WF) return false;
+  const s = WF.steps[WF.i], b = $('#nav-banner'), card = $('#nav-card');
+  const side = $('#nav-side'), host = $('#nav-map .m3-host'), tag = $('#nav-map .nav-tag');
+  const avoid = [side && [side.offsetLeft - 6, side.offsetTop - 6, host.clientWidth, side.offsetTop + side.offsetHeight + 6], tag && [tag.offsetLeft - 4, tag.offsetTop - 4, tag.offsetLeft + tag.offsetWidth + 4, tag.offsetTop + tag.offsetHeight + 4]].filter(Boolean);
+  return M3.mount(host, navSpec(s), { top: b.offsetTop + b.offsetHeight + 8, bottom: card.offsetHeight + 8, animate, avoid });
+}
+let navBusy = false;
+function speak(t) { if (!S.voice || !('speechSynthesis' in window)) return; try { speechSynthesis.cancel(); speechSynthesis.speak(new SpeechSynthesisUtterance(t)); } catch (e) {} }
+/* Next: the dot walks the step (or rides the elevator), then the next instruction appears */
+async function navAdvance() {
+  if (!WF || navBusy || WF.i >= WF.steps.length - 1) return;
+  const s = WF.steps[WF.i];
+  if (M3.ok() && !S.rm) {
+    navBusy = true; $$('#nav-card .wf-nav button').forEach(x => { x.disabled = true; });
+    const sub = $('#nav-banner .nb-s');
+    if (s.k === 'ride') { await M3.ride(s.plan, 2200, t => { const big = $('#nav-card .lift-disp .big span'); if (big) big.textContent = Math.max(1, Math.round(1 + (s.lift - 1) * t)); }); }
+    else if (s.walk && s.walk.length > 1) { const L = plen(s.walk); await M3.walk(s.walk, Math.min(3200, Math.max(900, L * 14)), t => { if (sub && s.k !== 'drive' && s.k !== 'turnin') sub.textContent = ft(L * (1 - t)); }); }
+    navBusy = false;
+    if (!WF) return;
+  }
+  WF.i++; renderWF(true);
+  const f = $('[data-act="wf-next"]') || $('#nav-card .wf-nav [data-act="close-page"]'); if (f) f.focus({ preventScroll: true });
+}
+async function navPlay() {
+  S.navPlay = !S.navPlay; renderWF(false);
+  while (S.navPlay && WF && WF.i < WF.steps.length - 1) { await navAdvance(); if (S.navPlay) await new Promise(r => setTimeout(r, S.rm ? 600 : 900)); }
+  if (WF && S.navPlay) { S.navPlay = false; renderWF(false); }
+}
+
 function renderWF(anim) {
-  const { steps, i, here, roomId } = WF, s = steps[i], r = ROOMS[roomId], rem = remaining(steps, i);
+  const { steps, i, here, roomId } = WF, s = steps[i], r = ROOMS[roomId], rem = remaining(steps, i), live3d = M3.ok();
   const target = stepView(s), from = navVB && anim && !S.rm ? navVB : target;
   const inner = s.plan === 'campus' ? campusSVG({ routes: s.routes, you: s.you, head: s.head, flag: s.flag, destB: s.destB, pulse: i === here }) : planSVG(s.plan, { routes: s.routes, you: s.you, head: s.head, flag: s.flag, dest: s.dest, pulse: i === here });
-  $('#nav-map').innerHTML = `<svg id="nav-svg" viewBox="${from.join(' ')}" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Sample map, step ${i + 1}: ${esc(s.t)}">${inner}</svg><span class="tag nav-tag">Sample map · ${s.plan === 'campus' ? 'Campus' : 'Floor ' + PLAN_META[s.plan].floor}</span>`;
+  const where = s.k === 'ride' ? 'Elevator' : S.navAll && live3d ? 'Route overview' : s.plan === 'campus' ? 'Campus' : 'Floor ' + PLAN_META[s.plan].floor;
+  const side = live3d ? `<div class="nav-side" id="nav-side"><button class="pm-btn" data-act="nav-all" aria-pressed="${!!S.navAll}" aria-label="Route overview">${ico('floor', 20)}</button><button class="pm-btn" data-act="nav-live" aria-pressed="${!!S.navLive}" aria-label="Live view – simulated">${ico('liveView', 20)}</button><button class="pm-btn" data-act="nav-voice" aria-pressed="${!!S.voice}" aria-label="${S.voice ? 'Voice guidance on' : 'Voice guidance off'}">${ico(S.voice ? 'voiceOn' : 'voiceOff', 20)}</button><button class="pm-btn" data-act="map-reset" aria-label="Recenter">${ico('compass', 20)}</button></div>` : '';
+  const hostOk = live3d && $('#nav-map .m3-host');
+  if (live3d) { if (!hostOk) $('#nav-map').innerHTML = `<div class="m3-host" role="img"></div><span class="tag nav-tag"></span><div class="nav-side-slot"></div>`; $('#nav-map .m3-host').setAttribute('aria-label', `Interactive 3D sample map, step ${i + 1}: ${s.t}`); $('#nav-map .nav-tag').textContent = `Sample 3D map · ${where}${S.navLive && !S.navAll && s.k !== 'ride' ? ' · Live view, simulated' : ''}`; $('#nav-map .nav-side-slot').innerHTML = side; }
+  else $('#nav-map').innerHTML = `<svg id="nav-svg" viewBox="${from.join(' ')}" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Sample map, step ${i + 1}: ${esc(s.t)}">${inner}</svg><span class="tag nav-tag">Sample map · ${where}</span>`;
   $('#nav-banner').innerHTML = `<span class="nb-arrow" aria-hidden="true">${ico(s.ic)}</span><span class="nb-txt"><span class="nb-t" id="wf-title">${s.t}</span><span class="nb-s">${s.sub || ''}</span></span>`;
   $('#nav-banner').classList.toggle('arrived', !!s.last);
   $('#nav-card').innerHTML = `<div class="nc-top"><span class="nc-eta"><b>${s.last ? 'Arrived' : `${rem.min} min`}</b><span>${s.last ? (r.suite ? 'Suite ' + r.suite : 'You are here') : `${rem.dist} · Arrive ${rem.arrive}`}</span></span><button class="nc-end" data-act="close-page" aria-label="End directions">${ico('close', 20)}<span>End</span></button></div>
@@ -2031,11 +2690,15 @@ function renderWF(anim) {
     <div class="wf-steps" style="--n:${steps.length}" aria-hidden="true">${steps.map((_, k) => `<i class="${k < i ? 'on' : k === i ? 'here' : ''}"></i>`).join('')}</div>
     ${s.lift ? `<div class="nc-lift">${liftPanel(1, s.lift)}</div>` : ''}
     ${s.ext ? `<button class="btn" data-act="info" data-msg="Opens your map app – simulated">${ico('mapApp', 20)}<span>Open in your map app</span>${ico('external', 16)}</button>` : ''}
-    <div class="wf-nav"><button class="btn" data-act="wf-prev" ${i === 0 ? 'disabled' : ''}>${ico('back', 20)}<span>Back</span></button>${i === steps.length - 1 ? `<button class="btn pri" data-act="close-page">${ico('arrived', 20)}<span>Done</span></button>` : `<button class="btn pri" data-act="wf-next"><span>Next</span>${ico('go', 20)}</button>`}</div>`;
+    ${live3d && i < steps.length - 1 ? `<button class="btn ghost nc-play" data-act="nav-play" aria-pressed="${!!S.navPlay}">${ico(S.navPlay ? 'pause' : 'play', 20)}<span>${S.navPlay ? 'Pause the walk' : 'Simulate the walk'}</span></button>` : ''}
+    <div class="wf-nav"><button class="btn" data-act="wf-prev" ${i === 0 || S.navPlay ? 'disabled' : ''}>${ico('back', 20)}<span>Back</span></button>${i === steps.length - 1 ? `<button class="btn pri" data-act="close-page">${ico('arrived', 20)}<span>Done</span></button>` : `<button class="btn pri" data-act="wf-next" ${S.navPlay ? 'disabled' : ''}><span>Next</span>${ico('go', 20)}</button>`}</div>`;
+  // the map tag and buttons sit under the banner, however tall large text makes it
+  { const bb = $('#nav-banner').offsetTop + $('#nav-banner').offsetHeight, tg = $('#nav-map .nav-tag'); if (tg) tg.style.top = (bb + 8) + 'px'; const ns = $('#nav-side'); if (ns) ns.style.top = (bb + 12) + 'px'; }
+  if (live3d) { mountNav(anim); if (anim) speak(`${s.t}. ${s.sub || ''}`); }
   if (anim && !S.rm) { $('#nav-banner').classList.remove('swap'); void $('#nav-banner').offsetWidth; $('#nav-banner').classList.add('swap'); }
-  // The camera glides to the new step
+  // The camera glides to the new step (SVG fallback)
   cancelAnimationFrame(navRaf);
-  if (from !== target) {
+  if (!live3d && from !== target) {
     const t0 = performance.now(), dur = 700, ease = t => 1 - Math.pow(1 - t, 3);
     const tick = now => { const t = Math.min(1, (now - t0) / dur), e = ease(t), vb = from.map((v, k) => v + (target[k] - v) * e); const svg = $('#nav-svg'); if (svg) svg.setAttribute('viewBox', vb.join(' ')); if (t < 1) navRaf = requestAnimationFrame(tick); };
     navRaf = requestAnimationFrame(tick);
@@ -2202,10 +2865,24 @@ phone.addEventListener('click', e => {
   switch (a) {
     case 'tab': closeSheet(true); closePage(); setTab(d.tab, true); break;
     case 'menu': openMenu(); break;
+    case 'peek': { S.peek = d.room; const r = ROOMS[d.room], c = ctx(); if (c.zone === 'inside' && r.b === 'clem') S.viewFloor = r.floor === c.floor ? null : r.floor; renderHome(true); $('#home-scroll').scrollTo({ top: 0, behavior: S.rm ? 'auto' : 'smooth' }); { const f = $('.pm-peek [data-act="wf"]', home); if (f) f.focus({ preventScroll: true }); } say(`${r.name} on the map. Start navigation is ready.`); break; }
+    case 'peek-close': S.peek = null; renderHome(true); break;
+    case 'map2d': S.map2d = !S.map2d; renderHome(true); { const f = $('[data-act="map2d"]', home); if (f) f.focus({ preventScroll: true }); } break;
+    case 'map-reset': M3.reset(); if ($('#pg-way').classList.contains('on')) { S.navLive = false; S.navAll = false; renderWF(false); } else { S.peek = null; S.viewFloor = null; renderHome(true); } break;
+    case 'guide': S.guideOpen = !S.guideOpen; renderHome(true); { const f = $('[data-act="guide"]', home); if (f) f.focus({ preventScroll: true }); } break;
+    case 'nav-play': navPlay(); break;
+    case 'nav-all': S.navAll = !S.navAll; if (S.navAll) S.navLive = false; renderWF(false); { const f = $('[data-act="nav-all"]'); if (f) f.focus({ preventScroll: true }); } say(S.navAll ? 'Route overview: the whole way, all floors' : 'Following you again'); break;
+    case 'nav-live': S.navLive = !S.navLive; if (S.navLive) S.navAll = false; renderWF(false); { const f = $('[data-act="nav-live"]'); if (f) f.focus({ preventScroll: true }); } say(S.navLive ? 'Live view on – simulated' : 'Live view off'); break;
+    case 'nav-voice': S.voice = !S.voice; renderWF(false); { const f = $('[data-act="nav-voice"]'); if (f) f.focus({ preventScroll: true }); } if (S.voice && WF) speak(WF.steps[WF.i].t); break;
     case 'cat': { const c = ctx(); S.cat = S.cat === d.k ? null : d.k;
-      if (S.cat && c.zone === 'inside' && S.cat !== 'parking') { const near = Object.values(ROOMS).filter(r => r.b === 'clem' && CAT_MATCH[S.cat](r)).sort((a, b) => walkMin(c, a) - walkMin(c, b))[0]; if (near) S.viewFloor = near.floor === c.floor ? null : near.floor; }
-      renderHome(true); { const f = $(`[data-act="cat"][data-k="${d.k}"]`, home); if (f) f.focus({ preventScroll: true }); } say(S.cat ? `Showing ${CATS.find(x => x[0] === S.cat)[2].toLowerCase()} on the map` : 'Showing everything'); break; }
-    case 'view-floor': { const c = ctx(); S.viewFloor = +d.f === c.floor ? null : +d.f; renderHome(true); { const f = $(`.pm-fl[data-f="${d.f}"]`, home); if (f) f.focus({ preventScroll: true }); } say(`Showing Floor ${d.f}`); break; }
+      S.peek = null;
+      if (S.cat && S.cat !== 'parking') { const near = Object.values(ROOMS).filter(r => r.b === placeOf(c) && CAT_MATCH[S.cat](r)).sort((a, b) => walkMin(c, a) - walkMin(c, b))[0]; if (near) { S.peek = near.id; if (c.zone === 'inside' && near.b === 'clem') S.viewFloor = near.floor === c.floor ? null : near.floor; } }
+      renderHome(true); { const f = $(`[data-act="cat"][data-k="${d.k}"]`, home); if (f) f.focus({ preventScroll: true }); }
+      if (S.peek) $('#home-scroll').scrollTo({ top: 0, behavior: S.rm ? 'auto' : 'smooth' });   // bring the map and its Start navigation card into view
+      say(S.cat ? `Showing ${CATS.find(x => x[0] === S.cat)[2].toLowerCase()} on the map` : 'Showing everything'); break; }
+    case 'view-floor': { const c = ctx();
+      if (d.f === 'all') { S.viewFloor = xrayOn(c, lineModel(c)) ? c.floor : 'all'; S.map2d = false; S.peek = null; } else S.viewFloor = +d.f;
+      renderHome(true); { const f = $(`.pm-fl[data-f="${d.f}"]`, home); if (f) f.focus({ preventScroll: true }); } say(S.viewFloor === 'all' ? 'Showing all floors, pulled apart, with your route' : `Showing Floor ${S.viewFloor}`); break; }
     case 'passed': S.showPassed = true; renderHome(true); $('#line-h', home).focus({ preventScroll: true }); break;
     case 'search': openPage('#pg-search'); if (d.q) { $('#so-q').value = d.q; renderSearch(); } break;
     case 'so-q': $('#so-q').value = d.q; renderSearch(); $('#so-q').focus({ preventScroll: true }); break;
@@ -2235,8 +2912,8 @@ phone.addEventListener('click', e => {
     case 'reason': { const p = placeOf(ctx()); S.reason = d.r; if (d.r === 'pharm') S.guestDest[p] = p === 'clem' ? 'c1-pharm' : 's1-pharm'; renderAll(); say(d.r === 'skip' ? 'Showing what is near you' : `Home updated for ${REASON[d.r][2]}`); const f = $('.here-for .link-btn', home); if (f) f.focus({ preventScroll: true }); break; }
     case 'reason-change': { S.reason = null; S.guestDest = { clem: null, simm: null }; renderAll(); const f = $('.ask-row', home); if (f) f.focus({ preventScroll: true }); break; }
     case 'wf-prev': if (WF.i > 0) { WF.i--; renderWF(true); $('[data-act="wf-prev"]').disabled ? $('[data-act="wf-next"]').focus({ preventScroll: true }) : $('[data-act="wf-prev"]').focus({ preventScroll: true }); } break;
-    case 'wf-next': if (WF.i < WF.steps.length - 1) { WF.i++; renderWF(true); ($('[data-act="wf-next"]') || $('#nav-card .wf-nav [data-act="close-page"]')).focus({ preventScroll: true }); } break;
-    case 'close-page': closePage(); break;
+    case 'wf-next': navAdvance(); break;
+    case 'close-page': S.navPlay = false; closePage(); break;
     case 'close-sheet': closeSheet(); break;
     case 'ext': toast(`${d.label} opens in MyChart – simulated`); break;
     case 'info': toast(d.msg); break;
@@ -2331,6 +3008,15 @@ const SCN = {
     { t: 'Need care', ic: 'findCare', sub: 'I need care: 911 first, then open times near you, for information', run: () => { at('entrance')(); S.reason = 'care'; } },
     { t: 'Other', ic: 'more', sub: 'Something else: search and other common reasons', run: () => { at('entrance')(); S.reason = 'other'; } }
   ] },
+  nav: { n: '4', t: '3D wayfinding', set: { signed: true, appt: true, reason: null }, steps: [
+    { t: 'All floors', ic: 'floor', sub: 'Inside on Floor 1: the whole way to Floor 7, floors pulled apart, the ones above drawn as light', run: at('inside', 1) },
+    { t: 'Tap Dining', ic: 'food', sub: 'A category flies the map to the nearest one, with Start navigation right there', run: () => { at('inside', 1)(); return () => { const b = $('#phone [data-act="cat"][data-k="dining"]'); if (b) b.click(); }; } },
+    { t: 'Turn by turn', ic: 'navigate', sub: 'The camera follows you, heading up; Next walks the dot to the next turn', run: () => { at('inside', 1)(); return () => navAt('c7-heart', 'hall'); } },
+    { t: 'Elevator', ic: 'elevator', sub: 'The ride: the dot climbs the glowing shaft from Floor 1 to Floor 7', run: () => { at('inside', 1)(); return () => navAt('c7-heart', 'ride'); } },
+    { t: 'Live view', ic: 'liveView', sub: 'Live view, simulated: the route ahead at eye level, out of the elevator', run: () => { at('inside', 1)(); return () => navAt('c7-heart', 'exit', { live: true }); } },
+    { t: 'Overview', ic: 'explore', sub: 'Route overview: every floor of the way in one view, any time during directions', run: () => { at('inside', 1)(); return () => navAt('c7-heart', 'hall', { all: true }); } },
+    { t: 'Arrived', ic: 'arrived', sub: 'Arrived at the Heart clinic – check in from MyChart', run: () => { at('inside', 1)(); return () => navAt('c7-heart', 'arrive'); } }
+  ] },
   visit: { n: '', t: 'With an appointment', set: { signed: true, appt: true, reason: null }, steps: [
     { t: 'Away', ic: 'home', sub: 'Common homepage with today\'s plan – nothing location-based yet', run: at('away') },
     { t: 'Arriving', ic: 'car', sub: 'Parking at Clements University Hospital, the car follows the route in', run: at('arriving') },
@@ -2341,7 +3027,9 @@ const SCN = {
     { t: 'No location', ic: 'locOff', sub: 'Permission denied – choose a place and everything still works', run: () => { S.perm = 'denied'; } }
   ] }
 };
-const SCN_ORDER = ['guest', 'appts', 'why', 'visit'];
+const SCN_ORDER = ['guest', 'appts', 'why', 'nav', 'visit'];
+/* Open directions at a given step (board scenario 4) */
+function navAt(room, k, o = {}) { openWF(room); const i = WF.steps.findIndex(x => x.k === k); if (i >= 0) WF.i = i; S.navLive = !!o.live; S.navAll = !!o.all; renderWF(false); }
 const scn = () => SCN[S.scn];
 /* With an appointment, the highlighted step follows the controls; the other scenarios remember the step pressed */
 function currentStep() {
@@ -2353,7 +3041,7 @@ function goStep(i) {
   const sc = scn(); i = Math.max(0, Math.min(sc.steps.length - 1, i));
   closeSheet(true); closePage(); $('#sys').hidden = true;
   // Each step starts clean, but keeps the account choices from the controls (set once per scenario)
-  Object.assign(S, { manual: null, paused: false, acc: 'precise', showPassed: false, perm: 'allowed', askHidden: true, guestDest: { clem: null, simm: null }, reason: sc.set.reason });
+  Object.assign(S, { manual: null, paused: false, acc: 'precise', showPassed: false, perm: 'allowed', askHidden: true, guestDest: { clem: null, simm: null }, reason: sc.set.reason, navLive: false, navAll: false, navPlay: false });
   S.step = i; DEPT_DAY = 'today';
   const after = sc.steps[i].run();
   if (S.tab !== 0) setTab(0);
@@ -2428,13 +3116,16 @@ function renderAll(force) {
 
 /* ---------- Docs ---------- */
 $('#doc-states').innerHTML = SCN.visit.steps.map((s, i) => `<li><b>${i + 1}. ${s.t}</b><span>${s.sub}</span></li>`).join('') + `<li><b>Approximate</b><span>Asks which building</span></li><li><b>No visit today</b><span>Asks why you're here, then shows what's near you</span></li>`;
-$('#doc-scn').innerHTML = ['guest', 'appts', 'why'].map(k => `<li><b>${SCN[k].n}. ${SCN[k].t}</b><span>${SCN[k].steps.map(s => s.t).join(' → ')}</span></li>`).join('');
+$('#doc-scn').innerHTML = ['guest', 'appts', 'why', 'nav'].map(k => `<li><b>${SCN[k].n}. ${SCN[k].t}</b><span>${SCN[k].steps.map(s => s.t).join(' → ')}</span></li>`).join('');
 $('#doc-map').innerHTML = `<div style="display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">${mapBox({ plan: 'campus', label: 'Sample campus map', routes: [[DRIVE.clem, ''], [WALK.clem, 'plan']], you: DRIVE.clem[2] })}${mapBox({ plan: 'clem7', label: 'Sample plan of Floor 7', routes: [[[[156, 100], [104, 100]]]], you: [156, 100], flag: [104, 100], dest: 'c7-heart' })}</div>`;
 $('#gmap').innerHTML = ICON_MAP.map(r => `<li>${ico(r[0], 20)}<span>${r[2]}</span><code>${r[1]}</code></li>`).join('');
 
 applyTheme(false);
 renderTabs();
 setScenario('guest');
+function renderDocMap() { $('#doc-map').innerHTML = `<div style="display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">${mapBox({ plan: 'campus', label: 'Sample campus map', routes: [[DRIVE.clem, ''], [WALK.clem, 'plan']], you: DRIVE.clem[2] })}${mapBox({ plan: 'clem7', label: 'Sample plan of Floor 7', routes: [[[[156, 100], [104, 100]]]], you: [156, 100], flag: [104, 100], dest: 'c7-heart' })}</div>`; }
+window.__m3 = () => { if (M3.ok()) { Object.keys(SNAP).forEach(k => delete SNAP[k]); renderAll(true); renderDocMap(); } };
+if (window.THREE) window.__m3();
 /* Fit the device to the window height on wide screens (the board scrolls; the phone stays whole) */
 function fitDevice() {
   const dev = $('.device'), wide = innerWidth >= 1000;
