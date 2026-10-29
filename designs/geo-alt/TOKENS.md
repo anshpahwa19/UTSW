@@ -67,6 +67,29 @@ The location layer sits on top; the guest home's modules follow in their usual C
 
 The menu adds "Why UT Southwestern" and "Patient resource guide". Article, resource, announcement, and campaign copy is copied unchanged from the guest prototype; all of it is sample CMS content.
 
+## Place mode: the app becomes the place (Gozio-style navigation, UT Southwestern design)
+
+When location (live or chosen) puts you at a campus, the Home tab stops being a page and becomes the place. Away, the common homepage returns.
+
+- **Full-bleed 3D map** (sticky; the sheet scrolls over it). Floating on top: search ("Search this hospital"), the menu, the location chip, and Not here?. Inside, a floor bar along the map's bottom edge reads Floor 1 · 2 · 7, with a cyan dot on your floor; viewing another floor shows its plan and your destination.
+- **Bottom sheet:** a "Floor 1 · You're here · Simulated" line and the place's full name, then eight category circles (56.0, solid Blue): Care, Dining, Restrooms, Pharmacy, Information, Parking, Elevators, Quiet rooms. A category ringed in cyan highlights its badges on the map, jumps to the nearest floor that has one, and lists the matches by walking time; each match opens its place page or directions.
+- **Below the categories:** the step-by-step guide (the day line, without small maps – the big map shows it), the visit pass, Care near you, open times, hospital resources, then the common homepage modules.
+- **Motion:** arriving zooms the map in (700 ms) while the sheet slides up on a spring. Floor changes slide the plan up or down (520 ms), like an elevator. The route draws, and the car follows it into the garage. Reduced motion uses cross-fades only.
+
+**3D map system** (one renderer for the hero, the cards, place pages, directions, and docs):
+- A tilted perspective of the same 320 × 200 plan data. Rooms rise 9 units and buildings 16–30, each with a lit top face and a shaded front face.
+- Departments get white callouts with a red dot, name, and suite. Amenities get 22.0 Blue badges with their glyph. Garages get a P badge.
+- The route is a 6.0 line with a 10.0 casing and cyan dashes flowing toward the destination.
+- You are a cyan dot with a halo and a heading cone pointing the way. The destination is a red pin.
+- Light and dark come from tokens (--m3-*). Every map carries "Sample map".
+
+**Turn-by-turn** (opens from any Start wayfinding, tile, category result, or search result):
+- **Top:** a Blue instruction banner with a 48.0 arrow (straight, turn left or right, walkway, entrance, elevator, flag), the instruction in 20.0/700, and the distance or a hint. It turns green on arrival.
+- **Map:** the 3D map fills the screen, and the camera glides (700 ms) to frame each step.
+- **Bottom card:** minutes left, distance, arrival time, the destination, step dots, the elevator display on the ride step, Open in your map app on the drive, Back and Next, and End.
+- **Example steps:** Head east on Sample Blvd → Turn left into Garage A → Park, then take the covered walkway → Enter at the North entrance → Go straight down the main hall → Turn left to Elevator B → Take Elevator B to Floor 7 → Turn right out of the elevator → Heart clinic is on your left.
+- **Left and right** come from the plan: which way you face and which side of the corridor the room is on.
+
 ## Places near you: menus, prices, and times (for everyone at a campus)
 
 Care near you and Facilities show for every user at a campus, guests and patients alike. A facility with something to show opens a **place page** instead of going straight to directions. The page has the floor plan, floor, walking time, hours, and Directions (primary), then what is there:
