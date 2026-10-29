@@ -578,14 +578,26 @@ button.map{border:0; padding:0; width:100%; text-align:left; color:inherit}
 .so-scopes .chip{flex:none}
 /* ===================== Scenarios: guest nearby, booking, why you're here ===================== */
 /* Why you're here: asked once on arrival when there's no visit; the answer shapes the home */
-.ask{margin:0 var(--s4) var(--s4); background:var(--surface); border:1px solid var(--line); border-radius:var(--r-md); padding:var(--s4); display:grid; gap:var(--s3)}
-.ask h2,.focus h2{font-size:var(--t18); font-weight:700; line-height:1.3; color:var(--ink)}
-.reasons{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,calc(144px * var(--ts))),1fr)); gap:var(--s2)}
-/* Two answers a row; one when large text would cut a word */
-.reasons button{width:100%; height:100%; min-height:calc(56px * var(--ts)); border:1px solid var(--line-strong); border-radius:var(--r-md); background:var(--surface); display:flex; align-items:center; gap:var(--s2); padding:var(--s2); text-align:left; font-size:var(--t14); font-weight:600; color:var(--ink); line-height:1.3}
-.reasons button .dot{width:var(--dot32); height:var(--dot32)}
-.ask-foot{display:flex; align-items:center; justify-content:space-between; gap:var(--s2); flex-wrap:wrap; font-size:var(--t14); color:var(--ink-2)}
+.focus h2{font-size:var(--t18); font-weight:700; line-height:1.3; color:var(--ink)}
+/* Where to today? A ticket like the visit pass: a Blue welcome band, notches, then answers that say where they lead */
+.ask{margin:0 var(--s4) var(--s4); background:var(--surface); border:1px solid var(--line); border-radius:var(--r-md); overflow:hidden; box-shadow:var(--shadow-1)}
+.ask-band{position:relative; background:var(--brand); color:#FFFFFF; padding:var(--s4) var(--s4) var(--s6); display:grid; gap:var(--s1); --grad:-25}
+.ask-band::before,.ask-band::after{content:""; position:absolute; bottom:-8px; width:16px; height:16px; border-radius:50%; background:var(--bg); z-index:1}
+.ask-band::before{left:-9px} .ask-band::after{right:-9px}
+.ask-k{font-size:var(--t12); font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:#D6E4F0}
+.ask-band h2{font-size:var(--t24); font-weight:800; line-height:1.2; letter-spacing:-.01em; color:#FFFFFF}
+.ask-p{font-size:var(--t14); color:#D6E4F0; line-height:1.4}
+.ask-list li + li{border-top:1px solid var(--line)}
+.ask-row{width:100%; min-height:calc(64px * var(--ts)); border:0; background:none; display:flex; align-items:center; gap:var(--s3); padding:var(--s2) var(--s4); text-align:left; color:var(--ink)}
+.ask-row > .ms:first-child{color:var(--blue)}
+.ask-row .txt{flex:1; min-width:0; display:grid}
+.ask-row .rt{font-size:var(--t16); font-weight:600; line-height:1.3}
+.ask-row .rs{font-size:var(--t14); color:var(--ink-2); line-height:1.4}
+.ask-row .chev{color:var(--ink-2)}
+.ask-more{display:flex; flex-wrap:wrap; gap:var(--s2); padding:var(--s3) var(--s4); border-top:1px dashed var(--line-strong)}
+.ask-foot{display:flex; align-items:center; justify-content:space-between; gap:var(--s2); flex-wrap:wrap; padding:var(--s1) var(--s2) var(--s1) var(--s4); border-top:1px solid var(--line); font-size:var(--t14); color:var(--ink-2)}
 .ask-foot > span{display:inline-flex; align-items:center; gap:var(--s1)}
+.phone:not(.rm) .ask.rise .ask-list li,.phone:not(.rm) .ask.rise .ask-more{animation:riseIn 420ms var(--spring) both; animation-delay:calc(160ms + var(--i,0) * 50ms)}
 .here-for{margin:0 var(--s4) var(--s3); display:flex; align-items:center; gap:var(--s2); font-size:var(--t14); color:var(--ink-2); line-height:1.3}
 .here-for b{color:var(--ink)}
 .here-for .sp{flex:1}
@@ -1394,10 +1406,21 @@ function renderInfo() {
 
 /* ---------- Why you're here, and what's near you (no visit today) ---------- */
 function askCard(c, anim) {
-  const P = PLACES[placeOf(c)];
-  return `<section class="ask${anim ? ' rise' : ''}" aria-labelledby="ask-h"><h2 id="ask-h">What brings you to ${P.short} today?</h2>
-    <ul class="reasons">${REASONS.map(([k, ic, t]) => `<li><button data-act="reason" data-r="${k}">${dot(ic)}<span>${t}</span></button></li>`).join('')}</ul>
-    <div class="ask-foot"><span>${ico('privacy', 16)}Your answer stays on this phone</span><button class="link-btn" data-act="reason" data-r="skip">Not now</button></div></section>`;
+  const p = placeOf(c), P = PLACES[p], info = ROOMS[p === 'clem' ? 'c1-info' : 's1-info'], pharm = ROOMS[p === 'clem' ? 'c1-pharm' : 's1-pharm'];
+  // The five most common answers say where they lead; the rest wait as quiet chips
+  const meta = {
+    appt: hasVisits() ? 'Your visit is on the line below' : S.signed ? 'Check MyChart, or pick the place' : 'Sign in, or pick the place',
+    visit: `${info.name} · ${walkMin(c, info)} min`,
+    lab: p === 'clem' ? 'Walk-in · Floors 1 and 2' : 'At Clements University Hospital',
+    pharm: `Floor 1 · ${walkMin(c, pharm)} min`,
+    care: 'Doctors and open times near you'
+  };
+  const main = ['appt', 'visit', 'lab', 'pharm', 'care'], more = ['pickup', 'look', 'other'];
+  return `<section class="ask${anim ? ' rise' : ''}" aria-labelledby="ask-h">
+    <div class="ask-band"><p class="ask-k">Welcome</p><h2 id="ask-h">Where to today?</h2><p class="ask-p">${P.short}</p></div>
+    <ul class="ask-list">${main.map((k, i) => { const [, ic, t] = REASON[k]; return `<li style="--i:${i}"><button class="ask-row" data-act="reason" data-r="${k}" aria-label="${t}. ${meta[k]}">${ico(ic)}<span class="txt" aria-hidden="true"><span class="rt">${t}</span><span class="rs">${meta[k]}</span></span>${ico('next', 20, 'chev')}</button></li>`; }).join('')}</ul>
+    <div class="ask-more" style="--i:5" role="group" aria-label="Other reasons">${more.map(k => `<button class="chip" data-act="reason" data-r="${k}">${ico(REASON[k][1], 20)}${REASON[k][2]}</button>`).join('')}</div>
+    <div class="ask-foot"><span>${ico('privacy', 16)}Stays on this phone</span><button class="link-btn" data-act="reason" data-r="skip">Not now</button></div></section>`;
 }
 function hereFor() {
   if (S.reason === 'skip') return `<div class="here-for"><span class="sp"></span><button class="link-btn" data-act="reason-change">${ico('pick', 16)}What brings you here?</button></div>`;
@@ -1904,7 +1927,7 @@ phone.addEventListener('click', e => {
     case 'dept': closeSheet(true); while ($('.page.on')) closePage(); openDept(d.room); break;
     case 'dept-day': DEPT_DAY = d.day; renderDept(); $(`[data-act="dept-day"][data-day="${d.day}"]`).focus({ preventScroll: true }); break;
     case 'reason': { const p = placeOf(ctx()); S.reason = d.r; if (d.r === 'pharm') S.guestDest[p] = p === 'clem' ? 'c1-pharm' : 's1-pharm'; renderAll(); say(d.r === 'skip' ? 'Showing what is near you' : `Home updated for ${REASON[d.r][2]}`); const f = $('.here-for .link-btn', home); if (f) f.focus({ preventScroll: true }); break; }
-    case 'reason-change': { S.reason = null; S.guestDest = { clem: null, simm: null }; renderAll(); const f = $('.reasons button', home); if (f) f.focus({ preventScroll: true }); break; }
+    case 'reason-change': { S.reason = null; S.guestDest = { clem: null, simm: null }; renderAll(); const f = $('.ask-row', home); if (f) f.focus({ preventScroll: true }); break; }
     case 'wf-prev': if (WF.i > 0) { WF.i--; renderWF(true); $('[data-act="wf-prev"]').disabled ? $('[data-act="wf-next"]').focus({ preventScroll: true }) : $('[data-act="wf-prev"]').focus({ preventScroll: true }); } break;
     case 'wf-next': if (WF.i < WF.steps.length - 1) { WF.i++; renderWF(true); ($('[data-act="wf-next"]') || $('#wf-body [data-act="close-page"]')).focus({ preventScroll: true }); } break;
     case 'close-page': closePage(); break;

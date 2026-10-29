@@ -88,7 +88,7 @@ Steps: Away → Arriving → Floor 1 → Café menu → Floor 2 → Lab prices �
 
 Steps: Your visit → Heart clinic → No visit → Open times → Tomorrow → Guest.
 
-**3. Why you're here.** With no visit today, the home asks once on arrival, "What brings you to Clements University Hospital today?", with eight answers. "Your answer stays on this phone" and Not now are on the card. A "Here for …" bar with Change replaces the question afterwards.
+**3. Why you're here.** With no visit today, the home asks once on arrival, as a ticket like the visit pass. A Blue welcome band reads "Where to today?" over the building name, with notches where it meets the list. Five common answers sit in a single list, each with a one-line hint of where it leads: Information desk · 4 min, Walk-in · Floors 1 and 2, Floor 1 · 6 min. Three rarer answers are quiet chips below. A footer has "Stays on this phone" and Not now. A "Here for …" bar with Change replaces the question afterwards.
 
 | Answer | Home shows |
 |---|---|
