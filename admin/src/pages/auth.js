@@ -10,7 +10,9 @@ function authLayout(inner) {
       ${inner}
     </div>
     <p class="auth-flag">${ic('database', 20)}<span>Prototype – mock data, not connected to MyCare</span></p>
+    ${themeControl('auth-theme')}
   </main>`;
+  wireThemeControl($('#auth-theme'));
   const h = $('#page-h'); if (h && Router.loaded) h.focus();
 }
 const simNote = text => `<p class="sim-note">${badge('simulated')}<span>${text}</span></p>`;
@@ -30,7 +32,7 @@ PUBLIC_PAGES.login = function login(step = 'start') {
     <p class="auth-lede">This step stands in for the UTSW identity provider. Each account has one of the planned roles.</p>
     <form id="idp" class="idp" novalidate>
       <fieldset><legend class="vh">Sample accounts</legend>
-        ${DB.db.users.map((u, i) => `<label class="acct" for="acct-${u.id}"><input type="radio" name="acct" id="acct-${u.id}" value="${u.id}" ${i === 0 ? 'checked' : ''}>
+        ${DB.db.users.filter(u => u.status === 'active').map((u, i) => `<label class="acct" for="acct-${u.id}"><input type="radio" name="acct" id="acct-${u.id}" value="${u.id}" ${i === 0 ? 'checked' : ''}>
           <span class="avatar" aria-hidden="true">${esc(initials(u))}</span><span class="acct-t"><span class="acct-n">${esc(u.first)} ${esc(u.last)}</span><span class="acct-r">${esc(ROLES[u.role].label)} · ${esc(u.email)}</span></span></label>`).join('')}
       </fieldset>
       <div class="auth-acts">${btn({ label: 'Back', variant: 'text', attrs: 'id="idp-back"' })}${btn({ label: 'Continue', variant: 'primary', type: 'submit', size: 'lg' })}</div>
@@ -66,17 +68,17 @@ const exitPage = (title, text, icon) => () => {
     <a class="btn btn-primary btn-lg" href="#login"><span class="lbl">Sign in again</span></a>`);
 };
 PUBLIC_PAGES['signed-out'] = exitPage('You’re signed out', 'You signed out of MyCare Admin. Unsaved changes were not kept.', 'logout');
-PUBLIC_PAGES.expired = exitPage('Your session ended', 'For security, MyCare Admin signs you out after 30 minutes without activity (placeholder until UTSW confirms the timeout). Sign in again to continue. Unsaved changes were not kept.', 'timer_off');
+PUBLIC_PAGES.expired = () => exitPage('Your session ended', `For security, MyCare Admin signs you out after ${(DB.db.settings && DB.db.settings.sessionTimeout) || 30} minutes without activity. Sign in again to continue. Unsaved changes were not kept.`, 'timer_off')();
 
 function deniedView(route) {
   const role = Session.role();
   const what = route ? `${route.section.label}${route.section.items.length > 1 ? ` – ${route.item.label}` : ''}` : 'this page';
   return `<div class="page sys-page">${emptyState({ icon: 'lock', level: 1, title: 'You don’t have access to this page',
     text: `Your role, ${esc(ROLES[role].label)}, can’t open ${esc(what)}. Access follows the proposed permission matrix, which is pending UTSW confirmation. Ask a Super Admin if you need access.`,
-    action: `<a class="btn btn-primary" href="#${DEFAULT_ROUTE}"><span class="lbl">Go to Home screen layout</span></a>` }).replace('<h1>', '<h1 id="page-h" tabindex="-1">')}</div>`;
+    action: `<a class="btn btn-primary" href="#${DEFAULT_ROUTE}"><span class="lbl">Go to the dashboard</span></a>` }).replace('<h1>', '<h1 id="page-h" tabindex="-1">')}</div>`;
 }
 function notFoundView(name) {
   return `<div class="page sys-page">${emptyState({ icon: 'search_off', level: 1, title: 'Page not found',
     text: `There is no page at “#${esc(name)}”. Check the link, or use the navigation.`,
-    action: `<a class="btn btn-primary" href="#${DEFAULT_ROUTE}"><span class="lbl">Go to Home screen layout</span></a>` }).replace('<h1>', '<h1 id="page-h" tabindex="-1">')}</div>`;
+    action: `<a class="btn btn-primary" href="#${DEFAULT_ROUTE}"><span class="lbl">Go to the dashboard</span></a>` }).replace('<h1>', '<h1 id="page-h" tabindex="-1">')}</div>`;
 }

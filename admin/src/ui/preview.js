@@ -26,3 +26,69 @@ function mountPreview(host, { title }) {
     destroy() { window.removeEventListener('message', onMsg); }
   };
 }
+
+/* ---------- What the app shows: assembles preview content from the config records ----------
+   env picks the snapshot of every other record (production by default); overrides replace one record's data. */
+const ENV_PICK = (r, env) => (env === 'draft' ? latestData(r) : env === 'demo' ? dataAt(r, 'demo') || dataAt(r, 'production') : dataAt(r, 'production'));
+const campaignView = d => ({ ...d, art: d.image && d.image !== 'none' ? ART[d.image] : null });
+const alertView = d => ({ title: d.title, message: d.message, icon: d.icon, priority: +d.priority, dismissible: d.dismissible, ctaLabel: d.ctaLabel, window: d.start ? `Active ${fmtLocal(d.start, false)} – ${fmtLocal(d.end, false)}` : '' });
+function appContent({ env = 'production', overrides = {}, audience = 'guest', allAlerts = false } = {}) {
+  const pick = r => overrides[r.id] !== undefined ? overrides[r.id] : ENV_PICK(r, env);
+  const of = type => ConfigService.peekAll(type).map(r => ({ r, d: pick(r) })).filter(x => x.d);
+  const forAudience = d => !d.audience || d.audience === 'seg-all' || (audience === 'guest' ? d.audience !== 'seg-signedin' : d.audience !== 'seg-guests');
+  const ordered = type => of(type).filter(x => x.d.enabled !== false).sort((a, b) => a.d.order - b.d.order);
+  const camps = of('campaign').filter(x => x.d.enabled !== false && forAudience(x.d));
+  const editedCamp = camps.find(x => overrides[x.r.id] !== undefined);
+  const camp = editedCamp || camps.find(x => windowStatus(x.d) === 'active') || null;
+  const alerts = of('alert').filter(x => x.d.enabled !== false && (allAlerts || overrides[x.r.id] !== undefined || windowStatus(x.d) === 'active'));
+  const drawer = ConfigService.peek('drawer'), entry = ConfigService.peek('app-entry');
+  return {
+    ...STATIC_CONTENT,
+    quickLinks: ordered('quickLink').map(x => ({ title: x.d.title, icon: x.d.icon, locked: x.d.requiresSignIn })),
+    resources: ordered('featuredCard').map(x => ({ title: x.d.title, subtitle: x.d.subtitle, icon: x.d.icon })),
+    campaign: camp ? campaignView(camp.d) : null,
+    alerts: alerts.map(x => alertView(x.d)),
+    drawer: overrides.drawer || pick(drawer),
+    entry: overrides['app-entry'] || pick(entry)
+  };
+}
+const layoutFor = (audience, env = 'production') => { const r = ConfigService.peek(`home-layout-${audience}`); return ENV_PICK(r, env) || { head: [], modules: [] }; };
+const colorsFor = env => ENV_PICK(ConfigService.peek('global-colors'), env);
+const effectiveTheme = () => DB.prefs.theme === 'dark' || (DB.prefs.theme !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+
+/* Preview card: source switch (your edits / demo / production), appearance, optional extras; payload(src) builds the message */
+function mountPreviewCard(host, { title, sources, payload, extras = '', onExtras }) {
+  const st = { src: sources()[0][0], theme: effectiveTheme() };
+  host.innerHTML = `<section class="card pv-card" aria-labelledby="${host.id}-h"><div class="card-head"><h2 id="${host.id}-h">Mobile preview</h2></div><div class="card-body">
+    <div class="pv-ctl"></div>${extras ? `<div class="pv-row pv-extras">${extras}</div>` : ''}<div class="pv-host"></div>
+    <p class="pv-note">${ic('info', 16)}<span>Drawn with the designs/guest app components and sample content. It is not the live app.</span></p></div></section>`;
+  const pv = mountPreview($('.pv-host', host), { title });
+  if (onExtras) onExtras($('.pv-extras', host), () => send());
+  function controls() {
+    const opts = sources();
+    if (!opts.some(o => o[0] === st.src)) st.src = opts[0][0];
+    const cur = opts.find(o => o[0] === st.src);
+    $('.pv-ctl', host).innerHTML = `<div class="pv-row">${opts.length > 1 ? segmented({ id: `${host.id}-src`, label: 'Preview source', options: opts.map(o => [o[0], o[1]]), value: st.src }) : ''}
+        ${segmented({ id: `${host.id}-theme`, label: 'Preview appearance', options: [['light', 'Light'], ['dark', 'Dark']], value: st.theme })}</div>
+      <p class="pv-what">${cur[2]}</p>`;
+    if (opts.length > 1) wireSegmented($(`#${host.id}-src`), v => { st.src = v; controls(); $(`#${host.id}-src [aria-checked="true"]`).focus(); });
+    wireSegmented($(`#${host.id}-theme`), v => { st.theme = v; send(); });
+    send();
+  }
+  function send() {
+    const p = payload(st.src);
+    if (!p) return;
+    const f = $('iframe', host); if (f) f.title = `${title}: ${p.label}`;
+    pv.render({ theme: st.theme, audience: 'guest', ...p });
+  }
+  controls();
+  return { update: controls, destroy: () => pv.destroy() };
+}
+/* Standard source options for a record being edited */
+function recSources(rec, dirty, isNew) {
+  const out = [['working', isNew ? 'New' : dirty ? 'Your edits' : rec && rec.draft ? 'Draft' : 'Current',
+    isNew || dirty ? badge('unsaved', 'Unsaved edits – not live') : rec && rec.draft ? badge('draft', 'Saved draft – not live') : badge('production', `Same as production v${rec.production}`)]];
+  if (rec && rec.demo && (dirty || rec.draft || rec.demo !== rec.production)) out.push(['demo', 'Demo', badge('demo', `Demo v${rec.demo} – demo environment only`)]);
+  if (rec && rec.production && (dirty || rec.draft || rec.demo !== rec.production)) out.push(['production', 'Production', badge('production', `Production v${rec.production} – what patients see`)]);
+  return out;
+}

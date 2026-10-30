@@ -111,19 +111,24 @@ function stepper(steps, label) {
 
 /* ---------- Table with search, filters and sortable headers ---------- */
 /* EXTRA_GLYPHS: arrow_upward arrow_downward unfold_more */
-function dataTable(host, cfg) {
-  const st = { q: '', filters: {}, sort: cfg.defaultSort || null, rows: cfg.rows };
+function dataTable(outer, cfg) {
+  /* A fresh root each time, so re-mounting on the same host never stacks listeners */
+  const host = document.createElement('div'); host.className = 'tbl-root'; outer.replaceChildren(host);
+  const st = { q: '', filters: {}, sort: cfg.defaultSort || null, rows: cfg.rows, page: 0 };
+  const size = cfg.pageSize || 0;
   const id = cfg.id;
   host.innerHTML = `
     <div class="tbl-tools" role="search" aria-label="${esc(cfg.caption)}">
       <div class="tbl-search"><label for="${id}-q" class="vh">Search ${esc(cfg.caption.toLowerCase())}</label>${ic('search', 20)}<input class="input" type="search" id="${id}-q" placeholder="${esc(cfg.searchPlaceholder || 'Search')}"></div>
       ${(cfg.filters || []).map(f => `<div class="tbl-filter"><label for="${id}-f-${f.key}">${esc(f.label)}</label><select class="input" id="${id}-f-${f.key}" data-filter="${f.key}"><option value="">All</option>${f.options.map(([v, l]) => `<option value="${esc(v)}">${esc(l)}</option>`).join('')}</select></div>`).join('')}
       <p class="tbl-count" id="${id}-count" role="status"></p>
+      ${cfg.actions ? `<div class="tbl-actions">${cfg.actions}</div>` : ''}
     </div>
     <div class="tbl-wrap" tabindex="0" role="region" aria-labelledby="${id}-cap">
       <table class="tbl"><caption id="${id}-cap" class="vh">${esc(cfg.caption)}</caption><thead></thead><tbody></tbody></table>
     </div>
-    <div class="tbl-empty" hidden></div>`;
+    <div class="tbl-empty" hidden></div>
+    <nav class="pager" aria-label="${esc(cfg.caption)} pages" hidden></nav>`;
   const thead = $('thead', host), tbody = $('tbody', host), empty = $('.tbl-empty', host), wrap = $('.tbl-wrap', host);
   const visible = () => {
     const q = st.q.trim().toLowerCase();
@@ -144,23 +149,31 @@ function dataTable(host, cfg) {
     }).join('')}</tr>`;
   };
   const body = () => {
-    const rows = visible();
+    const all = visible();
+    const pages = size ? Math.max(1, Math.ceil(all.length / size)) : 1;
+    st.page = Math.min(st.page, pages - 1);
+    const rows = size ? all.slice(st.page * size, st.page * size + size) : all;
+    const pager = $('.pager', host);
+    pager.hidden = pages < 2;
+    if (pages > 1) pager.innerHTML = `<span class="pg-info">${st.page * size + 1}–${st.page * size + rows.length} of ${all.length}</span>${btn({ label: 'Previous page', icon: 'chevron_left', variant: 'text', iconOnly: true, attrs: `data-page="-1" ${st.page === 0 ? 'disabled' : ''}` })}${btn({ label: 'Next page', icon: 'chevron_right', variant: 'text', iconOnly: true, attrs: `data-page="1" ${st.page >= pages - 1 ? 'disabled' : ''}` })}`;
     tbody.innerHTML = rows.map(r => `<tr>${cfg.columns.map((c, i) => i === 0 ? `<th scope="row" class="${c.cls || ''}">${c.render(r)}</th>` : `<td class="${c.cls || ''}">${c.render(r)}</td>`).join('')}</tr>`).join('');
     const filtered = st.q || Object.values(st.filters).some(Boolean);
-    $(`#${id}-count`, host).textContent = `${plural(rows.length, cfg.noun || 'row')}${filtered ? ` of ${st.rows.length}` : ''}`;
-    wrap.hidden = !rows.length; empty.hidden = !!rows.length;
-    if (!rows.length) empty.innerHTML = filtered
+    $(`#${id}-count`, host).textContent = `${plural(all.length, cfg.noun || 'row')}${filtered ? ` of ${st.rows.length}` : ''}`;
+    wrap.hidden = !all.length; empty.hidden = !!all.length;
+    if (!all.length) empty.innerHTML = filtered
       ? emptyState({ icon: 'search_off', title: 'No matches', text: 'Nothing matches this search and these filters.', action: btn({ label: 'Clear search and filters', variant: 'secondary', attrs: 'data-clear' }), level: 3 })
       : emptyState({ ...cfg.empty, level: 3 });
     if (cfg.onRender) cfg.onRender(tbody);
   };
   host.addEventListener('input', e => {
-    if (e.target.id === `${id}-q`) { st.q = e.target.value; body(); }
+    if (e.target.id === `${id}-q`) { st.q = e.target.value; st.page = 0; body(); }
   });
   host.addEventListener('change', e => {
-    if (e.target.dataset.filter) { st.filters[e.target.dataset.filter] = e.target.value; body(); }
+    if (e.target.dataset.filter) { st.filters[e.target.dataset.filter] = e.target.value; st.page = 0; body(); }
   });
   host.addEventListener('click', e => {
+    const pg = e.target.closest('[data-page]');
+    if (pg && !pg.disabled) { st.page += +pg.dataset.page; body(); const again = $(`[data-page="${pg.dataset.page}"]`, host); (again && !again.disabled ? again : $(`#${id}-q`, host)).focus(); return; }
     const s = e.target.closest('[data-sort]');
     if (s) {
       const k = s.dataset.sort;
@@ -173,6 +186,7 @@ function dataTable(host, cfg) {
       body(); $(`#${id}-q`, host).focus();
     }
   });
+  if (cfg.initialFilters) { Object.assign(st.filters, cfg.initialFilters); Object.entries(cfg.initialFilters).forEach(([k, v]) => { const sel = $(`[data-filter="${k}"]`, host); if (sel) sel.value = v; }); }
   head(); body();
   return { update(rows) { st.rows = rows; body(); } };
 }
@@ -198,12 +212,12 @@ function openModal({ title, body, actions, onOpen, wide = false }) {
   return { el: d, close };
 }
 /* Resolves { ok, comment }. A required comment is validated before confirming. */
-function confirmDialog({ title, body, confirmLabel, variant = 'primary', comment = null, cancelLabel = 'Cancel' }) {
+function confirmDialog({ title, body, confirmLabel, variant = 'primary', comment = null, cancelLabel = 'Cancel', wide = false }) {
   return new Promise(resolve => {
     let done = false;
     const commentField = comment ? field({ id: 'cf-comment', label: comment.label, hint: comment.hint || '', required: !!comment.required, textarea: true, rows: 3, value: comment.value || '' }) : '';
     const m = openModal({
-      title,
+      title, wide,
       body: `${body}${commentField}`,
       actions: `${btn({ label: cancelLabel, variant: 'text', attrs: 'data-close' })}${btn({ label: confirmLabel, variant, type: 'submit', attrs: 'data-confirm' })}`,
       onOpen(d, close) {

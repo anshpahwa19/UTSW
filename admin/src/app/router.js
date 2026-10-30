@@ -1,7 +1,7 @@
 /* ---------- Hash router with session and role guards ----------
    Public routes: login, mfa, signed-out, expired. Everything else needs the simulated session,
    and a role that can view the page's area; otherwise the access-denied view shows in place. */
-const DEFAULT_ROUTE = 'home-layout';
+const DEFAULT_ROUTE = 'dashboard';
 const PUBLIC_PAGES = {};  /* filled by pages/auth.js */
 const BUILT_PAGES = {};   /* filled by built pages, keyed by route */
 
@@ -56,9 +56,9 @@ const Router = {
     else {
       renderSidebar(m.route);
       title = m.route.title;
-      const page = !m.route.parent && BUILT_PAGES[m.route.pattern];
+      const page = BUILT_PAGES[m.route.pattern];
       if (page) { this.active = page; page.render(main, { route: m.route, params: m.params, role }); }
-      else main.innerHTML = plannedView(m.route, m.params, role);
+      else { title = 'Page not found'; main.innerHTML = notFoundView(name); }
     }
     document.title = `${title} – MyCare Admin (prototype)`;
     /* Move focus to the new heading on navigation, but not on first load, so Tab starts at the skip link */

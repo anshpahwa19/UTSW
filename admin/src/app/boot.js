@@ -1,5 +1,6 @@
 /* ---------- Boot ---------- */
 loadDb();
+applyTheme();
 /* Activity keeps the simulated session alive; a check every 30 seconds ends it after the idle limit */
 let lastTouch = 0;
 ['pointerdown', 'keydown'].forEach(t => document.addEventListener(t, () => {

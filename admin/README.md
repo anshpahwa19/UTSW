@@ -1,8 +1,8 @@
 # MyCare Admin – prototype
 
-The UTSW MyCare 2.0 Admin Portal, Phase 1: the app shell, core components, the mock service layer and config schema, and one working vertical slice, **Home screen management → Layout**. Planning inputs are `handoff/admin-portal/BRIEF.md` and `handoff/admin-portal/HANDOVER.md`.
+The UTSW MyCare 2.0 Admin Portal. All 12 modules from `handoff/admin-portal/BRIEF.md` work end to end on mock data, in light and dark themes. Planning inputs are `handoff/admin-portal/BRIEF.md` and `handoff/admin-portal/HANDOVER.md`.
 
-**Everything here is a prototype on mock data.** Nothing connects to MyCare, Epic/MyChart, Gozio, an identity provider or any UTSW system. Every screen says so, and the code has no endpoints, URLs to backends or credentials.
+**Everything runs on mock data.** Nothing connects to MyCare, Epic/MyChart, Gozio, an identity provider, a push provider or an analytics source. Every screen says so, and the code has no endpoints, backend URLs or credentials.
 
 ## Build
 
@@ -11,17 +11,46 @@ cd admin
 python3 build.py
 ```
 
-The build writes `admin-portal.html`, a single self-contained file that can be published as a claude.ai Artifact. It is committed beside its source, as elsewhere in this repo. It needs Python 3 only (standard library). At run time the page loads Inter and a Material Symbols Rounded subset from Google Fonts; everything else is inline.
+The build writes `admin-portal.html`, a single self-contained file published as a claude.ai Artifact and committed beside its source. It needs Python 3 only. At run time the page loads Inter and a Material Symbols Rounded subset from Google Fonts; everything else is inline.
 
-`build.py`:
-- concatenates `src/styles/` and the JS files (in its `FILES` order) into one strict-mode script
-- inlines `mycare-logo/reversed.svg` and `horizontal.svg` as data URIs, unaltered
-- inlines the mobile preview (`src/preview/`) as strings for a sandboxed `srcdoc` iframe
-- derives the icon subset from the glyphs the code names (`ic('…')`, `icon: '…'`, `BADGES`, `EXTRA_GLYPHS` comments)
+`build.py` concatenates `src/styles/` and the JS files (in `FILES` order) into one strict-mode script. It inlines the `mycare-logo/` SVGs unaltered and the mobile preview (`src/preview/`) for a sandboxed `srcdoc` iframe. It also derives the icon subset from every glyph the code names.
+
+## What each module does
+
+| Module | Routes | Working flows |
+|---|---|---|
+| Sign-in | `login`, `mfa`, `signed-out`, `expired`, `denied` | Simulated UTSW SSO, then sample account, then simulated MFA approval. Never a password. Idle timeout from settings, sign out, access denied, and return to the requested page |
+| Dashboard | `dashboard` | Live emergency alerts, sample KPIs, "Needs attention" (reviews, demo versions waiting, approvals, unpublished wayfinding), campaigns, scheduled notifications, wayfinding, recent activity, DAU chart |
+| Home layout | `home-layout` | Guest and Authenticated tabs: reorder (keyboard buttons), show or hide, module library (add or remove with Undo), live preview, full lifecycle, change history with rollback |
+| Campaigns | `home-campaigns`, `-new`, `-:id` | List with search, filters and status. Create and edit: content, image and alt text, facts, CTA and destination, audience, schedule, time zone. Validation, live preview, lifecycle, delete never-published drafts |
+| Emergency alerts | `home-alerts`, `-new`, `-:id` | Styled apart from campaigns (red banner, red-ruled form). Type, icon, message, full text, CTA, priority, display duration, window, dismissible, on or off. Preview stacks alerts by priority |
+| Quick links, Featured cards | `home-quick-links…`, `home-featured-cards…` | Title, approved icon, icon alt text, destination, position, sign-in lock (MyChart destinations must need sign-in), preview of the tiles or rows |
+| Global colors | `content-colors` | Four approved colors with live WCAG checks; saving is blocked until every check passes. Preview in light and dark |
+| Drawer / More options | `content-drawer` | Per section: show or hide, reorder, edit, add and remove items (Inbox and Language are fixed). Drawer preview, with hidden items optionally shown dimmed |
+| App entry | `content-app-entry` | Onboarding, EULA (version, text, re-accept), sign-in prompt and its type. Preview of the first-launch screen and EULA sheet |
+| Search | `search-query-mappings`, `search-synonyms`, `search-specialties`, `search-zero-results`, `search-ranking` | Editable tables with duplicate checks and a "Try a search" tester that uses unsaved edits. Zero-result queries become a synonym or mapping draft in one step. Ranking weights must total 100 |
+| Wayfinding | `wayfinding` | Choose or drop a real JSON file, or use a valid or broken sample. Progress, validation errors and warnings, save as validated, then publish to demo, publish to production, roll back, and history |
+| Audiences | `audiences…`, `audiences-rules`, `audiences-targeting` | Segments with a rule builder (all or any) and conflict checks, "used by", every rule with a person tester, and targeting campaigns or alerts (saves a draft on each item) |
+| Notifications | `notifications`, `-new`, `-:id` | Create and edit with validation, then submit for approval, approve and schedule or send now, cancel with a reason, duplicate, delete. Lock-screen or Inbox preview, plus results for sent messages |
+| Analytics | `analytics`, `analytics-*` | Overview plus five categories with exactly the brief's metrics. 7, 30 or 90 days with loading and error states, metric tiles, line chart (hover and arrow-key crosshair, data table), and breakdowns |
+| Users | `users`, `users-new`, `users-:id` | Search and filter by role and status. Create with required, email-format and duplicate checks (simulated invitation). Edit, change role, resend invite, deactivate or reactivate, delete. You can't remove or demote yourself |
+| Audit and versioning | `audit`, `audit-history` | Every action with actor, time, environment, comment and a before-and-after table. Every configuration's versions with comparison and rollback where the type supports it |
+| Platform operations | `platform-integrations`, `platform-monitoring` | Simulated integration status with "Run check", fetch error and latency charts, and incidents |
+| Administrative settings | `admin-settings`, `admin-settings-locations` | Session timeout, default time zone, required publish comment, and the permission matrix. Location-aware facility messages with a location-card preview |
+
+Every configuration editor shares the same lifecycle:
+1. **Save draft** (Marketing can then **Request review**).
+2. **Deploy to demo**, which creates a numbered version.
+3. **Request changes** (a comment is required) or **Publish to production**, which only publishes what is on demo.
+4. **Rollback**, only for types whose `supportsRollback` flag is true. Every flag is an assumption pending confirmation.
+
+Confirmations list the exact changes, and leaving with unsaved edits asks first.
+
+Theme: Light, Dark or System from the header (and on the sign-in screen). It is remembered on this device. Every color comes from the `designs/guest` tokens; dark values are the guest app's own dark palette.
 
 ## Stack decision
 
-Zero-dependency static app, the option recommended in HANDOVER §6.2: vanilla JS, CSS custom properties, hash routing and a Python build. There is no `package.json` and nothing to install. If UTSW wants this to become production code, the alternative (Vite + React + TypeScript) is still open. See open question 1.
+Zero-dependency static app, the option recommended in HANDOVER §6.2: vanilla JS, CSS custom properties, hash routing and a Python build. There is no `package.json`. If UTSW wants production code, the alternative (Vite + React + TypeScript) is still open; see open question 1.
 
 ## Structure
 
@@ -30,89 +59,56 @@ admin/
   build.py, admin-portal.html (built), README.md
   src/
     index.html            page template
-    styles/tokens.css     designs/guest tokens (lines 11–61, unchanged) + admin layout tokens + dark values
+    styles/tokens.css     designs/guest tokens (lines 11–61, unchanged) + admin layout tokens + guest dark values
     styles/admin.css      components and layouts
-    app/                  util (dates, storage), permissions, session, nav (IA), shell, router, boot
-    ui/components.js      button, badge, field, switch, checkbox, segmented, card, states, stepper, table, modal, confirm, toast
-    ui/preview.js         isolated preview frame (iframe srcdoc, sandbox="allow-scripts")
-    services/services.js  MOCK ConfigService and UserService, config schema, simulated latency and errors
-    mock/seed.js          MOCK fixtures seeded from designs/guest/src.html (line numbers in comments)
-    preview/              mobile.css, mobile.html and mobile.js: the designs/guest home modules, copied
-    pages/                auth (sign-in, MFA, signed out, expired, denied, not found), planned, home-layout
+    app/                  util, permissions (one matrix object), session, nav (IA), shell (header, sidebar, theme, user menu), router, boot
+    ui/                   components (button, badge, table, modal, toast…), forms, charts, lifecycle, preview
+    services/services.js  MOCK services: config + lifecycle, users, notifications, wayfinding, zero results, analytics, audit, platform, settings
+    mock/seed.js          MOCK fixtures, seeded from designs/guest/src.html (line numbers in comments)
+    preview/              mobile.css, mobile.html, mobile.js – designs/guest home, drawer, sign-in choice and sheet markup, copied
+    pages/                auth, home-layout, collection (campaigns, alerts, quick links, cards, segments), config-pages,
+                          notifications, users, wayfinding, analytics (+ dashboard), admin-pages (audit, platform, settings, rules, targeting, zero results)
 ```
 
-Nothing outside `admin/` is modified. The guest CSS, data and module markup are copied in, never linked across folders.
+Nothing outside `admin/` is modified.
 
 ## Routes
 
-Routes are plain hash names, for example `#home-layout`, because Artifact links keep only `#name` hashes, not `#/path`. The section "Settings" is named `#admin-settings` because claude.ai reserves `#settings`.
-
-| Status | Routes |
-|---|---|
-| Built | `home-layout` (Guest and Authenticated tabs) |
-| System | `login`, `mfa`, `signed-out`, `expired`, `denied`, plus a not-found view for unknown names |
-| Planned – Phase 2 | `dashboard`, `users`, `users-new`, `users-:id` |
-| Planned – Phase 3 | `home-campaigns`, `home-alerts`, `home-quick-links`, `home-featured-cards` (each with `-new` and `-:id`), `content-colors`, `content-drawer`, `content-app-entry` |
-| Planned – Phase 4 | `wayfinding`, `notifications`, `notifications-new`, `notifications-:id`, `audit`, `audit-history` |
-| Planned – Phase 5 | `search-query-mappings`, `search-synonyms`, `search-specialties`, `search-zero-results`, `search-ranking`, `audiences`, `audiences-new`, `audiences-:id`, `audiences-rules`, `audiences-targeting`, `analytics`, `analytics-adoption`, `analytics-search`, `analytics-content`, `analytics-care`, `analytics-notifications` |
-| Requires discovery – Phase 6 | `platform-integrations`, `platform-monitoring`, `admin-settings`, `admin-settings-locations` |
-
-Planned pages say "Planned – Phase N". They list what the page will do, the open questions it depends on and the viewer's access level. They have no form controls, so there are no dead buttons.
+Routes are plain hash names (`#home-layout`, `#home-campaigns-campaign-flu`) because Artifact links keep only `#name` hashes. Settings live at `#admin-settings` because claude.ai reserves `#settings`.
 
 ## What is mock or simulated
 
-| Area | In the prototype | Real integration needed |
-|---|---|---|
-| Sign-in | "Sign in with UTSW SSO" → choose a sample account → simulated MFA approval. Never a username or password | Identity provider (SAML or OIDC), MFA mechanism |
-| Session | 30-minute idle timeout (placeholder), "Simulate session expiry" and Sign out in the user menu | Approved timeout and session handling |
-| Roles | Three sample accounts; a role switcher labeled "Prototype only" | Roles from the identity provider; confirmed permission matrix |
-| Config and publishing | `ConfigService` with draft, demo and production snapshots, saved to `localStorage` on this device (`utsw-admin-mock-v1`, always in try/catch). "Reset mock data" restores the seed | Backend and API contract (none exists) |
-| Latency and errors | 180–420 ms simulated latency; "Simulate service errors" in the user menu makes calls fail, to show error states | – |
-| Preview | designs/guest home modules and sample content in an isolated iframe | The app's real rendering of published config |
-
-## Lifecycle (Home screen layout)
-
-- **Draft:** Save draft stores the working copy. Nothing reaches demo or production. Marketing can save drafts and request a review.
-- **Demo:** Deploy to demo turns the saved draft into a numbered version on demo. Production is unchanged.
-- **Request changes:** sends the demo version back to a draft with a required comment.
-- **Production:** Publish to production publishes the version on demo, never a draft. A confirmation lists the changes.
-- **Rollback:** creates a new version with an old version's contents on demo and production, and needs a reason. Offered only where the config type's `supportsRollback` flag is true. Every flag is an assumption pending confirmation.
-
-Each environment is labeled everywhere it appears: the stepper, the preview ("Unsaved edits – not live", "Demo v4 – demo environment only", "Production v3 – what patients see (simulated)") and the change history. Every status badge pairs an icon with a word. Leaving the page, switching audience or signing out with unsaved changes asks first.
+- **Sign-in, MFA and session:** simulated, with sample accounts only.
+- **Publishing, sending, uploading and integration checks:** simulated in the browser.
+- **Analytics, monitoring and zero-result counts:** deterministic sample data.
+- **Saving:** changes are saved in this browser's `localStorage` (`utsw-admin-mock-v1`, always wrapped in try/catch). "Reset mock data" in the user menu restores the seed.
+- **Errors:** "Simulate service errors" in the user menu makes every call fail, to show the error states with retry.
+- **Wayfinding files:** read in the browser with FileReader and never uploaded anywhere. The JSON schema checked is a placeholder until UTSW shares a real Gozio export.
 
 ## Permissions (proposed, pending confirmation)
 
-The matrix from HANDOVER §7 lives in one object, `PERMISSIONS` in `src/app/permissions.js`, with the levels none, view, draft, demo, publish and manage. Navigation hides areas a role can't view. Visiting one directly shows the access-denied view, and the services check the same matrix.
-
-Switching roles in the prototype keeps the signed-in sample person, so history entries show that person's name under the new role.
+The matrix lives in one object, `PERMISSIONS` in `src/app/permissions.js`, and is shown read-only on the settings page. Navigation hides areas a role can't view, and visiting one directly shows access denied. The services check the same matrix. The role switcher (prototype only) keeps the signed-in sample person.
 
 ## Verification (Oct. 30, 2026)
 
-All run in headless Chromium with the pre-installed Playwright, against the built file:
-- `python3 build.py` succeeds: 14 JS files, 76 glyphs in the icon subset, about 200 KB.
-- All 41 routes for each of the three roles: no console or page errors, one `h1` per page, every control has a name, no horizontal overflow, and every rendered glyph is in the subset. Each role sees the expected denied views: Super Admin only on `#denied`, Admin on 5 routes (Platform operations and Administrative settings), Marketing on 9 (adding User management and Audit).
-- Workflow: edit, Save draft, Deploy to demo (the change list is correct), Publish, Rollback (an empty reason is rejected), Marketing's Request review, the leave-page guard, simulated error with Retry, session expiry, and sign out.
-- Keyboard only:
-  - Tab reaches the skip link first.
-  - Sidebar sections open with Enter, and links move focus to the new page heading.
-  - Reorder buttons keep focus on the moved row and announce its new position.
-  - Dialogs move focus to the title, Escape closes them and focus returns to the opener.
-  - Sort headers keep focus and set `aria-sort`, and the table shows a no-match state with Clear.
-  - The preview scroller is reachable by Tab.
-- Contrast sweep of every visible text element in light and dark (sign-in, layout, dialog, toast, user menu, planned and not-found pages, preview light and dark with an alert): the Admin has no failures. In the preview, see the known issue below.
-- Widths 1024, 1280 and 1440 with a persistent sidebar, and 400 with the sidebar behind a menu button and the mock-data flag on its own row. No horizontal scroll at any width.
+Headless Chromium with the pre-installed Playwright, against the built file:
+- `python3 build.py` succeeds: 23 JS files, 114 icons, about 450 KB.
+- **Route sweep:** 53 routes, covering every page, create page and sample detail page, × 3 roles × light and dark. No console or page errors, no error or stuck loading states, every control has a name, every rendered icon is in the subset, and no horizontal overflow.
+- **End-to-end flows:** 48 checks pass, from campaign creation (validation, preview, deploy and publish) through wayfinding bad and good files, the notification lifecycle, users, audit rollback, settings and Marketing permissions.
+- **Contrast:** every visible text element in both themes, plus dialogs, the user menu, the error summary and validation results.
+- **Widths:** 1024, 1280, 1440 and phone width.
 
 ### Known issue in the copied mobile design
 
-The campaign tag ("Flu season": white on 14% white over the campaign gradient) measures 4.37:1 at the gradient's lightest stop (`--blue-80`), just under 4.5:1. The rule is copied unchanged from `designs/guest/src.html` (`.camp-tag`), which this work must not modify, so the preview mirrors it. The fix belongs in `designs/guest`.
+Campaign tags such as "Flu season" (white on 14% white over the campaign gradient) measure 4.37:1 at the gradient's lightest stop, just under 4.5:1. The rule is copied unchanged from `designs/guest/src.html` (`.camp-tag`), so the preview mirrors it; the fix belongs in `designs/guest`.
 
 ## Open questions (HANDOVER §10) – not guessed
 
 1. **Stack:** static, zero-dependency (in use) vs a framework app if this becomes production code.
 2. **Which prototype the preview mirrors:** `designs/guest` (in use) vs `design/guest-v2`, whose labels differ ("Find my Care" vs "Find my care"; "I'm a patient" vs "Sign in as a patient").
 3. **Configurable modules:** the brief names four, but the prototype has nine module ids. Alerts, Welcome and Search are shown as fixed; the six reorderable ones are configurable here. Which does the Admin manage, and do MedBlog and announcements come from the CMS or a website feed?
-4. **Featured cards:** assumed to be the UTSW resources rows, not the MedBlog carousel. Confirm.
-5. **Authenticated home:** no design exists. The Authenticated tab shows an empty state and publishes nothing.
+4. **Featured cards:** built as the UTSW resources rows, not the MedBlog carousel. Confirm.
+5. **Authenticated home:** no design exists. The Authenticated tab uses the personalised homepage modules from the prototype (Your next visits from MyChart, Near you) until the signed-in design is approved.
 6. **Alerts:** priority rules for several active alerts, the meaning of "display duration", and whether alerts can be dismissed.
 7. **Time zone default:** times show in Central Time (America/Chicago). Confirm, and a selector comes with scheduled content.
 8. **Destination types** for campaigns, alerts, quick links, cards and drawer items.
@@ -131,9 +127,8 @@ The campaign tag ("Flu season": white on 14% white over the campaign gradient) m
 
 Also pending: the session timeout (30 minutes is a placeholder) and the final permission matrix.
 
-## Next: Phase 2
+## Next
 
-- **Auth UI:** wire the screens to the approved identity provider once the protocol, MFA and timeout are confirmed. The screens and router guards exist.
-- **Role-aware navigation:** replace the proposed matrix with the confirmed one, and add permission-aware actions to each new page.
-- **Dashboard:** metric cards and status tables from mock services, labeled as mock data, with inline SVG charts (no chart library).
-- **User management:** list (the `dataTable` component already does search, filters and sort), create with validation and duplicate checks, and details with status changes and confirmations, on a mock `UserService`.
+- Connect the services to a real backend once an API contract exists. Screens only call the service interfaces in `src/services/services.js`.
+- Replace the simulated sign-in with the approved identity provider, and the proposed permission matrix with the confirmed one.
+- Swap in real data sources for analytics, push and the Gozio export schema as UTSW confirms them.

@@ -29,8 +29,9 @@ const PERMISSIONS = {
     notifications: { superAdmin: 'publish', admin: 'publish', marketing: 'draft' },
     users: { superAdmin: 'manage', admin: 'view', marketing: 'none' },
     audit: { superAdmin: 'publish', admin: 'view', marketing: 'none' },
-    platform: { superAdmin: 'view', admin: 'none', marketing: 'none' },
-    adminSettings: { superAdmin: 'view', admin: 'none', marketing: 'none' }
+    platform: { superAdmin: 'publish', admin: 'view', marketing: 'none' },
+    adminSettings: { superAdmin: 'publish', admin: 'view', marketing: 'none' },
+    locations: { superAdmin: 'publish', admin: 'publish', marketing: 'view' }
   }
 };
 const levelOf = (role, area) => (PERMISSIONS.areas[area] || {})[role] || 'none';

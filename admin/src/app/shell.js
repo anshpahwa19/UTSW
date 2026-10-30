@@ -8,6 +8,20 @@ function visibleNav(role) {
 }
 const initials = u => `${u.first[0]}${u.last[0]}`;
 
+/* ---------- Theme: Light, Dark or System (follows the device). Saved on this device. ---------- */
+const THEMES = [['light', 'Light', 'light_mode'], ['dark', 'Dark', 'dark_mode'], ['system', 'System', 'contrast']];
+function applyTheme() {
+  const t = DB.prefs.theme || 'system';
+  if (t === 'system') delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme = t;
+}
+const themeControl = id => `<div class="theme-sw" role="radiogroup" aria-label="Appearance" id="${id}">${THEMES.map(([k, l, g]) => {
+  const on = (DB.prefs.theme || 'system') === k;
+  return `<button type="button" role="radio" aria-checked="${on}" tabindex="${on ? 0 : -1}" data-value="${k}" aria-label="${l} appearance" title="${l}">${ic(g, 20)}</button>`; }).join('')}</div>`;
+function wireThemeControl(el) {
+  if (!el) return;
+  wireSegmented(el, v => { DB.prefs.theme = v; saveDb(); applyTheme(); announce(`${v === 'system' ? 'System' : v === 'dark' ? 'Dark' : 'Light'} appearance`); });
+}
+
 function renderShell() {
   const app = $('#app');
   app.className = 'app';
@@ -15,9 +29,10 @@ function renderShell() {
     <a class="skip" href="#main" data-skip>Skip to main content</a>
     <header class="topbar">
       <button type="button" class="nav-toggle btn btn-text btn-icon" aria-controls="sidebar" aria-expanded="false" aria-label="Show navigation">${ic('menu')}</button>
-      <a class="brand" href="#home-layout" aria-label="UTSW MyCare Admin, go to Home screen layout"><img src="${LOGO_REVERSED}" alt="" width="200"><span class="brand-admin" aria-hidden="true">Admin</span></a>
+      <a class="brand" href="#dashboard" aria-label="UTSW MyCare Admin, go to the dashboard"><img src="${LOGO_REVERSED}" alt="" width="200"><span class="brand-admin" aria-hidden="true">Admin</span></a>
       <div class="env-pill" title="This Admin runs as a prototype">${ic('dns', 20)}<span><span class="env-k">Environment</span> <b>Prototype</b></span></div>
       <p class="mock-flag">${ic('database', 20)}<span><span class="mf-long">Prototype – mock data, not connected to MyCare</span><span class="mf-short" aria-hidden="true">Mock data</span></span></p>
+      ${themeControl('hdr-theme')}
       <div class="user" id="user"></div>
     </header>
     <div class="layout">
@@ -26,6 +41,7 @@ function renderShell() {
       <main id="main" tabindex="-1"></main>
     </div>`;
   $('[data-skip]').addEventListener('click', e => { e.preventDefault(); $('#main').focus(); });
+  wireThemeControl($('#hdr-theme'));
   const toggle = $('.nav-toggle'), side = $('#sidebar'), scrim = $('#scrim');
   const setNav = open => {
     app.classList.toggle('nav-open', open); toggle.setAttribute('aria-expanded', open);
@@ -52,8 +68,7 @@ function renderSidebar(currentRoute) {
   if (cur) navOpen.add(cur);
   const link = (item, label, nested) => {
     const here = currentRoute && currentRoute.item === item;
-    const tag = item.built ? '' : `<span class="nav-tag" aria-hidden="true">Phase ${item.phase}</span><span class="vh">, planned for Phase ${item.phase}</span>`;
-    return `<a href="#${item.route}" class="nav-link${nested ? ' nested' : ''}" ${here ? 'aria-current="page"' : ''}><span class="nav-l">${esc(label)}</span>${tag}</a>`;
+    return `<a href="#${item.route}" class="nav-link${nested ? ' nested' : ''}" ${here ? 'aria-current="page"' : ''}><span class="nav-l">${esc(label)}</span></a>`;
   };
   side.innerHTML = `<ul class="nav">${visibleNav(role).map(sec => {
     if (sec.items.length === 1 && NAV.find(s => s.id === sec.id).items.length === 1) {
@@ -122,7 +137,7 @@ function renderUser() {
 /* Page heading with breadcrumbs */
 function pageHead({ crumbs, title, lede = '', badges = '', actions = '' }) {
   return `<div class="page-head">
-    <nav aria-label="Breadcrumb" class="crumbs"><ol>${crumbs.map(([label, href]) => `<li>${href ? `<a href="#${href}">${esc(label)}</a>` : `<span>${esc(label)}</span>`}</li>`).join('')}<li><span aria-current="page">${esc(title)}</span></li></ol></nav>
+    ${crumbs.length ? `<nav aria-label="Breadcrumb" class="crumbs"><ol>${crumbs.map(([label, href]) => `<li>${href ? `<a href="#${href}">${esc(label)}</a>` : `<span>${esc(label)}</span>`}</li>`).join('')}<li><span aria-current="page">${esc(title)}</span></li></ol></nav>` : ''}
     <div class="ph-row"><div class="ph-main"><h1 id="page-h" tabindex="-1">${esc(title)}</h1>${badges ? `<div class="ph-badges">${badges}</div>` : ''}</div>${actions ? `<div class="ph-actions">${actions}</div>` : ''}</div>
     ${lede ? `<p class="lede">${lede}</p>` : ''}
   </div>`;

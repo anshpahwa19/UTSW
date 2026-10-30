@@ -1,12 +1,12 @@
 <div class="phone bar-light" id="phone" lang="en">
   <div class="statusbar" aria-hidden="true"><span>9:41</span><span class="sb-r"><i></i><i></i></span></div>
   <div class="screens">
-    <section class="screen" aria-label="Home">
+    <section class="screen" id="scr-home" aria-label="Home">
       <div class="scroller home" id="scroller" tabindex="0">
         <header class="appbar">
           <img class="logo" alt="UTSW MyCare" src="data:image/svg+xml;base64,__LOGO_REVERSED__">
           <span class="sp"></span>
-          <button class="pill-btn" type="button" aria-label="Sign in to MyChart"><span class="ms s20" aria-hidden="true">login</span><span class="pl">Sign in</span></button>
+          <button class="pill-btn" type="button" id="pv-signin" aria-label="Sign in to MyChart"><span class="ms s20" aria-hidden="true">login</span><span class="pl">Sign in</span></button>
           <button class="icon-btn ghost menu-btn" type="button" aria-label="Menu"><span class="ms" aria-hidden="true">menu</span></button>
         </header>
         <div id="home-inner">
@@ -18,6 +18,8 @@
         </div>
       </div>
     </section>
+    <section class="screen" id="scr-alt" aria-label="Preview" hidden><div class="scroller" id="alt" tabindex="0"></div></section>
   </div>
   <nav class="tabbar" aria-label="Main"></nav>
+  <div id="overlay"></div>
 </div>
