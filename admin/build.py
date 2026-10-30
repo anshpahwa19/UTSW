@@ -74,6 +74,10 @@ consts = (f"const ICON_FONT_URL = {json.dumps(icon_url)};\n"
 js = "(function () {\n'use strict';\n" + consts + js + "\n})();"
 assert "</script" not in js.replace("<\\/script", ""), "a literal </script> would end the inline script"
 css = "\n".join(read(f) for f in CSS)
+# A missing brace silently drops every later rule, so check each stylesheet
+for name, text in [*[(f, read(f)) for f in CSS], ("preview/mobile.css", pv_css)]:
+    body = re.sub(r"/\*.*?\*/", "", text, flags=re.S)
+    assert body.count("{") == body.count("}"), f"unbalanced braces in {name}: {body.count('{')} open, {body.count('}')} close"
 page = read("index.html").replace("__ICON_FONT_URL__", icon_url.replace("&", "&amp;")).replace("/*__CSS__*/", css).replace("/*__JS__*/", js)
 (here / "admin-portal.html").write_text(page, encoding="utf-8")
 print(f"{len(FILES)} JS files, {len(names)} glyphs in the icon subset, {len(page) // 1024} KB")

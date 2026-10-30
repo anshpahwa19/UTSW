@@ -40,7 +40,8 @@ function announce(msg) {
   el.textContent = '';
   setTimeout(() => { el.textContent = msg; }, 30);
 }
-const plural = (n, one, many = one + 's') => `${n} ${n === 1 ? one : many}`;
+const pluralize = w => /[^aeiou]y$/.test(w) ? w.slice(0, -1) + 'ies' : /(s|x|ch|sh)$/.test(w) ? w + 'es' : w + 's';
+const plural = (n, one, many = pluralize(one)) => `${n} ${n === 1 ? one : many}`;
 
 /* Local Central Time date-times stored as 'YYYY-MM-DDTHH:MM' (what a datetime-local field gives) */
 function nowLocal() {

@@ -32,7 +32,7 @@ function mountPreview(host, { title }) {
 const ENV_PICK = (r, env) => (env === 'draft' ? latestData(r) : env === 'demo' ? dataAt(r, 'demo') || dataAt(r, 'production') : dataAt(r, 'production'));
 const campaignView = d => ({ ...d, art: d.image && d.image !== 'none' ? ART[d.image] : null });
 const alertView = d => ({ title: d.title, message: d.message, icon: d.icon, priority: +d.priority, dismissible: d.dismissible, ctaLabel: d.ctaLabel, window: d.start ? `Active ${fmtLocal(d.start, false)} – ${fmtLocal(d.end, false)}` : '' });
-function appContent({ env = 'production', overrides = {}, audience = 'guest', allAlerts = false } = {}) {
+function appContent({ env = 'production', overrides = {}, audience = 'guest', allAlerts = false, newItem = null } = {}) {
   const pick = r => overrides[r.id] !== undefined ? overrides[r.id] : ENV_PICK(r, env);
   const of = type => ConfigService.peekAll(type).map(r => ({ r, d: pick(r) })).filter(x => x.d);
   const forAudience = d => !d.audience || d.audience === 'seg-all' || (audience === 'guest' ? d.audience !== 'seg-signedin' : d.audience !== 'seg-guests');
@@ -42,12 +42,16 @@ function appContent({ env = 'production', overrides = {}, audience = 'guest', al
   const camp = editedCamp || camps.find(x => windowStatus(x.d) === 'active') || null;
   const alerts = of('alert').filter(x => x.d.enabled !== false && (allAlerts || overrides[x.r.id] !== undefined || windowStatus(x.d) === 'active'));
   const drawer = ConfigService.peek('drawer'), entry = ConfigService.peek('app-entry');
+  /* An item that isn't saved yet has no record, so it joins its list here */
+  const add = type => newItem && newItem.type === type ? [{ r: { id: '__new__' }, d: newItem.data }] : [];
+  const camp2 = newItem && newItem.type === 'campaign' ? { d: newItem.data } : camp;
+  const withNew = (type, list) => [...list, ...add(type).filter(x => x.d.enabled !== false)].sort((a, b) => a.d.order - b.d.order);
   return {
     ...STATIC_CONTENT,
-    quickLinks: ordered('quickLink').map(x => ({ title: x.d.title, icon: x.d.icon, locked: x.d.requiresSignIn })),
-    resources: ordered('featuredCard').map(x => ({ title: x.d.title, subtitle: x.d.subtitle, icon: x.d.icon })),
-    campaign: camp ? campaignView(camp.d) : null,
-    alerts: alerts.map(x => alertView(x.d)),
+    quickLinks: withNew('quickLink', ordered('quickLink')).map(x => ({ title: x.d.title || 'New quick link', icon: x.d.icon, locked: x.d.requiresSignIn })),
+    resources: withNew('featuredCard', ordered('featuredCard')).map(x => ({ title: x.d.title || 'New featured card', subtitle: x.d.subtitle, icon: x.d.icon })),
+    campaign: camp2 ? campaignView(camp2.d) : null,
+    alerts: [...alerts, ...add('alert')].map(x => alertView(x.d)),
     drawer: overrides.drawer || pick(drawer),
     entry: overrides['app-entry'] || pick(entry)
   };

@@ -141,9 +141,9 @@ const scheduleFields = [
 const windowCheck = d => d.start && d.end && d.end <= d.start ? { end: 'The end must be after the start.' } : {};
 const WINDOW_BADGE = { active: ['live', 'Active now'], upcoming: ['planned', 'Upcoming'], ended: ['hidden', 'Ended'], off: ['hidden', 'Turned off'] };
 const windowBadge = d => { const [k, l] = WINDOW_BADGE[windowStatus(d)]; return badge(k, l); };
-const homePreview = (audience = 'guest') => (data, id, src, focus, extra = {}) => ({
+const homePreview = (audience = 'guest', type = null) => (data, id, src, focus, extra = {}) => ({
   screen: 'home', audience, layout: layoutFor(audience), colors: colorsFor('production'), focus,
-  content: appContent({ overrides: data ? { [id]: data } : {}, audience, ...extra }),
+  content: appContent({ overrides: data && id !== '__new__' ? { [id]: data } : {}, newItem: id === '__new__' && data ? { type, data } : null, audience, ...extra }),
   label: src === 'working' ? 'your edits, not live' : `${src} version`
 });
 
@@ -177,7 +177,7 @@ defineCollection({
     { key: 'window', label: 'Schedule', sortable: true, sortValue: d => d.start, render: d => `<span class="sched">${esc(fmtLocal(d.start, false))} – ${esc(fmtLocal(d.end, false))}</span> ${windowBadge(d)}` }
   ],
   filters: [{ key: 'type', label: 'Type', options: ['Seasonal', 'Service', 'Awareness', 'Announcement', 'Event'].map(x => [x, x]), match: (r, v) => latestData(r).type === v }],
-  preview: (d, id, src) => homePreview(d && d.audience === 'seg-signedin' ? 'authenticated' : 'guest')(d, id, src, 'campaign')
+  preview: (d, id, src) => homePreview(d && d.audience === 'seg-signedin' ? 'authenticated' : 'guest', 'campaign')(d, id, src, 'campaign')
 });
 
 /* ---- Emergency alerts: styled and worded apart from campaigns ---- */
@@ -212,7 +212,7 @@ defineCollection({
     { key: 'priority', label: 'Priority', sortable: true, sortValue: d => +d.priority, render: d => `P${d.priority}`, cls: 'num' },
     { key: 'window', label: 'Active window', sortable: true, sortValue: d => d.start, render: d => `<span class="sched">${esc(fmtLocal(d.start, false))} – ${esc(fmtLocal(d.end, false))}</span> ${windowBadge(d)}` }
   ],
-  preview: (d, id, src) => homePreview('guest')(d, id, src, null)
+  preview: (d, id, src) => homePreview('guest', 'alert')(d, id, src, null)
 });
 
 /* ---- Quick links ---- */
@@ -236,7 +236,7 @@ defineCollection({
     { key: 'signin', label: 'Sign-in', render: d => d.requiresSignIn ? badge('fixed', 'MyChart') : '<span class="muted">Open</span>' },
     { key: 'shown', label: 'Shown', render: d => badge(d.enabled ? 'visible' : 'hidden') }
   ],
-  preview: (d, id, src) => homePreview('guest')(d, id, src, 'tiles')
+  preview: (d, id, src) => homePreview('guest', 'quickLink')(d, id, src, 'tiles')
 });
 
 /* ---- Featured cards (UTSW resources rows, §10.4) ---- */
@@ -259,7 +259,7 @@ defineCollection({
     { key: 'order', label: 'Position', sortable: true, sortValue: d => d.order, render: d => String(d.order), cls: 'num' },
     { key: 'shown', label: 'Shown', render: d => badge(d.enabled ? 'visible' : 'hidden') }
   ],
-  preview: (d, id, src) => homePreview('guest')(d, id, src, 'services')
+  preview: (d, id, src) => homePreview('guest', 'featuredCard')(d, id, src, 'services')
 });
 
 /* ---- Audience segments ---- */

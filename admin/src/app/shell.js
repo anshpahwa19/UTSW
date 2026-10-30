@@ -65,7 +65,8 @@ function renderSidebar(currentRoute) {
   const side = $('#sidebar'); if (!side) return;
   const role = Session.role();
   const cur = currentRoute && currentRoute.section ? currentRoute.section.id : null;
-  if (cur) navOpen.add(cur);
+  /* Moving to another section closes the rest; toggles made by hand last until then */
+  if (cur && cur !== renderSidebar.last) { navOpen.clear(); navOpen.add(cur); renderSidebar.last = cur; }
   const link = (item, label, nested) => {
     const here = currentRoute && currentRoute.item === item;
     return `<a href="#${item.route}" class="nav-link${nested ? ' nested' : ''}" ${here ? 'aria-current="page"' : ''}><span class="nav-l">${esc(label)}</span></a>`;

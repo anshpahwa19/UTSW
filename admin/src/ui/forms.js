@@ -11,7 +11,8 @@ function renderField(f, data, err, prefix) {
   const hint = f.hint ? `<p class="hint" id="${id}-hint">${esc(f.hint)}</p>` : '';
   const req = f.required ? ' <span class="req">(required)</span>' : '';
   const a = `id="${id}" data-key="${f.key}" aria-describedby="${desc}" ${err ? 'aria-invalid="true"' : ''} ${f.required ? 'aria-required="true"' : ''} ${f.readonly ? 'disabled' : ''}`;
-  const counter = f.max ? `<p class="count-line" id="${id}-cnt" aria-live="off">${(v || '').length} of ${f.max} characters</p>` : '';
+  /* Long text always shows its count; short fields only once they near the limit */
+  const counter = f.max ? `<p class="count-line" id="${id}-cnt" ${f.type === 'textarea' || (v || '').length >= f.max * .7 ? '' : 'hidden'}>${(v || '').length} of ${f.max} characters</p>` : '';
   const wrap = control => `<div class="field${err ? ' has-error' : ''}" data-field="${f.key}"><label for="${id}">${esc(f.label)}${req}</label>${hint}${control}${counter}${errP}</div>`;
   switch (f.type) {
     case 'textarea': return wrap(`<textarea class="input" rows="${f.rows || 3}" ${a}>${esc(v || '')}</textarea>`);
@@ -92,7 +93,7 @@ function applyInput(e, data, fields) {
   if (f.type === 'color') { const v = t.value.trim(); data[key] = v; const other = t.type === 'color' ? t.parentElement.querySelector('.input-hex') : t.parentElement.querySelector('.swatch'); if (/^#[0-9a-f]{6}$/i.test(v)) { other.value = v; } return false; }
   data[key] = t.value;
   if (f.type === 'icon' || f.type === 'alertIcon') t.parentElement.querySelector('.icon-prev').innerHTML = ic(t.value);
-  if (f.max) { const c = document.getElementById(`${t.id}-cnt`); if (c) c.textContent = `${t.value.length} of ${f.max} characters`; }
+  if (f.max) { const c = document.getElementById(`${t.id}-cnt`); if (c) { c.textContent = `${t.value.length} of ${f.max} characters`; c.hidden = f.type !== 'textarea' && t.value.length < f.max * .7; } }
   return !!f.rerender;
 }
 /* Wires a form host: input/change/switch clicks update data and call onChange; error summary links focus fields */

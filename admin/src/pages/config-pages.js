@@ -327,10 +327,9 @@ defineSingleton({
   renderEditor(host, st, { ro, onChange }) {
     rowsEditor(host, { rows: st.working.rows, noun: 'facility', caption: 'Facilities', ro, rowTitle: r => r.name, searchText: r => `${r.name} ${r.message}`,
       columns: [
-        { key: 'name', label: 'Facility', sortable: true, render: r => esc(r.name) }, { key: 'type', label: 'Type', render: r => esc(r.type) },
+        { key: 'name', label: 'Facility', sortable: true, render: r => `<span class="cell-2"><span>${esc(r.name)}</span><span class="muted">${esc(r.type)}</span></span>` },
         { key: 'message', label: 'Arrival message', render: r => r.message ? esc(r.message) : '<span class="muted">None</span>', cls: 'wrap' },
-        { key: 'indoor', label: 'Indoor maps', render: r => r.indoor ? badge('live', 'Available') : badge('hidden', 'None') },
-        { key: 'enabled', label: 'Shown', render: r => badge(r.enabled ? 'visible' : 'hidden') }],
+        { key: 'status', label: 'Status', render: r => `<span class="badges col">${badge(r.enabled ? 'visible' : 'hidden', r.enabled ? 'Shown' : 'Hidden')}${r.indoor ? badge('live', 'Indoor maps') : badge('hidden', 'No indoor maps')}</span>` }],
       extraActions: r => btn({ label: `Preview ${r.name}`, icon: 'smartphone', variant: 'text', iconOnly: true, attrs: `data-loc-pv="${r.id}"` }),
       sections: [{ fields: [
         { key: 'name', label: 'Facility name', required: true, max: 60 }, { key: 'type', label: 'Type', type: 'select', options: ['Hospital', 'Clinic', 'Building', 'Parking'] },

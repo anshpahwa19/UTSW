@@ -6,7 +6,7 @@
 /* ---------- Button ---------- variants: primary, secondary, tonal, text, danger; size: md (44) or lg (48) */
 function btn({ label, icon, variant = 'secondary', size = 'md', attrs = '', iconOnly = false, type = 'button' }) {
   const cls = `btn btn-${variant}${size === 'lg' ? ' btn-lg' : ''}${iconOnly ? ' btn-icon' : ''}`;
-  return `<button type="${type}" class="${cls}" ${iconOnly ? `aria-label="${esc(label)}"` : ''} ${attrs}>${icon ? ic(icon, 20) : ''}${iconOnly ? '' : `<span class="lbl">${esc(label)}</span>`}<span class="dots" aria-hidden="true"><i></i><i></i><i></i></span></button>`;
+  return `<button type="${type}" class="${cls}" ${iconOnly ? `aria-label="${esc(label)}" title="${esc(label)}"` : ''} ${attrs}>${icon ? ic(icon, 20) : ''}${iconOnly ? '' : `<span class="lbl">${esc(label)}</span>`}<span class="dots" aria-hidden="true"><i></i><i></i><i></i></span></button>`;
 }
 /* Busy state while a mock service call runs */
 function setBusy(button, busy, busyLabel) {
@@ -120,7 +120,7 @@ function dataTable(outer, cfg) {
   host.innerHTML = `
     <div class="tbl-tools" role="search" aria-label="${esc(cfg.caption)}">
       <div class="tbl-search"><label for="${id}-q" class="vh">Search ${esc(cfg.caption.toLowerCase())}</label>${ic('search', 20)}<input class="input" type="search" id="${id}-q" placeholder="${esc(cfg.searchPlaceholder || 'Search')}"></div>
-      ${(cfg.filters || []).map(f => `<div class="tbl-filter"><label for="${id}-f-${f.key}">${esc(f.label)}</label><select class="input" id="${id}-f-${f.key}" data-filter="${f.key}"><option value="">All</option>${f.options.map(([v, l]) => `<option value="${esc(v)}">${esc(l)}</option>`).join('')}</select></div>`).join('')}
+      ${(cfg.filters || []).map(f => `<label class="tbl-filter" for="${id}-f-${f.key}"><span>${esc(f.label)}</span><select class="input" id="${id}-f-${f.key}" data-filter="${f.key}"><option value="">All</option>${f.options.map(([v, l]) => `<option value="${esc(v)}">${esc(l)}</option>`).join('')}</select></label>`).join('')}
       <p class="tbl-count" id="${id}-count" role="status"></p>
       ${cfg.actions ? `<div class="tbl-actions">${cfg.actions}</div>` : ''}
     </div>
@@ -156,7 +156,7 @@ function dataTable(outer, cfg) {
     const pager = $('.pager', host);
     pager.hidden = pages < 2;
     if (pages > 1) pager.innerHTML = `<span class="pg-info">${st.page * size + 1}–${st.page * size + rows.length} of ${all.length}</span>${btn({ label: 'Previous page', icon: 'chevron_left', variant: 'text', iconOnly: true, attrs: `data-page="-1" ${st.page === 0 ? 'disabled' : ''}` })}${btn({ label: 'Next page', icon: 'chevron_right', variant: 'text', iconOnly: true, attrs: `data-page="1" ${st.page >= pages - 1 ? 'disabled' : ''}` })}`;
-    tbody.innerHTML = rows.map(r => `<tr>${cfg.columns.map((c, i) => i === 0 ? `<th scope="row" class="${c.cls || ''}">${c.render(r)}</th>` : `<td class="${c.cls || ''}">${c.render(r)}</td>`).join('')}</tr>`).join('');
+    tbody.innerHTML = rows.map(r => `<tr>${cfg.columns.map((c, i) => i === 0 ? `<th scope="row" class="${c.cls || ''}">${c.render(r)}</th>` : `<td class="${c.key === 'acts' || c.key === 'v' || c.key === 'details' ? 'acts' : c.cls || ''}">${c.render(r)}</td>`).join('')}</tr>`).join('');
     const filtered = st.q || Object.values(st.filters).some(Boolean);
     $(`#${id}-count`, host).textContent = `${plural(all.length, cfg.noun || 'row')}${filtered ? ` of ${st.rows.length}` : ''}`;
     wrap.hidden = !all.length; empty.hidden = !!all.length;

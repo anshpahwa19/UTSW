@@ -381,7 +381,7 @@ html:not(.ms-ready) .ms{color:transparent!important}
 .phone.narrow.lg .pill-btn{padding:0; width:var(--hit); justify-content:center}
 .phone.narrow.lg .pill-btn .pl{display:none}
 .appbar .logo{min-width:187px}
-/* 1007–1024: dark mode */
+/* 1007–1033: dark mode */
 /* ===================== Dark mode (app setting: Light, Dark, or System) ===================== */
 /* Only tokens change. Brand surfaces (app bar, hero, splash, campaign) stay UT Southwestern Blue; the page goes
    deep navy; Blue text and icons lift to a light blue; small controls use a brighter Blue that keeps white text at 5.5:1. */
@@ -396,8 +396,19 @@ html:not(.ms-ready) .ms{color:transparent!important}
   --shadow-1:0 1px 2px rgba(0,0,0,.4), 0 2px 8px rgba(0,0,0,.3);
   --shadow-2:0 4px 12px rgba(0,0,0,.4), 0 16px 40px rgba(0,0,0,.5);
   --focus:0 0 0 2px #0D1620, 0 0 0 5px #8CC0EA;
+}
+/* Map drawings take their colors from the theme */
+.m-bg{fill:var(--map-bg)} .m-block{fill:var(--map-block)} .m-block2{fill:var(--map-block-2)}
+.m-road{stroke:var(--map-road); fill:none} .m-edge{stroke:var(--map-road)} .m-pin{fill:var(--blue)} .m-start{fill:var(--surface); stroke:var(--blue)}
+/* Dark-only touches: a hairline so the search field reads on Blue, softer illustrations, and the offline bar's Retry on a light pill */
+.phone.dark .search-field{box-shadow:0 8px 24px rgba(0,0,0,.4), inset 0 0 0 1px rgba(255,255,255,.16)}
+.phone.dark :is(.feat-art,.art-hero,.blog-th) svg{filter:brightness(.86) saturate(.92)}
 .phone.dark .netbar button{background:rgba(13,22,32,.1); color:var(--on-inverse)}
 .phone.dark .netbar :focus-visible{box-shadow:0 0 0 3px var(--on-inverse)!important}
+.phone.dark .content{box-shadow:0 -8px 24px rgba(0,0,0,.35)}
+.phone.dark .tabbar{box-shadow:0 8px 24px rgba(0,0,0,.45), 0 0 0 1px var(--line)}
+.phone.dark .sk{background:var(--tint)}
+.phone.dark .choice.primary small{color:#FFFFFF}
 /* 1049–1050: module stack */
 .content{gap:var(--s6)}
 .mods{display:grid; grid-template-columns:minmax(0,1fr); gap:var(--s8)}
@@ -451,9 +462,6 @@ html:not(.ms-ready) .ms{color:transparent!important}
 .choice.primary .dot{background:#FFFFFF; color:var(--brand); --grad:0}
 .choice.primary .chev{color:#FFFFFF}
 .choice.primary:focus-visible{box-shadow:var(--focus)}
-
-/* 1033: dark sign-in choice subtitle */
-.phone.dark .choice.primary small{color:#FFFFFF}
 
 /* ===================== Admin preview additions (not in designs/guest) ===================== */
 /* The preview is read-only: controls are drawn but take no pointer or keyboard input; the scroller is the one tab stop */
