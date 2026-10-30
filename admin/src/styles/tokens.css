@@ -1,0 +1,86 @@
+/* Admin tokens. Block 1 is designs/guest/src.html lines 11–61, copied unchanged (the app palette, type, spacing,
+   radii, motion, focus and the board chrome tokens). Never edit block 1 here; change designs/guest and re-copy. */
+:root{
+  /* Board chrome (theme-aware) */
+  --bd-bg:#F2F5F8; --bd-panel:#FFFFFF; --bd-ink:#1F2A33; --bd-muted:#5B6770; --bd-line:#D5DDE5; --bd-accent:#004278; --bd-chip:#EBF0F5; --bd-bezel:#0E2236;
+
+  /* ===== App palette (identical across themes – the app frame is a brand surface) ===== */
+  --blue:#004278; --blue-80:#336893; --pms542:#7BAFD4; --cyan:#00A9E0;
+  --bg:#F7F8FA; --surface:#FFFFFF; --tint:#EBF0F5; --tint-2:#D1DDE6; --sky:#D6E4F0;
+  --line:#D5DDE5; --line-strong:#808B96;
+  --ink:#333333; --ink-2:#5B6770;
+  --on-blue-2:#D6E4F0; --on-blue-3:#A9C7E0;
+  --alert:#B0003A;
+  /* Theme roles. --blue is the accent for text and icons; --brand is the large Blue surface (always #004278, so the
+     logo's own tile never shows an edge); --ctl is Blue on small controls (buttons, solid circles, selected chips). */
+  --brand:#004278; --ctl:#004278; --alert-ink:#B0003A;
+  --field-on-brand:#FFFFFF; --bar-glass:rgba(255,255,255,.94); --inverse:#333333; --on-inverse:#FFFFFF;
+  --map-bg:#E6EDF3; --map-block:#D6E4F0; --map-block-2:#D1DDE6; --map-road:#FFFFFF;
+
+  --ts:1;
+  --font:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+
+  /* Spacing – one 4-pt scale */
+  --s1:4.0px; --s2:8.0px; --s3:12.0px; --s4:16.0px; --s6:24.0px; --s8:32.0px; --s10:40.0px; --s12:48.0px;
+  --hit:44.0px; --hit-lg:48.0px;
+
+  /* Radii */
+  --r-sm:8.0px; --r-md:12.0px; --r-lg:16.0px; --r-xl:24.0px; --r-pill:999px;
+
+  /* Motion */
+  --d-fast:150ms; --d-base:240ms; --d-slow:400ms;
+  --ease-out:cubic-bezier(.2,.8,.2,1); --ease-in-out:cubic-bezier(.65,0,.35,1);
+  --spring-snappy:linear(0, 0.066, 0.218, 0.401, 0.58, 0.735, 0.857, 0.945, 1.003, 1.037, 1.051, 1.054, 1.049, 1.04, 1.03, 1.02, 1.012, 1.006, 1.002, 0.999, 0.998, 0.997, 0.997, 0.997, 1);
+  --spring-gentle:linear(0, 0.049, 0.158, 0.285, 0.412, 0.526, 0.624, 0.706, 0.772, 0.825, 0.867, 0.899, 0.924, 0.943, 0.957, 0.968, 0.976, 0.983, 0.987, 0.991, 0.993, 0.995, 0.996, 0.997, 1);
+  --d-snappy:360ms; --d-gentle:400ms;
+
+  --shadow-1:0 1px 2px rgba(16,38,60,.06), 0 2px 8px rgba(16,38,60,.06);
+  --shadow-2:0 4px 12px rgba(16,38,60,.10), 0 16px 40px rgba(16,38,60,.14);
+  --focus:0 0 0 2px #FFFFFF, 0 0 0 5px #004278;
+  --focus-on-blue:0 0 0 2px #004278, 0 0 0 4px #FFFFFF;
+  --glow:radial-gradient(90% 70% at 100% 20%, rgba(0,169,224,.30) 0, rgba(0,169,224,0) 70%);
+  --hero-glow:radial-gradient(75% 55% at 100% 58%, rgba(0,169,224,.26) 0, rgba(0,169,224,0) 72%);
+
+  /* Icon axes – inherited, so a container's state (selected, pressed, dark) reaches its glyph */
+  --fill:0; --wght:500; --grad:0;
+}
+/* Tokens that follow the text-size setting are declared again on .phone so they resolve against its --ts */
+:root,.phone{
+  --t12:calc(12.0px * var(--ts)); --t14:calc(14.0px * var(--ts)); --t16:calc(16.0px * var(--ts)); --t18:calc(18.0px * var(--ts));
+  --t20:calc(20.0px * var(--ts)); --t24:calc(24.0px * var(--ts)); --t28:calc(28.0px * var(--ts)); --t32:calc(32.0px * var(--ts));
+  --i16:calc(16.0px * var(--ts)); --i20:calc(20.0px * var(--ts)); --i24:calc(24.0px * var(--ts)); --i32:calc(32.0px * var(--ts));
+  --dot40:calc(40.0px * var(--ts)); --dot48:calc(48.0px * var(--ts)); --dot56:calc(56.0px * var(--ts));
+}
+
+/* Block 2 – admin-only layout tokens (not in the mobile files) */
+:root{
+  --a-sidebar:272px;          /* persistent sidebar */
+  --a-header:64px;            /* top header */
+  --a-content-max:1440px;     /* main column max width */
+  --a-gutter:24px;            /* page side padding */
+  --a-row:48px;               /* table row min height */
+  --a-dense:14.0px;           /* dense body for tables and side notes */
+  --a-preview-scale:.8;       /* phone preview scale */
+}
+
+/* Block 3 – the Admin follows the viewer's theme. Dark values are the designs/guest .phone.dark values (lines 1010–1021),
+   unchanged; --brand stays UT Southwestern Blue in both themes, as in the app. */
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0D1620; --surface:#16222E; --tint:#1F3042; --tint-2:#2A4157; --sky:#1F3042;
+    --line:#2B3C4D; --line-strong:#7D8E9E; --ink:#E6EDF3; --ink-2:#A6B4C0;
+    --blue:#8CC0EA; --ctl:#2D6CA6; --alert-ink:#FF8AA8;
+    --shadow-1:0 1px 2px rgba(0,0,0,.4), 0 2px 8px rgba(0,0,0,.3);
+    --shadow-2:0 4px 12px rgba(0,0,0,.4), 0 16px 40px rgba(0,0,0,.5);
+    --focus:0 0 0 2px #0D1620, 0 0 0 5px #8CC0EA; --inverse:#E6EDF3; --on-inverse:#0D1620;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0D1620; --surface:#16222E; --tint:#1F3042; --tint-2:#2A4157; --sky:#1F3042;
+  --line:#2B3C4D; --line-strong:#7D8E9E; --ink:#E6EDF3; --ink-2:#A6B4C0;
+  --blue:#8CC0EA; --ctl:#2D6CA6; --alert-ink:#FF8AA8;
+  --shadow-1:0 1px 2px rgba(0,0,0,.4), 0 2px 8px rgba(0,0,0,.3);
+  --shadow-2:0 4px 12px rgba(0,0,0,.4), 0 16px 40px rgba(0,0,0,.5);
+  --focus:0 0 0 2px #0D1620, 0 0 0 5px #8CC0EA; --inverse:#E6EDF3; --on-inverse:#0D1620;
+  color-scheme:dark;
+}
