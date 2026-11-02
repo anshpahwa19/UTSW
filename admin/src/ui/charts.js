@@ -34,7 +34,7 @@ function lineChart(host, { points, unit, label, height = 220, zeroBase = false }
       ${ticks.map(t => `<line x1="${m.l}" x2="${W - m.r}" y1="${Y(t)}" y2="${Y(t)}" class="c-grid"/><text x="${m.l - 8}" y="${Y(t) + 4}" text-anchor="end" class="c-axis">${tickFmt(t, unit)}</text>`).join('')}
       ${xt.map(i => `<text x="${X(i)}" y="${H - 8}" text-anchor="${i === 0 ? 'start' : i === points.length - 1 ? 'end' : 'middle'}" class="c-axis">${fmtDay(points[i].x)}</text>`).join('')}
       <path d="${line}L${X(points.length - 1)},${Y(y0)}L${X(0)},${Y(y0)}Z" class="c-area"/>
-      <path d="${line}" class="c-line"/>
+      <path d="${line}" class="c-line" pathLength="1"/>
       <circle cx="${X(points.length - 1)}" cy="${Y(last.y)}" r="4" class="c-end"/>
       <text x="${X(points.length - 1) + 8}" y="${Y(last.y) + 4}" class="c-endl">${tickFmt(+last.y.toFixed(unit === 'count' ? 0 : 1), unit)}</text>
       <g class="c-cross" hidden><line class="c-xline" y1="${m.t}" y2="${H - m.b}"/><circle r="5" class="c-dot"/></g>
@@ -64,7 +64,7 @@ function lineChart(host, { points, unit, label, height = 220, zeroBase = false }
 function sparkline(points) {
   const W = 120, H = 32, ys = points.map(p => p.y), lo = Math.min(...ys), hi = Math.max(...ys) || 1;
   const d = points.map((p, i) => `${i ? 'L' : 'M'}${(i / (points.length - 1) * W).toFixed(1)},${(H - 3 - (p.y - lo) / ((hi - lo) || 1) * (H - 6)).toFixed(1)}`).join('');
-  return `<svg class="spark" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" aria-hidden="true"><path d="${d}" class="c-line"/></svg>`;
+  return `<svg class="spark" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" aria-hidden="true"><path d="${d}" class="c-line" pathLength="1"/></svg>`;
 }
 /* Horizontal bars: a labeled list, readable without the bars */
 function barList(rows, { unit = 'count', max } = {}) {
