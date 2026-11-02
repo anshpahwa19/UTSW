@@ -274,7 +274,8 @@ function segmentConflicts(d) {
 }
 const segmentUsers = id => [
   ...ConfigService.peekAll('campaign').filter(r => latestData(r).audience === id).map(r => ['Campaign', r.name, `home-campaigns-${r.id}`]),
-  ...ConfigService.peekAll('alert').filter(r => latestData(r).audience === id).map(r => ['Emergency alert', r.name, `home-alerts-${r.id}`])
+  ...ConfigService.peekAll('alert').filter(r => latestData(r).audience === id).map(r => ['Emergency alert', r.name, `home-alerts-${r.id}`]),
+  ...DB.db.notifications.filter(n => n.sendTo === id && !['sent', 'cancelled'].includes(n.status)).map(n => ['Notification', n.title, `notifications-${n.id}`])
 ];
 defineCollection({
   route: 'audiences', type: 'segment', area: 'audiences', section: 'Audience management', title: 'Audience segments', noun: 'segment', newLabel: 'New segment', icon: 'groups', nameLabel: 'Segment',

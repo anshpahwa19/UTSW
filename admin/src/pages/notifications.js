@@ -12,6 +12,7 @@ const NOTE_SECTIONS = [
     { key: 'videoUrl', label: 'Video URL', type: 'text', placeholder: 'https://', hint: 'Optional. Allowed video hosts are pending (§10.14).' },
     { key: 'destination', label: 'Opens', type: 'destination', hint: 'Where the app goes when the notification is tapped.' }] },
   { title: 'Delivery', fields: [
+    { key: 'sendTo', label: 'Send to', type: 'segment' },
     { key: 'timing', label: 'When', type: 'radio', options: [['now', 'Immediately'], ['scheduled', 'At a scheduled time']], rerender: true },
     { key: 'scheduledAt', label: 'Scheduled date and time (Central Time)', type: 'datetime', required: true, show: d => d.timing === 'scheduled' }] }
 ];
@@ -36,10 +37,12 @@ BUILT_PAGES.notifications = {
       id: 'nt', caption: 'Notifications', noun: 'notification', rows: list, defaultSort: { key: 'created', dir: 'desc' }, pageSize: 10, searchPlaceholder: 'Search titles and messages',
       searchText: n => `${n.title} ${n.description}`,
       filters: [
-        { key: 'status', label: 'Status', options: Object.entries(NOTE_STATUS), match: (n, v) => n.status === v }],
+        { key: 'status', label: 'Status', options: Object.entries(NOTE_STATUS), match: (n, v) => n.status === v },
+        { key: 'aud', label: 'Audience', options: segmentOptions(), match: (n, v) => n.sendTo === v }],
       empty: { icon: 'notifications', title: 'No notifications yet', text: canEdit ? 'Create the first one.' : '' },
       columns: [
         { key: 'title', label: 'Title', sortable: true, sortValue: n => n.title.toLowerCase(), render: n => `<a class="row-link" href="#notifications-${n.id}">${esc(n.title)}</a>` },
+        { key: 'sendTo', label: 'Audience', render: n => esc(segmentName(n.sendTo)) },
         { key: 'when', label: 'Scheduled', sortable: true, sortValue: n => n.scheduledAt || '', render: n => n.timing === 'now' && !n.sentAt ? 'Immediately' : `<span class="nowrap">${esc(fmtLocal(n.scheduledAt))}</span>` },
         { key: 'created', label: 'Created', sortable: true, sortValue: n => n.createdAt, render: n => `<span class="nowrap">${esc(fmtDate(n.createdAt))}</span>` },
         { key: 'status', label: 'Status', sortable: true, sortValue: n => n.status, render: n => noteBadge(n.status) }]
@@ -57,7 +60,7 @@ const noteEditor = {
       try { n = await NotificationService.get(ctx.params.id); }
       catch (err) { $('#ne').innerHTML = `${pageHead({ crumbs: [['Notifications', null], ['All notifications', 'notifications']], title: 'Notification not found' })}${errorState(err.message)}`; $('[data-retry]').onclick = () => this.render(main, ctx); return; }
     }
-    const blank = { title: '', description: '', timing: 'scheduled', scheduledAt: '', image: 'none', imageAlt: '', videoUrl: '', destination: { type: 'none', value: '' } };
+    const blank = { title: '', description: '', sendTo: 'seg-all', timing: 'scheduled', scheduledAt: '', image: 'none', imageAlt: '', videoUrl: '', destination: { type: 'none', value: '' } };
     const working = n ? noteData(n) : clone(blank);
     let errors = {};
     const editable = () => can(role, 'notifications', 'draft') && (!n || n.status === 'draft');
@@ -116,7 +119,7 @@ const noteEditor = {
         return run(() => NotificationService.save(n && n.id, working), 'Saving', can(role, 'notifications', 'publish') ? 'Saved as a draft. Schedule it when it’s ready.' : 'Saved as a draft.', r => isNew ? `notifications-${r.id}` : null);
       }
       if (k === 'schedule') {
-        const c = await confirmDialog({ title: n.timing === 'now' ? 'Send this notification now?' : 'Schedule this notification?', body: `<div class="warn-box">${ic('notifications', 20)}<p>${n.timing === 'now' ? 'It goes out now' : `It goes out on ${esc(fmtLocal(n.scheduledAt))}`} as a push notification and an Inbox message. Sending is simulated in the prototype.</p></div>`, confirmLabel: n.timing === 'now' ? 'Send now' : 'Schedule', comment: { label: 'Comment', hint: 'Optional' } });
+        const c = await confirmDialog({ title: n.timing === 'now' ? 'Send this notification now?' : 'Schedule this notification?', body: `<div class="warn-box">${ic('notifications', 20)}<p>${n.timing === 'now' ? 'It goes out now' : `It goes out on ${esc(fmtLocal(n.scheduledAt))}`} to <b>${esc(segmentName(n.sendTo))}</b> as a push notification and an Inbox message. Sending is simulated in the prototype.</p></div>`, confirmLabel: n.timing === 'now' ? 'Send now' : 'Schedule', comment: { label: 'Comment', hint: 'Optional' } });
         if (c.ok) run(() => NotificationService.schedule(n.id, c.comment), n.timing === 'now' ? 'Sending' : 'Scheduling', r => r.status === 'sent' ? 'Sent (simulated).' : `Scheduled for ${fmtLocal(r.scheduledAt)}.`);
       }
       if (k === 'cancel') { const c = await confirmDialog({ title: 'Cancel this notification?', body: '<p>It won’t be sent. You can duplicate it later to send a new version.</p>', confirmLabel: 'Cancel notification', variant: 'danger', cancelLabel: 'Keep it', comment: { label: 'Reason', required: true } }); if (c.ok) run(() => NotificationService.cancel(n.id, c.comment), 'Cancelling', 'Notification cancelled.'); }

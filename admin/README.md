@@ -31,7 +31,7 @@ The build writes `admin-portal.html`, a single self-contained file published as 
 | Search | `search-query-mappings`, `search-synonyms`, `search-specialties`, `search-zero-results`, `search-ranking` | Editable tables with duplicate checks and a "Try a search" tester that uses unsaved edits. Zero-result queries become a synonym or mapping draft in one step. Ranking weights must total 100 |
 | Wayfinding | `wayfinding` | Choose or drop a real JSON file, or use a valid or broken sample. Progress, validation errors and warnings, save as validated, then publish to demo, publish to production, roll back, and history |
 | Audiences | `audiences…`, `audiences-rules`, `audiences-targeting` | Segments with a rule builder (all or any) and conflict checks, "used by", every rule with a person tester, and targeting campaigns or alerts (saves a draft on each item) |
-| Notifications | `notifications`, `-new`, `-:id` | Create and edit with validation, then schedule or send now (Admin and Super Admin), cancel a scheduled one with a reason, duplicate, delete. Every notification goes to all app users as push and Inbox. Lock-screen preview, plus results for sent messages |
+| Notifications | `notifications`, `-new`, `-:id` | Create and edit with validation, then schedule or send now (Admin and Super Admin), cancel a scheduled one with a reason, duplicate, delete. Choose the audience segment; every notification goes out as push and Inbox. Lock-screen preview, plus results for sent messages |
 | Analytics | `analytics`, `analytics-*` | Overview plus five categories with exactly the brief's metrics. 7, 30 or 90 days with loading and error states, metric tiles, line chart (hover and arrow-key crosshair, data table), and breakdowns |
 | Users | `users`, `users-new`, `users-:id` | Search and filter by role and status. Create with required, email-format and duplicate checks (simulated invitation). Edit, change role, resend invite, deactivate or reactivate, delete. You can't remove or demote yourself |
 | Audit and versioning | `audit`, `audit-history` | Every action with actor, time, environment, comment and a before-and-after table. Every configuration's versions with comparison and rollback where the type supports it |
@@ -117,7 +117,7 @@ Campaign tags such as "Flu season" (white on 14% white over the campaign gradien
 11. **Drawer:** which items are fixed or CMS-managed, and whether sections can be reordered.
 12. **Search:** the engine, mapping semantics, the source of zero-result queries, and which ranking parameters can change.
 13. **Audiences:** attributes, precedence, conflict handling and PHI limits.
-14. **Notifications:** push provider, whether audience targeting, delivery types or an approval step are needed (removed from the prototype on request), who can send, cancel and edit rules, allowed video hosts.
+14. **Notifications:** push provider, whether delivery types or an approval step are needed (removed from the prototype on request), who can send, cancel and edit rules, allowed video hosts.
 15. **Analytics:** data source and exact metric definitions.
 16. **Users:** invitation through the identity provider or the Admin; deletion vs deactivation; audit retention and before-and-after detail.
 17. **Environments:** what "Demo" is (a separate environment or a build), and who can promote to production. Which config types support versioning and rollback (all flags here are assumptions).
