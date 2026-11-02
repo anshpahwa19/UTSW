@@ -3,7 +3,7 @@
    children: routes that aren't sidebar items (create and details pages). */
 const NAV = [
   { id: 'dashboard', label: 'Dashboard', icon: 'dashboard', items: [{ route: 'dashboard', label: 'Dashboard', area: 'dashboard' }] },
-  { id: 'home', label: 'Home screen management', icon: 'smartphone', items: [
+  { id: 'home', label: 'Home Screen', icon: 'smartphone', items: [
     { route: 'home-layout', label: 'Layout', area: 'homeLayout' },
     { route: 'home-campaigns', label: 'Campaigns', area: 'campaigns', children: [['home-campaigns-new', 'New campaign'], ['home-campaigns-:id', 'Campaign']] },
     { route: 'home-alerts', label: 'Emergency alerts', area: 'alerts', children: [['home-alerts-new', 'New emergency alert'], ['home-alerts-:id', 'Emergency alert']] },

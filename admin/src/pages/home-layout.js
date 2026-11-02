@@ -1,4 +1,4 @@
-/* ---------- Home screen management → Layout ----------
+/* ---------- Home Screen → Layout ----------
    Order and visibility of the home modules for guests and signed-in patients, a module library, a live preview
    built from the designs/guest modules, and the shared Draft → Demo → Production lifecycle. */
 /* EXTRA_GLYPHS: save rate_review science public */
@@ -27,7 +27,7 @@ BUILT_PAGES['home-layout'] = (() => {
   function render(host) {
     main = host;
     main.innerHTML = `<div class="page hl">
-      ${pageHead({ crumbs: [['Home screen management', null]], title: 'Home screen layout',
+      ${pageHead({ crumbs: [['Home Screen', null]], title: 'Home screen layout',
         lede: 'Choose which modules patients see on the MyCare home screen and in what order, for guests and for signed-in patients.' })}
       <div class="tabs" role="tablist" aria-label="Audience">${AUDIENCES.map(([k, l]) =>
         `<button type="button" role="tab" id="aud-${k}" aria-controls="aud-panel" aria-selected="${k === st.aud}" tabindex="${k === st.aud ? 0 : -1}" data-aud="${k}">${esc(l)}</button>`).join('')}</div>

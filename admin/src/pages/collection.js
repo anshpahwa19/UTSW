@@ -149,7 +149,7 @@ const homePreview = (audience = 'guest', type = null) => (data, id, src, focus, 
 
 /* ---- Campaigns ---- */
 defineCollection({
-  route: 'home-campaigns', type: 'campaign', area: 'campaigns', section: 'Home screen management', title: 'Campaigns', noun: 'campaign', newLabel: 'New campaign', icon: 'campaign',
+  route: 'home-campaigns', type: 'campaign', area: 'campaigns', section: 'Home Screen', title: 'Campaigns', noun: 'campaign', newLabel: 'New campaign', icon: 'campaign',
   lede: 'Promotional banners on the home screen. The SOW proposes three to five campaigns for the MVP, pending confirmation. One active campaign shows at a time; emergency alerts are managed separately.',
   summary: list => { const n = list.length; return n > 5 ? `<p class="note-line">${ic('info', 20)}<span>${n} campaigns – more than the five the SOW proposes.</span></p>` : ''; },
   defaults: () => ({ title: '', type: 'Seasonal', tag: '', icon: 'vaccines', description: '', image: 'none', imageAlt: '', fact1Label: '', fact1Value: '', fact2Label: '', fact2Value: '', ctaLabel: '', destination: { type: 'screen', value: 'Find my Care' }, audience: 'seg-all', start: nowLocal().slice(0, 11) + '08:00', end: '', timeZone: TZ, enabled: true }),
@@ -182,7 +182,7 @@ defineCollection({
 
 /* ---- Emergency alerts: styled and worded apart from campaigns ---- */
 defineCollection({
-  route: 'home-alerts', type: 'alert', area: 'alerts', section: 'Home screen management', title: 'Emergency alerts', noun: 'emergency alert', newLabel: 'New emergency alert', icon: 'warning', cls: 'alert-page',
+  route: 'home-alerts', type: 'alert', area: 'alerts', section: 'Home Screen', title: 'Emergency alerts', noun: 'emergency alert', newLabel: 'New emergency alert', icon: 'warning', cls: 'alert-page',
   lede: 'Urgent safety and service messages that sit above everything on the home screen. Use them only for emergencies and disruptions – never for promotions.',
   banner: `<div class="alert-banner" role="note">${ic('warning', 24, 'f1')}<div><p class="ab-t">Emergency alerts reach every patient in the audience as soon as they’re active</p><p>Check the wording on demo first. Two alerts can show at once; priority 1 shows on top.</p></div></div>`,
   formCls: 'alert-form', formTitle: 'Alert details',
@@ -217,7 +217,7 @@ defineCollection({
 
 /* ---- Quick links ---- */
 defineCollection({
-  route: 'home-quick-links', type: 'quickLink', area: 'quickLinks', section: 'Home screen management', title: 'Quick links', noun: 'quick link', newLabel: 'New quick link', icon: 'apps',
+  route: 'home-quick-links', type: 'quickLink', area: 'quickLinks', section: 'Home Screen', title: 'Quick links', noun: 'quick link', newLabel: 'New quick link', icon: 'apps',
   lede: 'Tiles in the Quick links module. MyChart links hand off to MyChart sign-in; the Admin never edits MyChart content.',
   nameIcon: d => d.icon, defaultSort: { key: 'order', dir: 'asc' },
   defaults: () => ({ title: '', icon: 'stethoscope', iconAlt: '', destination: { type: 'screen', value: 'Find my Care' }, requiresSignIn: false, order: ConfigService.peekAll('quickLink').length + 1, enabled: true }),
@@ -241,7 +241,7 @@ defineCollection({
 
 /* ---- Featured cards (UTSW resources rows, §10.4) ---- */
 defineCollection({
-  route: 'home-featured-cards', type: 'featuredCard', area: 'featuredCards', section: 'Home screen management', title: 'Featured cards', noun: 'featured card', newLabel: 'New featured card', icon: 'library_books',
+  route: 'home-featured-cards', type: 'featuredCard', area: 'featuredCards', section: 'Home Screen', title: 'Featured cards', noun: 'featured card', newLabel: 'New featured card', icon: 'library_books',
   lede: 'Rows in the UTSW resources module. Assumed to be these rows rather than the MedBlog carousel – pending confirmation.',
   nameIcon: d => d.icon, defaultSort: { key: 'order', dir: 'asc' },
   defaults: () => ({ title: '', subtitle: '', icon: 'library_books', iconAlt: '', destination: { type: 'screen', value: 'Find my Care' }, order: ConfigService.peekAll('featuredCard').length + 1, enabled: true }),
