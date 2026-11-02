@@ -26,7 +26,7 @@ function delta(m, onBlue = false) {
   return `<span class="${cls} ${good ? 'good' : 'bad'}">${ic(up ? 'trending_up' : 'trending_down', 16)}${up ? '+' : '−'}${Math.abs(pct).toFixed(1)}%<span class="vh">, ${good ? 'better' : 'worse'} than the previous 30 days</span></span>`;
 }
 /* Audit actions read as sentences after the person's name */
-const VERBS = { 'Draft saved': 'saved a draft of', 'Review requested': 'requested a review of', 'Created as draft': 'created', 'Draft discarded': 'discarded the draft of', 'Deleted draft': 'deleted', 'Changes requested': 'requested changes to', 'User invited': 'invited', 'Role changed': 'changed the role of', 'User updated': 'updated', 'User deactivated': 'deactivated', 'User reactivated': 'reactivated', 'User deleted': 'deleted the account of', 'Invitation resent': 'resent the invitation to', 'Notification created': 'created the notification', 'Notification edited': 'edited the notification', 'Submitted for approval': 'submitted for approval', 'Notification scheduled': 'scheduled', 'Notification cancelled': 'cancelled', 'Notification duplicated': 'duplicated', 'Notification deleted': 'deleted the notification', 'Wayfinding file uploaded': 'uploaded the wayfinding file', 'Administrative settings changed': 'changed', 'Integration check run (simulated)': 'ran a check on' };
+const VERBS = { 'Draft saved': 'saved a draft of', 'Review requested': 'requested a review of', 'Created as draft': 'created', 'Draft discarded': 'discarded the draft of', 'Deleted draft': 'deleted', 'Changes requested': 'requested changes to', 'User invited': 'invited', 'Role changed': 'changed the role of', 'User updated': 'updated', 'User deactivated': 'deactivated', 'User reactivated': 'reactivated', 'User deleted': 'deleted the account of', 'Invitation resent': 'resent the invitation to', 'Notification created': 'created the notification', 'Notification edited': 'edited the notification', 'Notification scheduled': 'scheduled', 'Notification cancelled': 'cancelled', 'Notification duplicated': 'duplicated', 'Notification deleted': 'deleted the notification', 'Wayfinding file uploaded': 'uploaded the wayfinding file', 'Administrative settings changed': 'changed', 'Integration check run (simulated)': 'ran a check on' };
 const activityVerb = a => VERBS[a] || a.charAt(0).toLowerCase() + a.slice(1);
 /* Each person keeps one avatar style */
 const AVATAR_TONES = ['tone-a', 'tone-b', 'tone-c'];
@@ -78,7 +78,6 @@ BUILT_PAGES.dashboard = {
     const queue = [
       ...recs.filter(r => r.review).map(r => ({ tone: 'review', icon: 'rate_review', kind: 'Review requested', t: r.name, type: CONFIG_TYPES[r.type].label, s: `${UserService.name(r.review.by)} · ${ago(r.review.at)}`, href: recLink(r), act: canPub(CONFIG_TYPES[r.type].area) ? 'Review' : 'View' })),
       ...recs.filter(r => r.demo && r.demo !== r.production).map(r => ({ tone: 'publish', icon: 'rocket_launch', kind: 'Ready to publish', t: r.name, type: CONFIG_TYPES[r.type].label, s: `v${r.demo} checked on demo`, href: recLink(r), act: canPub(CONFIG_TYPES[r.type].area) ? 'Publish' : 'View' })),
-      ...notes.filter(n => n.status === 'pending').map(n => ({ tone: 'approve', icon: 'notifications', kind: 'Needs approval', t: n.title, type: 'Notification', s: `Sends ${fmtLocal(n.scheduledAt)}`, href: `notifications-${n.id}`, act: canPub('notifications') ? 'Approve' : 'View' })),
       ...way.versions.filter(v => v.status === 'validated').map(v => ({ tone: 'approve', icon: 'upload_file', kind: 'Ready for demo', t: v.fileName, type: 'Wayfinding file', s: `v${v.version} validated`, href: 'wayfinding', act: 'Open' }))
     ];
     const drafts = recs.filter(r => r.draft).length, onDemo = recs.filter(r => r.demo && r.demo !== r.production).length, livec = recs.filter(r => r.production).length;
@@ -88,7 +87,7 @@ BUILT_PAGES.dashboard = {
     const in30 = (() => { const d = localDay(now); d.setUTCDate(d.getUTCDate() + 30); return d.toISOString().slice(0, 10); })();
     const soon = s => s && s > now && s.slice(0, 10) <= in30;
     const upcoming = [
-      ...notes.filter(n => ['scheduled', 'pending'].includes(n.status) && soon(n.scheduledAt)).map(n => ({ at: n.scheduledAt, icon: 'notifications', what: n.status === 'pending' ? 'Notification, awaiting approval' : 'Notification sends', t: n.title, href: `notifications-${n.id}` })),
+      ...notes.filter(n => n.status === 'scheduled' && soon(n.scheduledAt)).map(n => ({ at: n.scheduledAt, icon: 'notifications', what: 'Notification sends', t: n.title, href: `notifications-${n.id}` })),
       ...recs.filter(r => r.type === 'campaign').flatMap(r => { const d = latestData(r); return [
         ...(soon(d.start) ? [{ at: d.start, icon: 'campaign', what: 'Campaign starts', t: r.name, href: recLink(r) }] : []),
         ...(soon(d.end) && windowStatus(d) === 'active' ? [{ at: d.end, icon: 'campaign', what: 'Campaign ends', t: r.name, href: recLink(r) }] : [])]; }),
@@ -123,7 +122,7 @@ BUILT_PAGES.dashboard = {
               <span class="db-tile">${ic(q.icon, 20)}</span>
               <span class="db-q-t"><span class="db-q-k">${esc(q.kind)} · ${esc(q.type)}</span><a href="#${q.href}">${esc(q.t)}</a><span class="muted">${esc(q.s)}</span></span>
               <a class="btn ${q.act === 'View' || q.act === 'Open' ? 'btn-secondary' : 'btn-primary'} btn-sm" href="#${q.href}" aria-label="${esc(q.act)}: ${esc(q.t)}"><span class="lbl">${esc(q.act)}</span></a></li>`).join('')}</ul>`
-            : `<div class="db-empty">${ic('task_alt', 24)}<p>You’re all caught up. Nothing is waiting for review, publishing or approval.</p></div>`}
+            : `<div class="db-empty">${ic('task_alt', 24)}<p>You’re all caught up. Nothing is waiting for review or publishing.</p></div>`}
         </section>
 
         <section class="card db-card db-now db-in ga-n" style="--i:2" aria-labelledby="dn-h">

@@ -20,8 +20,8 @@ The build writes `admin-portal.html`, a single self-contained file published as 
 | Module | Routes | Working flows |
 |---|---|---|
 | Sign-in | `login`, `mfa`, `signed-out`, `expired`, `denied` | Simulated UTSW SSO, then sample account, then simulated MFA approval. Never a password. Idle timeout from settings, sign out, access denied, and return to the requested page |
-| Dashboard | `dashboard` | Live emergency alerts, sample KPIs, "Needs attention" (reviews, demo versions waiting, approvals, unpublished wayfinding), campaigns, scheduled notifications, wayfinding, recent activity, DAU chart |
-| Home layout | `home-layout` | Guest and Authenticated tabs: reorder (keyboard buttons), show or hide, module library (add or remove with Undo), live preview, full lifecycle, change history with rollback |
+| Dashboard | `dashboard` | Live emergency alerts, sample KPIs, "Needs attention" (reviews, demo versions waiting, unpublished wayfinding), campaigns, scheduled notifications, wayfinding, recent activity, DAU chart |
+| Home layout | `home-layout` | Guest and Authenticated tabs: reorder (keyboard buttons), show or hide, live preview, full lifecycle, change history with rollback |
 | Campaigns | `home-campaigns`, `-new`, `-:id` | List with search, filters and status. Create and edit: content, image and alt text, facts, CTA and destination, audience, schedule, time zone. Validation, live preview, lifecycle, delete never-published drafts |
 | Emergency alerts | `home-alerts`, `-new`, `-:id` | Styled apart from campaigns (red banner, red-ruled form). Type, icon, message, full text, CTA, priority, display duration, window, dismissible, on or off. Preview stacks alerts by priority |
 | Quick links, Featured cards | `home-quick-links…`, `home-featured-cards…` | Title, approved icon, icon alt text, destination, position, sign-in lock (MyChart destinations must need sign-in), preview of the tiles or rows |
@@ -31,7 +31,7 @@ The build writes `admin-portal.html`, a single self-contained file published as 
 | Search | `search-query-mappings`, `search-synonyms`, `search-specialties`, `search-zero-results`, `search-ranking` | Editable tables with duplicate checks and a "Try a search" tester that uses unsaved edits. Zero-result queries become a synonym or mapping draft in one step. Ranking weights must total 100 |
 | Wayfinding | `wayfinding` | Choose or drop a real JSON file, or use a valid or broken sample. Progress, validation errors and warnings, save as validated, then publish to demo, publish to production, roll back, and history |
 | Audiences | `audiences…`, `audiences-rules`, `audiences-targeting` | Segments with a rule builder (all or any) and conflict checks, "used by", every rule with a person tester, and targeting campaigns or alerts (saves a draft on each item) |
-| Notifications | `notifications`, `-new`, `-:id` | Create and edit with validation, then submit for approval, approve and schedule or send now, cancel with a reason, duplicate, delete. Lock-screen or Inbox preview, plus results for sent messages |
+| Notifications | `notifications`, `-new`, `-:id` | Create and edit with validation, then schedule or send now (Admin and Super Admin), cancel a scheduled one with a reason, duplicate, delete. Every notification goes to all app users as push and Inbox. Lock-screen preview, plus results for sent messages |
 | Analytics | `analytics`, `analytics-*` | Overview plus five categories with exactly the brief's metrics. 7, 30 or 90 days with loading and error states, metric tiles, line chart (hover and arrow-key crosshair, data table), and breakdowns |
 | Users | `users`, `users-new`, `users-:id` | Search and filter by role and status. Create with required, email-format and duplicate checks (simulated invitation). Edit, change role, resend invite, deactivate or reactivate, delete. You can't remove or demote yourself |
 | Audit and versioning | `audit`, `audit-history` | Every action with actor, time, environment, comment and a before-and-after table. Every configuration's versions with comparison and rollback where the type supports it |
@@ -117,7 +117,7 @@ Campaign tags such as "Flu season" (white on 14% white over the campaign gradien
 11. **Drawer:** which items are fixed or CMS-managed, and whether sections can be reordered.
 12. **Search:** the engine, mapping semantics, the source of zero-result queries, and which ranking parameters can change.
 13. **Audiences:** attributes, precedence, conflict handling and PHI limits.
-14. **Notifications:** push provider, delivery types, approval, cancel and edit rules, allowed video hosts.
+14. **Notifications:** push provider, whether audience targeting, delivery types or an approval step are needed (removed from the prototype on request), who can send, cancel and edit rules, allowed video hosts.
 15. **Analytics:** data source and exact metric definitions.
 16. **Users:** invitation through the identity provider or the Admin; deletion vs deactivation; audit retention and before-and-after detail.
 17. **Environments:** what "Demo" is (a separate environment or a build), and who can promote to production. Which config types support versioning and rollback (all flags here are assumptions).

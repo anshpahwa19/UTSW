@@ -402,16 +402,12 @@ select.input:disabled{cursor:not-allowed}
 .hl-grid{display:grid; grid-template-columns:minmax(0,1fr); gap:var(--s6); align-items:start}
 .hl-preview{min-width:0}
 .hint-line{font-size:var(--t14); color:var(--ink-2); margin-bottom:var(--s3)}
-.fixed-list,.mod-list,.lib-list{list-style:none; margin:0; padding:0; display:grid; gap:var(--s2)}
-.fixed-list li{display:flex; align-items:center; gap:var(--s3); padding:var(--s2) var(--s3); border-radius:var(--r-md); background:var(--bg); color:var(--ink)}
-.fixed-list li > .ms{color:var(--ink-2)}
-.fixed-list .mod-txt{flex:1}
+.mod-list{list-style:none; margin:0; padding:0; display:grid; gap:var(--s2)}
 .hl-edit{min-width:0; container:edit / inline-size}
-.mod-row,.lib-row{display:grid; grid-template-columns:auto auto minmax(0,1fr); grid-template-areas:"pos ic txt" ". . ctl"; align-items:center; gap:var(--s2) var(--s3); padding:var(--s3); border-radius:var(--r-md); background:var(--surface); box-shadow:inset 0 0 0 1px var(--line-strong)}
+.mod-row{display:grid; grid-template-columns:auto auto minmax(0,1fr); grid-template-areas:"pos ic txt" ". . ctl"; align-items:center; gap:var(--s2) var(--s3); padding:var(--s3); border-radius:var(--r-md); background:var(--surface); box-shadow:inset 0 0 0 1px var(--line-strong)}
 .mod-pos{grid-area:pos} .mod-row .mod-ic{grid-area:ic} .mod-row .mod-txt{grid-area:txt}
 .mod-row > .badge{grid-area:ctl; justify-self:start}
 .mod-ctl{grid-area:ctl; justify-self:end}
-.lib-row{grid-template-columns:auto minmax(0,1fr) auto; grid-template-areas:none; box-shadow:inset 0 0 0 1px var(--line); background:var(--bg)}
 @container edit (min-width: 640px){
   .mod-row{grid-template-columns:auto auto minmax(0,1fr) auto auto; grid-template-areas:"pos ic txt badge ctl"}
   .mod-row > .badge{grid-area:badge}
@@ -424,8 +420,6 @@ select.input:disabled{cursor:not-allowed}
 .mod-t{font-weight:600}
 .mod-d{font-size:var(--t14); color:var(--ink-2)}
 .mod-ctl{display:flex; align-items:center; gap:2px}
-.lib-empty{display:flex; align-items:center; gap:var(--s2); font-size:var(--t14); color:var(--ink-2)}
-.lib-empty .ms{color:var(--blue)}
 
 /* Preview */
 .pv-row{display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:var(--s2) var(--s3); margin-bottom:var(--s3)}
@@ -1179,13 +1173,13 @@ function seedDb() {
   };
 
   /* ---- Notifications ---- */
-  const nt = (id, o) => ({ id, title: '', description: '', sendTo: 'seg-all', delivery: 'push+inbox', timing: 'scheduled', scheduledAt: '', image: 'none', imageAlt: '', videoUrl: '', destination: { type: 'none', value: '' }, status: 'draft', createdBy: 'u3', createdAt: t('2026-10-20T15:00:00Z'), updatedAt: t('2026-10-20T15:00:00Z'), sentAt: null, stats: null, ...o });
+  const nt = (id, o) => ({ id, title: '', description: '', timing: 'scheduled', scheduledAt: '', image: 'none', imageAlt: '', videoUrl: '', destination: { type: 'none', value: '' }, status: 'draft', createdBy: 'u3', createdAt: t('2026-10-20T15:00:00Z'), updatedAt: t('2026-10-20T15:00:00Z'), sentAt: null, stats: null, ...o });
   const notifications = [
     nt('n1', { title: 'Flu shots are here', description: 'Walk in on Saturdays, 8 a.m. to noon, at any primary care clinic.', destination: { type: 'screen', value: 'Flu shot locations' }, status: 'sent', scheduledAt: '2026-09-29T08:00', sentAt: t('2026-09-29T13:00:00Z'), createdAt: t('2026-09-26T19:00:00Z'), stats: { delivered: 168250, opened: 31400, actions: 9620 } }),
-    nt('n2', { title: 'New visitor hours start Nov. 1', description: 'Two visitors at a time, 8 a.m. to 8 p.m.', delivery: 'inbox', destination: { type: 'screen', value: 'Visitor guidelines' }, status: 'sent', scheduledAt: '2026-10-06T09:00', sentAt: t('2026-10-06T14:00:00Z'), createdBy: 'u2', createdAt: t('2026-10-03T15:00:00Z'), stats: { delivered: 179900, opened: 22100, actions: 4380 } }),
-    nt('n3', { title: 'Estimate your costs before your visit', description: 'Price estimates are now online. It takes about 5 minutes.', sendTo: 'seg-signedin', destination: { type: 'screen', value: 'Price estimates' }, status: 'scheduled', scheduledAt: '2026-11-03T09:00', createdAt: t('2026-10-27T15:00:00Z'), image: 'b', imageAlt: 'Abstract circles on a sky-blue background' }),
-    nt('n4', { title: 'MyCare ahora en español', description: 'Cambie el idioma en MyChart, luego Idioma.', sendTo: 'seg-spanish', destination: { type: 'screen', value: 'Language' }, status: 'pending', scheduledAt: '2026-11-05T10:00', createdAt: t('2026-10-29T16:00:00Z') }),
-    nt('n5', { title: 'Our new Frisco clinic opens Dec. 1', description: 'Primary care, imaging, and physical therapy in one place.', sendTo: 'seg-collin', destination: { type: 'screen', value: 'Locations' }, status: 'draft', scheduledAt: '2026-12-01T08:00', createdAt: t('2026-10-29T20:10:00Z') }),
+    nt('n2', { title: 'New visitor hours start Nov. 1', description: 'Two visitors at a time, 8 a.m. to 8 p.m.', destination: { type: 'screen', value: 'Visitor guidelines' }, status: 'sent', scheduledAt: '2026-10-06T09:00', sentAt: t('2026-10-06T14:00:00Z'), createdBy: 'u2', createdAt: t('2026-10-03T15:00:00Z'), stats: { delivered: 179900, opened: 22100, actions: 4380 } }),
+    nt('n3', { title: 'Estimate your costs before your visit', description: 'Price estimates are now online. It takes about 5 minutes.', destination: { type: 'screen', value: 'Price estimates' }, status: 'scheduled', scheduledAt: '2026-11-03T09:00', createdAt: t('2026-10-27T15:00:00Z'), image: 'b', imageAlt: 'Abstract circles on a sky-blue background' }),
+    nt('n4', { title: 'MyCare ahora en español', description: 'Cambie el idioma en MyChart, luego Idioma.', destination: { type: 'screen', value: 'Language' }, status: 'draft', scheduledAt: '2026-11-05T10:00', createdAt: t('2026-10-29T16:00:00Z') }),
+    nt('n5', { title: 'Our new Frisco clinic opens Dec. 1', description: 'Primary care, imaging, and physical therapy in one place.', destination: { type: 'screen', value: 'Locations' }, status: 'draft', scheduledAt: '2026-12-01T08:00', createdAt: t('2026-10-29T20:10:00Z') }),
     nt('n6', { title: 'Holiday hours', description: 'Most clinics close Thursday, Nov. 26. Emergency departments stay open.', status: 'cancelled', scheduledAt: '2026-11-20T09:00', createdBy: 'u2', createdAt: t('2026-10-15T15:00:00Z') })
   ];
 
@@ -1222,7 +1216,7 @@ function seedDb() {
     { id: uid('au'), at: t('2026-09-01T15:00:00Z'), by: 'u1', action: 'User deactivated', target: 'Grace Liu', targetId: 'u7', targetType: 'user', environment: null, version: null, comment: 'Moved to another department', before: { status: 'Active' }, after: { status: 'Deactivated' } },
     { id: uid('au'), at: t('2026-08-10T15:00:00Z'), by: 'u1', action: 'Role changed', target: 'Theo Adams', targetId: 'u8', targetType: 'user', environment: null, version: null, comment: '', before: { role: 'Admin' }, after: { role: 'Marketing' } });
 
-  return { schema: 3, records: Object.fromEntries(records.map(r => [r.id, r])), users, notifications, wayfinding, integrations, settings, audit, zeroResults };
+  return { schema: 4, records: Object.fromEntries(records.map(r => [r.id, r])), users, notifications, wayfinding, integrations, settings, audit, zeroResults };
 }
 
 /* ===== src/app/permissions.js ===== */
@@ -1277,7 +1271,7 @@ const canAct = (role, area, action) => can(role, area, ACTION_NEEDS[action]);
 const MockSettings = { latency: [160, 380], simulateErrors: false };
 class ServiceError extends Error {}
 const wait = ms => new Promise(r => setTimeout(r, ms));
-const SCHEMA = 3;
+const SCHEMA = 4;
 let DB = null;
 function loadDb() {
   const saved = store.read();
@@ -1477,8 +1471,8 @@ const UserService = {
   })
 };
 
-/* ---------- Notifications: draft → pending approval → scheduled or sent; cancel while scheduled ---------- */
-const NOTE_STATUS = { draft: 'Draft', pending: 'Pending approval', scheduled: 'Scheduled', sent: 'Sent', cancelled: 'Cancelled' };
+/* ---------- Notifications: draft → scheduled or sent; cancel while scheduled ---------- */
+const NOTE_STATUS = { draft: 'Draft', scheduled: 'Scheduled', sent: 'Sent', cancelled: 'Cancelled' };
 const NotificationService = {
   list: () => mockCall('notifications', () => DB.db.notifications),
   get: id => mockCall('notifications', () => { const n = DB.db.notifications.find(x => x.id === id); if (!n) throw new ServiceError('That notification no longer exists.'); return n; }),
@@ -1491,21 +1485,16 @@ const NotificationService = {
       return n;
     }
     const n = DB.db.notifications.find(x => x.id === id);
-    if (!['draft', 'pending'].includes(n.status)) throw new ServiceError(`${NOTE_STATUS[n.status]} notifications can’t be edited. Duplicate it instead.`);
+    if (n.status !== 'draft') throw new ServiceError(`${NOTE_STATUS[n.status]} notifications can’t be edited. Duplicate it instead.`);
     const before = clone(n);
     Object.assign(n, clone(data), { status: 'draft', updatedAt: nowIso() });
     audit('Notification edited', n.title, { targetId: id, targetType: 'notification', before, after: data });
     return n;
   }),
-  submit: id => mockCall('notifications', () => {
-    needs('notifications', 'draft');
-    const n = DB.db.notifications.find(x => x.id === id); n.status = 'pending'; n.updatedAt = nowIso();
-    audit('Submitted for approval', n.title, { targetId: id, targetType: 'notification' });
-    return n;
-  }),
-  approve: (id, comment) => mockCall('notifications', () => {
+  schedule: (id, comment) => mockCall('notifications', () => {
     needs('notifications', 'publish');
     const n = DB.db.notifications.find(x => x.id === id);
+    if (n.status !== 'draft') throw new ServiceError('Only drafts can be scheduled or sent.');
     if (n.timing === 'now') { n.status = 'sent'; n.sentAt = nowIso(); n.stats = { delivered: 0, opened: 0, actions: 0 }; }
     else n.status = 'scheduled';
     n.updatedAt = nowIso();
@@ -1515,7 +1504,7 @@ const NotificationService = {
   cancel: (id, comment) => mockCall('notifications', () => {
     needs('notifications', 'publish');
     const n = DB.db.notifications.find(x => x.id === id);
-    if (n.status !== 'scheduled' && n.status !== 'pending') throw new ServiceError('Only scheduled or pending notifications can be cancelled.');
+    if (n.status !== 'scheduled') throw new ServiceError('Only scheduled notifications can be cancelled.');
     n.status = 'cancelled'; n.updatedAt = nowIso();
     audit('Notification cancelled', n.title, { targetId: id, targetType: 'notification', comment });
     return n;
@@ -2973,7 +2962,6 @@ BUILT_PAGES['home-layout'] = (() => {
 
   function renderEditor(focus) {
     const ro = !may('saveDraft');
-    const lib = AUDIENCE_MODULES[st.aud].filter(id => !st.working.modules.some(m => m.id === id));
     const n = st.working.modules.length;
     const row = (m, i) => {
       const meta = HOME_MODULES[m.id];
@@ -2986,22 +2974,14 @@ BUILT_PAGES['home-layout'] = (() => {
           ${switchBtn({ id: `vis-${m.id}`, checked: m.on, label: `Show ${meta.label} on the home screen`, attrs: 'data-act="vis"' })}
           <button type="button" class="btn btn-text btn-icon" data-act="up" aria-label="Move ${esc(meta.label)} up" ${i === 0 ? 'disabled' : ''}>${ic('arrow_upward', 20)}</button>
           <button type="button" class="btn btn-text btn-icon" data-act="down" aria-label="Move ${esc(meta.label)} down" ${i === n - 1 ? 'disabled' : ''}>${ic('arrow_downward', 20)}</button>
-          <button type="button" class="btn btn-text btn-icon" data-act="remove" aria-label="Remove ${esc(meta.label)} from the layout">${ic('remove_circle', 20)}</button>
         </span>`}
       </li>`;
     };
     $('#editor').innerHTML = card({ title: `${st.aud === 'guest' ? 'Guest' : 'Authenticated'} home modules`, titleId: 'ed-h', actions: ro ? badge('fixed', 'View only') : '', body: `
-      <h3 class="sub-h">Fixed at the top</h3>
-      <ul class="fixed-list">${HOME_FIXED.map(f => `<li>${ic(f.icon, 20)}<span class="mod-txt"><span class="mod-t">${esc(f.label)}</span><span class="mod-d">${esc(f.desc)}</span></span>${badge('fixed')}</li>`).join('')}</ul>
       <h3 class="sub-h" id="ord-h" tabindex="-1">Modules, in order</h3>
       <p class="hint-line">Use the arrows to reorder. Hidden modules keep their place but patients don’t see them.</p>
       ${n ? `<ol class="mod-list" aria-labelledby="ord-h">${st.working.modules.map(row).join('')}</ol>`
-        : emptyState({ icon: 'view_agenda', title: 'No modules on this layout', text: 'Add modules from the library below.', level: 4 })}
-      <h3 class="sub-h" id="lib-h">Module library</h3>
-      ${lib.length ? `<ul class="lib-list" aria-labelledby="lib-h">${lib.map(id => `<li class="lib-row" data-id="${id}">
-          <span class="mod-ic">${ic(HOME_MODULES[id].icon, 20)}</span><span class="mod-txt"><span class="mod-t">${esc(HOME_MODULES[id].label)}</span><span class="mod-d">${esc(HOME_MODULES[id].desc)}</span></span>
-          ${ro ? '' : btn({ label: 'Add to layout', icon: 'add', variant: 'tonal', attrs: `data-act="add" aria-label="Add ${esc(HOME_MODULES[id].label)} to the layout"` })}</li>`).join('')}</ul>`
-        : `<p class="lib-empty">${ic('check_circle', 20)}<span>Every ${st.aud} module is on the layout. Remove one to move it here.</span></p>`}` });
+        : emptyState({ icon: 'view_agenda', title: 'No modules on this layout', text: '', level: 4 })}` });
     $('#editor').onclick = editorClick;
     if (focus) {
       const sel = focus.id ? `[data-id="${focus.id}"] [data-act="${focus.act}"]` : focus.sel;
@@ -3022,16 +3002,6 @@ BUILT_PAGES['home-layout'] = (() => {
       announce(`${label} moved to position ${j + 1} of ${list.length}`);
       update({ id, act: b.dataset.act });
     }
-    if (b.dataset.act === 'remove') {
-      const [gone] = list.splice(i, 1);
-      announce(`${label} removed from the layout. It is in the module library.`);
-      update({ sel: `[data-id="${id}"] [data-act="add"]` });
-      toast(`${label} removed from the layout.`, { action: 'Undo', onAction: () => {
-        if (st.working.modules.some(m => m.id === gone.id)) return;
-        st.working.modules.splice(i, 0, gone); announce(`${label} restored to position ${i + 1}`); update({ id, act: 'remove' });
-      } });
-    }
-    if (b.dataset.act === 'add') { list.push({ id, on: true }); announce(`${label} added at position ${list.length}`); update({ id, act: 'up' }); }
   }
 
   return { render, leave() { if (pv) { pv.destroy(); pv = null; } } };
@@ -3314,8 +3284,7 @@ function segmentConflicts(d) {
 }
 const segmentUsers = id => [
   ...ConfigService.peekAll('campaign').filter(r => latestData(r).audience === id).map(r => ['Campaign', r.name, `home-campaigns-${r.id}`]),
-  ...ConfigService.peekAll('alert').filter(r => latestData(r).audience === id).map(r => ['Emergency alert', r.name, `home-alerts-${r.id}`]),
-  ...DB.db.notifications.filter(n => n.sendTo === id && !['sent', 'cancelled'].includes(n.status)).map(n => ['Notification', n.title, `notifications-${n.id}`])
+  ...ConfigService.peekAll('alert').filter(r => latestData(r).audience === id).map(r => ['Emergency alert', r.name, `home-alerts-${r.id}`])
 ];
 defineCollection({
   route: 'audiences', type: 'segment', area: 'audiences', section: 'Audience management', title: 'Audience segments', noun: 'segment', newLabel: 'New segment', icon: 'groups', nameLabel: 'Segment',
@@ -3692,12 +3661,10 @@ defineSingleton({
 
 /* ===== src/pages/notifications.js ===== */
 /* ---------- Notifications: list, create and edit, details ----------
-   Lifecycle: Draft → Pending approval → Scheduled (or Sent when immediate) → Sent; Cancel while pending or scheduled.
-   Approval, cancel and edit rules are pending UTSW confirmation (§10.14). Sending is simulated. */
-const NOTE_BADGE = { draft: 'draft', pending: 'review', scheduled: 'demo', sent: 'live', cancelled: 'hidden' };
+   Lifecycle: Draft → Scheduled (or Sent when immediate) → Sent; Cancel while scheduled.
+   Admins and Super Admins schedule or send; cancel and edit rules are pending UTSW confirmation (§10.14). Sending is simulated. */
+const NOTE_BADGE = { draft: 'draft', scheduled: 'demo', sent: 'live', cancelled: 'hidden' };
 const noteBadge = s => badge(NOTE_BADGE[s], NOTE_STATUS[s]);
-const DELIVERY = [['push+inbox', 'Push and Inbox'], ['push', 'Push only'], ['inbox', 'Inbox only']];
-const deliveryLabel = k => (DELIVERY.find(d => d[0] === k) || [k, k])[1];
 const NOTE_SECTIONS = [
   { title: 'Message', fields: [
     { key: 'title', label: 'Notification title', required: true, max: 50 },
@@ -3707,9 +3674,7 @@ const NOTE_SECTIONS = [
     { key: 'videoUrl', label: 'Video URL', type: 'text', placeholder: 'https://', hint: 'Optional. Allowed video hosts are pending (§10.14).' },
     { key: 'destination', label: 'Opens', type: 'destination', hint: 'Where the app goes when the notification is tapped.' }] },
   { title: 'Delivery', fields: [
-    { key: 'sendTo', label: 'Send to', type: 'segment' },
-    { key: 'delivery', label: 'Delivery type', type: 'radio', options: DELIVERY },
-    { key: 'timing', label: 'When', type: 'radio', options: [['now', 'Immediately after approval'], ['scheduled', 'At a scheduled time']], rerender: true },
+    { key: 'timing', label: 'When', type: 'radio', options: [['now', 'Immediately'], ['scheduled', 'At a scheduled time']], rerender: true },
     { key: 'scheduledAt', label: 'Scheduled date and time (Central Time)', type: 'datetime', required: true, show: d => d.timing === 'scheduled' }] }
 ];
 const noteFields = fields(NOTE_SECTIONS);
@@ -3725,7 +3690,7 @@ BUILT_PAGES.notifications = {
     try { list = await NotificationService.list(); } catch (err) { $('#nt-body').innerHTML = errorState(err.message); $('[data-retry]').onclick = () => this.render(main); return; }
     const c = k => list.filter(n => n.status === k).length;
     $('#nt-body').innerHTML = `<div class="stat-strip">
-      <div class="stat">${ic('rate_review', 20)}<span><b>${c('pending')}</b> waiting for approval</span></div>
+      <div class="stat">${ic('edit_note', 20)}<span><b>${c('draft')}</b> ${c('draft') === 1 ? 'draft' : 'drafts'}</span></div>
       <div class="stat">${ic('schedule', 20)}<span><b>${c('scheduled')}</b> scheduled</span></div>
       <div class="stat">${ic('send', 20)}<span><b>${c('sent')}</b> sent</span></div></div>
       <section class="card"><div class="card-body" id="nt-table"></div></section>`;
@@ -3733,15 +3698,11 @@ BUILT_PAGES.notifications = {
       id: 'nt', caption: 'Notifications', noun: 'notification', rows: list, defaultSort: { key: 'created', dir: 'desc' }, pageSize: 10, searchPlaceholder: 'Search titles and messages',
       searchText: n => `${n.title} ${n.description}`,
       filters: [
-        { key: 'status', label: 'Status', options: Object.entries(NOTE_STATUS), match: (n, v) => n.status === v },
-        { key: 'delivery', label: 'Type', options: DELIVERY, match: (n, v) => n.delivery === v },
-        { key: 'aud', label: 'Audience', options: segmentOptions(), match: (n, v) => n.sendTo === v }],
+        { key: 'status', label: 'Status', options: Object.entries(NOTE_STATUS), match: (n, v) => n.status === v }],
       empty: { icon: 'notifications', title: 'No notifications yet', text: canEdit ? 'Create the first one.' : '' },
       columns: [
         { key: 'title', label: 'Title', sortable: true, sortValue: n => n.title.toLowerCase(), render: n => `<a class="row-link" href="#notifications-${n.id}">${esc(n.title)}</a>` },
-        { key: 'delivery', label: 'Type', render: n => esc(deliveryLabel(n.delivery)) },
-        { key: 'sendTo', label: 'Audience', render: n => esc(segmentName(n.sendTo)) },
-        { key: 'when', label: 'Scheduled', sortable: true, sortValue: n => n.scheduledAt || '', render: n => n.timing === 'now' && !n.sentAt ? 'After approval' : `<span class="nowrap">${esc(fmtLocal(n.scheduledAt))}</span>` },
+        { key: 'when', label: 'Scheduled', sortable: true, sortValue: n => n.scheduledAt || '', render: n => n.timing === 'now' && !n.sentAt ? 'Immediately' : `<span class="nowrap">${esc(fmtLocal(n.scheduledAt))}</span>` },
         { key: 'created', label: 'Created', sortable: true, sortValue: n => n.createdAt, render: n => `<span class="nowrap">${esc(fmtDate(n.createdAt))}</span>` },
         { key: 'status', label: 'Status', sortable: true, sortValue: n => n.status, render: n => noteBadge(n.status) }]
     });
@@ -3758,17 +3719,17 @@ const noteEditor = {
       try { n = await NotificationService.get(ctx.params.id); }
       catch (err) { $('#ne').innerHTML = `${pageHead({ crumbs: [['Notifications', null], ['All notifications', 'notifications']], title: 'Notification not found' })}${errorState(err.message)}`; $('[data-retry]').onclick = () => this.render(main, ctx); return; }
     }
-    const blank = { title: '', description: '', sendTo: 'seg-all', delivery: 'push+inbox', timing: 'scheduled', scheduledAt: '', image: 'none', imageAlt: '', videoUrl: '', destination: { type: 'none', value: '' } };
+    const blank = { title: '', description: '', timing: 'scheduled', scheduledAt: '', image: 'none', imageAlt: '', videoUrl: '', destination: { type: 'none', value: '' } };
     const working = n ? noteData(n) : clone(blank);
     let errors = {};
-    const editable = () => can(role, 'notifications', 'draft') && (!n || ['draft', 'pending'].includes(n.status));
+    const editable = () => can(role, 'notifications', 'draft') && (!n || n.status === 'draft');
     const dirty = () => !same(working, n ? noteData(n) : blank);
     const title = () => working.title || 'Create notification';
     const steps = () => {
-      const s = n ? n.status : 'draft', order = ['draft', 'pending', 'scheduled', 'sent'];
+      const s = n ? n.status : 'draft', order = ['draft', 'scheduled', 'sent'];
       if (s === 'cancelled') return [{ title: 'Draft', state: 'done' }, { title: 'Cancelled', state: 'current', detail: badge('hidden', 'Cancelled – won’t be sent') }];
       const at = order.indexOf(s);
-      return [['Draft', 'draft'], ['Approval', 'pending'], [working.timing === 'now' ? 'Send' : 'Scheduled', 'scheduled'], ['Sent', 'sent']].map(([t, k], i) => ({ title: t, state: i < at ? 'done' : i === at ? (k === 'sent' ? 'done' : 'current') : 'todo',
+      return [['Draft', 'draft'], [working.timing === 'now' ? 'Send' : 'Scheduled', 'scheduled'], ['Sent', 'sent']].map(([t, k], i) => ({ title: t, state: i < at ? 'done' : i === at ? (k === 'sent' ? 'done' : 'current') : 'todo',
         detail: k === 'scheduled' && n && n.scheduledAt && working.timing === 'scheduled' ? esc(fmtLocal(n.scheduledAt)) : k === 'sent' && n && n.sentAt ? esc(fmtDateTime(n.sentAt)) : k === 'draft' && isNew ? badge('unsaved', 'New') : '' }));
     };
     $('#ne').innerHTML = `${pageHead({ crumbs: [['Notifications', null], ['All notifications', 'notifications']], title: title(), badges: `<span id="ne-b">${n ? noteBadge(n.status) : badge('unsaved', 'New')}</span>` })}
@@ -3787,20 +3748,19 @@ const noteEditor = {
     form.addEventListener('submit', e => e.preventDefault());
     const pv = this.pv = mountPreviewCard($('#ne-pv'), {
       title: 'Mobile preview of the notification',
-      sources: () => [['working', 'Lock screen', working.delivery === 'inbox' ? badge('draft', 'Inbox message') : badge('draft', 'Push notification')]],
-      payload: () => ({ screen: 'push', layout: layoutFor('guest'), content: { ...appContent(), push: { title: working.title, body: working.description, art: working.image !== 'none' ? ART[working.image] : null, delivery: working.delivery, when: working.timing === 'scheduled' && working.scheduledAt ? fmtLocal(working.scheduledAt).replace(/, \d{4},.*$/, '') : 'Thursday, Oct. 30' } }, label: 'notification preview' })
+      sources: () => [['working', 'Lock screen', badge('draft', 'Push notification')]],
+      payload: () => ({ screen: 'push', layout: layoutFor('guest'), content: { ...appContent(), push: { title: working.title, body: working.description, art: working.image !== 'none' ? ART[working.image] : null, delivery: 'push+inbox', when: working.timing === 'scheduled' && working.scheduledAt ? fmtLocal(working.scheduledAt).replace(/, \d{4},.*$/, '') : 'Thursday, Oct. 30' } }, label: 'notification preview' })
     });
     const renderActions = () => {
       const s = n ? n.status : 'new', acts = [];
       const can2 = l => can(role, 'notifications', l);
       if (editable() && (dirty() || isNew)) acts.push(btn({ label: isNew ? 'Save as draft' : 'Save changes', icon: 'save', variant: 'primary', attrs: 'data-n="save"' }));
-      if (s === 'draft' && !dirty() && can2('draft')) acts.push(btn({ label: 'Submit for approval', icon: 'rate_review', variant: can2('publish') ? 'secondary' : 'primary', attrs: 'data-n="submit"' }));
-      if (s === 'pending' && !dirty() && can2('publish')) acts.push(btn({ label: working.timing === 'now' ? 'Approve and send now' : 'Approve and schedule', icon: working.timing === 'now' ? 'send' : 'schedule', variant: 'primary', attrs: 'data-n="approve"' }));
-      if (['pending', 'scheduled'].includes(s) && can2('publish')) acts.push(btn({ label: 'Cancel notification', icon: 'cancel', variant: 'secondary', attrs: 'data-n="cancel"' }));
+      if (s === 'draft' && !dirty() && can2('publish')) acts.push(btn({ label: working.timing === 'now' ? 'Send now' : 'Schedule', icon: working.timing === 'now' ? 'send' : 'schedule', variant: 'primary', attrs: 'data-n="schedule"' }));
+      if (s === 'scheduled' && can2('publish')) acts.push(btn({ label: 'Cancel notification', icon: 'cancel', variant: 'secondary', attrs: 'data-n="cancel"' }));
       if (n && can2('draft')) acts.push(btn({ label: 'Duplicate', icon: 'content_copy', variant: 'text', attrs: 'data-n="dup"' }));
       if (n && ['draft', 'cancelled'].includes(s) && can2('draft')) acts.push(btn({ label: 'Delete', icon: 'delete', variant: 'text', attrs: 'data-n="del"' }));
-      const note = s === 'pending' && !can2('publish') ? 'Waiting for an Admin or Super Admin to approve it.' : s === 'draft' && !can2('publish') ? 'After you submit it, an Admin or Super Admin approves it.' : '';
-      $('#ne-lc').innerHTML = `${stepper(steps(), 'Notification status')}<div class="lc-actions">${acts.join('')}</div>${note ? `<p class="role-note">${ic('info', 20)}<span>${note} Approval rules are pending confirmation.</span></p>` : ''}`;
+      const note = s === 'draft' && can2('draft') && !can2('publish') ? 'An Admin or Super Admin schedules or sends drafts. Who can send is pending confirmation.' : '';
+      $('#ne-lc').innerHTML = `${stepper(steps(), 'Notification status')}<div class="lc-actions">${acts.join('')}</div>${note ? `<p class="role-note">${ic('info', 20)}<span>${note}</span></p>` : ''}`;
       $('#ne-b').innerHTML = `${n ? noteBadge(n.status) : badge('unsaved', 'New')}${n && dirty() ? badge('unsaved') : ''}`;
       $('#page-h').textContent = title();
     };
@@ -3815,12 +3775,11 @@ const noteEditor = {
       if (k === 'save') {
         errors = validateData(noteFields, working, noteValidate); draw();
         if (Object.keys(errors).length) { $('#f-errsum').focus(); return; }
-        return run(() => NotificationService.save(n && n.id, working), 'Saving', 'Saved as a draft. Submit it for approval when it’s ready.', r => isNew ? `notifications-${r.id}` : null);
+        return run(() => NotificationService.save(n && n.id, working), 'Saving', can(role, 'notifications', 'publish') ? 'Saved as a draft. Schedule it when it’s ready.' : 'Saved as a draft.', r => isNew ? `notifications-${r.id}` : null);
       }
-      if (k === 'submit') { const c = await confirmDialog({ title: 'Submit for approval?', body: `<p>An Admin or Super Admin reviews “${esc(n.title)}” before it’s ${n.timing === 'now' ? 'sent' : 'scheduled'}.</p>`, confirmLabel: 'Submit for approval' }); if (c.ok) run(() => NotificationService.submit(n.id), 'Submitting', 'Submitted for approval.'); }
-      if (k === 'approve') {
-        const c = await confirmDialog({ title: n.timing === 'now' ? 'Send this notification now?' : 'Approve and schedule?', body: `<div class="warn-box">${ic('notifications', 20)}<p>${n.timing === 'now' ? 'It goes to' : `On ${esc(fmtLocal(n.scheduledAt))} it goes to`} <b>${esc(segmentName(n.sendTo))}</b> as ${esc(deliveryLabel(n.delivery).toLowerCase())}. Sending is simulated in the prototype.</p></div>`, confirmLabel: n.timing === 'now' ? 'Send now' : 'Approve and schedule', comment: { label: 'Comment', hint: 'Optional' } });
-        if (c.ok) run(() => NotificationService.approve(n.id, c.comment), 'Approving', r => r.status === 'sent' ? 'Sent (simulated).' : `Scheduled for ${fmtLocal(r.scheduledAt)}.`);
+      if (k === 'schedule') {
+        const c = await confirmDialog({ title: n.timing === 'now' ? 'Send this notification now?' : 'Schedule this notification?', body: `<div class="warn-box">${ic('notifications', 20)}<p>${n.timing === 'now' ? 'It goes out now' : `It goes out on ${esc(fmtLocal(n.scheduledAt))}`} as a push notification and an Inbox message. Sending is simulated in the prototype.</p></div>`, confirmLabel: n.timing === 'now' ? 'Send now' : 'Schedule', comment: { label: 'Comment', hint: 'Optional' } });
+        if (c.ok) run(() => NotificationService.schedule(n.id, c.comment), n.timing === 'now' ? 'Sending' : 'Scheduling', r => r.status === 'sent' ? 'Sent (simulated).' : `Scheduled for ${fmtLocal(r.scheduledAt)}.`);
       }
       if (k === 'cancel') { const c = await confirmDialog({ title: 'Cancel this notification?', body: '<p>It won’t be sent. You can duplicate it later to send a new version.</p>', confirmLabel: 'Cancel notification', variant: 'danger', cancelLabel: 'Keep it', comment: { label: 'Reason', required: true } }); if (c.ok) run(() => NotificationService.cancel(n.id, c.comment), 'Cancelling', 'Notification cancelled.'); }
       if (k === 'dup') run(() => NotificationService.duplicate(n.id), 'Duplicating', 'Duplicated as a new draft.', r => `notifications-${r.id}`);
@@ -4242,7 +4201,7 @@ function delta(m, onBlue = false) {
   return `<span class="${cls} ${good ? 'good' : 'bad'}">${ic(up ? 'trending_up' : 'trending_down', 16)}${up ? '+' : '−'}${Math.abs(pct).toFixed(1)}%<span class="vh">, ${good ? 'better' : 'worse'} than the previous 30 days</span></span>`;
 }
 /* Audit actions read as sentences after the person's name */
-const VERBS = { 'Draft saved': 'saved a draft of', 'Review requested': 'requested a review of', 'Created as draft': 'created', 'Draft discarded': 'discarded the draft of', 'Deleted draft': 'deleted', 'Changes requested': 'requested changes to', 'User invited': 'invited', 'Role changed': 'changed the role of', 'User updated': 'updated', 'User deactivated': 'deactivated', 'User reactivated': 'reactivated', 'User deleted': 'deleted the account of', 'Invitation resent': 'resent the invitation to', 'Notification created': 'created the notification', 'Notification edited': 'edited the notification', 'Submitted for approval': 'submitted for approval', 'Notification scheduled': 'scheduled', 'Notification cancelled': 'cancelled', 'Notification duplicated': 'duplicated', 'Notification deleted': 'deleted the notification', 'Wayfinding file uploaded': 'uploaded the wayfinding file', 'Administrative settings changed': 'changed', 'Integration check run (simulated)': 'ran a check on' };
+const VERBS = { 'Draft saved': 'saved a draft of', 'Review requested': 'requested a review of', 'Created as draft': 'created', 'Draft discarded': 'discarded the draft of', 'Deleted draft': 'deleted', 'Changes requested': 'requested changes to', 'User invited': 'invited', 'Role changed': 'changed the role of', 'User updated': 'updated', 'User deactivated': 'deactivated', 'User reactivated': 'reactivated', 'User deleted': 'deleted the account of', 'Invitation resent': 'resent the invitation to', 'Notification created': 'created the notification', 'Notification edited': 'edited the notification', 'Notification scheduled': 'scheduled', 'Notification cancelled': 'cancelled', 'Notification duplicated': 'duplicated', 'Notification deleted': 'deleted the notification', 'Wayfinding file uploaded': 'uploaded the wayfinding file', 'Administrative settings changed': 'changed', 'Integration check run (simulated)': 'ran a check on' };
 const activityVerb = a => VERBS[a] || a.charAt(0).toLowerCase() + a.slice(1);
 /* Each person keeps one avatar style */
 const AVATAR_TONES = ['tone-a', 'tone-b', 'tone-c'];
@@ -4294,7 +4253,6 @@ BUILT_PAGES.dashboard = {
     const queue = [
       ...recs.filter(r => r.review).map(r => ({ tone: 'review', icon: 'rate_review', kind: 'Review requested', t: r.name, type: CONFIG_TYPES[r.type].label, s: `${UserService.name(r.review.by)} · ${ago(r.review.at)}`, href: recLink(r), act: canPub(CONFIG_TYPES[r.type].area) ? 'Review' : 'View' })),
       ...recs.filter(r => r.demo && r.demo !== r.production).map(r => ({ tone: 'publish', icon: 'rocket_launch', kind: 'Ready to publish', t: r.name, type: CONFIG_TYPES[r.type].label, s: `v${r.demo} checked on demo`, href: recLink(r), act: canPub(CONFIG_TYPES[r.type].area) ? 'Publish' : 'View' })),
-      ...notes.filter(n => n.status === 'pending').map(n => ({ tone: 'approve', icon: 'notifications', kind: 'Needs approval', t: n.title, type: 'Notification', s: `Sends ${fmtLocal(n.scheduledAt)}`, href: `notifications-${n.id}`, act: canPub('notifications') ? 'Approve' : 'View' })),
       ...way.versions.filter(v => v.status === 'validated').map(v => ({ tone: 'approve', icon: 'upload_file', kind: 'Ready for demo', t: v.fileName, type: 'Wayfinding file', s: `v${v.version} validated`, href: 'wayfinding', act: 'Open' }))
     ];
     const drafts = recs.filter(r => r.draft).length, onDemo = recs.filter(r => r.demo && r.demo !== r.production).length, livec = recs.filter(r => r.production).length;
@@ -4304,7 +4262,7 @@ BUILT_PAGES.dashboard = {
     const in30 = (() => { const d = localDay(now); d.setUTCDate(d.getUTCDate() + 30); return d.toISOString().slice(0, 10); })();
     const soon = s => s && s > now && s.slice(0, 10) <= in30;
     const upcoming = [
-      ...notes.filter(n => ['scheduled', 'pending'].includes(n.status) && soon(n.scheduledAt)).map(n => ({ at: n.scheduledAt, icon: 'notifications', what: n.status === 'pending' ? 'Notification, awaiting approval' : 'Notification sends', t: n.title, href: `notifications-${n.id}` })),
+      ...notes.filter(n => n.status === 'scheduled' && soon(n.scheduledAt)).map(n => ({ at: n.scheduledAt, icon: 'notifications', what: 'Notification sends', t: n.title, href: `notifications-${n.id}` })),
       ...recs.filter(r => r.type === 'campaign').flatMap(r => { const d = latestData(r); return [
         ...(soon(d.start) ? [{ at: d.start, icon: 'campaign', what: 'Campaign starts', t: r.name, href: recLink(r) }] : []),
         ...(soon(d.end) && windowStatus(d) === 'active' ? [{ at: d.end, icon: 'campaign', what: 'Campaign ends', t: r.name, href: recLink(r) }] : [])]; }),
@@ -4339,7 +4297,7 @@ BUILT_PAGES.dashboard = {
               <span class="db-tile">${ic(q.icon, 20)}</span>
               <span class="db-q-t"><span class="db-q-k">${esc(q.kind)} · ${esc(q.type)}</span><a href="#${q.href}">${esc(q.t)}</a><span class="muted">${esc(q.s)}</span></span>
               <a class="btn ${q.act === 'View' || q.act === 'Open' ? 'btn-secondary' : 'btn-primary'} btn-sm" href="#${q.href}" aria-label="${esc(q.act)}: ${esc(q.t)}"><span class="lbl">${esc(q.act)}</span></a></li>`).join('')}</ul>`
-            : `<div class="db-empty">${ic('task_alt', 24)}<p>You’re all caught up. Nothing is waiting for review, publishing or approval.</p></div>`}
+            : `<div class="db-empty">${ic('task_alt', 24)}<p>You’re all caught up. Nothing is waiting for review or publishing.</p></div>`}
         </section>
 
         <section class="card db-card db-now db-in ga-n" style="--i:2" aria-labelledby="dn-h">

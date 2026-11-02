@@ -264,13 +264,13 @@ function seedDb() {
   };
 
   /* ---- Notifications ---- */
-  const nt = (id, o) => ({ id, title: '', description: '', sendTo: 'seg-all', delivery: 'push+inbox', timing: 'scheduled', scheduledAt: '', image: 'none', imageAlt: '', videoUrl: '', destination: { type: 'none', value: '' }, status: 'draft', createdBy: 'u3', createdAt: t('2026-10-20T15:00:00Z'), updatedAt: t('2026-10-20T15:00:00Z'), sentAt: null, stats: null, ...o });
+  const nt = (id, o) => ({ id, title: '', description: '', timing: 'scheduled', scheduledAt: '', image: 'none', imageAlt: '', videoUrl: '', destination: { type: 'none', value: '' }, status: 'draft', createdBy: 'u3', createdAt: t('2026-10-20T15:00:00Z'), updatedAt: t('2026-10-20T15:00:00Z'), sentAt: null, stats: null, ...o });
   const notifications = [
     nt('n1', { title: 'Flu shots are here', description: 'Walk in on Saturdays, 8 a.m. to noon, at any primary care clinic.', destination: { type: 'screen', value: 'Flu shot locations' }, status: 'sent', scheduledAt: '2026-09-29T08:00', sentAt: t('2026-09-29T13:00:00Z'), createdAt: t('2026-09-26T19:00:00Z'), stats: { delivered: 168250, opened: 31400, actions: 9620 } }),
-    nt('n2', { title: 'New visitor hours start Nov. 1', description: 'Two visitors at a time, 8 a.m. to 8 p.m.', delivery: 'inbox', destination: { type: 'screen', value: 'Visitor guidelines' }, status: 'sent', scheduledAt: '2026-10-06T09:00', sentAt: t('2026-10-06T14:00:00Z'), createdBy: 'u2', createdAt: t('2026-10-03T15:00:00Z'), stats: { delivered: 179900, opened: 22100, actions: 4380 } }),
-    nt('n3', { title: 'Estimate your costs before your visit', description: 'Price estimates are now online. It takes about 5 minutes.', sendTo: 'seg-signedin', destination: { type: 'screen', value: 'Price estimates' }, status: 'scheduled', scheduledAt: '2026-11-03T09:00', createdAt: t('2026-10-27T15:00:00Z'), image: 'b', imageAlt: 'Abstract circles on a sky-blue background' }),
-    nt('n4', { title: 'MyCare ahora en español', description: 'Cambie el idioma en MyChart, luego Idioma.', sendTo: 'seg-spanish', destination: { type: 'screen', value: 'Language' }, status: 'pending', scheduledAt: '2026-11-05T10:00', createdAt: t('2026-10-29T16:00:00Z') }),
-    nt('n5', { title: 'Our new Frisco clinic opens Dec. 1', description: 'Primary care, imaging, and physical therapy in one place.', sendTo: 'seg-collin', destination: { type: 'screen', value: 'Locations' }, status: 'draft', scheduledAt: '2026-12-01T08:00', createdAt: t('2026-10-29T20:10:00Z') }),
+    nt('n2', { title: 'New visitor hours start Nov. 1', description: 'Two visitors at a time, 8 a.m. to 8 p.m.', destination: { type: 'screen', value: 'Visitor guidelines' }, status: 'sent', scheduledAt: '2026-10-06T09:00', sentAt: t('2026-10-06T14:00:00Z'), createdBy: 'u2', createdAt: t('2026-10-03T15:00:00Z'), stats: { delivered: 179900, opened: 22100, actions: 4380 } }),
+    nt('n3', { title: 'Estimate your costs before your visit', description: 'Price estimates are now online. It takes about 5 minutes.', destination: { type: 'screen', value: 'Price estimates' }, status: 'scheduled', scheduledAt: '2026-11-03T09:00', createdAt: t('2026-10-27T15:00:00Z'), image: 'b', imageAlt: 'Abstract circles on a sky-blue background' }),
+    nt('n4', { title: 'MyCare ahora en español', description: 'Cambie el idioma en MyChart, luego Idioma.', destination: { type: 'screen', value: 'Language' }, status: 'draft', scheduledAt: '2026-11-05T10:00', createdAt: t('2026-10-29T16:00:00Z') }),
+    nt('n5', { title: 'Our new Frisco clinic opens Dec. 1', description: 'Primary care, imaging, and physical therapy in one place.', destination: { type: 'screen', value: 'Locations' }, status: 'draft', scheduledAt: '2026-12-01T08:00', createdAt: t('2026-10-29T20:10:00Z') }),
     nt('n6', { title: 'Holiday hours', description: 'Most clinics close Thursday, Nov. 26. Emergency departments stay open.', status: 'cancelled', scheduledAt: '2026-11-20T09:00', createdBy: 'u2', createdAt: t('2026-10-15T15:00:00Z') })
   ];
 
@@ -307,5 +307,5 @@ function seedDb() {
     { id: uid('au'), at: t('2026-09-01T15:00:00Z'), by: 'u1', action: 'User deactivated', target: 'Grace Liu', targetId: 'u7', targetType: 'user', environment: null, version: null, comment: 'Moved to another department', before: { status: 'Active' }, after: { status: 'Deactivated' } },
     { id: uid('au'), at: t('2026-08-10T15:00:00Z'), by: 'u1', action: 'Role changed', target: 'Theo Adams', targetId: 'u8', targetType: 'user', environment: null, version: null, comment: '', before: { role: 'Admin' }, after: { role: 'Marketing' } });
 
-  return { schema: 3, records: Object.fromEntries(records.map(r => [r.id, r])), users, notifications, wayfinding, integrations, settings, audit, zeroResults };
+  return { schema: 4, records: Object.fromEntries(records.map(r => [r.id, r])), users, notifications, wayfinding, integrations, settings, audit, zeroResults };
 }

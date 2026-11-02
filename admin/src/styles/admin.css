@@ -307,16 +307,12 @@ select.input:disabled{cursor:not-allowed}
 .hl-grid{display:grid; grid-template-columns:minmax(0,1fr); gap:var(--s6); align-items:start}
 .hl-preview{min-width:0}
 .hint-line{font-size:var(--t14); color:var(--ink-2); margin-bottom:var(--s3)}
-.fixed-list,.mod-list,.lib-list{list-style:none; margin:0; padding:0; display:grid; gap:var(--s2)}
-.fixed-list li{display:flex; align-items:center; gap:var(--s3); padding:var(--s2) var(--s3); border-radius:var(--r-md); background:var(--bg); color:var(--ink)}
-.fixed-list li > .ms{color:var(--ink-2)}
-.fixed-list .mod-txt{flex:1}
+.mod-list{list-style:none; margin:0; padding:0; display:grid; gap:var(--s2)}
 .hl-edit{min-width:0; container:edit / inline-size}
-.mod-row,.lib-row{display:grid; grid-template-columns:auto auto minmax(0,1fr); grid-template-areas:"pos ic txt" ". . ctl"; align-items:center; gap:var(--s2) var(--s3); padding:var(--s3); border-radius:var(--r-md); background:var(--surface); box-shadow:inset 0 0 0 1px var(--line-strong)}
+.mod-row{display:grid; grid-template-columns:auto auto minmax(0,1fr); grid-template-areas:"pos ic txt" ". . ctl"; align-items:center; gap:var(--s2) var(--s3); padding:var(--s3); border-radius:var(--r-md); background:var(--surface); box-shadow:inset 0 0 0 1px var(--line-strong)}
 .mod-pos{grid-area:pos} .mod-row .mod-ic{grid-area:ic} .mod-row .mod-txt{grid-area:txt}
 .mod-row > .badge{grid-area:ctl; justify-self:start}
 .mod-ctl{grid-area:ctl; justify-self:end}
-.lib-row{grid-template-columns:auto minmax(0,1fr) auto; grid-template-areas:none; box-shadow:inset 0 0 0 1px var(--line); background:var(--bg)}
 @container edit (min-width: 640px){
   .mod-row{grid-template-columns:auto auto minmax(0,1fr) auto auto; grid-template-areas:"pos ic txt badge ctl"}
   .mod-row > .badge{grid-area:badge}
@@ -329,8 +325,6 @@ select.input:disabled{cursor:not-allowed}
 .mod-t{font-weight:600}
 .mod-d{font-size:var(--t14); color:var(--ink-2)}
 .mod-ctl{display:flex; align-items:center; gap:2px}
-.lib-empty{display:flex; align-items:center; gap:var(--s2); font-size:var(--t14); color:var(--ink-2)}
-.lib-empty .ms{color:var(--blue)}
 
 /* Preview */
 .pv-row{display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:var(--s2) var(--s3); margin-bottom:var(--s3)}

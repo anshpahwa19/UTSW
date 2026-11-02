@@ -6,7 +6,7 @@
 const MockSettings = { latency: [160, 380], simulateErrors: false };
 class ServiceError extends Error {}
 const wait = ms => new Promise(r => setTimeout(r, ms));
-const SCHEMA = 3;
+const SCHEMA = 4;
 let DB = null;
 function loadDb() {
   const saved = store.read();
@@ -206,8 +206,8 @@ const UserService = {
   })
 };
 
-/* ---------- Notifications: draft → pending approval → scheduled or sent; cancel while scheduled ---------- */
-const NOTE_STATUS = { draft: 'Draft', pending: 'Pending approval', scheduled: 'Scheduled', sent: 'Sent', cancelled: 'Cancelled' };
+/* ---------- Notifications: draft → scheduled or sent; cancel while scheduled ---------- */
+const NOTE_STATUS = { draft: 'Draft', scheduled: 'Scheduled', sent: 'Sent', cancelled: 'Cancelled' };
 const NotificationService = {
   list: () => mockCall('notifications', () => DB.db.notifications),
   get: id => mockCall('notifications', () => { const n = DB.db.notifications.find(x => x.id === id); if (!n) throw new ServiceError('That notification no longer exists.'); return n; }),
@@ -220,21 +220,16 @@ const NotificationService = {
       return n;
     }
     const n = DB.db.notifications.find(x => x.id === id);
-    if (!['draft', 'pending'].includes(n.status)) throw new ServiceError(`${NOTE_STATUS[n.status]} notifications can’t be edited. Duplicate it instead.`);
+    if (n.status !== 'draft') throw new ServiceError(`${NOTE_STATUS[n.status]} notifications can’t be edited. Duplicate it instead.`);
     const before = clone(n);
     Object.assign(n, clone(data), { status: 'draft', updatedAt: nowIso() });
     audit('Notification edited', n.title, { targetId: id, targetType: 'notification', before, after: data });
     return n;
   }),
-  submit: id => mockCall('notifications', () => {
-    needs('notifications', 'draft');
-    const n = DB.db.notifications.find(x => x.id === id); n.status = 'pending'; n.updatedAt = nowIso();
-    audit('Submitted for approval', n.title, { targetId: id, targetType: 'notification' });
-    return n;
-  }),
-  approve: (id, comment) => mockCall('notifications', () => {
+  schedule: (id, comment) => mockCall('notifications', () => {
     needs('notifications', 'publish');
     const n = DB.db.notifications.find(x => x.id === id);
+    if (n.status !== 'draft') throw new ServiceError('Only drafts can be scheduled or sent.');
     if (n.timing === 'now') { n.status = 'sent'; n.sentAt = nowIso(); n.stats = { delivered: 0, opened: 0, actions: 0 }; }
     else n.status = 'scheduled';
     n.updatedAt = nowIso();
@@ -244,7 +239,7 @@ const NotificationService = {
   cancel: (id, comment) => mockCall('notifications', () => {
     needs('notifications', 'publish');
     const n = DB.db.notifications.find(x => x.id === id);
-    if (n.status !== 'scheduled' && n.status !== 'pending') throw new ServiceError('Only scheduled or pending notifications can be cancelled.');
+    if (n.status !== 'scheduled') throw new ServiceError('Only scheduled notifications can be cancelled.');
     n.status = 'cancelled'; n.updatedAt = nowIso();
     audit('Notification cancelled', n.title, { targetId: id, targetType: 'notification', comment });
     return n;

@@ -103,7 +103,6 @@ BUILT_PAGES['home-layout'] = (() => {
 
   function renderEditor(focus) {
     const ro = !may('saveDraft');
-    const lib = AUDIENCE_MODULES[st.aud].filter(id => !st.working.modules.some(m => m.id === id));
     const n = st.working.modules.length;
     const row = (m, i) => {
       const meta = HOME_MODULES[m.id];
@@ -116,22 +115,14 @@ BUILT_PAGES['home-layout'] = (() => {
           ${switchBtn({ id: `vis-${m.id}`, checked: m.on, label: `Show ${meta.label} on the home screen`, attrs: 'data-act="vis"' })}
           <button type="button" class="btn btn-text btn-icon" data-act="up" aria-label="Move ${esc(meta.label)} up" ${i === 0 ? 'disabled' : ''}>${ic('arrow_upward', 20)}</button>
           <button type="button" class="btn btn-text btn-icon" data-act="down" aria-label="Move ${esc(meta.label)} down" ${i === n - 1 ? 'disabled' : ''}>${ic('arrow_downward', 20)}</button>
-          <button type="button" class="btn btn-text btn-icon" data-act="remove" aria-label="Remove ${esc(meta.label)} from the layout">${ic('remove_circle', 20)}</button>
         </span>`}
       </li>`;
     };
     $('#editor').innerHTML = card({ title: `${st.aud === 'guest' ? 'Guest' : 'Authenticated'} home modules`, titleId: 'ed-h', actions: ro ? badge('fixed', 'View only') : '', body: `
-      <h3 class="sub-h">Fixed at the top</h3>
-      <ul class="fixed-list">${HOME_FIXED.map(f => `<li>${ic(f.icon, 20)}<span class="mod-txt"><span class="mod-t">${esc(f.label)}</span><span class="mod-d">${esc(f.desc)}</span></span>${badge('fixed')}</li>`).join('')}</ul>
       <h3 class="sub-h" id="ord-h" tabindex="-1">Modules, in order</h3>
       <p class="hint-line">Use the arrows to reorder. Hidden modules keep their place but patients don’t see them.</p>
       ${n ? `<ol class="mod-list" aria-labelledby="ord-h">${st.working.modules.map(row).join('')}</ol>`
-        : emptyState({ icon: 'view_agenda', title: 'No modules on this layout', text: 'Add modules from the library below.', level: 4 })}
-      <h3 class="sub-h" id="lib-h">Module library</h3>
-      ${lib.length ? `<ul class="lib-list" aria-labelledby="lib-h">${lib.map(id => `<li class="lib-row" data-id="${id}">
-          <span class="mod-ic">${ic(HOME_MODULES[id].icon, 20)}</span><span class="mod-txt"><span class="mod-t">${esc(HOME_MODULES[id].label)}</span><span class="mod-d">${esc(HOME_MODULES[id].desc)}</span></span>
-          ${ro ? '' : btn({ label: 'Add to layout', icon: 'add', variant: 'tonal', attrs: `data-act="add" aria-label="Add ${esc(HOME_MODULES[id].label)} to the layout"` })}</li>`).join('')}</ul>`
-        : `<p class="lib-empty">${ic('check_circle', 20)}<span>Every ${st.aud} module is on the layout. Remove one to move it here.</span></p>`}` });
+        : emptyState({ icon: 'view_agenda', title: 'No modules on this layout', text: '', level: 4 })}` });
     $('#editor').onclick = editorClick;
     if (focus) {
       const sel = focus.id ? `[data-id="${focus.id}"] [data-act="${focus.act}"]` : focus.sel;
@@ -152,16 +143,6 @@ BUILT_PAGES['home-layout'] = (() => {
       announce(`${label} moved to position ${j + 1} of ${list.length}`);
       update({ id, act: b.dataset.act });
     }
-    if (b.dataset.act === 'remove') {
-      const [gone] = list.splice(i, 1);
-      announce(`${label} removed from the layout. It is in the module library.`);
-      update({ sel: `[data-id="${id}"] [data-act="add"]` });
-      toast(`${label} removed from the layout.`, { action: 'Undo', onAction: () => {
-        if (st.working.modules.some(m => m.id === gone.id)) return;
-        st.working.modules.splice(i, 0, gone); announce(`${label} restored to position ${i + 1}`); update({ id, act: 'remove' });
-      } });
-    }
-    if (b.dataset.act === 'add') { list.push({ id, on: true }); announce(`${label} added at position ${list.length}`); update({ id, act: 'up' }); }
   }
 
   return { render, leave() { if (pv) { pv.destroy(); pv = null; } } };
