@@ -399,8 +399,19 @@ select.input:disabled{cursor:not-allowed}
 .row-link{display:inline-flex; align-items:center; gap:var(--s2); font-weight:600; color:var(--blue); text-decoration:none}
 .row-link:hover span{text-decoration:underline}
 .row-link .ms{color:var(--blue)}
+/* Title with a one-line description under it; the description lines up with the title text, not the icon */
+.name-cell{display:grid; gap:2px; min-width:220px}
+.name-sub{font-size:var(--t14); font-weight:400; color:var(--ink-2)}
+.name-cell.has-ic .name-sub{padding-left:28px}
+.tbl .dest{overflow-wrap:break-word; min-width:160px}
 .avatar.sm{width:28px; height:28px; font-size:var(--t12); background:var(--tint); color:var(--blue)}
 .sched{white-space:nowrap}
+/* Table cells that hold a value plus a status: always stacked, so every row reads the same */
+.cell-stack{display:flex; flex-direction:column; align-items:flex-start; gap:var(--s1)}
+.tbl .badges{flex-direction:column; align-items:flex-start}
+/* Order and priority: a short left-aligned chip in a column sized to its header */
+.tbl .ord{width:1%; white-space:nowrap; text-align:left}
+.ord-chip{display:inline-grid; place-items:center; min-width:28px; height:28px; padding:0 var(--s2); border-radius:var(--r-pill, 999px); background:var(--tint); color:var(--blue); font-size:var(--t14); font-weight:700; font-variant-numeric:tabular-nums}
 .mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:var(--t14); overflow-wrap:anywhere}
 .row-acts{display:inline-flex; gap:var(--s1); flex-wrap:nowrap; justify-content:flex-end}
 .row-acts .btn-icon{width:36px; min-height:36px}

@@ -34,7 +34,8 @@ function defineCollection(cfg) {
         ],
         empty: { icon: cfg.icon, title: `No ${cfg.title.toLowerCase()} yet`, text: canEdit ? `Create the first ${cfg.noun}.` : '' },
         columns: [
-          { key: 'name', label: cfg.nameLabel || 'Title', sortable: true, sortValue: r => r.name.toLowerCase(), render: r => `<a class="row-link" href="#${cfg.route}-${r.id}">${cfg.nameIcon ? ic(cfg.nameIcon(latestData(r)), 20) : ''}<span>${esc(r.name)}</span></a>` },
+          { key: 'name', label: cfg.nameLabel || 'Title', sortable: true, sortValue: r => r.name.toLowerCase(), render: r => { const sub = cfg.nameSub && cfg.nameSub(latestData(r)); const link = `<a class="row-link" href="#${cfg.route}-${r.id}">${cfg.nameIcon ? ic(cfg.nameIcon(latestData(r)), 20) : ''}<span>${esc(r.name)}</span></a>`;
+            return sub ? `<div class="name-cell${cfg.nameIcon ? ' has-ic' : ''}">${link}<span class="name-sub">${esc(sub)}</span></div>` : link; } },
           ...cfg.columns.map(c => ({ ...c, render: r => c.render(latestData(r), r), sortValue: c.sortValue ? r => c.sortValue(latestData(r)) : undefined })),
           { key: 'status', label: 'Publishing', render: envBadges },
           { key: 'updated', label: 'Last change', sortable: true, sortValue: lastChange, render: r => `<span class="nowrap">${esc(fmtDateTime(lastChange(r)))}</span>` }
@@ -174,7 +175,7 @@ defineCollection({
   columns: [
     { key: 'type', label: 'Type', render: d => esc(d.type) },
     { key: 'audience', label: 'Audience', render: d => esc(segmentName(d.audience)) },
-    { key: 'window', label: 'Schedule', sortable: true, sortValue: d => d.start, render: d => `<span class="sched">${esc(fmtLocal(d.start, false))} – ${esc(fmtLocal(d.end, false))}</span> ${windowBadge(d)}` }
+    { key: 'window', label: 'Schedule', sortable: true, sortValue: d => d.start, render: d => `<div class="cell-stack"><span class="sched">${esc(fmtLocal(d.start, false))} – ${esc(fmtLocal(d.end, false))}</span>${windowBadge(d)}</div>` }
   ],
   filters: [{ key: 'type', label: 'Type', options: ['Seasonal', 'Service', 'Awareness', 'Announcement', 'Event'].map(x => [x, x]), match: (r, v) => latestData(r).type === v }],
   preview: (d, id, src) => homePreview(d && d.audience === 'seg-signedin' ? 'authenticated' : 'guest', 'campaign')(d, id, src, 'campaign')
@@ -209,8 +210,8 @@ defineCollection({
   searchExtra: d => `${d.type} ${d.message}`,
   columns: [
     { key: 'type', label: 'Type', render: d => esc(d.type) },
-    { key: 'priority', label: 'Priority', sortable: true, sortValue: d => +d.priority, render: d => `P${d.priority}`, cls: 'num' },
-    { key: 'window', label: 'Active window', sortable: true, sortValue: d => d.start, render: d => `<span class="sched">${esc(fmtLocal(d.start, false))} – ${esc(fmtLocal(d.end, false))}</span> ${windowBadge(d)}` }
+    { key: 'priority', label: 'Priority', sortable: true, sortValue: d => +d.priority, render: d => `<span class="ord-chip">P${d.priority}</span>`, cls: 'ord' },
+    { key: 'window', label: 'Active window', sortable: true, sortValue: d => d.start, render: d => `<div class="cell-stack"><span class="sched">${esc(fmtLocal(d.start, false))} – ${esc(fmtLocal(d.end, false))}</span>${windowBadge(d)}</div>` }
   ],
   preview: (d, id, src) => homePreview('guest', 'alert')(d, id, src, null)
 });
@@ -231,8 +232,8 @@ defineCollection({
     { key: 'enabled', label: 'Show this tile', type: 'switch' }] }],
   validate: d => d.destination.type === 'mychart' && !d.requiresSignIn ? { requiresSignIn: 'MyChart destinations need sign-in. Turn on “Needs MyChart sign-in”.' } : {},
   columns: [
-    { key: 'destination', label: 'Destination', render: d => esc(destLabel(d.destination)) },
-    { key: 'order', label: 'Position', sortable: true, sortValue: d => d.order, render: d => String(d.order), cls: 'num' },
+    { key: 'destination', label: 'Destination', render: d => esc(destLabel(d.destination)).replace(/\//g, '/<wbr>'), cls: 'dest' },
+    { key: 'order', label: 'Position', sortable: true, sortValue: d => d.order, render: d => `<span class="ord-chip">${d.order}</span>`, cls: 'ord' },
     { key: 'signin', label: 'Sign-in', render: d => d.requiresSignIn ? badge('fixed', 'MyChart') : '<span class="muted">Open</span>' },
     { key: 'shown', label: 'Shown', render: d => badge(d.enabled ? 'visible' : 'hidden') }
   ],
@@ -243,7 +244,7 @@ defineCollection({
 defineCollection({
   route: 'home-featured-cards', type: 'featuredCard', area: 'featuredCards', section: 'Home Screen', title: 'Featured cards', noun: 'featured card', newLabel: 'New featured card', icon: 'library_books',
   lede: 'Rows in the UTSW resources module. Assumed to be these rows rather than the MedBlog carousel – pending confirmation.',
-  nameIcon: d => d.icon, defaultSort: { key: 'order', dir: 'asc' },
+  nameIcon: d => d.icon, nameSub: d => d.subtitle, defaultSort: { key: 'order', dir: 'asc' },
   defaults: () => ({ title: '', subtitle: '', icon: 'library_books', iconAlt: '', destination: { type: 'screen', value: 'Find my Care' }, order: ConfigService.peekAll('featuredCard').length + 1, enabled: true }),
   sections: [{ title: 'Card', fields: [
     { key: 'title', label: 'Title', required: true, max: 40 },
@@ -254,9 +255,8 @@ defineCollection({
     { key: 'order', label: 'Position', type: 'number', min: 1, maxNum: 12, wide: false },
     { key: 'enabled', label: 'Show this card', type: 'switch' }] }],
   columns: [
-    { key: 'subtitle', label: 'Subtitle', render: d => esc(d.subtitle) },
-    { key: 'destination', label: 'Destination', render: d => esc(destLabel(d.destination)) },
-    { key: 'order', label: 'Position', sortable: true, sortValue: d => d.order, render: d => String(d.order), cls: 'num' },
+    { key: 'destination', label: 'Destination', render: d => esc(destLabel(d.destination)).replace(/\//g, '/<wbr>'), cls: 'dest' },
+    { key: 'order', label: 'Position', sortable: true, sortValue: d => d.order, render: d => `<span class="ord-chip">${d.order}</span>`, cls: 'ord' },
     { key: 'shown', label: 'Shown', render: d => badge(d.enabled ? 'visible' : 'hidden') }
   ],
   preview: (d, id, src) => homePreview('guest', 'featuredCard')(d, id, src, 'services')
