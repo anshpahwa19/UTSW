@@ -38,7 +38,8 @@ html:not(.ms-ready) .ms{color:transparent!important}
 .env-pill b{color:#FFFFFF}
 .mock-flag{background:#FFFFFF; color:var(--brand); font-weight:600; --grad:0}
 .mf-short{display:none}
-.user{margin-left:auto; position:relative}
+.topbar .theme-sw{margin-left:auto}
+.user{position:relative}
 .user-btn{display:flex; align-items:center; gap:var(--s2); min-height:var(--hit); padding:0 var(--s2) 0 var(--s1); border:0; border-radius:var(--r-pill); background:transparent; color:#FFFFFF; cursor:pointer; text-align:left}
 .user-btn:hover{background:rgba(255,255,255,.10)}
 .avatar{width:36px; height:36px; border-radius:50%; display:grid; place-items:center; background:#FFFFFF; color:var(--brand); font-size:var(--t14); font-weight:700; flex:none}
@@ -373,13 +374,10 @@ select.input:disabled{cursor:not-allowed}
   .card-head,.card-body{padding-left:var(--s4); padding-right:var(--s4)}
   .auth-card{padding:var(--s6)}
 }
-/* Phone width: the mock-data flag gets its own full-width row so it stays visible */
-@media (max-width: 560px){
-  :root{--a-header:112px}
-  .topbar{flex-wrap:wrap; height:auto; min-height:var(--a-header); gap:var(--s2); padding-block:var(--s2); align-content:center}
-  .mock-flag{order:5; width:100%; justify-content:center}
-  .mf-long{display:inline} .mf-short{display:none}
-}
+@media (max-width: 480px){ .topbar{gap:var(--s2)} .topbar > .theme-sw{display:none} .user{margin-left:auto} }
+.user-menu .theme-sw{background:var(--bg); box-shadow:inset 0 0 0 1px var(--line)}
+.user-menu .theme-sw button{color:var(--ink-2)}
+.user-menu .theme-sw button[aria-checked="true"]{background:var(--ctl); color:#FFFFFF; --grad:-25}
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:1ms!important; animation-iteration-count:1!important; transition-duration:1ms!important}
 }
