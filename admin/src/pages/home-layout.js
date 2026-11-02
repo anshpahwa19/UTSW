@@ -90,6 +90,7 @@ BUILT_PAGES['home-layout'] = (() => {
           label: src === 'working' ? (dirty() ? 'unsaved edits, not live' : st.rec.draft ? 'saved draft, not live' : `production version ${st.rec.production}`) : `${src} version ${src === 'demo' ? st.rec.demo : st.rec.production}` };
       }
     });
+    fitPhone(panel);
     Router.setGuard(async () => {
       if (!dirty()) return true;
       const r = await confirmDialog({ title: 'Leave without saving?', body: '<p>Your changes to the layout aren’t saved. If you leave, they’re lost.</p>', confirmLabel: 'Leave page', variant: 'danger', cancelLabel: 'Stay on this page' });
@@ -147,5 +148,26 @@ BUILT_PAGES['home-layout'] = (() => {
     }
   }
 
-  return { render, leave() { if (pv) { pv.destroy(); pv = null; } } };
+  /* Size the phone so the preview card ends level with the left column at any width, never larger than the
+     breakpoint's scale or smaller than a readable minimum. Only the phone scales; the preview column keeps its
+     width, so the left column never reflows because of this (no resize loop). */
+  function fitPhone(panel) {
+    if (fitPhone.ro) fitPhone.ro.disconnect();
+    const grid = $('.hl-grid', panel), left = $('.hl-main', panel), aside = $('#hl-pv', panel);
+    if (!grid || !window.ResizeObserver) return;
+    const fit = () => {
+      if (!grid.isConnected) { fitPhone.ro && fitPhone.ro.disconnect(); return; }
+      aside.style.removeProperty('--s');
+      if (getComputedStyle(grid).gridTemplateColumns.trim().split(/\s+/).length < 2) return;
+      const max = parseFloat(getComputedStyle(grid).getPropertyValue('--s')) || .8;
+      const chrome = aside.offsetHeight - 844 * max;
+      const s = Math.max(.55, Math.min(max, (left.offsetHeight - chrome) / 844));
+      if (s < max - .002) aside.style.setProperty('--s', s.toFixed(3));
+    };
+    fitPhone.ro = new ResizeObserver(() => requestAnimationFrame(fit));
+    fitPhone.ro.observe(left); $('.pv-ctl', aside) && fitPhone.ro.observe($('.pv-ctl', aside));
+    fit();
+  }
+
+  return { render, leave() { if (pv) { pv.destroy(); pv = null; } if (fitPhone.ro) { fitPhone.ro.disconnect(); fitPhone.ro = null; } } };
 })();
