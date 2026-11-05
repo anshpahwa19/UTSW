@@ -10,6 +10,19 @@ const HUB_TYPES = ['homeLayout', 'campaign', 'alert', 'quickLink', 'featuredCard
 const HUB_ICONS = { homeLayout: 'view_agenda', campaign: 'campaign', alert: 'warning', quickLink: 'apps', featuredCard: 'library_books' };
 let HUB_TAB = false;          /* true while a Home Screen tab is rendering: page headings become h2 inside the hub */
 let hubFromTab = false;
+let hubAud = 'guest';         /* the home screen being worked on, kept while moving between tabs */
+const HUB_AUDS = [['guest', 'Guest'], ['authenticated', 'Authenticated']];
+const hubAudLabel = () => hubAud === 'guest' ? 'guests' : 'signed-in patients';
+/* Does an audience segment reach guests or signed-in patients? Judged by its sign-in rule; no rule reaches both. */
+function segReaches(segId, aud = hubAud) {
+  if (!segId || segId === 'seg-all') return true;
+  const r = ConfigService.peek(segId), d = r && latestData(r);
+  if (!d) return true;
+  const all = d.rules || [], rules = all.filter(x => x.attr === 'signedIn');
+  if (!rules.length) return true;
+  const want = aud === 'guest' ? 'Guest' : 'Signed in to MyChart', ok = x => (x.op === 'is' ? x.value === want : x.value !== want);
+  return d.match === 'any' ? rules.some(ok) || rules.length < all.length : rules.every(ok);
+}
 
 function hubRecords() { return HUB_TYPES.flatMap(t => ConfigService.peekAll(t)); }
 function hubStages() {
@@ -26,13 +39,25 @@ function homeHub(main, route) {
   const sec = NAV.find(s => s.id === route.section.id), role = Session.role();
   const tabs = sec.items.filter(i => can(role, i.area, 'view'));
   main.innerHTML = `<div class="page hub">
-    <div class="page-head hub-head"><div class="ph-row"><div class="ph-main"><h1 id="hub-h" tabindex="-1">Home Screen</h1></div></div>
+    <div class="page-head hub-head"><div class="ph-row"><div class="ph-main"><h1 id="hub-h" tabindex="-1">Home Screen</h1></div>
+      <div class="ph-actions hub-aud"><span class="hub-aud-l" id="hub-aud-l">Home screen for</span>${segmented({ id: 'hub-aud', label: 'Home screen for', options: HUB_AUDS, value: hubAud })}</div></div>
       <p class="lede">Everything on the MyCare home screen: its layout, campaigns, emergency alerts, quick links and featured cards.</p></div>
     <section class="card hub-pub" aria-labelledby="hub-pub-h" id="hub-pub"></section>
     <nav class="hub-tabs" aria-label="Home Screen sections"><ul>${tabs.map(i => `<li><a href="#${i.route}" ${i.route === route.pattern ? 'aria-current="page"' : ''}>${esc(i.label)}<span class="hub-n" data-n="${i.area}"></span></a></li>`).join('')}</ul></nav>
     <div class="hub-panel" id="hub-panel"></div>
   </div>`;
   $('.hub-tabs', main).addEventListener('click', e => { if (e.target.closest('a')) hubFromTab = true; });
+  const audCtl = $('#hub-aud', main);
+  wireSegmented(audCtl, async v => {
+    if (v === hubAud) return;
+    const sync = k => $$('[role="radio"]', audCtl).forEach(r => { const on = r.dataset.value === k; r.setAttribute('aria-checked', on); r.tabIndex = on ? 0 : -1; });
+    if ($('#hub-panel .badge-unsaved') && !(await Router.canLeave())) { sync(hubAud); $(`[data-value="${hubAud}"]`, audCtl).focus(); return; }
+    Router.clearGuard();
+    hubAud = v;
+    Router.refresh();
+    const again = $(`#hub-aud [data-value="${v}"]`); if (again) again.focus();
+    announce(`Showing the home screen for ${hubAudLabel()}`);
+  });
   hubRenderBar();
   return $('#hub-panel', main);
 }

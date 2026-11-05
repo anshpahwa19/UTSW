@@ -17,7 +17,10 @@ function defineCollection(cfg) {
       try { list = await ConfigService.list(cfg.type); }
       catch (err) { $('#col-body').innerHTML = errorState(err.message); $('[data-retry]').onclick = () => this.render(main); return; }
       const counts = { live: list.filter(r => r.production && latestOn(r)).length, demo: list.filter(r => r.demo && r.demo !== r.production).length, draft: list.filter(r => r.draft).length, review: list.filter(r => r.review).length };
-      $('#col-body').innerHTML = `${cfg.summary ? cfg.summary(list) : ''}
+      /* Inside the Home Screen page, items with an audience show only when they reach the chosen home screen */
+      const byAud = HUB_TAB && ['campaign', 'alert'].includes(cfg.type), allCount = list.length;
+      if (byAud) list = list.filter(r => segReaches((latestData(r) || {}).audience));
+      $('#col-body').innerHTML = `${byAud ? `<p class="note-line hub-aud-note">${ic('groups', 20)}<span>Showing ${plural(list.length, cfg.noun)} that reach ${hubAudLabel()}.${allCount > list.length ? ` ${allCount - list.length} more only reach${allCount - list.length === 1 ? 'es' : ''} ${hubAud === 'guest' ? 'signed-in patients' : 'guests'}; switch the home screen above to see ${allCount - list.length === 1 ? 'it' : 'them'}.` : ''}</span></p>` : ''}${cfg.summary ? cfg.summary(list) : ''}
         <div class="stat-strip">
           <div class="stat">${ic('public', 20)}<span><b>${counts.live}</b> live in production</span></div>
           <div class="stat">${ic('science', 20)}<span><b>${counts.demo}</b> on demo, waiting for production</span></div>

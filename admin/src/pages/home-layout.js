@@ -27,12 +27,13 @@ BUILT_PAGES['home-layout'] = (() => {
 
   function render(host) {
     main = host;
+    if (HUB_TAB) st.aud = hubAud;
     main.innerHTML = `<div class="page hl">
       ${pageHead({ crumbs: [['Home Screen', null]], title: 'Home screen layout',
         lede: 'Choose which modules patients see on the MyCare home screen and in what order, for guests and for signed-in patients.' })}
-      <div class="tabs" role="tablist" aria-label="Audience">${AUDIENCES.map(([k, l]) =>
+      ${HUB_TAB ? '<div id="aud-panel"></div>' : `<div class="tabs" role="tablist" aria-label="Audience">${AUDIENCES.map(([k, l]) =>
         `<button type="button" role="tab" id="aud-${k}" aria-controls="aud-panel" aria-selected="${k === st.aud}" tabindex="${k === st.aud ? 0 : -1}" data-aud="${k}">${esc(l)}</button>`).join('')}</div>
-      <div id="aud-panel" role="tabpanel" aria-labelledby="aud-${st.aud}"></div>
+      <div id="aud-panel" role="tabpanel" aria-labelledby="aud-${st.aud}"></div>`}
     </div>`;
     const tabs = $$('[role="tab"]', main);
     const pick = async (t, focus) => {

@@ -826,3 +826,6 @@ label.btn:has(+ input:focus-visible){box-shadow:var(--focus)}
 @container main (max-width: 760px){ .hub-stages{grid-template-columns:minmax(0,1fr)} .hub-acts{justify-content:stretch} .hub-acts .btn{flex:1} }
 .hub-panel .stat-strip{display:none}
 .lc-status{display:flex; flex-wrap:wrap; align-items:center; gap:var(--s2); font-size:var(--t14); color:var(--ink-2)}
+.hub-aud{display:flex; align-items:center; gap:var(--s3); flex-wrap:wrap}
+.hub-aud-l{font-size:var(--t14); font-weight:600; color:var(--ink-2)}
+.hub-aud-note{margin-bottom:var(--s4)}

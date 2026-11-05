@@ -902,6 +902,9 @@ label.btn:has(+ input:focus-visible){box-shadow:var(--focus)}
 @container main (max-width: 760px){ .hub-stages{grid-template-columns:minmax(0,1fr)} .hub-acts{justify-content:stretch} .hub-acts .btn{flex:1} }
 .hub-panel .stat-strip{display:none}
 .lc-status{display:flex; flex-wrap:wrap; align-items:center; gap:var(--s2); font-size:var(--t14); color:var(--ink-2)}
+.hub-aud{display:flex; align-items:center; gap:var(--s3); flex-wrap:wrap}
+.hub-aud-l{font-size:var(--t14); font-weight:600; color:var(--ink-2)}
+.hub-aud-note{margin-bottom:var(--s4)}
 
 </style>
 <div id="app" lang="en"></div>
@@ -3213,12 +3216,13 @@ BUILT_PAGES['home-layout'] = (() => {
 
   function render(host) {
     main = host;
+    if (HUB_TAB) st.aud = hubAud;
     main.innerHTML = `<div class="page hl">
       ${pageHead({ crumbs: [['Home Screen', null]], title: 'Home screen layout',
         lede: 'Choose which modules patients see on the MyCare home screen and in what order, for guests and for signed-in patients.' })}
-      <div class="tabs" role="tablist" aria-label="Audience">${AUDIENCES.map(([k, l]) =>
+      ${HUB_TAB ? '<div id="aud-panel"></div>' : `<div class="tabs" role="tablist" aria-label="Audience">${AUDIENCES.map(([k, l]) =>
         `<button type="button" role="tab" id="aud-${k}" aria-controls="aud-panel" aria-selected="${k === st.aud}" tabindex="${k === st.aud ? 0 : -1}" data-aud="${k}">${esc(l)}</button>`).join('')}</div>
-      <div id="aud-panel" role="tabpanel" aria-labelledby="aud-${st.aud}"></div>
+      <div id="aud-panel" role="tabpanel" aria-labelledby="aud-${st.aud}"></div>`}
     </div>`;
     const tabs = $$('[role="tab"]', main);
     const pick = async (t, focus) => {
@@ -3472,7 +3476,10 @@ function defineCollection(cfg) {
       try { list = await ConfigService.list(cfg.type); }
       catch (err) { $('#col-body').innerHTML = errorState(err.message); $('[data-retry]').onclick = () => this.render(main); return; }
       const counts = { live: list.filter(r => r.production && latestOn(r)).length, demo: list.filter(r => r.demo && r.demo !== r.production).length, draft: list.filter(r => r.draft).length, review: list.filter(r => r.review).length };
-      $('#col-body').innerHTML = `${cfg.summary ? cfg.summary(list) : ''}
+      /* Inside the Home Screen page, items with an audience show only when they reach the chosen home screen */
+      const byAud = HUB_TAB && ['campaign', 'alert'].includes(cfg.type), allCount = list.length;
+      if (byAud) list = list.filter(r => segReaches((latestData(r) || {}).audience));
+      $('#col-body').innerHTML = `${byAud ? `<p class="note-line hub-aud-note">${ic('groups', 20)}<span>Showing ${plural(list.length, cfg.noun)} that reach ${hubAudLabel()}.${allCount > list.length ? ` ${allCount - list.length} more only reach${allCount - list.length === 1 ? 'es' : ''} ${hubAud === 'guest' ? 'signed-in patients' : 'guests'}; switch the home screen above to see ${allCount - list.length === 1 ? 'it' : 'them'}.` : ''}</span></p>` : ''}${cfg.summary ? cfg.summary(list) : ''}
         <div class="stat-strip">
           <div class="stat">${ic('public', 20)}<span><b>${counts.live}</b> live in production</span></div>
           <div class="stat">${ic('science', 20)}<span><b>${counts.demo}</b> on demo, waiting for production</span></div>
@@ -3768,6 +3775,19 @@ const HUB_TYPES = ['homeLayout', 'campaign', 'alert', 'quickLink', 'featuredCard
 const HUB_ICONS = { homeLayout: 'view_agenda', campaign: 'campaign', alert: 'warning', quickLink: 'apps', featuredCard: 'library_books' };
 let HUB_TAB = false;          /* true while a Home Screen tab is rendering: page headings become h2 inside the hub */
 let hubFromTab = false;
+let hubAud = 'guest';         /* the home screen being worked on, kept while moving between tabs */
+const HUB_AUDS = [['guest', 'Guest'], ['authenticated', 'Authenticated']];
+const hubAudLabel = () => hubAud === 'guest' ? 'guests' : 'signed-in patients';
+/* Does an audience segment reach guests or signed-in patients? Judged by its sign-in rule; no rule reaches both. */
+function segReaches(segId, aud = hubAud) {
+  if (!segId || segId === 'seg-all') return true;
+  const r = ConfigService.peek(segId), d = r && latestData(r);
+  if (!d) return true;
+  const all = d.rules || [], rules = all.filter(x => x.attr === 'signedIn');
+  if (!rules.length) return true;
+  const want = aud === 'guest' ? 'Guest' : 'Signed in to MyChart', ok = x => (x.op === 'is' ? x.value === want : x.value !== want);
+  return d.match === 'any' ? rules.some(ok) || rules.length < all.length : rules.every(ok);
+}
 
 function hubRecords() { return HUB_TYPES.flatMap(t => ConfigService.peekAll(t)); }
 function hubStages() {
@@ -3784,13 +3804,25 @@ function homeHub(main, route) {
   const sec = NAV.find(s => s.id === route.section.id), role = Session.role();
   const tabs = sec.items.filter(i => can(role, i.area, 'view'));
   main.innerHTML = `<div class="page hub">
-    <div class="page-head hub-head"><div class="ph-row"><div class="ph-main"><h1 id="hub-h" tabindex="-1">Home Screen</h1></div></div>
+    <div class="page-head hub-head"><div class="ph-row"><div class="ph-main"><h1 id="hub-h" tabindex="-1">Home Screen</h1></div>
+      <div class="ph-actions hub-aud"><span class="hub-aud-l" id="hub-aud-l">Home screen for</span>${segmented({ id: 'hub-aud', label: 'Home screen for', options: HUB_AUDS, value: hubAud })}</div></div>
       <p class="lede">Everything on the MyCare home screen: its layout, campaigns, emergency alerts, quick links and featured cards.</p></div>
     <section class="card hub-pub" aria-labelledby="hub-pub-h" id="hub-pub"></section>
     <nav class="hub-tabs" aria-label="Home Screen sections"><ul>${tabs.map(i => `<li><a href="#${i.route}" ${i.route === route.pattern ? 'aria-current="page"' : ''}>${esc(i.label)}<span class="hub-n" data-n="${i.area}"></span></a></li>`).join('')}</ul></nav>
     <div class="hub-panel" id="hub-panel"></div>
   </div>`;
   $('.hub-tabs', main).addEventListener('click', e => { if (e.target.closest('a')) hubFromTab = true; });
+  const audCtl = $('#hub-aud', main);
+  wireSegmented(audCtl, async v => {
+    if (v === hubAud) return;
+    const sync = k => $$('[role="radio"]', audCtl).forEach(r => { const on = r.dataset.value === k; r.setAttribute('aria-checked', on); r.tabIndex = on ? 0 : -1; });
+    if ($('#hub-panel .badge-unsaved') && !(await Router.canLeave())) { sync(hubAud); $(`[data-value="${hubAud}"]`, audCtl).focus(); return; }
+    Router.clearGuard();
+    hubAud = v;
+    Router.refresh();
+    const again = $(`#hub-aud [data-value="${v}"]`); if (again) again.focus();
+    announce(`Showing the home screen for ${hubAudLabel()}`);
+  });
   hubRenderBar();
   return $('#hub-panel', main);
 }
