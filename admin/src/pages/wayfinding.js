@@ -36,11 +36,7 @@ BUILT_PAGES.wayfinding = {
       const stepState = i => i < stage ? 'done' : i === stage && stage < 3 ? 'current' : i === 3 && stage === 3 ? 'done' : 'todo';
       $('#wf').innerHTML = `
         <section class="card" aria-labelledby="wf-cur-h"><div class="card-head"><h2 id="wf-cur-h" tabindex="-1">Current version</h2><div class="card-actions">${badge('mock')}</div></div><div class="card-body">
-          ${stepper([
-            { title: 'Upload', state: stepState(0), detail: 'Export from Gozio, then upload here' },
-            { title: 'Validate', state: stepState(1), detail: val ? `${badge('draft', `v${val.version} validated`)}` : 'Checked automatically on upload' },
-            { title: 'Demo', state: stepState(2), detail: demo ? `${badge('demo', `v${demo.version}`)} ${esc(demo.fileName)}` : 'Nothing on demo' },
-            { title: 'Production', state: stepState(3), detail: prod ? `${badge('production', `v${prod.version}`)} ${esc(prod.fileName)}` : 'Nothing published' }], 'Wayfinding publication steps')}
+          <p class="lc-status wf-status">${val ? badge('draft', `v${val.version} validated`) : ''}${demo && w.demo !== w.production ? badge('demo', `Demo v${demo.version}`) : ''}${prod ? badge('production', `Production v${prod.version}`) : '<span class="muted">Nothing published</span>'}<span>${val ? 'Ready for demo.' : w.demo !== w.production ? 'Demo is ahead of production.' : 'Demo and production match.'}</span></p>
           <div class="wf-cur">${prod ? `<dl class="facts cols"><dt>Published version</dt><dd>v${prod.version} · ${esc(prod.fileName)}</dd><dt>Last updated</dt><dd>${esc(fmtDateTime((w.history.filter(h => h.version === prod.version && h.environment === 'production').slice(-1)[0] || prod).at))}</dd>
             <dt>Contents</dt><dd>${prod.buildings} buildings · ${prod.floors} floors · ${prod.destinations.toLocaleString('en-US')} destinations</dd><dt>Uploaded by</dt><dd>${esc(UserService.name(prod.by))}${prod.comment ? ` – “${esc(prod.comment)}”` : ''}</dd></dl>` : ''}</div>
           ${canPub ? `<div class="lc-actions">

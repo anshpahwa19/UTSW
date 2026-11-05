@@ -74,7 +74,7 @@ const noteEditor = {
         detail: k === 'scheduled' && n && n.scheduledAt && working.timing === 'scheduled' ? esc(fmtLocal(n.scheduledAt)) : k === 'sent' && n && n.sentAt ? esc(fmtDateTime(n.sentAt)) : k === 'draft' && isNew ? badge('unsaved', 'New') : '' }));
     };
     $('#ne').innerHTML = `${pageHead({ crumbs: [['Notifications', null], ['All notifications', 'notifications']], title: title(), badges: `<span id="ne-b">${n ? noteBadge(n.status) : badge('unsaved', 'New')}</span>` })}
-      <section class="card lc" aria-labelledby="lc-h"><div class="card-head"><h2 id="lc-h" tabindex="-1">Status</h2><div class="card-actions">${badge('simulated', 'Sending is simulated')}</div></div><div class="card-body" id="ne-lc"></div></section>
+      <section class="card lc lc-slim" aria-labelledby="lc-h"><div class="card-body" id="ne-lc"></div></section>
       ${n && n.stats ? `<section class="card" aria-labelledby="res-h"><div class="card-head"><h2 id="res-h">Results</h2><div class="card-actions">${badge('mock')}</div></div><div class="card-body"><div class="metric-row">
         ${[['Delivered', n.stats.delivered, null], ['Opened', n.stats.opened, n.stats.delivered], ['Took action', n.stats.actions, n.stats.delivered]].map(([l, v, of]) => `<div class="metric"><p class="metric-l">${l}</p><p class="metric-v">${v.toLocaleString('en-US')}</p><p class="metric-c">${of ? `${(v / of * 100).toFixed(1)}% of delivered` : n.sentAt ? `Sent ${esc(fmtDateTime(n.sentAt))}` : ''}</p></div>`).join('')}</div></div></section>` : ''}
       <div class="ed-grid">
@@ -82,7 +82,8 @@ const noteEditor = {
           ${!editable() && n ? `<p class="note-line in-card">${ic('lock', 20)}<span>${can(role, 'notifications', 'draft') ? `${NOTE_STATUS[n.status]} notifications can’t be edited. Duplicate it to send a new version.` : 'Your role can view notifications only.'}</span></p>` : ''}
           <form class="card-body form" id="ne-form" novalidate></form></section>
         <aside class="ed-side" id="ne-pv"></aside>
-      </div>`;
+      </div>
+      ${n ? `<section class="card" aria-labelledby="nv-h"><div class="card-head"><h2 id="nv-h" tabindex="-1">Versions</h2></div><div class="card-body" id="ne-ver"></div></section>` : ''}`;
     const form = $('#ne-form');
     const draw = () => { form.innerHTML = renderForm(NOTE_SECTIONS.map(s => ({ ...s, fields: s.fields.map(f => editable() ? f : { ...f, readonly: true }) })), working, errors, 'f'); };
     draw();
@@ -95,19 +96,48 @@ const noteEditor = {
     const renderActions = () => {
       const s = n ? n.status : 'new', acts = [];
       const can2 = l => can(role, 'notifications', l);
-      if (editable() && (dirty() || isNew)) acts.push(btn({ label: isNew ? 'Save as draft' : 'Save changes', icon: 'save', variant: 'primary', attrs: 'data-n="save"' }));
-      if (s === 'draft' && !dirty() && can2('publish')) acts.push(btn({ label: working.timing === 'now' ? 'Send now' : 'Schedule', icon: working.timing === 'now' ? 'send' : 'schedule', variant: 'primary', attrs: 'data-n="schedule"' }));
-      if (s === 'scheduled' && can2('publish')) acts.push(btn({ label: 'Cancel notification', icon: 'cancel', variant: 'secondary', attrs: 'data-n="cancel"' }));
-      if (n && can2('draft')) acts.push(btn({ label: 'Duplicate', icon: 'content_copy', variant: 'text', attrs: 'data-n="dup"' }));
-      if (n && ['draft', 'cancelled'].includes(s) && can2('draft')) acts.push(btn({ label: 'Delete', icon: 'delete', variant: 'text', attrs: 'data-n="del"' }));
+      if (editable() && (dirty() || isNew)) acts.push(btn({ label: isNew ? 'Save as draft' : 'Save changes', icon: 'save', variant: 'primary', size: 'sm', attrs: 'data-n="save"' }));
+      if (s === 'draft' && !dirty() && can2('publish')) acts.push(btn({ label: working.timing === 'now' ? 'Send now' : 'Schedule', icon: working.timing === 'now' ? 'send' : 'schedule', variant: 'primary', size: 'sm', attrs: 'data-n="schedule"' }));
+      if (s === 'scheduled' && can2('publish')) acts.push(btn({ label: 'Cancel notification', icon: 'cancel', variant: 'secondary', size: 'sm', attrs: 'data-n="cancel"' }));
+      if (n && can2('draft')) acts.push(btn({ label: 'Duplicate', icon: 'content_copy', variant: 'text', size: 'sm', attrs: 'data-n="dup"' }));
+      if (n && ['draft', 'cancelled'].includes(s) && can2('draft')) acts.push(btn({ label: 'Delete', icon: 'delete', variant: 'text', size: 'sm', attrs: 'data-n="del"' }));
       const note = s === 'draft' && can2('draft') && !can2('publish') ? 'An Admin or Super Admin schedules or sends drafts. Who can send is pending confirmation.' : '';
-      $('#ne-lc').innerHTML = `${stepper(steps(), 'Notification status')}<div class="lc-actions">${acts.join('')}</div>${note ? `<p class="role-note">${ic('info', 20)}<span>${note}</span></p>` : ''}`;
+      const when = n && n.status === 'sent' && n.sentAt ? `Sent ${fmtDateTime(n.sentAt)}` : n && n.status === 'scheduled' ? `Sends ${fmtLocal(n.scheduledAt)}` : n && n.status === 'cancelled' ? 'Won’t be sent' : dirty() || isNew ? 'Save it, then schedule or send it.' : working.timing === 'now' ? 'Sends when you choose Send now.' : working.scheduledAt ? `Set for ${fmtLocal(working.scheduledAt)}` : 'Choose a send time.';
+      $('#ne-lc').innerHTML = `<div class="lc-row"><h2 id="lc-h" class="lc-row-h" tabindex="-1">Status</h2>
+        <p class="lc-status">${n ? noteBadge(n.status) : badge('unsaved', 'New – not saved')}${n && dirty() ? badge('unsaved') : ''}<span>${esc(when)}</span><span class="muted">· Sending is simulated</span></p>
+        <div class="lc-actions">${acts.join('')}</div></div>${note ? `<p class="role-note">${ic('info', 20)}<span>${note}</span></p>` : ''}`;
       $('#ne-b').innerHTML = `${n ? noteBadge(n.status) : badge('unsaved', 'New')}${n && dirty() ? badge('unsaved') : ''}`;
       $('#page-h').textContent = title();
     };
     const refresh = debounce(() => { renderActions(); pv.update(); }, 100);
     wireForm(form, () => noteFields, working, refresh, draw);
     renderActions();
+    if (n) {
+      const canD = can(role, 'notifications', 'draft');
+      dataTable($('#ne-ver'), { hideCount: true, id: 'nv', caption: 'Notification versions', noun: 'version', rows: n.versions, defaultSort: { key: 'v', dir: 'desc' }, searchText: v => `v${v.version} ${v.comment} ${UserService.name(v.by)}`,
+        columns: [
+          { key: 'v', label: 'Version', sortable: true, sortValue: v => v.version, render: v => `<span class="ord-chip">v${v.version}</span>${v.version === n.versions.length ? ' <span class="muted small">Current</span>' : ''}`, cls: 'ord' },
+          { key: 'at', label: 'Saved', sortable: true, render: v => `<span class="nowrap">${esc(fmtDateTime(v.at))}</span>` },
+          { key: 'by', label: 'By', render: v => esc(UserService.name(v.by)) },
+          { key: 'comment', label: 'Comment', render: v => esc(v.comment || ''), cls: 'wrap' },
+          { key: 'acts', label: 'Actions', hideLabel: true, render: v => `<span class="row-acts">${btn({ label: 'View', icon: 'visibility', variant: 'text', size: 'sm', attrs: `data-nview="${v.version}" aria-label="View version ${v.version}"` })}${canD && v.version !== n.versions.length ? btn({ label: n.status === 'draft' ? 'Restore' : 'Use as new draft', icon: n.status === 'draft' ? 'history' : 'content_copy', variant: 'text', size: 'sm', attrs: `data-nrestore="${v.version}" aria-label="${n.status === 'draft' ? 'Restore' : 'Use as a new draft:'} version ${v.version}"` }) : ''}</span>` }],
+        onRender(tbody) { tbody.onclick = async e => {
+          const vb = e.target.closest('[data-nview]'), rb = e.target.closest('[data-nrestore]');
+          if (vb) { const v = n.versions.find(x => x.version === +vb.dataset.nview), cur = n.versions[n.versions.length - 1];
+            openModal({ title: `Version ${v.version}`, wide: true, body: `<dl class="facts cols"><dt>Saved</dt><dd>${esc(fmtDateTime(v.at))} by ${esc(UserService.name(v.by))}</dd><dt>Title</dt><dd>${esc(v.data.title)}</dd><dt>Description</dt><dd>${esc(v.data.description)}</dd><dt>Send</dt><dd>${v.data.timing === 'now' ? 'Instant' : esc(fmtLocal(v.data.scheduledAt))}</dd><dt>Audience</dt><dd>${esc(segmentName(v.data.sendTo))}</dd></dl>
+              <h3 class="sub-h">${v === cur ? 'This is the current version' : `Compared with the current version (v${cur.version})`}</h3>${v === cur ? '' : changeList(describeData(cur.data, v.data, noteFields))}`,
+              actions: btn({ label: 'Close', variant: 'text', attrs: 'data-close' }) }); }
+          if (rb) {
+            const ver = +rb.dataset.nrestore, asDraft = n.status === 'draft';
+            const c = await confirmDialog({ title: asDraft ? `Restore version ${ver}?` : `Use version ${ver} as a new draft?`, body: `<p>${asDraft ? `The draft goes back to the message and delivery settings of version ${ver}. That becomes version ${n.versions.length + 1}; nothing is lost.` : `“${esc(n.title)}” is ${NOTE_STATUS[n.status].toLowerCase()} and can’t change, so version ${ver} comes back as a new draft you can edit and schedule.`}</p>`, confirmLabel: asDraft ? 'Restore' : 'Create draft' });
+            if (!c.ok) return;
+            setBusy(rb, true, 'Restoring');
+            try { const r = await NotificationService.restore(n.id, ver); reload(asDraft ? `Version ${ver} restored.` : 'New draft created from that version.', asDraft ? null : `notifications-${r.id}`); }
+            catch (err) { setBusy(rb, false); toast(err.message, { kind: 'error', ms: 8000 }); }
+          }
+        }; }
+      });
+    }
     const reload = async (msg, go) => { Router.clearGuard(); toast(msg, { kind: 'success' }); if (go) Router.go(go); else this.render(main, ctx); };
     $('#ne-lc').onclick = async e => {
       const b = e.target.closest('[data-n]'); if (!b) return;

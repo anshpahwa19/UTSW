@@ -72,7 +72,7 @@ function defineSingleton(cfg) {
       const allF = () => cfg.sections ? fields(cfg.sections) : [];
       const describe = (a, b) => cfg.describe ? cfg.describe(a, b) : describeData(a, b, allF());
       $('#sg-body').innerHTML = `
-        <section class="card lc" aria-labelledby="lc-h"><div class="card-head"><h2 id="lc-h" tabindex="-1">Publishing</h2><div class="card-actions"><span id="sg-badges"></span>${badge('mock')}</div></div><div class="card-body" id="lc"></div></section>
+        <section class="card lc lc-slim" aria-labelledby="lc-h"><span id="sg-badges" hidden></span><div class="card-body" id="lc"></div></section>
         <div class="ed-grid${cfg.preview || cfg.side || cfg.sideStatic ? '' : ' single'}">
           <div class="ed-main">
             <section class="card" aria-labelledby="form-h"><div class="card-head"><h2 id="form-h">${esc(cfg.formTitle || 'Settings')}</h2>${ro ? `<div class="card-actions">${badge('fixed', 'View only')}</div>` : ''}</div>

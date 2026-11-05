@@ -874,3 +874,5 @@ label.btn:has(+ input:focus-visible){box-shadow:var(--focus)}
 .field .dt-l{font-size:var(--t12); font-weight:600; color:var(--ink-2)}
 .field-dt > legend{font-weight:600; font-size:var(--t14); margin-bottom:6px}
 @container main (max-width: 420px){ .dt-row{grid-template-columns:minmax(0,1fr)} }
+.wf-status{margin-bottom:var(--s3)}
+.lc-status .badge{flex:none}

@@ -66,7 +66,7 @@ BUILT_PAGES['home-layout'] = (() => {
       ${st.aud === 'authenticated' ? `<p class="note-line">${ic('info', 20)}<span>The signed-in home has no approved design yet (§10.5). These modules come from the personalised homepage prototype; “Your next visits” is read only from MyChart – Epic stays the source.</span></p>` : ''}
       <div class="hl-grid">
         <div class="hl-main">
-          ${HUB_TAB ? `<section class="card lc lc-slim" aria-labelledby="lc-h"><span id="lc-badges" hidden></span><div class="card-body" id="lc"></div></section>` : `<section class="card lc" aria-labelledby="lc-h"><div class="card-head"><h2 id="lc-h" tabindex="-1">Publishing</h2><div id="lc-badges" class="card-actions"></div></div><div class="card-body" id="lc"></div></section>`}
+          ${HUB_TAB ? `<section class="card lc lc-slim" aria-labelledby="lc-h"><span id="lc-badges" hidden></span><div class="card-body" id="lc"></div></section>` : `<section class="card lc lc-slim" aria-labelledby="lc-h"><span id="lc-badges" hidden></span><div class="card-body" id="lc"></div></section>`}
           <div class="hl-edit" id="editor"></div>
         </div>
         <aside class="hl-preview" id="hl-pv"></aside>

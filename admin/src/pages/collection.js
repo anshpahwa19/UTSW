@@ -71,7 +71,7 @@ function defineCollection(cfg) {
         ${cfg.banner ? cfg.banner : ''}
         ${homeItem ? `<section class="card hub-pub" aria-labelledby="hub-pub-h" id="hub-pub"></section>
         <section class="card lc lc-slim" aria-labelledby="lc-h"><div class="card-body" id="lc"></div></section>`
-        : `<section class="card lc" aria-labelledby="lc-h"><div class="card-head"><h2 id="lc-h" tabindex="-1">Publishing</h2><div class="card-actions">${badge('mock')}</div></div><div class="card-body" id="lc"></div></section>`}
+        : `<section class="card lc lc-slim" aria-labelledby="lc-h"><div class="card-body" id="lc"></div></section>`}
         <div class="ed-grid${cfg.preview || cfg.side ? '' : ' single'}">
           <section class="card ${cfg.formCls || ''}" aria-labelledby="form-h"><div class="card-head"><h2 id="form-h">${esc(cfg.formTitle || 'Details')}</h2>${ro ? `<div class="card-actions">${badge('fixed', 'View only')}</div>` : ''}</div>
             <form class="card-body form" id="ed-form" novalidate></form></section>

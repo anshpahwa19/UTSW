@@ -41,8 +41,8 @@ function audit(action, target, { targetId = null, targetType = null, environment
    supportsRollback is per type; every value is an assumption pending confirmation (§10.17). */
 const CONFIG_TYPES = {
   homeLayout: { label: 'Home screen layout', area: 'homeLayout', supportsRollback: true, route: 'home-layout' },
-  campaign: { label: 'Campaign', area: 'campaigns', supportsRollback: false, route: 'home-campaigns' },
-  alert: { label: 'Emergency alert', area: 'alerts', supportsRollback: false, route: 'home-alerts' },
+  campaign: { label: 'Campaign', area: 'campaigns', supportsRollback: true, route: 'home-campaigns' },
+  alert: { label: 'Emergency alert', area: 'alerts', supportsRollback: true, route: 'home-alerts' },
   quickLink: { label: 'Quick link', area: 'quickLinks', supportsRollback: true, route: 'home-quick-links' },
   featuredCard: { label: 'Featured card', area: 'featuredCards', supportsRollback: true, route: 'home-featured-cards' },
   drawer: { label: 'Drawer / More options', area: 'drawer', supportsRollback: true, route: 'content-drawer' },
@@ -216,13 +216,35 @@ const UserService = {
 
 /* ---------- Notifications: draft → scheduled or sent; cancel while scheduled ---------- */
 const NOTE_STATUS = { draft: 'Draft', scheduled: 'Scheduled', sent: 'Sent', cancelled: 'Cancelled' };
+/* Each save of a notification keeps a version (its message and delivery fields) */
+const NOTE_KEYS = ['title', 'description', 'image', 'imageAlt', 'videoUrl', 'destination', 'sendTo', 'timing', 'scheduledAt'];
+const noteSnap = n => Object.fromEntries(NOTE_KEYS.map(k => [k, clone(n[k])]));
+const noteVersions = n => { if (!n.versions) n.versions = [{ version: 1, data: noteSnap(n), at: n.createdAt, by: n.createdBy, comment: 'Created' }]; return n.versions; };
 const NotificationService = {
-  list: () => mockCall('notifications', () => DB.db.notifications),
-  get: id => mockCall('notifications', () => { const n = DB.db.notifications.find(x => x.id === id); if (!n) throw new ServiceError('That notification no longer exists.'); return n; }),
+  list: () => mockCall('notifications', () => { DB.db.notifications.forEach(noteVersions); return DB.db.notifications; }),
+  get: id => mockCall('notifications', () => { const n = DB.db.notifications.find(x => x.id === id); if (!n) throw new ServiceError('That notification no longer exists.'); noteVersions(n); return n; }),
+  restore: (id, version) => mockCall('notifications', () => {
+    needs('notifications', 'draft');
+    const n = DB.db.notifications.find(x => x.id === id), ver = noteVersions(n).find(v => v.version === version);
+    if (!ver) throw new ServiceError(`Version ${version} doesn’t exist.`);
+    if (n.status === 'draft') {
+      Object.assign(n, clone(ver.data), { updatedAt: nowIso() });
+      n.versions.push({ version: n.versions.length + 1, data: noteSnap(n), at: nowIso(), by: actor(), comment: `Restored v${version}` });
+      audit('Notification restored', n.title, { targetId: id, targetType: 'notification', comment: `Version ${version}` });
+      return n;
+    }
+    /* Sent, scheduled or cancelled: the old version comes back as a new draft */
+    const c = { ...clone(n), ...clone(ver.data), id: uid('n'), title: `${ver.data.title} (copy)`, status: 'draft', createdBy: actor(), createdAt: nowIso(), updatedAt: nowIso(), sentAt: null, stats: null };
+    c.versions = [{ version: 1, data: noteSnap(c), at: nowIso(), by: actor(), comment: `From v${version} of “${n.title}”` }];
+    DB.db.notifications.unshift(c);
+    audit('Notification duplicated', c.title, { targetId: c.id, targetType: 'notification', comment: `From version ${version}` });
+    return c;
+  }),
   save: (id, data) => mockCall('notifications', () => {
     needs('notifications', 'draft');
     if (!id) {
       const n = { ...clone(data), id: uid('n'), status: 'draft', createdBy: actor(), createdAt: nowIso(), updatedAt: nowIso(), sentAt: null, stats: null };
+      n.versions = [{ version: 1, data: noteSnap(n), at: nowIso(), by: actor(), comment: 'Created' }];
       DB.db.notifications.unshift(n);
       audit('Notification created', n.title, { targetId: n.id, targetType: 'notification', after: data });
       return n;
@@ -231,6 +253,7 @@ const NotificationService = {
     if (n.status !== 'draft') throw new ServiceError(`${NOTE_STATUS[n.status]} notifications can’t be edited. Duplicate it instead.`);
     const before = clone(n);
     Object.assign(n, clone(data), { status: 'draft', updatedAt: nowIso() });
+    noteVersions(n).push({ version: n.versions.length + 1, data: noteSnap(n), at: nowIso(), by: actor(), comment: 'Edited' });
     audit('Notification edited', n.title, { targetId: id, targetType: 'notification', before, after: data });
     return n;
   }),
@@ -256,6 +279,7 @@ const NotificationService = {
     needs('notifications', 'draft');
     const src = DB.db.notifications.find(x => x.id === id);
     const n = { ...clone(src), id: uid('n'), title: `${src.title} (copy)`, status: 'draft', createdBy: actor(), createdAt: nowIso(), updatedAt: nowIso(), sentAt: null, stats: null };
+    n.versions = [{ version: 1, data: noteSnap(n), at: nowIso(), by: actor(), comment: `Duplicated from “${src.title}”` }];
     DB.db.notifications.unshift(n);
     audit('Notification duplicated', n.title, { targetId: n.id, targetType: 'notification' });
     return n;

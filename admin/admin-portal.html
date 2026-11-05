@@ -950,6 +950,8 @@ label.btn:has(+ input:focus-visible){box-shadow:var(--focus)}
 .field .dt-l{font-size:var(--t12); font-weight:600; color:var(--ink-2)}
 .field-dt > legend{font-weight:600; font-size:var(--t14); margin-bottom:6px}
 @container main (max-width: 420px){ .dt-row{grid-template-columns:minmax(0,1fr)} }
+.wf-status{margin-bottom:var(--s3)}
+.lc-status .badge{flex:none}
 
 </style>
 <div id="app" lang="en"></div>
@@ -1428,8 +1430,8 @@ function audit(action, target, { targetId = null, targetType = null, environment
    supportsRollback is per type; every value is an assumption pending confirmation (§10.17). */
 const CONFIG_TYPES = {
   homeLayout: { label: 'Home screen layout', area: 'homeLayout', supportsRollback: true, route: 'home-layout' },
-  campaign: { label: 'Campaign', area: 'campaigns', supportsRollback: false, route: 'home-campaigns' },
-  alert: { label: 'Emergency alert', area: 'alerts', supportsRollback: false, route: 'home-alerts' },
+  campaign: { label: 'Campaign', area: 'campaigns', supportsRollback: true, route: 'home-campaigns' },
+  alert: { label: 'Emergency alert', area: 'alerts', supportsRollback: true, route: 'home-alerts' },
   quickLink: { label: 'Quick link', area: 'quickLinks', supportsRollback: true, route: 'home-quick-links' },
   featuredCard: { label: 'Featured card', area: 'featuredCards', supportsRollback: true, route: 'home-featured-cards' },
   drawer: { label: 'Drawer / More options', area: 'drawer', supportsRollback: true, route: 'content-drawer' },
@@ -1603,13 +1605,35 @@ const UserService = {
 
 /* ---------- Notifications: draft → scheduled or sent; cancel while scheduled ---------- */
 const NOTE_STATUS = { draft: 'Draft', scheduled: 'Scheduled', sent: 'Sent', cancelled: 'Cancelled' };
+/* Each save of a notification keeps a version (its message and delivery fields) */
+const NOTE_KEYS = ['title', 'description', 'image', 'imageAlt', 'videoUrl', 'destination', 'sendTo', 'timing', 'scheduledAt'];
+const noteSnap = n => Object.fromEntries(NOTE_KEYS.map(k => [k, clone(n[k])]));
+const noteVersions = n => { if (!n.versions) n.versions = [{ version: 1, data: noteSnap(n), at: n.createdAt, by: n.createdBy, comment: 'Created' }]; return n.versions; };
 const NotificationService = {
-  list: () => mockCall('notifications', () => DB.db.notifications),
-  get: id => mockCall('notifications', () => { const n = DB.db.notifications.find(x => x.id === id); if (!n) throw new ServiceError('That notification no longer exists.'); return n; }),
+  list: () => mockCall('notifications', () => { DB.db.notifications.forEach(noteVersions); return DB.db.notifications; }),
+  get: id => mockCall('notifications', () => { const n = DB.db.notifications.find(x => x.id === id); if (!n) throw new ServiceError('That notification no longer exists.'); noteVersions(n); return n; }),
+  restore: (id, version) => mockCall('notifications', () => {
+    needs('notifications', 'draft');
+    const n = DB.db.notifications.find(x => x.id === id), ver = noteVersions(n).find(v => v.version === version);
+    if (!ver) throw new ServiceError(`Version ${version} doesn’t exist.`);
+    if (n.status === 'draft') {
+      Object.assign(n, clone(ver.data), { updatedAt: nowIso() });
+      n.versions.push({ version: n.versions.length + 1, data: noteSnap(n), at: nowIso(), by: actor(), comment: `Restored v${version}` });
+      audit('Notification restored', n.title, { targetId: id, targetType: 'notification', comment: `Version ${version}` });
+      return n;
+    }
+    /* Sent, scheduled or cancelled: the old version comes back as a new draft */
+    const c = { ...clone(n), ...clone(ver.data), id: uid('n'), title: `${ver.data.title} (copy)`, status: 'draft', createdBy: actor(), createdAt: nowIso(), updatedAt: nowIso(), sentAt: null, stats: null };
+    c.versions = [{ version: 1, data: noteSnap(c), at: nowIso(), by: actor(), comment: `From v${version} of “${n.title}”` }];
+    DB.db.notifications.unshift(c);
+    audit('Notification duplicated', c.title, { targetId: c.id, targetType: 'notification', comment: `From version ${version}` });
+    return c;
+  }),
   save: (id, data) => mockCall('notifications', () => {
     needs('notifications', 'draft');
     if (!id) {
       const n = { ...clone(data), id: uid('n'), status: 'draft', createdBy: actor(), createdAt: nowIso(), updatedAt: nowIso(), sentAt: null, stats: null };
+      n.versions = [{ version: 1, data: noteSnap(n), at: nowIso(), by: actor(), comment: 'Created' }];
       DB.db.notifications.unshift(n);
       audit('Notification created', n.title, { targetId: n.id, targetType: 'notification', after: data });
       return n;
@@ -1618,6 +1642,7 @@ const NotificationService = {
     if (n.status !== 'draft') throw new ServiceError(`${NOTE_STATUS[n.status]} notifications can’t be edited. Duplicate it instead.`);
     const before = clone(n);
     Object.assign(n, clone(data), { status: 'draft', updatedAt: nowIso() });
+    noteVersions(n).push({ version: n.versions.length + 1, data: noteSnap(n), at: nowIso(), by: actor(), comment: 'Edited' });
     audit('Notification edited', n.title, { targetId: id, targetType: 'notification', before, after: data });
     return n;
   }),
@@ -1643,6 +1668,7 @@ const NotificationService = {
     needs('notifications', 'draft');
     const src = DB.db.notifications.find(x => x.id === id);
     const n = { ...clone(src), id: uid('n'), title: `${src.title} (copy)`, status: 'draft', createdBy: actor(), createdAt: nowIso(), updatedAt: nowIso(), sentAt: null, stats: null };
+    n.versions = [{ version: 1, data: noteSnap(n), at: nowIso(), by: actor(), comment: `Duplicated from “${src.title}”` }];
     DB.db.notifications.unshift(n);
     audit('Notification duplicated', n.title, { targetId: n.id, targetType: 'notification' });
     return n;
@@ -2769,20 +2795,20 @@ function Lifecycle(opts) {
     reason = {};
     const acts = [];
     const add = (key, label, variant, ok, why, icon) => {
-      acts.push(btn({ label, icon, variant, size: opts.draftOnly ? 'sm' : 'md', attrs: `data-lc="${key}" ${ok ? '' : `aria-disabled="true" aria-describedby="why-${key}"`}` }));
+      acts.push(btn({ label, icon, variant, size: 'sm', attrs: `data-lc="${key}" ${ok ? '' : `aria-disabled="true" aria-describedby="why-${key}"`}` }));
       if (!ok) reason[key] = why;
     };
     const hasDraft = r && r.draft, draftOnly = !!opts.draftOnly;
     const next = d || isNew ? 'save' : hasDraft ? (may('deployDemo') ? 'deploy' : 'review') : demoAhead(r) ? 'publish' : null;
     const v = k => (k === next ? 'primary' : 'secondary');
-    if (!isNew && d) acts.push(btn({ label: 'Discard changes', variant: 'text', size: opts.draftOnly ? 'sm' : 'md', attrs: 'data-lc="discard"' }));
-    else if (hasDraft && may('saveDraft')) acts.push(btn({ label: 'Discard draft', variant: 'text', size: opts.draftOnly ? 'sm' : 'md', attrs: 'data-lc="discardDraft"' }));
-    if (r && !r.production && !r.demo && may('saveDraft')) acts.push(btn({ label: 'Delete', icon: 'delete', variant: 'text', attrs: 'data-lc="delete"' }));
+    if (!isNew && d) acts.push(btn({ label: 'Discard changes', variant: 'text', size: 'sm', attrs: 'data-lc="discard"' }));
+    else if (hasDraft && may('saveDraft')) acts.push(btn({ label: 'Discard draft', variant: 'text', size: 'sm', attrs: 'data-lc="discardDraft"' }));
+    if (r && !r.production && !r.demo && may('saveDraft')) acts.push(btn({ label: 'Delete', icon: 'delete', variant: 'text', size: 'sm', attrs: 'data-lc="delete"' }));
     if (may('saveDraft')) add('save', isNew ? 'Save as draft' : 'Save draft', v('save'), d || isNew, 'There are no unsaved changes to save.', 'save');
     if (!isNew && may('requestReview') && !may('deployDemo')) add('review', r.review ? 'Review requested' : 'Request review', v('review'), !!hasDraft && !d && !r.review,
       d ? 'Save the draft before you request a review.' : r.review ? 'A review is already requested for this draft.' : 'Save a draft first, then request a review.', 'rate_review');
     if (!isNew && !draftOnly && may('deployDemo')) add('deploy', 'Deploy to demo', v('deploy'), !!hasDraft && !d, d ? 'Save the draft first. Demo only takes saved drafts.' : 'Save a draft first. Demo only takes saved drafts.', 'science');
-    if (!isNew && !draftOnly && may('requestChanges') && demoAhead(r)) acts.push(btn({ label: 'Request changes', icon: 'undo', variant: 'secondary', attrs: 'data-lc="changes"' }));
+    if (!isNew && !draftOnly && may('requestChanges') && demoAhead(r)) acts.push(btn({ label: 'Request changes', icon: 'undo', variant: 'secondary', size: 'sm', attrs: 'data-lc="changes"' }));
     if (!isNew && !draftOnly && may('publish')) add('publish', 'Publish to production', v('publish'), demoAhead(r), r && r.production ? `Production v${r.production} already matches demo. Deploy a new version to demo first.` : 'Deploy to demo and check it there first.', 'public');
     const lvl = levelOf(role(), opts.area);
     const note = lvl === 'view' ? `You can view this ${opts.noun}. Your role, ${ROLES[role()].label}, can’t change it.`
@@ -2791,10 +2817,11 @@ function Lifecycle(opts) {
     const status = !draftOnly ? '' : d || isNew ? `${badge('unsaved', isNew ? 'New – not saved' : 'Unsaved changes')}<span>Save a draft, then deploy it from Publishing above.</span>`
       : hasDraft ? `${r.draft.changesRequested ? badge('changes') : r.review ? badge('review') : badge('draft', 'Saved draft')}<span>${when(lastEvent(r, 'draft'))}. Deploy it with the other drafts from Publishing above.</span>`
       : `${r.production ? badge('production', `Production v${r.production}`) : ''}${demoAhead(r) ? badge('demo', `Demo v${r.demo}`) : ''}<span>No open draft. Edit below to start one.</span>`;
-    host.innerHTML = draftOnly
-      ? `<div class="lc-row"><h2 id="lc-h" class="lc-row-h" tabindex="-1">Draft</h2><p class="lc-status">${status}</p>${acts.length ? `<div class="lc-actions">${acts.join('')}</div>` : ''}</div>`
-      : `${stepper(steps, `Where the newest ${opts.noun} changes are`)}
-      ${acts.length ? `<div class="lc-actions">${acts.join('')}</div>` : ''}`;
+    /* Full mode, same row: where the newest changes are, as three tags */
+    const chips = `${d || isNew ? badge('unsaved', isNew ? 'New – not saved' : 'Unsaved changes') : hasDraft ? (r.draft.changesRequested ? badge('changes') : r.review ? badge('review') : badge('draft', 'Saved draft')) : '<span class="muted">No open draft</span>'}
+      ${r && r.demo ? badge('demo', `Demo v${r.demo}`) : ''}${r && r.production ? badge('production', `Production v${r.production}`) : '<span class="muted">Not published</span>'}`;
+    host.innerHTML = `<div class="lc-row"><h2 id="lc-h" class="lc-row-h" tabindex="-1">${draftOnly ? 'Draft' : 'Publishing'}</h2>
+      <p class="lc-status">${draftOnly ? status : chips}</p>${acts.length ? `<div class="lc-actions">${acts.join('')}</div>` : ''}</div>`;
     host.innerHTML += `
       ${Object.entries(reason).map(([k, t]) => `<span class="vh" id="why-${k}">${esc(t)}</span>`).join('')}
       ${note ? `<p class="role-note">${ic('info', 20)}<span>${esc(note)} Permissions are proposed, pending confirmation.</span></p>` : ''}`;
@@ -2863,7 +2890,9 @@ function Lifecycle(opts) {
 
 /* Change history table with rollback where the type supports it */
 function historyCard(id = 'hist') {
-  return `<section class="card" aria-labelledby="${id}-h"><div class="card-head"><h2 id="${id}-h" tabindex="-1">Change history</h2></div><div class="card-body" id="${id}"></div></section>`;
+  return `<section class="card" aria-labelledby="${id}-h"><div class="card-head"><h2 id="${id}-h" tabindex="-1">History</h2>
+      <div class="card-actions">${segmented({ id: `${id}-view`, label: 'Show', options: [['versions', 'Versions'], ['events', 'Change history']], value: 'versions' })}</div></div>
+    <div class="card-body"><div id="${id}-v"></div><div id="${id}" hidden></div></div></section>`;
 }
 function mountHistory({ hostId = 'hist', getRec, describe, onSaved }) {
   const r0 = getRec(), type = CONFIG_TYPES[r0.type];
@@ -2874,11 +2903,40 @@ function mountHistory({ hostId = 'hist', getRec, describe, onSaved }) {
       <h3 class="sub-h">Changes from production v${r.production}</h3>${changeList(describe(dataAt(r, 'production'), r.versions[version].data))}`,
       confirmLabel: `Roll back to v${version}`, variant: 'danger', comment: { label: 'Reason for the rollback', required: true } });
     if (!c.ok) return;
-    setBusy(b, true, 'Rolling back');
+    if (b) setBusy(b, true, 'Rolling back');
     try { const rec = await ConfigService.rollback(r.id, version, c.comment); onSaved(rec, 'rollback'); toast(`Rolled back. Production is now v${rec.production}, a copy of v${version}.`, { kind: 'success' }); $(`#${hostId}-h`).focus(); }
-    catch (err) { setBusy(b, false); toast(err.message, { kind: 'error', ms: 8000 }); }
+    catch (err) { if (b) setBusy(b, false); toast(err.message, { kind: 'error', ms: 8000 }); }
   };
-  return dataTable($(`#${hostId}`), { hideCount: true,
+  /* Versions: every saved version, where it is now, what it changes, and a way back to it */
+  const where = (r, v) => `${r.production === v ? badge('production', 'In production') : ''}${r.demo === v && r.demo !== r.production ? badge('demo', 'On demo') : ''}${r.versions[v].rollbackOf ? badge('pending', `Copy of v${r.versions[v].rollbackOf}`) : ''}`;
+  const viewVersion = v => {
+    const r = getRec(), ver = r.versions[v], ok = canRb() && v !== r.production;
+    const m = openModal({ title: `Version ${v}`, wide: true,
+      body: `<dl class="facts cols"><dt>Saved</dt><dd>${esc(fmtDateTime(ver.updatedAt))} by ${esc(UserService.name(ver.updatedBy))}</dd><dt>Comment</dt><dd>${ver.comment ? esc(ver.comment) : '<span class="muted">None</span>'}</dd><dt>Where</dt><dd>${where(r, v) || '<span class="muted">Not on demo or production</span>'}</dd></dl>
+        <h3 class="sub-h">${v === r.production ? 'This is the version in production' : `Compared with production v${r.production}`}</h3>${v === r.production ? '' : changeList(describe(dataAt(r, 'production'), ver.data))}`,
+      actions: `${btn({ label: 'Close', variant: 'text', attrs: 'data-close' })}${ok ? btn({ label: `Roll back to v${v}`, icon: 'history', variant: 'danger', attrs: `data-vrb="${v}"` }) : ''}`,
+      onOpen(d, close) { d.addEventListener('click', e => { const b = e.target.closest('[data-vrb]'); if (b) { e.preventDefault(); close(); rollback(v, null); } }); } });
+    return m;
+  };
+  const versionsTable = () => dataTable($(`#${hostId}-v`), { hideCount: true,
+    id: `${hostId}v`, caption: 'Versions', noun: 'version', searchPlaceholder: 'Search versions and comments',
+    rows: Object.values(getRec().versions), defaultSort: { key: 'version', dir: 'desc' },
+    searchText: v => `v${v.version} ${v.comment || ''} ${UserService.name(v.updatedBy)}`,
+    empty: { icon: 'history', title: 'No versions yet', text: 'A version is made each time a draft goes to demo.' },
+    columns: [
+      { key: 'version', label: 'Version', sortable: true, render: v => `<span class="ord-chip">v${v.version}</span>`, cls: 'ord' },
+      { key: 'saved', label: 'Saved', sortable: true, sortValue: v => v.updatedAt, render: v => `<span class="nowrap">${esc(fmtDateTime(v.updatedAt))}</span>` },
+      { key: 'by', label: 'By', render: v => esc(UserService.name(v.updatedBy)) },
+      { key: 'comment', label: 'Comment', render: v => v.comment ? esc(v.comment) : '<span class="muted">None</span>', cls: 'wrap' },
+      { key: 'where', label: 'Where', render: v => `<span class="badges">${where(getRec(), v.version)}</span>` },
+      { key: 'acts', label: 'Actions', hideLabel: true, render: v => { const r = getRec(); return `<span class="row-acts">${btn({ label: 'View', icon: 'visibility', variant: 'text', size: 'sm', attrs: `data-vview="${v.version}" aria-label="View version ${v.version}"` })}${canRb() && v.version !== r.production ? btn({ label: 'Roll back', icon: 'history', variant: 'text', size: 'sm', attrs: `data-rollback="${v.version}" aria-label="Roll back to version ${v.version}"` }) : ''}</span>`; } }
+    ],
+    onRender(tbody) { tbody.onclick = ev => { const vb = ev.target.closest('[data-vview]'), rb = ev.target.closest('[data-rollback]'); if (vb) viewVersion(+vb.dataset.vview); if (rb) rollback(+rb.dataset.rollback, rb); }; }
+  });
+  const vt = versionsTable();
+  const toggle = $(`#${hostId}-view`);
+  if (toggle) wireSegmented(toggle, k => { $(`#${hostId}-v`).hidden = k !== 'versions'; $(`#${hostId}`).hidden = k !== 'events'; });
+  const events = dataTable($(`#${hostId}`), { hideCount: true,
     id: hostId, caption: 'Change history', noun: 'change', searchPlaceholder: 'Search events, people and comments',
     rows: r0.events, defaultSort: { key: 'at', dir: 'desc' },
     searchText: e => `${e.action} ${UserService.name(e.by)} ${e.comment} v${e.version || ''}`,
@@ -2899,6 +2957,7 @@ function mountHistory({ hostId = 'hist', getRec, describe, onSaved }) {
     ],
     onRender(tbody) { tbody.onclick = ev => { const b = ev.target.closest('[data-rollback]'); if (b) rollback(+b.dataset.rollback, b); }; }
   });
+  return { update(rows) { events.update(rows); vt.update(Object.values(getRec().versions)); } };
 }
 
 /* Environment status badges for list rows */
@@ -3331,7 +3390,7 @@ BUILT_PAGES['home-layout'] = (() => {
       ${st.aud === 'authenticated' ? `<p class="note-line">${ic('info', 20)}<span>The signed-in home has no approved design yet (§10.5). These modules come from the personalised homepage prototype; “Your next visits” is read only from MyChart – Epic stays the source.</span></p>` : ''}
       <div class="hl-grid">
         <div class="hl-main">
-          ${HUB_TAB ? `<section class="card lc lc-slim" aria-labelledby="lc-h"><span id="lc-badges" hidden></span><div class="card-body" id="lc"></div></section>` : `<section class="card lc" aria-labelledby="lc-h"><div class="card-head"><h2 id="lc-h" tabindex="-1">Publishing</h2><div id="lc-badges" class="card-actions"></div></div><div class="card-body" id="lc"></div></section>`}
+          ${HUB_TAB ? `<section class="card lc lc-slim" aria-labelledby="lc-h"><span id="lc-badges" hidden></span><div class="card-body" id="lc"></div></section>` : `<section class="card lc lc-slim" aria-labelledby="lc-h"><span id="lc-badges" hidden></span><div class="card-body" id="lc"></div></section>`}
           <div class="hl-edit" id="editor"></div>
         </div>
         <aside class="hl-preview" id="hl-pv"></aside>
@@ -3606,7 +3665,7 @@ function defineCollection(cfg) {
         ${cfg.banner ? cfg.banner : ''}
         ${homeItem ? `<section class="card hub-pub" aria-labelledby="hub-pub-h" id="hub-pub"></section>
         <section class="card lc lc-slim" aria-labelledby="lc-h"><div class="card-body" id="lc"></div></section>`
-        : `<section class="card lc" aria-labelledby="lc-h"><div class="card-head"><h2 id="lc-h" tabindex="-1">Publishing</h2><div class="card-actions">${badge('mock')}</div></div><div class="card-body" id="lc"></div></section>`}
+        : `<section class="card lc lc-slim" aria-labelledby="lc-h"><div class="card-body" id="lc"></div></section>`}
         <div class="ed-grid${cfg.preview || cfg.side ? '' : ' single'}">
           <section class="card ${cfg.formCls || ''}" aria-labelledby="form-h"><div class="card-head"><h2 id="form-h">${esc(cfg.formTitle || 'Details')}</h2>${ro ? `<div class="card-actions">${badge('fixed', 'View only')}</div>` : ''}</div>
             <form class="card-body form" id="ed-form" novalidate></form></section>
@@ -4039,7 +4098,7 @@ function defineSingleton(cfg) {
       const allF = () => cfg.sections ? fields(cfg.sections) : [];
       const describe = (a, b) => cfg.describe ? cfg.describe(a, b) : describeData(a, b, allF());
       $('#sg-body').innerHTML = `
-        <section class="card lc" aria-labelledby="lc-h"><div class="card-head"><h2 id="lc-h" tabindex="-1">Publishing</h2><div class="card-actions"><span id="sg-badges"></span>${badge('mock')}</div></div><div class="card-body" id="lc"></div></section>
+        <section class="card lc lc-slim" aria-labelledby="lc-h"><span id="sg-badges" hidden></span><div class="card-body" id="lc"></div></section>
         <div class="ed-grid${cfg.preview || cfg.side || cfg.sideStatic ? '' : ' single'}">
           <div class="ed-main">
             <section class="card" aria-labelledby="form-h"><div class="card-head"><h2 id="form-h">${esc(cfg.formTitle || 'Settings')}</h2>${ro ? `<div class="card-actions">${badge('fixed', 'View only')}</div>` : ''}</div>
@@ -4386,7 +4445,7 @@ const noteEditor = {
         detail: k === 'scheduled' && n && n.scheduledAt && working.timing === 'scheduled' ? esc(fmtLocal(n.scheduledAt)) : k === 'sent' && n && n.sentAt ? esc(fmtDateTime(n.sentAt)) : k === 'draft' && isNew ? badge('unsaved', 'New') : '' }));
     };
     $('#ne').innerHTML = `${pageHead({ crumbs: [['Notifications', null], ['All notifications', 'notifications']], title: title(), badges: `<span id="ne-b">${n ? noteBadge(n.status) : badge('unsaved', 'New')}</span>` })}
-      <section class="card lc" aria-labelledby="lc-h"><div class="card-head"><h2 id="lc-h" tabindex="-1">Status</h2><div class="card-actions">${badge('simulated', 'Sending is simulated')}</div></div><div class="card-body" id="ne-lc"></div></section>
+      <section class="card lc lc-slim" aria-labelledby="lc-h"><div class="card-body" id="ne-lc"></div></section>
       ${n && n.stats ? `<section class="card" aria-labelledby="res-h"><div class="card-head"><h2 id="res-h">Results</h2><div class="card-actions">${badge('mock')}</div></div><div class="card-body"><div class="metric-row">
         ${[['Delivered', n.stats.delivered, null], ['Opened', n.stats.opened, n.stats.delivered], ['Took action', n.stats.actions, n.stats.delivered]].map(([l, v, of]) => `<div class="metric"><p class="metric-l">${l}</p><p class="metric-v">${v.toLocaleString('en-US')}</p><p class="metric-c">${of ? `${(v / of * 100).toFixed(1)}% of delivered` : n.sentAt ? `Sent ${esc(fmtDateTime(n.sentAt))}` : ''}</p></div>`).join('')}</div></div></section>` : ''}
       <div class="ed-grid">
@@ -4394,7 +4453,8 @@ const noteEditor = {
           ${!editable() && n ? `<p class="note-line in-card">${ic('lock', 20)}<span>${can(role, 'notifications', 'draft') ? `${NOTE_STATUS[n.status]} notifications can’t be edited. Duplicate it to send a new version.` : 'Your role can view notifications only.'}</span></p>` : ''}
           <form class="card-body form" id="ne-form" novalidate></form></section>
         <aside class="ed-side" id="ne-pv"></aside>
-      </div>`;
+      </div>
+      ${n ? `<section class="card" aria-labelledby="nv-h"><div class="card-head"><h2 id="nv-h" tabindex="-1">Versions</h2></div><div class="card-body" id="ne-ver"></div></section>` : ''}`;
     const form = $('#ne-form');
     const draw = () => { form.innerHTML = renderForm(NOTE_SECTIONS.map(s => ({ ...s, fields: s.fields.map(f => editable() ? f : { ...f, readonly: true }) })), working, errors, 'f'); };
     draw();
@@ -4407,19 +4467,48 @@ const noteEditor = {
     const renderActions = () => {
       const s = n ? n.status : 'new', acts = [];
       const can2 = l => can(role, 'notifications', l);
-      if (editable() && (dirty() || isNew)) acts.push(btn({ label: isNew ? 'Save as draft' : 'Save changes', icon: 'save', variant: 'primary', attrs: 'data-n="save"' }));
-      if (s === 'draft' && !dirty() && can2('publish')) acts.push(btn({ label: working.timing === 'now' ? 'Send now' : 'Schedule', icon: working.timing === 'now' ? 'send' : 'schedule', variant: 'primary', attrs: 'data-n="schedule"' }));
-      if (s === 'scheduled' && can2('publish')) acts.push(btn({ label: 'Cancel notification', icon: 'cancel', variant: 'secondary', attrs: 'data-n="cancel"' }));
-      if (n && can2('draft')) acts.push(btn({ label: 'Duplicate', icon: 'content_copy', variant: 'text', attrs: 'data-n="dup"' }));
-      if (n && ['draft', 'cancelled'].includes(s) && can2('draft')) acts.push(btn({ label: 'Delete', icon: 'delete', variant: 'text', attrs: 'data-n="del"' }));
+      if (editable() && (dirty() || isNew)) acts.push(btn({ label: isNew ? 'Save as draft' : 'Save changes', icon: 'save', variant: 'primary', size: 'sm', attrs: 'data-n="save"' }));
+      if (s === 'draft' && !dirty() && can2('publish')) acts.push(btn({ label: working.timing === 'now' ? 'Send now' : 'Schedule', icon: working.timing === 'now' ? 'send' : 'schedule', variant: 'primary', size: 'sm', attrs: 'data-n="schedule"' }));
+      if (s === 'scheduled' && can2('publish')) acts.push(btn({ label: 'Cancel notification', icon: 'cancel', variant: 'secondary', size: 'sm', attrs: 'data-n="cancel"' }));
+      if (n && can2('draft')) acts.push(btn({ label: 'Duplicate', icon: 'content_copy', variant: 'text', size: 'sm', attrs: 'data-n="dup"' }));
+      if (n && ['draft', 'cancelled'].includes(s) && can2('draft')) acts.push(btn({ label: 'Delete', icon: 'delete', variant: 'text', size: 'sm', attrs: 'data-n="del"' }));
       const note = s === 'draft' && can2('draft') && !can2('publish') ? 'An Admin or Super Admin schedules or sends drafts. Who can send is pending confirmation.' : '';
-      $('#ne-lc').innerHTML = `${stepper(steps(), 'Notification status')}<div class="lc-actions">${acts.join('')}</div>${note ? `<p class="role-note">${ic('info', 20)}<span>${note}</span></p>` : ''}`;
+      const when = n && n.status === 'sent' && n.sentAt ? `Sent ${fmtDateTime(n.sentAt)}` : n && n.status === 'scheduled' ? `Sends ${fmtLocal(n.scheduledAt)}` : n && n.status === 'cancelled' ? 'Won’t be sent' : dirty() || isNew ? 'Save it, then schedule or send it.' : working.timing === 'now' ? 'Sends when you choose Send now.' : working.scheduledAt ? `Set for ${fmtLocal(working.scheduledAt)}` : 'Choose a send time.';
+      $('#ne-lc').innerHTML = `<div class="lc-row"><h2 id="lc-h" class="lc-row-h" tabindex="-1">Status</h2>
+        <p class="lc-status">${n ? noteBadge(n.status) : badge('unsaved', 'New – not saved')}${n && dirty() ? badge('unsaved') : ''}<span>${esc(when)}</span><span class="muted">· Sending is simulated</span></p>
+        <div class="lc-actions">${acts.join('')}</div></div>${note ? `<p class="role-note">${ic('info', 20)}<span>${note}</span></p>` : ''}`;
       $('#ne-b').innerHTML = `${n ? noteBadge(n.status) : badge('unsaved', 'New')}${n && dirty() ? badge('unsaved') : ''}`;
       $('#page-h').textContent = title();
     };
     const refresh = debounce(() => { renderActions(); pv.update(); }, 100);
     wireForm(form, () => noteFields, working, refresh, draw);
     renderActions();
+    if (n) {
+      const canD = can(role, 'notifications', 'draft');
+      dataTable($('#ne-ver'), { hideCount: true, id: 'nv', caption: 'Notification versions', noun: 'version', rows: n.versions, defaultSort: { key: 'v', dir: 'desc' }, searchText: v => `v${v.version} ${v.comment} ${UserService.name(v.by)}`,
+        columns: [
+          { key: 'v', label: 'Version', sortable: true, sortValue: v => v.version, render: v => `<span class="ord-chip">v${v.version}</span>${v.version === n.versions.length ? ' <span class="muted small">Current</span>' : ''}`, cls: 'ord' },
+          { key: 'at', label: 'Saved', sortable: true, render: v => `<span class="nowrap">${esc(fmtDateTime(v.at))}</span>` },
+          { key: 'by', label: 'By', render: v => esc(UserService.name(v.by)) },
+          { key: 'comment', label: 'Comment', render: v => esc(v.comment || ''), cls: 'wrap' },
+          { key: 'acts', label: 'Actions', hideLabel: true, render: v => `<span class="row-acts">${btn({ label: 'View', icon: 'visibility', variant: 'text', size: 'sm', attrs: `data-nview="${v.version}" aria-label="View version ${v.version}"` })}${canD && v.version !== n.versions.length ? btn({ label: n.status === 'draft' ? 'Restore' : 'Use as new draft', icon: n.status === 'draft' ? 'history' : 'content_copy', variant: 'text', size: 'sm', attrs: `data-nrestore="${v.version}" aria-label="${n.status === 'draft' ? 'Restore' : 'Use as a new draft:'} version ${v.version}"` }) : ''}</span>` }],
+        onRender(tbody) { tbody.onclick = async e => {
+          const vb = e.target.closest('[data-nview]'), rb = e.target.closest('[data-nrestore]');
+          if (vb) { const v = n.versions.find(x => x.version === +vb.dataset.nview), cur = n.versions[n.versions.length - 1];
+            openModal({ title: `Version ${v.version}`, wide: true, body: `<dl class="facts cols"><dt>Saved</dt><dd>${esc(fmtDateTime(v.at))} by ${esc(UserService.name(v.by))}</dd><dt>Title</dt><dd>${esc(v.data.title)}</dd><dt>Description</dt><dd>${esc(v.data.description)}</dd><dt>Send</dt><dd>${v.data.timing === 'now' ? 'Instant' : esc(fmtLocal(v.data.scheduledAt))}</dd><dt>Audience</dt><dd>${esc(segmentName(v.data.sendTo))}</dd></dl>
+              <h3 class="sub-h">${v === cur ? 'This is the current version' : `Compared with the current version (v${cur.version})`}</h3>${v === cur ? '' : changeList(describeData(cur.data, v.data, noteFields))}`,
+              actions: btn({ label: 'Close', variant: 'text', attrs: 'data-close' }) }); }
+          if (rb) {
+            const ver = +rb.dataset.nrestore, asDraft = n.status === 'draft';
+            const c = await confirmDialog({ title: asDraft ? `Restore version ${ver}?` : `Use version ${ver} as a new draft?`, body: `<p>${asDraft ? `The draft goes back to the message and delivery settings of version ${ver}. That becomes version ${n.versions.length + 1}; nothing is lost.` : `“${esc(n.title)}” is ${NOTE_STATUS[n.status].toLowerCase()} and can’t change, so version ${ver} comes back as a new draft you can edit and schedule.`}</p>`, confirmLabel: asDraft ? 'Restore' : 'Create draft' });
+            if (!c.ok) return;
+            setBusy(rb, true, 'Restoring');
+            try { const r = await NotificationService.restore(n.id, ver); reload(asDraft ? `Version ${ver} restored.` : 'New draft created from that version.', asDraft ? null : `notifications-${r.id}`); }
+            catch (err) { setBusy(rb, false); toast(err.message, { kind: 'error', ms: 8000 }); }
+          }
+        }; }
+      });
+    }
     const reload = async (msg, go) => { Router.clearGuard(); toast(msg, { kind: 'success' }); if (go) Router.go(go); else this.render(main, ctx); };
     $('#ne-lc').onclick = async e => {
       const b = e.target.closest('[data-n]'); if (!b) return;
@@ -4617,11 +4706,7 @@ BUILT_PAGES.wayfinding = {
       const stepState = i => i < stage ? 'done' : i === stage && stage < 3 ? 'current' : i === 3 && stage === 3 ? 'done' : 'todo';
       $('#wf').innerHTML = `
         <section class="card" aria-labelledby="wf-cur-h"><div class="card-head"><h2 id="wf-cur-h" tabindex="-1">Current version</h2><div class="card-actions">${badge('mock')}</div></div><div class="card-body">
-          ${stepper([
-            { title: 'Upload', state: stepState(0), detail: 'Export from Gozio, then upload here' },
-            { title: 'Validate', state: stepState(1), detail: val ? `${badge('draft', `v${val.version} validated`)}` : 'Checked automatically on upload' },
-            { title: 'Demo', state: stepState(2), detail: demo ? `${badge('demo', `v${demo.version}`)} ${esc(demo.fileName)}` : 'Nothing on demo' },
-            { title: 'Production', state: stepState(3), detail: prod ? `${badge('production', `v${prod.version}`)} ${esc(prod.fileName)}` : 'Nothing published' }], 'Wayfinding publication steps')}
+          <p class="lc-status wf-status">${val ? badge('draft', `v${val.version} validated`) : ''}${demo && w.demo !== w.production ? badge('demo', `Demo v${demo.version}`) : ''}${prod ? badge('production', `Production v${prod.version}`) : '<span class="muted">Nothing published</span>'}<span>${val ? 'Ready for demo.' : w.demo !== w.production ? 'Demo is ahead of production.' : 'Demo and production match.'}</span></p>
           <div class="wf-cur">${prod ? `<dl class="facts cols"><dt>Published version</dt><dd>v${prod.version} · ${esc(prod.fileName)}</dd><dt>Last updated</dt><dd>${esc(fmtDateTime((w.history.filter(h => h.version === prod.version && h.environment === 'production').slice(-1)[0] || prod).at))}</dd>
             <dt>Contents</dt><dd>${prod.buildings} buildings · ${prod.floors} floors · ${prod.destinations.toLocaleString('en-US')} destinations</dd><dt>Uploaded by</dt><dd>${esc(UserService.name(prod.by))}${prod.comment ? ` – “${esc(prod.comment)}”` : ''}</dd></dl>` : ''}</div>
           ${canPub ? `<div class="lc-actions">
