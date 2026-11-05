@@ -54,7 +54,8 @@ function defineCollection(cfg) {
     async render(main, ctx) {
       const isNewRoute = ctx.route.pattern.endsWith('-new');
       const st = this.st = { rec: null, working: null, errors: {}, isNew: isNewRoute };
-      const crumbs = [[cfg.section, cfg.section === 'Home Screen' ? 'home-layout' : null], [cfg.title, cfg.route]];
+      const homeItem = cfg.section === 'Home Screen';
+      const crumbs = [[cfg.section, homeItem ? 'home-layout' : null], [cfg.title, cfg.route]];
       main.innerHTML = `<div class="page ${cfg.cls || ''}" id="ed-page">${loadingState(`Loading the ${cfg.noun}`)}</div>`;
       if (!isNewRoute) {
         try { st.rec = await ConfigService.get(ctx.params.id); }
@@ -68,7 +69,9 @@ function defineCollection(cfg) {
       const secs = () => cfg.sections.map(s => ({ ...s, fields: s.fields.map(f => ro ? { ...f, readonly: true } : f) }));
       $('#ed-page').innerHTML = `${pageHead({ crumbs, title: title(), badges: `<span id="ed-badges">${st.isNew ? badge('unsaved', 'New') : envBadges(st.rec)}</span>`, lede: cfg.editorLede || '' })}
         ${cfg.banner ? cfg.banner : ''}
-        <section class="card lc" aria-labelledby="lc-h"><div class="card-head"><h2 id="lc-h" tabindex="-1">Publishing</h2><div class="card-actions">${badge('mock')}</div></div><div class="card-body" id="lc"></div></section>
+        ${homeItem ? `<section class="card hub-pub" aria-labelledby="hub-pub-h" id="hub-pub"></section>
+        <section class="card lc lc-slim" aria-labelledby="lc-h"><div class="card-body" id="lc"></div></section>`
+        : `<section class="card lc" aria-labelledby="lc-h"><div class="card-head"><h2 id="lc-h" tabindex="-1">Publishing</h2><div class="card-actions">${badge('mock')}</div></div><div class="card-body" id="lc"></div></section>`}
         <div class="ed-grid${cfg.preview || cfg.side ? '' : ' single'}">
           <section class="card ${cfg.formCls || ''}" aria-labelledby="form-h"><div class="card-head"><h2 id="form-h">${esc(cfg.formTitle || 'Details')}</h2>${ro ? `<div class="card-actions">${badge('fixed', 'View only')}</div>` : ''}</div>
             <form class="card-body form" id="ed-form" novalidate></form></section>
@@ -98,8 +101,9 @@ function defineCollection(cfg) {
         refresh();
       }, 120), drawForm);
       const describe = (a, b) => cfg.describe ? cfg.describe(a, b) : describeData(a, b, allFields());
+      if (homeItem) hubRenderBar();
       const lc = Lifecycle({
-        host: () => $('#lc'), area: cfg.area, noun: cfg.noun,
+        host: () => $('#lc'), draftOnly: homeItem, area: cfg.area, noun: cfg.noun,
         getRec: () => st.rec, getWorking: () => clone(st.working), isDirty: dirty, isNew: () => st.isNew, describe, validate,
         create: data => ConfigService.create(cfg.type, data, 'Created in the Admin'),
         onSaved: (rec, kind) => {

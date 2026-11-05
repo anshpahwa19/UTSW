@@ -27,14 +27,14 @@ function Lifecycle(opts) {
     reason = {};
     const acts = [];
     const add = (key, label, variant, ok, why, icon) => {
-      acts.push(btn({ label, icon, variant, attrs: `data-lc="${key}" ${ok ? '' : `aria-disabled="true" aria-describedby="why-${key}"`}` }));
+      acts.push(btn({ label, icon, variant, size: opts.draftOnly ? 'sm' : 'md', attrs: `data-lc="${key}" ${ok ? '' : `aria-disabled="true" aria-describedby="why-${key}"`}` }));
       if (!ok) reason[key] = why;
     };
     const hasDraft = r && r.draft, draftOnly = !!opts.draftOnly;
     const next = d || isNew ? 'save' : hasDraft ? (may('deployDemo') ? 'deploy' : 'review') : demoAhead(r) ? 'publish' : null;
     const v = k => (k === next ? 'primary' : 'secondary');
-    if (!isNew && d) acts.push(btn({ label: 'Discard changes', variant: 'text', attrs: 'data-lc="discard"' }));
-    else if (hasDraft && may('saveDraft')) acts.push(btn({ label: 'Discard draft', variant: 'text', attrs: 'data-lc="discardDraft"' }));
+    if (!isNew && d) acts.push(btn({ label: 'Discard changes', variant: 'text', size: opts.draftOnly ? 'sm' : 'md', attrs: 'data-lc="discard"' }));
+    else if (hasDraft && may('saveDraft')) acts.push(btn({ label: 'Discard draft', variant: 'text', size: opts.draftOnly ? 'sm' : 'md', attrs: 'data-lc="discardDraft"' }));
     if (r && !r.production && !r.demo && may('saveDraft')) acts.push(btn({ label: 'Delete', icon: 'delete', variant: 'text', attrs: 'data-lc="delete"' }));
     if (may('saveDraft')) add('save', isNew ? 'Save as draft' : 'Save draft', v('save'), d || isNew, 'There are no unsaved changes to save.', 'save');
     if (!isNew && may('requestReview') && !may('deployDemo')) add('review', r.review ? 'Review requested' : 'Request review', v('review'), !!hasDraft && !d && !r.review,
@@ -46,11 +46,14 @@ function Lifecycle(opts) {
     const note = lvl === 'view' ? `You can view this ${opts.noun}. Your role, ${ROLES[role()].label}, can’t change it.`
       : !may('deployDemo') ? `As ${ROLES[role()].label}, you can save drafts and request a review. An Admin or Super Admin deploys to demo and publishes.`
       : !may('publish') ? `As ${ROLES[role()].label}, you can deploy to demo. An Admin or Super Admin publishes to production.` : '';
-    const status = !draftOnly ? '' : d || isNew ? `${badge('unsaved')}<span>Not saved yet. Save a draft, then use Deploy to demo above.</span>`
+    const status = !draftOnly ? '' : d || isNew ? `${badge('unsaved', isNew ? 'New – not saved' : 'Unsaved changes')}<span>Save a draft, then deploy it from Publishing above.</span>`
       : hasDraft ? `${r.draft.changesRequested ? badge('changes') : r.review ? badge('review') : badge('draft', 'Saved draft')}<span>${when(lastEvent(r, 'draft'))}. Deploy it with the other drafts from Publishing above.</span>`
-      : `${badge('production', `Production v${r.production}`)}${demoAhead(r) ? badge('demo', `Demo v${r.demo}`) : ''}<span>No open draft. Edit below to start one.</span>`;
-    host.innerHTML = `${draftOnly ? `<p class="lc-status">${status}</p>` : stepper(steps, `Where the newest ${opts.noun} changes are`)}
-      ${acts.length ? `<div class="lc-actions">${acts.join('')}</div>` : ''}
+      : `${r.production ? badge('production', `Production v${r.production}`) : ''}${demoAhead(r) ? badge('demo', `Demo v${r.demo}`) : ''}<span>No open draft. Edit below to start one.</span>`;
+    host.innerHTML = draftOnly
+      ? `<div class="lc-row"><h2 id="lc-h" class="lc-row-h" tabindex="-1">Draft</h2><p class="lc-status">${status}</p>${acts.length ? `<div class="lc-actions">${acts.join('')}</div>` : ''}</div>`
+      : `${stepper(steps, `Where the newest ${opts.noun} changes are`)}
+      ${acts.length ? `<div class="lc-actions">${acts.join('')}</div>` : ''}`;
+    host.innerHTML += `
       ${Object.entries(reason).map(([k, t]) => `<span class="vh" id="why-${k}">${esc(t)}</span>`).join('')}
       ${note ? `<p class="role-note">${ic('info', 20)}<span>${esc(note)} Permissions are proposed, pending confirmation.</span></p>` : ''}`;
     host.onclick = e => { const b = e.target.closest('[data-lc]'); if (b) act(b); };

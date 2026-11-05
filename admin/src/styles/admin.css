@@ -840,3 +840,10 @@ label.btn:has(+ input:focus-visible){box-shadow:var(--focus)}
 .hub-bar .hub-acts{margin:0 0 0 auto}
 .hub-pub .role-note{margin-top:var(--s2)}
 @container main (max-width: 760px){ .hub-bar .hub-acts{margin-left:0; width:100%} }
+/* Slim Draft card (Home Screen): heading, status and Save draft in one row */
+.lc-slim > .card-body{padding:var(--s3) var(--s4) var(--s3) var(--s5, 20px)}
+.lc-row{display:flex; flex-wrap:wrap; align-items:center; gap:var(--s2) var(--s4)}
+.lc-row-h{font-size:var(--t16); font-weight:700; color:var(--ink); margin:0}
+.lc-row .lc-status{flex:1 1 280px; min-width:0}
+.lc-row .lc-actions{margin:0 0 0 auto}
+.lc-slim .role-note{margin-top:var(--s2)}

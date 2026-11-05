@@ -93,7 +93,7 @@ function hubRenderBar() {
   });
   host.onclick = async e => {
     const b = e.target.closest('[data-hub]'); if (!b || b.disabled) return;
-    if ($('#hub-panel .badge-unsaved')) { toast('Save or discard the changes on this tab first. Batch actions use saved drafts only.', { kind: 'error', ms: 7000 }); return; }
+    if ($('#main .lc .badge-unsaved, #hub-panel .badge-unsaved')) { toast('Save or discard the changes on this tab first. Batch actions use saved drafts only.', { kind: 'error', ms: 7000 }); return; }
     const toDemo = b.dataset.hub === 'demo', list = toDemo ? dep : pub;
     const needComment = !toDemo && DB.db.settings.requirePublishComment;
     const c = await confirmDialog({
