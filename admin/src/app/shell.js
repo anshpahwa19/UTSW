@@ -8,21 +8,6 @@ function visibleNav(role) {
 }
 const initials = u => `${u.first[0]}${u.last[0]}`;
 
-/* ---------- Theme: Light, Dark or System (follows the device). Saved on this device. ---------- */
-const THEMES = [['light', 'Light', 'light_mode'], ['dark', 'Dark', 'dark_mode'], ['system', 'System', 'contrast']];
-function applyTheme() {
-  const t = DB.prefs.theme || 'system';
-  if (t === 'system') delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme = t;
-}
-const themeControl = id => `<div class="theme-sw" role="radiogroup" aria-label="Appearance" id="${id}">${THEMES.map(([k, l, g]) => {
-  const on = (DB.prefs.theme || 'system') === k;
-  return `<button type="button" role="radio" aria-checked="${on}" tabindex="${on ? 0 : -1}" data-value="${k}" aria-label="${l} appearance" title="${l}">${ic(g, 20)}</button>`; }).join('')}</div>`;
-function wireThemeControl(el) {
-  if (!el) return;
-  wireSegmented(el, v => { DB.prefs.theme = v; saveDb(); applyTheme();
-    $$('.theme-sw').forEach(g => { if (g !== el) $$('[role="radio"]', g).forEach(r => { const on = r.dataset.value === v; r.setAttribute('aria-checked', on); r.tabIndex = on ? 0 : -1; }); }); announce(`${v === 'system' ? 'System' : v === 'dark' ? 'Dark' : 'Light'} appearance`); });
-}
-
 function renderShell() {
   const app = $('#app');
   app.className = 'app';
@@ -31,7 +16,6 @@ function renderShell() {
     <header class="topbar">
       <button type="button" class="nav-toggle btn btn-text btn-icon" aria-controls="sidebar" aria-expanded="false" aria-label="Show navigation">${ic('menu')}</button>
       <a class="brand" href="#dashboard" aria-label="UTSW MyCare Admin, go to the dashboard"><img src="${LOGO_REVERSED}" alt="" width="200"><span class="brand-admin" aria-hidden="true">Admin</span></a>
-      ${themeControl('hdr-theme')}
       <div class="user" id="user"></div>
     </header>
     <div class="layout">
@@ -40,7 +24,6 @@ function renderShell() {
       <main id="main" tabindex="-1"></main>
     </div>`;
   $('[data-skip]').addEventListener('click', e => { e.preventDefault(); $('#main').focus(); });
-  wireThemeControl($('#hdr-theme'));
   const toggle = $('.nav-toggle'), side = $('#sidebar'), scrim = $('#scrim');
   const setNav = open => {
     app.classList.toggle('nav-open', open); toggle.setAttribute('aria-expanded', open);
@@ -97,7 +80,6 @@ function renderUser() {
         ${Object.entries(ROLES).map(([k, r]) => `<label class="radio" for="um-role-${k}"><input type="radio" name="um-role" id="um-role-${k}" value="${k}" ${k === role ? 'checked' : ''}><span>${esc(r.label)}</span></label>`).join('')}
         <p class="um-note">Switching roles lets reviewers see each role’s navigation and actions. The real role comes from the approved identity provider.</p>
       </fieldset>
-      <div class="um-row"><span>Appearance</span>${themeControl('um-theme')}</div>
       <div class="um-row"><span id="um-err-l">Simulate service errors <span class="proto">Prototype only</span></span>${switchBtn({ id: 'um-err', checked: MockSettings.simulateErrors, labelledby: 'um-err-l' })}</div>
       <div class="um-acts">
         <button type="button" class="um-act" data-um="expire">${ic('timer_off', 20)}<span>Simulate session expiry</span></button>
@@ -108,7 +90,6 @@ function renderUser() {
   const b = $('.user-btn', host), menu = $('#user-menu');
   const set = open => { menu.hidden = !open; b.setAttribute('aria-expanded', open); if (open) $('input:checked', menu).focus(); };
   b.onclick = () => set(menu.hidden);
-  wireThemeControl($('#um-theme'));
   host.addEventListener('keydown', e => { if (e.key === 'Escape' && !menu.hidden) { set(false); b.focus(); } });
   document.onclick = e => { const m = $('#user-menu'); if (m && !m.hidden && !$('#user').contains(e.target)) { m.hidden = true; $('.user-btn').setAttribute('aria-expanded', 'false'); } };
   menu.addEventListener('change', e => {

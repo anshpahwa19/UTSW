@@ -10,9 +10,7 @@ function authLayout(inner) {
       ${inner}
     </div>
     <p class="auth-flag">${ic('database', 20)}<span>Prototype – mock data, not connected to MyCare</span></p>
-    ${themeControl('auth-theme')}
   </main>`;
-  wireThemeControl($('#auth-theme'));
   const h = $('#page-h'); if (h && Router.loaded) h.focus();
 }
 const simNote = text => `<p class="sim-note">${badge('simulated')}<span>${text}</span></p>`;

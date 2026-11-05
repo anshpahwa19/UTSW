@@ -1,6 +1,6 @@
 # MyCare Admin – prototype
 
-The UTSW MyCare 2.0 Admin Portal. All 12 modules from `handoff/admin-portal/BRIEF.md` work end to end on mock data, in light and dark themes. Planning inputs are `handoff/admin-portal/BRIEF.md` and `handoff/admin-portal/HANDOVER.md`.
+The UTSW MyCare 2.0 Admin Portal. All 12 modules from `handoff/admin-portal/BRIEF.md` work end to end on mock data. The Admin is light only; the mobile previews show the app in light or dark. Planning inputs are `handoff/admin-portal/BRIEF.md` and `handoff/admin-portal/HANDOVER.md`.
 
 **Everything runs on mock data.** Nothing connects to MyCare, Epic/MyChart, Gozio, an identity provider, a push provider or an analytics source. Every screen says so, and the code has no endpoints, backend URLs or credentials.
 
@@ -50,7 +50,7 @@ Tables: every table shows 8 rows a page, with numbered pages once it has more th
 
 Dropdowns: every select uses one dropdown design (ui/select.js). The native select stays in the page, hidden, as the source of truth for forms and validation; a button shows the choice and opens a listbox in the top layer, so tables, cards and dialogs never clip it. Table filters are multi-select (checkboxes, an All row that clears, values within one filter combine with OR, filters combine with AND). Form fields stay single-select, since each holds one value. Keyboard: Down, Enter or Space opens; arrows, Home, End and typing move; Enter or Space picks; Escape closes.
 
-Theme: Light, Dark or System from the header (and on the sign-in screen). It is remembered on this device. Every color comes from the `designs/guest` tokens; dark values are the guest app's own dark palette.
+Theme: the Admin is light only. Each mobile preview has its own Light/Dark toggle that shows the app in the guest app's own dark palette. Every color comes from the `designs/guest` tokens.
 
 ## Stack decision
 
@@ -99,7 +99,7 @@ Headless Chromium with the pre-installed Playwright, against the built file:
 - `python3 build.py` succeeds: 23 JS files, 114 icons, about 450 KB.
 - **Route sweep:** 53 routes, covering every page, create page and sample detail page, × 3 roles × light and dark. No console or page errors, no error or stuck loading states, every control has a name, every rendered icon is in the subset, and no horizontal overflow.
 - **End-to-end flows:** 48 checks pass, from campaign creation (validation, preview, deploy and publish) through wayfinding bad and good files, the notification lifecycle, users, audit rollback, settings and Marketing permissions.
-- **Contrast:** every visible text element in both themes, plus dialogs, the user menu, the error summary and validation results.
+- **Contrast:** every visible text element, plus dialogs, the user menu, the error summary and validation results.
 - **Widths:** 1024, 1280, 1440 and phone width.
 
 ### Known issue in the copied mobile design

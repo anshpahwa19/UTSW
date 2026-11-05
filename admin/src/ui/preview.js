@@ -58,7 +58,7 @@ function appContent({ env = 'production', overrides = {}, audience = 'guest', al
 }
 const layoutFor = (audience, env = 'production') => { const r = ConfigService.peek(`home-layout-${audience}`); return ENV_PICK(r, env) || { head: [], modules: [] }; };
 const colorsFor = env => ENV_PICK(ConfigService.peek('global-colors'), env);
-const effectiveTheme = () => DB.prefs.theme === 'dark' || (DB.prefs.theme !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+const effectiveTheme = () => 'light';   /* the Admin is light only; each preview card has its own Light/Dark toggle */
 
 /* Preview card: source switch (your edits / demo / production), appearance, optional extras; payload(src) builds the message */
 function mountPreviewCard(host, { title, sources, payload, extras = '', onExtras }) {
@@ -86,7 +86,36 @@ function mountPreviewCard(host, { title, sources, payload, extras = '', onExtras
     pv.render({ theme: st.theme, audience: 'guest', ...p });
   }
   controls();
-  return { update: controls, destroy: () => pv.destroy() };
+  const fit = fitPreview(host);
+  return { update: controls, destroy: () => { fit.stop(); pv.destroy(); } };
+}
+/* Size the phone so the preview card ends level with the editor column beside it, at any width. Never larger
+   than the breakpoint's scale, never smaller than a readable minimum. Only the phone scales; the preview column
+   keeps its width, so the editor never reflows because of this (no resize loop). Stacked layouts are left alone. */
+function fitPreview(aside) {
+  const grid = aside.closest('.ed-grid, .hl-grid');
+  if (!grid || !window.ResizeObserver) return { stop() {} };
+  const left = [...grid.children].find(c => c !== aside && !c.contains(aside));
+  const phone = $('.pv-host', aside);
+  if (!left || !phone) return { stop() {} };
+  /* When the editor is shorter than even the smallest phone, its last card grows to meet the preview */
+  const last = () => (left.matches('.ed-main, .hl-main') ? left.lastElementChild : left);
+  const fit = () => {
+    if (!grid.isConnected) { ro.disconnect(); return; }
+    phone.style.removeProperty('--s');
+    const tail = last(); if (tail) tail.style.removeProperty('min-height');
+    if (getComputedStyle(grid).gridTemplateColumns.trim().split(/\s+/).length < 2) return;
+    const max = parseFloat(getComputedStyle(phone).getPropertyValue('--s')) || .8;
+    const chrome = aside.offsetHeight - 844 * max;
+    const s = Math.max(.5, Math.min(max, (left.offsetHeight - chrome) / 844));
+    if (s < max - .002) phone.style.setProperty('--s', s.toFixed(3));
+    const short = aside.offsetHeight - left.offsetHeight;
+    if (short > 1 && tail) tail.style.minHeight = `${tail.offsetHeight + short}px`;
+  };
+  const ro = new ResizeObserver(() => requestAnimationFrame(fit));
+  ro.observe(left); const ctl = $('.pv-ctl', aside); if (ctl) ro.observe(ctl);
+  fit();
+  return { stop: () => ro.disconnect() };
 }
 /* Standard source options for a record being edited */
 function recSources(rec, dirty, isNew) {

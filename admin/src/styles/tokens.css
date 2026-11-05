@@ -63,24 +63,5 @@
   --a-preview-scale:.8;       /* phone preview scale */
 }
 
-/* Block 3 – the Admin follows the viewer's theme. Dark values are the designs/guest .phone.dark values (lines 1010–1021),
-   unchanged; --brand stays UT Southwestern Blue in both themes, as in the app. */
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --bg:#0D1620; --surface:#16222E; --tint:#1F3042; --tint-2:#2A4157; --sky:#1F3042;
-    --line:#2B3C4D; --line-strong:#7D8E9E; --ink:#E6EDF3; --ink-2:#A6B4C0;
-    --blue:#8CC0EA; --ctl:#2D6CA6; --alert-ink:#FF8AA8;
-    --shadow-1:0 1px 2px rgba(0,0,0,.4), 0 2px 8px rgba(0,0,0,.3);
-    --shadow-2:0 4px 12px rgba(0,0,0,.4), 0 16px 40px rgba(0,0,0,.5);
-    --focus:0 0 0 2px #0D1620, 0 0 0 5px #8CC0EA; --inverse:#E6EDF3; --on-inverse:#0D1620;
-  }
-}
-:root[data-theme="dark"]{
-  --bg:#0D1620; --surface:#16222E; --tint:#1F3042; --tint-2:#2A4157; --sky:#1F3042;
-  --line:#2B3C4D; --line-strong:#7D8E9E; --ink:#E6EDF3; --ink-2:#A6B4C0;
-  --blue:#8CC0EA; --ctl:#2D6CA6; --alert-ink:#FF8AA8;
-  --shadow-1:0 1px 2px rgba(0,0,0,.4), 0 2px 8px rgba(0,0,0,.3);
-  --shadow-2:0 4px 12px rgba(0,0,0,.4), 0 16px 40px rgba(0,0,0,.5);
-  --focus:0 0 0 2px #0D1620, 0 0 0 5px #8CC0EA; --inverse:#E6EDF3; --on-inverse:#0D1620;
-  color-scheme:dark;
-}
+/* Block 3 – the Admin is light only (the mobile preview keeps its own light and dark themes). */
+:root{color-scheme:light}

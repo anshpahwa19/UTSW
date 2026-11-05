@@ -15,7 +15,7 @@ function loadDb() {
 }
 const saveDb = () => store.write(DB);
 function resetMockData() {
-  DB = { db: seedDb(), session: DB.session, prefs: { theme: DB.prefs.theme } };
+  DB = { db: seedDb(), session: DB.session, prefs: {} };
   MockSettings.simulateErrors = false;
   saveDb();
 }

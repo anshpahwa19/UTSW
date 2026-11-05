@@ -1,6 +1,5 @@
 /* ---------- Boot ---------- */
 loadDb();
-applyTheme();
 startDropdowns();
 /* Activity keeps the simulated session alive; a check every 30 seconds ends it after the idle limit */
 let lastTouch = 0;
