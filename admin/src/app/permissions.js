@@ -34,7 +34,7 @@ const PERMISSIONS = {
     locations: { superAdmin: 'publish', admin: 'publish', marketing: 'view' }
   }
 };
-const levelOf = (role, area) => (PERMISSIONS.areas[area] || {})[role] || 'none';
+const levelOf = (role, area) => area === 'profile' ? 'manage' : (PERMISSIONS.areas[area] || {})[role] || 'none';
 const can = (role, area, need = 'view') => LEVELS.indexOf(levelOf(role, area)) >= LEVELS.indexOf(need);
 /* Lifecycle actions → the level each needs */
 const ACTION_NEEDS = { saveDraft: 'draft', requestReview: 'draft', deployDemo: 'demo', requestChanges: 'publish', publish: 'publish', rollback: 'publish' };

@@ -61,3 +61,5 @@ NAV.forEach(sec => sec.items.forEach(item => {
   ROUTES.push({ pattern: item.route, section: sec, item, title: item.label });
   (item.children || []).forEach(([pattern, title]) => ROUTES.push({ pattern, section: sec, item, title, parent: item }));
 }));
+/* My profile: from the user menu, not the sidebar; every signed-in role has it */
+ROUTES.push({ pattern: 'profile', title: 'My profile', section: { id: 'profile', label: 'My profile', icon: 'person', items: [] }, item: { route: 'profile', label: 'My profile', area: 'profile' } });

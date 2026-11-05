@@ -171,6 +171,14 @@ const UserService = {
     audit('User invited', `${u.first} ${u.last}`, { targetId: u.id, targetType: 'user', after: { role: ROLES[u.role].label, status: 'Invited', email: u.email } });
     return u;
   }),
+  updateOwnName: (first, last) => mockCall('users', () => {
+    const u = DB.db.users.find(x => x.id === actor()); if (!u) throw new ServiceError('Your account wasn’t found.');
+    if (!first || !last) throw new ServiceError('Enter your first and last name.');
+    const before = { name: `${u.first} ${u.last}` };
+    u.first = first; u.last = last;
+    audit('Profile updated', `${first} ${last}`, { targetId: u.id, targetType: 'user', before, after: { name: `${first} ${last}` } });
+    return u;
+  }),
   update: (id, patch) => mockCall('users', () => {
     needs('users', 'manage');
     const u = DB.db.users.find(x => x.id === id); if (!u) throw new ServiceError('That user no longer exists.');

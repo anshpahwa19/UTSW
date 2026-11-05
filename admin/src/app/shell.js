@@ -79,8 +79,9 @@ function renderUser() {
       ${ic('expand_more', 20)}
     </button>
     <div class="user-menu" id="user-menu" hidden>
-      <div class="um-id"><p class="um-n">${esc(u.first)} ${esc(u.last)}</p><p class="um-e">${esc(u.email)}</p><p class="um-s">${badge('simulated', 'Simulated SSO session')}</p></div>
+      <div class="um-id"><p class="um-n">${esc(u.first)} ${esc(u.last)}</p><p class="um-e">${esc(u.email)}</p><p class="um-s"><span class="role-tag">${esc(ROLES[role].label)}</span></p></div>
       <div class="um-acts">
+        <button type="button" class="um-act" data-um="profile">${ic('person', 20)}<span>My profile</span></button>
         <button type="button" class="um-act" data-um="signout">${ic('logout', 20)}<span>Sign out</span></button>
       </div>
     </div>`;
@@ -92,6 +93,7 @@ function renderUser() {
   menu.addEventListener('click', async e => {
     const a = e.target.closest('[data-um]'); if (!a) return;
     set(false);
+    if (a.dataset.um === 'profile') { Router.go('profile'); return; }
     if (a.dataset.um === 'signout') { if (await Router.canLeave()) { Session.end(); Router.go('signed-out', { force: true }); } else b.focus(); }
   });
 }

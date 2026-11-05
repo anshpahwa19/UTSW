@@ -35,6 +35,7 @@ The build writes `admin-portal.html`, a single self-contained file published as 
 | Notifications | `notifications`, `-new`, `-:id` | Create and edit with validation, then schedule or send now (Admin and Super Admin), cancel a scheduled one with a reason, duplicate, delete. Choose the audience segment; every notification goes out as push and Inbox. Lock-screen preview, plus results for sent messages |
 | Analytics | `analytics`, `analytics-*` | Overview plus five categories with exactly the brief's metrics. 7, 30 or 90 days with loading and error states, metric tiles, line chart (hover and arrow-key crosshair, data table), and breakdowns |
 | Admin management (users) | `users`, `users-new`, `users-:id` | Search and filter by role and status. Create with required, email-format and duplicate checks (simulated invitation). Edit, change role, resend invite, deactivate or reactivate, delete. You can't remove or demote yourself |
+| My profile | `profile` | From the user menu (which shows the current role tag). Change your own first and last name (audited). Email, role, status and dates are read only. Password change is SIMULATED: the form checks the rules (12+ characters, a letter and a number, different from the current one, confirmation matches), sends and stores nothing, and clears the fields |
 | Audit and versioning | `audit`, `audit-history` | Every action with actor, time, environment, comment and a before-and-after table. Every configuration's versions with comparison and rollback where the type supports it |
 | Platform operations | `platform-integrations`, `platform-monitoring` | Simulated integration status with "Run check", fetch error and latency charts, and incidents |
 | Administrative settings | `admin-settings`, `admin-settings-locations` | Session timeout, default time zone, required publish comment, and the permission matrix. Location-aware facility messages with a location-card preview |
@@ -130,6 +131,7 @@ Campaign tags such as "Flu season" (white on 14% white over the campaign gradien
 18. **Admin device support:** built for desktop (1280 and 1440, usable at 1024). It also works at phone width, but that is not a supported target until confirmed.
 19. **Spelling:** the UI uses US English ("Global colors") per UT Southwestern style, while the brief uses UK spelling. The one exception is the app's own label "Personalise My Homepage".
 20. **Logo:** `mycare-logo/` is a proposal pending CMPA approval and is used unaltered.
+21. **Password changes:** sign-in is UTSW SSO, so who changes an admin's password (the identity provider's own page, or never from the Admin) and whether the profile page should link there. The prototype's password form is simulated and stores nothing.
 
 Also pending: the session timeout (30 minutes is a placeholder) and the final permission matrix.
 

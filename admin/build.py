@@ -21,7 +21,7 @@ FILES = [
     "ui/components.js", "ui/forms.js","ui/select.js", "ui/charts.js", "ui/preview.js", "ui/lifecycle.js",
     "app/nav.js", "app/shell.js", "app/router.js",
     "pages/auth.js", "pages/home-layout.js", "pages/collection.js","pages/home-hub.js", "pages/config-pages.js",
-    "pages/notifications.js", "pages/users.js", "pages/wayfinding.js", "pages/analytics.js", "pages/dashboard.js", "pages/admin-pages.js",
+    "pages/notifications.js", "pages/users.js", "pages/wayfinding.js", "pages/analytics.js", "pages/dashboard.js", "pages/admin-pages.js","pages/profile.js",
     "app/boot.js",
 ]
 CSS = ["styles/tokens.css", "styles/admin.css"]
