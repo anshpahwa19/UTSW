@@ -118,8 +118,8 @@ h1:focus{outline:none}
 .btn-text{background:transparent; color:var(--blue)}
 .btn-danger{background:var(--alert); color:#FFFFFF}
 .btn-icon{width:var(--hit); padding:0}
-.btn[disabled]{color:var(--ink-2); opacity:.55; cursor:default}
-.btn[disabled]:hover{background:transparent}
+.btn[disabled],.btn[disabled]:hover{background:var(--bg); background-image:none; color:var(--ink-2); box-shadow:inset 0 0 0 1.5px var(--line); opacity:1; cursor:not-allowed; transform:none}
+.btn-text[disabled],.btn-text[disabled]:hover,.btn-icon[disabled],.btn-icon[disabled]:hover{background:transparent; box-shadow:none; color:var(--ink-2); opacity:.6}
 .btn[aria-disabled="true"]{background:var(--bg); color:var(--ink-2); box-shadow:inset 0 0 0 1.5px var(--line); cursor:not-allowed}
 .btn .dots{position:absolute; inset:0; display:none; align-items:center; justify-content:center; gap:6px}
 .btn .dots i{width:6px; height:6px; border-radius:50%; background:currentColor; animation:dotHop 600ms var(--ease-in-out) infinite}
