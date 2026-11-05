@@ -51,7 +51,7 @@ function defineCollection(cfg) {
     async render(main, ctx) {
       const isNewRoute = ctx.route.pattern.endsWith('-new');
       const st = this.st = { rec: null, working: null, errors: {}, isNew: isNewRoute };
-      const crumbs = [[cfg.section, null], [cfg.title, cfg.route]];
+      const crumbs = [[cfg.section, cfg.section === 'Home Screen' ? 'home-layout' : null], [cfg.title, cfg.route]];
       main.innerHTML = `<div class="page ${cfg.cls || ''}" id="ed-page">${loadingState(`Loading the ${cfg.noun}`)}</div>`;
       if (!isNewRoute) {
         try { st.rec = await ConfigService.get(ctx.params.id); }

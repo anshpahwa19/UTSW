@@ -54,6 +54,10 @@ function renderSidebar(currentRoute) {
     return `<a href="#${item.route}" class="nav-link${nested ? ' nested' : ''}" ${here ? 'aria-current="page"' : ''}><span class="nav-l">${esc(label)}</span></a>`;
   };
   side.innerHTML = `<ul class="nav">${visibleNav(role).map(sec => {
+    if (sec.tabs) {
+      const here = currentRoute && currentRoute.section && currentRoute.section.id === sec.id;
+      return `<li class="nav-sec single"><a href="#${sec.items[0].route}" class="nav-link" ${here ? 'aria-current="page"' : ''}>${ic(sec.icon, 20)}<span class="nav-l">${esc(sec.label)}</span></a></li>`;
+    }
     if (sec.items.length === 1 && NAV.find(s => s.id === sec.id).items.length === 1) {
       return `<li class="nav-sec single">${link(sec.items[0], sec.label).replace('<span class="nav-l">', `${ic(sec.icon, 20)}<span class="nav-l">`)}</li>`;
     }
@@ -94,6 +98,10 @@ function renderUser() {
 
 /* Page heading with breadcrumbs */
 function pageHead({ crumbs, title, lede = '', badges = '', actions = '' }) {
+  if (HUB_TAB) return `<div class="page-head tab-head">
+    <div class="ph-row"><div class="ph-main"><h2 id="page-h" tabindex="-1">${esc(title)}</h2>${badges ? `<div class="ph-badges">${badges}</div>` : ''}</div>${actions ? `<div class="ph-actions">${actions}</div>` : ''}</div>
+    ${lede ? `<p class="lede">${lede}</p>` : ''}
+  </div>`;
   return `<div class="page-head">
     ${crumbs.length ? `<nav aria-label="Breadcrumb" class="crumbs"><ol>${crumbs.map(([label, href]) => `<li>${href ? `<a href="#${href}">${esc(label)}</a>` : `<span>${esc(label)}</span>`}</li>`).join('')}<li><span aria-current="page">${esc(title)}</span></li></ol></nav>` : ''}
     <div class="ph-row"><div class="ph-main"><h1 id="page-h" tabindex="-1">${esc(title)}</h1>${badges ? `<div class="ph-badges">${badges}</div>` : ''}</div>${actions ? `<div class="ph-actions">${actions}</div>` : ''}</div>
@@ -102,7 +110,8 @@ function pageHead({ crumbs, title, lede = '', badges = '', actions = '' }) {
 }
 const crumbsFor = r => {
   const c = [];
-  if (r.section.items.length > 1) c.push([r.section.label, null]);
+  if (r.section.tabs) c.push([r.section.label, r.section.items[0].route]);
+  else if (r.section.items.length > 1) c.push([r.section.label, null]);
   if (r.parent) c.push([r.parent.label, r.parent.route]);
   return c;
 };

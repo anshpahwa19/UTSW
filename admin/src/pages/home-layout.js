@@ -65,14 +65,14 @@ BUILT_PAGES['home-layout'] = (() => {
       ${st.aud === 'authenticated' ? `<p class="note-line">${ic('info', 20)}<span>The signed-in home has no approved design yet (§10.5). These modules come from the personalised homepage prototype; “Your next visits” is read only from MyChart – Epic stays the source.</span></p>` : ''}
       <div class="hl-grid">
         <div class="hl-main">
-          <section class="card lc" aria-labelledby="lc-h"><div class="card-head"><h2 id="lc-h" tabindex="-1">Publishing</h2><div id="lc-badges" class="card-actions"></div></div><div class="card-body" id="lc"></div></section>
+          <section class="card lc" aria-labelledby="lc-h"><div class="card-head"><h2 id="lc-h" tabindex="-1">${HUB_TAB ? 'Draft' : 'Publishing'}</h2><div id="lc-badges" class="card-actions"></div></div><div class="card-body" id="lc"></div></section>
           <div class="hl-edit" id="editor"></div>
         </div>
         <aside class="hl-preview" id="hl-pv"></aside>
       </div>
       ${historyCard()}`;
     const lc = Lifecycle({
-      host: () => $('#lc'), area: 'homeLayout', noun: 'layout', getRec: () => st.rec, getWorking: () => clone(st.working), isDirty: dirty, describe: describeLayout,
+      host: () => $('#lc'), draftOnly: HUB_TAB, area: 'homeLayout', noun: 'layout', getRec: () => st.rec, getWorking: () => clone(st.working), isDirty: dirty, describe: describeLayout,
       onSaved: rec => { st.rec = rec; st.working = clone(base()); update(); hist.update(rec.events); $('#lc-h').focus(); },
       onDiscard: () => { st.working = clone(base()); update(); $('#lc-h').focus(); }, afterDelete: () => {}
     });

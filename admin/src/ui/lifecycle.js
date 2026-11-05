@@ -30,7 +30,7 @@ function Lifecycle(opts) {
       acts.push(btn({ label, icon, variant, attrs: `data-lc="${key}" ${ok ? '' : `aria-disabled="true" aria-describedby="why-${key}"`}` }));
       if (!ok) reason[key] = why;
     };
-    const hasDraft = r && r.draft;
+    const hasDraft = r && r.draft, draftOnly = !!opts.draftOnly;
     const next = d || isNew ? 'save' : hasDraft ? (may('deployDemo') ? 'deploy' : 'review') : demoAhead(r) ? 'publish' : null;
     const v = k => (k === next ? 'primary' : 'secondary');
     if (!isNew && d) acts.push(btn({ label: 'Discard changes', variant: 'text', attrs: 'data-lc="discard"' }));
@@ -39,14 +39,17 @@ function Lifecycle(opts) {
     if (may('saveDraft')) add('save', isNew ? 'Save as draft' : 'Save draft', v('save'), d || isNew, 'There are no unsaved changes to save.', 'save');
     if (!isNew && may('requestReview') && !may('deployDemo')) add('review', r.review ? 'Review requested' : 'Request review', v('review'), !!hasDraft && !d && !r.review,
       d ? 'Save the draft before you request a review.' : r.review ? 'A review is already requested for this draft.' : 'Save a draft first, then request a review.', 'rate_review');
-    if (!isNew && may('deployDemo')) add('deploy', 'Deploy to demo', v('deploy'), !!hasDraft && !d, d ? 'Save the draft first. Demo only takes saved drafts.' : 'Save a draft first. Demo only takes saved drafts.', 'science');
-    if (!isNew && may('requestChanges') && demoAhead(r)) acts.push(btn({ label: 'Request changes', icon: 'undo', variant: 'secondary', attrs: 'data-lc="changes"' }));
-    if (!isNew && may('publish')) add('publish', 'Publish to production', v('publish'), demoAhead(r), r && r.production ? `Production v${r.production} already matches demo. Deploy a new version to demo first.` : 'Deploy to demo and check it there first.', 'public');
+    if (!isNew && !draftOnly && may('deployDemo')) add('deploy', 'Deploy to demo', v('deploy'), !!hasDraft && !d, d ? 'Save the draft first. Demo only takes saved drafts.' : 'Save a draft first. Demo only takes saved drafts.', 'science');
+    if (!isNew && !draftOnly && may('requestChanges') && demoAhead(r)) acts.push(btn({ label: 'Request changes', icon: 'undo', variant: 'secondary', attrs: 'data-lc="changes"' }));
+    if (!isNew && !draftOnly && may('publish')) add('publish', 'Publish to production', v('publish'), demoAhead(r), r && r.production ? `Production v${r.production} already matches demo. Deploy a new version to demo first.` : 'Deploy to demo and check it there first.', 'public');
     const lvl = levelOf(role(), opts.area);
     const note = lvl === 'view' ? `You can view this ${opts.noun}. Your role, ${ROLES[role()].label}, can’t change it.`
       : !may('deployDemo') ? `As ${ROLES[role()].label}, you can save drafts and request a review. An Admin or Super Admin deploys to demo and publishes.`
       : !may('publish') ? `As ${ROLES[role()].label}, you can deploy to demo. An Admin or Super Admin publishes to production.` : '';
-    host.innerHTML = `${stepper(steps, `Where the newest ${opts.noun} changes are`)}
+    const status = !draftOnly ? '' : d || isNew ? `${badge('unsaved')}<span>Not saved yet. Save a draft, then use Deploy to demo above.</span>`
+      : hasDraft ? `${r.draft.changesRequested ? badge('changes') : r.review ? badge('review') : badge('draft', 'Saved draft')}<span>${when(lastEvent(r, 'draft'))}. Deploy it with the other drafts from Publishing above.</span>`
+      : `${badge('production', `Production v${r.production}`)}${demoAhead(r) ? badge('demo', `Demo v${r.demo}`) : ''}<span>No open draft. Edit below to start one.</span>`;
+    host.innerHTML = `${draftOnly ? `<p class="lc-status">${status}</p>` : stepper(steps, `Where the newest ${opts.noun} changes are`)}
       ${acts.length ? `<div class="lc-actions">${acts.join('')}</div>` : ''}
       ${Object.entries(reason).map(([k, t]) => `<span class="vh" id="why-${k}">${esc(t)}</span>`).join('')}
       ${note ? `<p class="role-note">${ic('info', 20)}<span>${esc(note)} Permissions are proposed, pending confirmation.</span></p>` : ''}`;
@@ -59,7 +62,7 @@ function Lifecycle(opts) {
     const r = opts.getRec();
     const run = async (fn, busyLabel, msg, kind) => {
       setBusy(b, true, busyLabel);
-      try { const rec = await fn(); opts.onSaved(rec, kind); toast(msg, { kind: 'success' }); announce(msg); }
+      try { const rec = await fn(); opts.onSaved(rec, kind); hubRenderBar(); toast(msg, { kind: 'success' }); announce(msg); }
       catch (err) { setBusy(b, false); toast(err.message, { kind: 'error', ms: 8000 }); }
     };
     const needComment = DB.db.settings.requirePublishComment;

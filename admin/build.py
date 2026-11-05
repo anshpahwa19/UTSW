@@ -20,7 +20,7 @@ FILES = [
     "app/util.js", "mock/seed.js", "app/permissions.js", "services/services.js", "app/session.js",
     "ui/components.js", "ui/forms.js","ui/select.js", "ui/charts.js", "ui/preview.js", "ui/lifecycle.js",
     "app/nav.js", "app/shell.js", "app/router.js",
-    "pages/auth.js", "pages/home-layout.js", "pages/collection.js", "pages/config-pages.js",
+    "pages/auth.js", "pages/home-layout.js", "pages/collection.js","pages/home-hub.js", "pages/config-pages.js",
     "pages/notifications.js", "pages/users.js", "pages/wayfinding.js", "pages/analytics.js", "pages/dashboard.js", "pages/admin-pages.js",
     "app/boot.js",
 ]

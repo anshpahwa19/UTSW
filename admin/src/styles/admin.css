@@ -796,3 +796,33 @@ label.btn:has(+ input:focus-visible){box-shadow:var(--focus)}
 
 .db .ph-actions{display:flex; flex-wrap:wrap; gap:var(--s2)}
 .db .page-head .lede{margin-top:var(--s1)}
+
+/* ===================== Home Screen hub: publishing bar and tabs ===================== */
+.hub{display:grid; gap:var(--s6)}
+.hub-head{margin-bottom:0}
+.hub-stages{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:var(--s3)}
+.hub-stage{display:grid; grid-template-columns:auto minmax(0,1fr); gap:var(--s3); align-items:start; padding:var(--s4); border-radius:var(--r-md); background:var(--bg); box-shadow:inset 0 0 0 1px var(--line)}
+.hub-st-ic{width:40px; height:40px; border-radius:50%; display:grid; place-items:center; background:var(--tint); color:var(--blue)}
+.hub-prod .hub-st-ic{background:var(--ctl); color:#FFFFFF}
+.hub-st-t{display:grid; gap:2px; min-width:0}
+.hub-st-l{font-weight:700}
+.hub-st-v{font-size:var(--t14); color:var(--ink-2)}
+.hub-st-v b{font-size:var(--t20); color:var(--ink); font-variant-numeric:tabular-nums; margin-right:2px}
+.hub-names{list-style:none; margin:var(--s1) 0 0; padding:0; display:grid; gap:2px; font-size:var(--t14)}
+.hub-names a{color:var(--blue); font-weight:600}
+.hub-acts{display:flex; flex-wrap:wrap; justify-content:flex-end; gap:var(--s2); margin-top:var(--s4)}
+.hub-confirm{list-style:none; margin:var(--s3) 0 0; padding:0; display:grid; gap:var(--s2); max-height:260px; overflow:auto}
+.hub-confirm li{display:flex; align-items:center; gap:var(--s2); padding:var(--s2) var(--s3); border-radius:var(--r-sm); background:var(--bg)}
+.hub-confirm .ms{color:var(--blue)}
+.hub-tabs ul{list-style:none; margin:0; padding:0; display:flex; gap:var(--s1); overflow-x:auto; box-shadow:inset 0 -1px 0 var(--line); scrollbar-width:thin}
+.hub-tabs a{display:inline-flex; align-items:center; gap:var(--s2); min-height:var(--hit-lg, 48px); padding:0 var(--s4); color:var(--ink-2); font-weight:600; text-decoration:none; white-space:nowrap; border-radius:var(--r-sm) var(--r-sm) 0 0; box-shadow:inset 0 -3px 0 transparent}
+.hub-tabs a:hover{background:var(--tint); color:var(--ink)}
+.hub-tabs a[aria-current="page"]{color:var(--blue); box-shadow:inset 0 -3px 0 var(--ctl)}
+.hub-tabs a:focus-visible{outline:none; box-shadow:var(--focus)}
+.hub-n{min-width:22px; height:22px; padding:0 6px; border-radius:var(--r-pill); background:var(--tint); color:var(--blue); font-size:var(--t12); font-weight:700; display:grid; place-items:center; font-variant-numeric:tabular-nums}
+.hub-n[hidden]{display:none}
+.hub-panel > .page{padding:0; max-width:none}
+.tab-head h2{font-size:var(--t24, 24px)}
+@container main (max-width: 760px){ .hub-stages{grid-template-columns:minmax(0,1fr)} .hub-acts{justify-content:stretch} .hub-acts .btn{flex:1} }
+.hub-panel .stat-strip{display:none}
+.lc-status{display:flex; flex-wrap:wrap; align-items:center; gap:var(--s2); font-size:var(--t14); color:var(--ink-2)}
