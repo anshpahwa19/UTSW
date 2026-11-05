@@ -68,25 +68,23 @@ function hubRenderBar() {
   const role = Session.role(), st = hubStages();
   const may = (r, a) => canAct(role, CONFIG_TYPES[r.type].area, a);
   const dep = st.drafts.filter(r => may(r, 'deployDemo')), pub = st.demo.filter(r => may(r, 'publish'));
-  const names = list => list.length ? `<ul class="hub-names">${list.slice(0, 3).map(r => `<li><a href="#${recLink(r)}">${esc(r.name)}</a></li>`).join('')}${list.length > 3 ? `<li class="muted">and ${list.length - 3} more</li>` : ''}</ul>` : '';
-  const tile = (k, icon, label, list, note) => `<div class="hub-stage hub-${k}">
-      <span class="hub-st-ic" aria-hidden="true">${ic(icon, 20)}</span>
-      <div class="hub-st-t"><p class="hub-st-l">${label}</p><p class="hub-st-v"><b>${list.length}</b> <span>${note}</span></p>${names(list)}</div></div>`;
-  host.innerHTML = `<div class="card-head"><h2 id="hub-pub-h">Publishing</h2><div class="card-actions">${badge('mock')}</div></div>
-    <div class="card-body">
-      <div class="hub-stages">
-        ${tile('draft', 'edit_note', 'Draft', st.drafts, st.drafts.length === 1 ? 'saved draft' : 'saved drafts')}
-        ${tile('demo', 'science', 'Demo', st.demo, 'waiting for production')}
-        ${tile('prod', 'public', 'Production', [], 'live in the app').replace('<b>0</b>', `<b>${st.live.length}</b>`)}
-      </div>
+  /* One slim row: three counts and the two batch actions */
+  const count = (k, icon, n, label) => `<li class="hub-c hub-${k}">${ic(icon, 20)}<b>${n}</b><span>${label}</span></li>`;
+  host.innerHTML = `<div class="hub-bar">
+      <h2 id="hub-pub-h" class="hub-bar-h" tabindex="-1">Publishing</h2>
+      <ul class="hub-counts" aria-label="Home Screen items by stage">
+        ${count('draft', 'edit_note', st.drafts.length, st.drafts.length === 1 ? 'draft' : 'drafts')}
+        ${count('demo', 'science', st.demo.length, 'on demo')}
+        ${count('prod', 'public', st.live.length, 'live')}
+      </ul>
       <div class="hub-acts">
-        ${btn({ label: dep.length ? `Deploy ${plural(dep.length, 'draft')} to demo` : 'Deploy drafts to demo', icon: 'science', variant: 'secondary', attrs: `data-hub="demo" ${dep.length ? '' : 'disabled'}` })}
-        ${btn({ label: pub.length ? `Publish ${pub.length} to production` : 'Publish to production', icon: 'rocket_launch', variant: 'primary', attrs: `data-hub="prod" ${pub.length ? '' : 'disabled'}` })}
+        ${btn({ label: dep.length ? `Deploy ${plural(dep.length, 'draft')} to demo` : 'Deploy to demo', icon: 'science', variant: 'secondary', size: 'sm', attrs: `data-hub="demo" ${dep.length ? '' : 'disabled'}` })}
+        ${btn({ label: pub.length ? `Publish ${pub.length} to production` : 'Publish to production', icon: 'rocket_launch', variant: 'primary', size: 'sm', attrs: `data-hub="prod" ${pub.length ? '' : 'disabled'}` })}
       </div>
+    </div>
       ${st.drafts.length > dep.length || st.demo.length > pub.length ? `<p class="role-note">${ic('info', 20)}<span>${[
         st.drafts.length > dep.length ? `${plural(st.drafts.length - dep.length, 'draft')} need${st.drafts.length - dep.length === 1 ? 's' : ''} a role that can deploy it` : '',
-        st.demo.length > pub.length ? `${plural(st.demo.length - pub.length, 'item')} on demo need${st.demo.length - pub.length === 1 ? 's' : ''} an Admin or Super Admin to publish` : ''].filter(Boolean).join('. ')}.</span></p>` : ''}
-    </div>`;
+        st.demo.length > pub.length ? `${plural(st.demo.length - pub.length, 'item')} on demo need${st.demo.length - pub.length === 1 ? 's' : ''} an Admin or Super Admin to publish` : ''].filter(Boolean).join('. ')}.</span></p>` : ''}`;
   /* Counts on the tabs: anything waiting in that area */
   $$('.hub-n').forEach(n => {
     const area = n.dataset.n, c = [...st.drafts, ...st.demo].filter((r, i, a) => CONFIG_TYPES[r.type].area === area && a.indexOf(r) === i).length;
@@ -115,6 +113,6 @@ function hubRenderBar() {
     Router.clearGuard();
     toast(`${toDemo ? 'Deployed' : 'Published'} ${plural(done, 'item')} ${toDemo ? 'to demo' : 'to production'}.${failed.length ? ` ${failed.length} didn’t: ${failed.join('; ')}` : ''}`, { kind: failed.length ? 'error' : 'success', ms: failed.length ? 9000 : 5000 });
     Router.refresh();
-    const again = $(`[data-hub="${toDemo ? 'prod' : 'demo'}"]`); if (again && !again.disabled) again.focus(); else { const h = $('#hub-pub-h'); if (h) { h.tabIndex = -1; h.focus(); } }
+    const again = $(`[data-hub="${toDemo ? 'prod' : 'demo'}"]`); if (again && !again.disabled) again.focus(); else { const h = $('#hub-pub-h'); if (h) h.focus(); }
   };
 }

@@ -905,6 +905,17 @@ label.btn:has(+ input:focus-visible){box-shadow:var(--focus)}
 .hub-aud{display:flex; align-items:center; gap:var(--s3); flex-wrap:wrap}
 .hub-aud-l{font-size:var(--t14); font-weight:600; color:var(--ink-2)}
 .hub-aud-note{margin-bottom:var(--s4)}
+/* Slim publishing bar */
+.hub-pub{padding:var(--s3) var(--s4) var(--s3) var(--s5, 20px)}
+.hub-bar{display:flex; flex-wrap:wrap; align-items:center; gap:var(--s2) var(--s5, 20px)}
+.hub-bar-h{font-size:var(--t16); font-weight:700; color:var(--ink); margin:0}
+.hub-counts{list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:var(--s2)}
+.hub-c{display:inline-flex; align-items:center; gap:6px; min-height:32px; padding:0 var(--s3); border-radius:var(--r-pill); background:var(--bg); box-shadow:inset 0 0 0 1px var(--line); font-size:var(--t14); color:var(--ink-2)}
+.hub-c .ms{color:var(--blue)}
+.hub-c b{color:var(--ink); font-variant-numeric:tabular-nums}
+.hub-bar .hub-acts{margin:0 0 0 auto}
+.hub-pub .role-note{margin-top:var(--s2)}
+@container main (max-width: 760px){ .hub-bar .hub-acts{margin-left:0; width:100%} }
 
 </style>
 <div id="app" lang="en"></div>
@@ -1796,7 +1807,7 @@ const Session = {
 
 /* ---------- Button ---------- variants: primary, secondary, tonal, text, danger; size: md (44) or lg (48) */
 function btn({ label, icon, variant = 'secondary', size = 'md', attrs = '', iconOnly = false, type = 'button' }) {
-  const cls = `btn btn-${variant}${size === 'lg' ? ' btn-lg' : ''}${iconOnly ? ' btn-icon' : ''}`;
+  const cls = `btn btn-${variant}${size === 'lg' ? ' btn-lg' : size === 'sm' ? ' btn-sm' : ''}${iconOnly ? ' btn-icon' : ''}`;
   return `<button type="${type}" class="${cls}" ${iconOnly ? `aria-label="${esc(label)}" title="${esc(label)}"` : ''} ${attrs}>${icon ? ic(icon, 20) : ''}${iconOnly ? '' : `<span class="lbl">${esc(label)}</span>`}<span class="dots" aria-hidden="true"><i></i><i></i><i></i></span></button>`;
 }
 /* Busy state while a mock service call runs */
@@ -3833,25 +3844,23 @@ function hubRenderBar() {
   const role = Session.role(), st = hubStages();
   const may = (r, a) => canAct(role, CONFIG_TYPES[r.type].area, a);
   const dep = st.drafts.filter(r => may(r, 'deployDemo')), pub = st.demo.filter(r => may(r, 'publish'));
-  const names = list => list.length ? `<ul class="hub-names">${list.slice(0, 3).map(r => `<li><a href="#${recLink(r)}">${esc(r.name)}</a></li>`).join('')}${list.length > 3 ? `<li class="muted">and ${list.length - 3} more</li>` : ''}</ul>` : '';
-  const tile = (k, icon, label, list, note) => `<div class="hub-stage hub-${k}">
-      <span class="hub-st-ic" aria-hidden="true">${ic(icon, 20)}</span>
-      <div class="hub-st-t"><p class="hub-st-l">${label}</p><p class="hub-st-v"><b>${list.length}</b> <span>${note}</span></p>${names(list)}</div></div>`;
-  host.innerHTML = `<div class="card-head"><h2 id="hub-pub-h">Publishing</h2><div class="card-actions">${badge('mock')}</div></div>
-    <div class="card-body">
-      <div class="hub-stages">
-        ${tile('draft', 'edit_note', 'Draft', st.drafts, st.drafts.length === 1 ? 'saved draft' : 'saved drafts')}
-        ${tile('demo', 'science', 'Demo', st.demo, 'waiting for production')}
-        ${tile('prod', 'public', 'Production', [], 'live in the app').replace('<b>0</b>', `<b>${st.live.length}</b>`)}
-      </div>
+  /* One slim row: three counts and the two batch actions */
+  const count = (k, icon, n, label) => `<li class="hub-c hub-${k}">${ic(icon, 20)}<b>${n}</b><span>${label}</span></li>`;
+  host.innerHTML = `<div class="hub-bar">
+      <h2 id="hub-pub-h" class="hub-bar-h" tabindex="-1">Publishing</h2>
+      <ul class="hub-counts" aria-label="Home Screen items by stage">
+        ${count('draft', 'edit_note', st.drafts.length, st.drafts.length === 1 ? 'draft' : 'drafts')}
+        ${count('demo', 'science', st.demo.length, 'on demo')}
+        ${count('prod', 'public', st.live.length, 'live')}
+      </ul>
       <div class="hub-acts">
-        ${btn({ label: dep.length ? `Deploy ${plural(dep.length, 'draft')} to demo` : 'Deploy drafts to demo', icon: 'science', variant: 'secondary', attrs: `data-hub="demo" ${dep.length ? '' : 'disabled'}` })}
-        ${btn({ label: pub.length ? `Publish ${pub.length} to production` : 'Publish to production', icon: 'rocket_launch', variant: 'primary', attrs: `data-hub="prod" ${pub.length ? '' : 'disabled'}` })}
+        ${btn({ label: dep.length ? `Deploy ${plural(dep.length, 'draft')} to demo` : 'Deploy to demo', icon: 'science', variant: 'secondary', size: 'sm', attrs: `data-hub="demo" ${dep.length ? '' : 'disabled'}` })}
+        ${btn({ label: pub.length ? `Publish ${pub.length} to production` : 'Publish to production', icon: 'rocket_launch', variant: 'primary', size: 'sm', attrs: `data-hub="prod" ${pub.length ? '' : 'disabled'}` })}
       </div>
+    </div>
       ${st.drafts.length > dep.length || st.demo.length > pub.length ? `<p class="role-note">${ic('info', 20)}<span>${[
         st.drafts.length > dep.length ? `${plural(st.drafts.length - dep.length, 'draft')} need${st.drafts.length - dep.length === 1 ? 's' : ''} a role that can deploy it` : '',
-        st.demo.length > pub.length ? `${plural(st.demo.length - pub.length, 'item')} on demo need${st.demo.length - pub.length === 1 ? 's' : ''} an Admin or Super Admin to publish` : ''].filter(Boolean).join('. ')}.</span></p>` : ''}
-    </div>`;
+        st.demo.length > pub.length ? `${plural(st.demo.length - pub.length, 'item')} on demo need${st.demo.length - pub.length === 1 ? 's' : ''} an Admin or Super Admin to publish` : ''].filter(Boolean).join('. ')}.</span></p>` : ''}`;
   /* Counts on the tabs: anything waiting in that area */
   $$('.hub-n').forEach(n => {
     const area = n.dataset.n, c = [...st.drafts, ...st.demo].filter((r, i, a) => CONFIG_TYPES[r.type].area === area && a.indexOf(r) === i).length;
@@ -3880,7 +3889,7 @@ function hubRenderBar() {
     Router.clearGuard();
     toast(`${toDemo ? 'Deployed' : 'Published'} ${plural(done, 'item')} ${toDemo ? 'to demo' : 'to production'}.${failed.length ? ` ${failed.length} didn’t: ${failed.join('; ')}` : ''}`, { kind: failed.length ? 'error' : 'success', ms: failed.length ? 9000 : 5000 });
     Router.refresh();
-    const again = $(`[data-hub="${toDemo ? 'prod' : 'demo'}"]`); if (again && !again.disabled) again.focus(); else { const h = $('#hub-pub-h'); if (h) { h.tabIndex = -1; h.focus(); } }
+    const again = $(`[data-hub="${toDemo ? 'prod' : 'demo'}"]`); if (again && !again.disabled) again.focus(); else { const h = $('#hub-pub-h'); if (h) h.focus(); }
   };
 }
 

@@ -5,7 +5,7 @@
 
 /* ---------- Button ---------- variants: primary, secondary, tonal, text, danger; size: md (44) or lg (48) */
 function btn({ label, icon, variant = 'secondary', size = 'md', attrs = '', iconOnly = false, type = 'button' }) {
-  const cls = `btn btn-${variant}${size === 'lg' ? ' btn-lg' : ''}${iconOnly ? ' btn-icon' : ''}`;
+  const cls = `btn btn-${variant}${size === 'lg' ? ' btn-lg' : size === 'sm' ? ' btn-sm' : ''}${iconOnly ? ' btn-icon' : ''}`;
   return `<button type="${type}" class="${cls}" ${iconOnly ? `aria-label="${esc(label)}" title="${esc(label)}"` : ''} ${attrs}>${icon ? ic(icon, 20) : ''}${iconOnly ? '' : `<span class="lbl">${esc(label)}</span>`}<span class="dots" aria-hidden="true"><i></i><i></i><i></i></span></button>`;
 }
 /* Busy state while a mock service call runs */
