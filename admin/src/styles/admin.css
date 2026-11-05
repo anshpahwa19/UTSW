@@ -311,12 +311,33 @@ select.input:disabled{cursor:not-allowed}
 .hint-line{font-size:var(--t14); color:var(--ink-2); margin-bottom:var(--s3)}
 .mod-list{list-style:none; margin:0; padding:0; display:grid; gap:var(--s2)}
 .hl-edit{min-width:0; container:edit / inline-size}
-.mod-row{display:grid; grid-template-columns:auto auto minmax(0,1fr); grid-template-areas:"pos ic txt" ". . ctl"; align-items:center; gap:var(--s2) var(--s3); padding:var(--s3); border-radius:var(--r-md); background:var(--surface); box-shadow:inset 0 0 0 1px var(--line-strong)}
+.mod-row{position:relative; display:grid; grid-template-columns:auto auto auto minmax(0,1fr); grid-template-areas:"drag pos ic txt" ". . . ctl"; align-items:center; gap:var(--s2) var(--s3); padding:var(--s3) var(--s3) var(--s3) var(--s2); border-radius:var(--r-md); background:var(--surface); box-shadow:inset 0 0 0 1px var(--line-strong); transition:transform .18s ease, box-shadow .18s ease}
+.mod-row.ro{grid-template-columns:auto auto minmax(0,1fr); grid-template-areas:"pos ic txt" ". . ctl"; padding-left:var(--s3)}
+.mod-row:not(.ro){cursor:grab}
+.mod-row :is(a,button,[role="switch"]){cursor:pointer}
+/* Drag handle: 44px target, the visible grip that says "this row moves" */
+.drag-h{grid-area:drag; width:32px; height:44px; display:grid; place-items:center; border:0; border-radius:var(--r-sm); background:transparent; color:var(--ink-2); cursor:grab; touch-action:none}
+.drag-h:hover{background:var(--tint); color:var(--blue)}
+.drag-h:focus-visible{outline:none; box-shadow:var(--focus); color:var(--blue)}
+.drag-h[aria-expanded="true"]{background:var(--tint); color:var(--blue)}
+.mod-list.is-sorting,.mod-list.is-sorting *{cursor:grabbing!important; user-select:none}
+.mod-row.is-dragging{z-index:5; transition:box-shadow .18s ease; background:var(--surface); box-shadow:inset 0 0 0 2px var(--blue), 0 18px 36px -12px rgba(0,30,60,.35)}
+.mod-row.is-dragging .drag-h{color:var(--blue)}
+/* Move menu */
+.drag-menu{position:absolute; z-index:10; top:calc(100% - var(--s2)); left:var(--s2); min-width:200px; display:grid; padding:var(--s1); border-radius:var(--r-md); background:var(--surface); box-shadow:0 0 0 1px var(--line-strong), 0 16px 32px -12px rgba(0,30,60,.35)}
+.drag-menu button{display:flex; align-items:center; gap:var(--s2); min-height:40px; padding:0 var(--s3); border:0; border-radius:var(--r-sm); background:none; color:var(--ink); font:inherit; font-size:var(--t14); text-align:left; cursor:pointer}
+.drag-menu button .ms{color:var(--blue)}
+.drag-menu button:hover,.drag-menu button:focus-visible{background:var(--tint); outline:none}
+.drag-menu button:focus-visible{box-shadow:inset 0 0 0 2px var(--blue)}
+.drag-menu button[aria-disabled="true"]{color:var(--ink-2); cursor:default; background:none}
+.drag-menu button[aria-disabled="true"] .ms{color:var(--ink-2)}
+@media (prefers-reduced-motion: reduce){ .mod-row{transition:none} }
 .mod-pos{grid-area:pos} .mod-row .mod-ic{grid-area:ic} .mod-row .mod-txt{grid-area:txt}
 .mod-row > .badge{grid-area:ctl; justify-self:start}
 .mod-ctl{grid-area:ctl; justify-self:end}
 @container edit (min-width: 640px){
-  .mod-row{grid-template-columns:auto auto minmax(0,1fr) auto auto; grid-template-areas:"pos ic txt badge ctl"}
+  .mod-row{grid-template-columns:auto auto auto minmax(0,1fr) auto auto; grid-template-areas:"drag pos ic txt badge ctl"}
+  .mod-row.ro{grid-template-columns:auto auto minmax(0,1fr) auto; grid-template-areas:"pos ic txt badge"}
   .mod-row > .badge{grid-area:badge}
 }
 .mod-row.is-off{background:var(--bg)}

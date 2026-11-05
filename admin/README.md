@@ -21,7 +21,7 @@ The build writes `admin-portal.html`, a single self-contained file published as 
 |---|---|---|
 | Sign-in | `login`, `mfa`, `signed-out`, `expired`, `denied` | Simulated UTSW SSO, then sample account, then simulated MFA approval. Never a password. Idle timeout from settings, sign out, access denied, and return to the requested page |
 | Dashboard | `dashboard` | Live emergency alerts, sample KPIs, "Needs attention" (reviews, demo versions waiting, unpublished wayfinding), campaigns, scheduled notifications, wayfinding, recent activity, DAU chart |
-| Home layout | `home-layout` | Guest and Authenticated tabs: reorder (keyboard buttons), show or hide, live preview, full lifecycle, change history with rollback |
+| Home layout | `home-layout` | Guest and Authenticated tabs: reorder by drag and drop (mouse, touch or pen), with the arrow keys on the handle, or from the handle's move menu (WCAG 2.5.7 alternative to dragging), show or hide, live preview, full lifecycle, change history with rollback |
 | Campaigns | `home-campaigns`, `-new`, `-:id` | List with search, filters and status. Create and edit: content, image and alt text, facts, CTA and destination, audience, schedule, time zone. Validation, live preview, lifecycle, delete never-published drafts |
 | Emergency alerts | `home-alerts`, `-new`, `-:id` | Styled apart from campaigns (red banner, red-ruled form). Type, icon, message, full text, CTA, priority, display duration, window, dismissible, on or off. Preview stacks alerts by priority |
 | Quick links, Featured cards | `home-quick-links…`, `home-featured-cards…` | Title, approved icon, icon alt text, destination, position, sign-in lock (MyChart destinations must need sign-in), preview of the tiles or rows |
