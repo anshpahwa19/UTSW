@@ -168,7 +168,7 @@ defineCollection({
     { title: 'Call to action', fields: [
       { key: 'ctaLabel', label: 'Button label', required: true, max: 24 },
       { key: 'destination', label: 'Destination', type: 'destination', required: true, noNone: true }] },
-    { title: 'Audience and schedule', fields: [...scheduleFields, { key: 'enabled', label: 'Show this campaign', type: 'switch', hint: 'Off keeps it in the Admin but hides it in the app once published.' }] }
+    { title: 'Audience and schedule', fields: [...scheduleFields] }
   ],
   validate: d => ({ ...windowCheck(d), ...((d.fact1Label && !d.fact1Value) ? { fact1Value: 'Add the text for fact 1, or clear its label.' } : {}), ...((d.fact2Label && !d.fact2Value) ? { fact2Value: 'Add the text for fact 2, or clear its label.' } : {}) }),
   searchExtra: d => `${d.type} ${d.description}`,
@@ -203,8 +203,7 @@ defineCollection({
       { key: 'priority', label: 'Priority', type: 'select', options: [[1, 'Priority 1 – shows first'], [2, 'Priority 2'], [3, 'Priority 3']], wide: false },
       { key: 'duration', label: 'Display duration', type: 'select', wide: false, options: [['window', 'For the whole active window'], ['1h', '1 hour after a patient first sees it'], ['4h', '4 hours after first seen'], ['24h', '24 hours after first seen']], hint: 'Meaning pending confirmation (§10.6).' },
       ...scheduleFields,
-      { key: 'dismissible', label: 'Patients can dismiss it', type: 'switch' },
-      { key: 'enabled', label: 'Alert is on', type: 'switch', hint: 'Turn off and publish to end an alert early.' }] }
+      { key: 'dismissible', label: 'Patients can dismiss it', type: 'switch' }] }
   ],
   validate: d => ({ ...windowCheck(d), ...(d.ctaLabel && d.destination.type === 'none' ? { destination: 'Choose where the button goes, or clear the button label.' } : {}), ...(!d.ctaLabel && d.destination.type !== 'none' ? { ctaLabel: 'Add a button label for this destination.' } : {}) }),
   searchExtra: d => `${d.type} ${d.message}`,
@@ -228,14 +227,12 @@ defineCollection({
     { key: 'iconAlt', label: 'Icon alternative text', max: 60, hint: 'Leave empty when the title already says it – the icon is then decorative.' },
     { key: 'destination', label: 'Destination', type: 'destination', required: true, noNone: true },
     { key: 'requiresSignIn', label: 'Needs MyChart sign-in', type: 'switch', hint: 'Guests see a lock and go to MyChart sign-in first.' },
-    { key: 'order', label: 'Position', type: 'number', min: 1, maxNum: 12, wide: false },
-    { key: 'enabled', label: 'Show this tile', type: 'switch' }] }],
+    { key: 'order', label: 'Position', type: 'number', min: 1, maxNum: 12, wide: false }] }],
   validate: d => d.destination.type === 'mychart' && !d.requiresSignIn ? { requiresSignIn: 'MyChart destinations need sign-in. Turn on “Needs MyChart sign-in”.' } : {},
   columns: [
     { key: 'destination', label: 'Destination', render: d => esc(destLabel(d.destination)).replace(/\//g, '/<wbr>'), cls: 'dest' },
     { key: 'order', label: 'Position', sortable: true, sortValue: d => d.order, render: d => `<span class="ord-chip">${d.order}</span>`, cls: 'ord' },
     { key: 'signin', label: 'Sign-in', render: d => d.requiresSignIn ? badge('fixed', 'MyChart') : '<span class="muted">Open</span>' },
-    { key: 'shown', label: 'Shown', render: d => badge(d.enabled ? 'visible' : 'hidden') }
   ],
   preview: (d, id, src) => homePreview('guest', 'quickLink')(d, id, src, 'tiles')
 });
@@ -252,12 +249,10 @@ defineCollection({
     { key: 'icon', label: 'Icon', type: 'icon' },
     { key: 'iconAlt', label: 'Icon alternative text', max: 60, hint: 'Leave empty when the title already says it.' },
     { key: 'destination', label: 'Destination', type: 'destination', required: true, noNone: true },
-    { key: 'order', label: 'Position', type: 'number', min: 1, maxNum: 12, wide: false },
-    { key: 'enabled', label: 'Show this card', type: 'switch' }] }],
+    { key: 'order', label: 'Position', type: 'number', min: 1, maxNum: 12, wide: false }] }],
   columns: [
     { key: 'destination', label: 'Destination', render: d => esc(destLabel(d.destination)).replace(/\//g, '/<wbr>'), cls: 'dest' },
     { key: 'order', label: 'Position', sortable: true, sortValue: d => d.order, render: d => `<span class="ord-chip">${d.order}</span>`, cls: 'ord' },
-    { key: 'shown', label: 'Shown', render: d => badge(d.enabled ? 'visible' : 'hidden') }
   ],
   preview: (d, id, src) => homePreview('guest', 'featuredCard')(d, id, src, 'services')
 });

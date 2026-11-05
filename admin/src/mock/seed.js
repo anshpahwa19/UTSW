@@ -96,7 +96,6 @@ const HOME_FIXED = [
 ];
 const HOME_MODULES = {
   tiles: { label: 'Quick links', desc: 'Tiles managed in Quick links.', icon: 'apps', link: 'home-quick-links' },
-  signin: { label: 'MyChart sign-in prompt', desc: 'Invites guests to sign in or create a MyChart account.', icon: 'login' },
   featured: { label: 'MedBlog (featured)', desc: 'Carousel of the four newest MedBlog articles.', icon: 'article' },
   services: { label: 'UTSW resources', desc: 'Rows managed in Featured cards.', icon: 'library_books', link: 'home-featured-cards' },
   campaign: { label: 'Campaign banner', desc: 'The active campaign, managed in Campaigns.', icon: 'campaign', link: 'home-campaigns' },
@@ -105,7 +104,7 @@ const HOME_MODULES = {
   near: { label: 'Near you', desc: 'Closest UT Southwestern locations to the patient.', icon: 'near_me' }
 };
 const AUDIENCE_MODULES = {
-  guest: ['tiles', 'signin', 'featured', 'services', 'campaign', 'news'],
+  guest: ['tiles', 'featured', 'services', 'campaign', 'news'],
   authenticated: ['visits', 'tiles', 'near', 'featured', 'services', 'campaign', 'news']
 };
 
@@ -155,9 +154,9 @@ function seedDb() {
   /* ---- Home layouts ---- */
   const mods = (order, off = []) => order.map(id => ({ id, on: !off.includes(id) }));
   const head = ['alerts', 'greeting', 'search'];
-  const g = rec('home-layout-guest', 'homeLayout', 'Guest home layout', { head, modules: mods(['tiles', 'signin', 'featured', 'services', 'news', 'campaign'], ['campaign']) }, { by: 'u1', at: '2026-09-08T14:05:00Z', comment: 'Initial guest home from the approved design' });
-  g.versions[2] = ver(2, { head, modules: mods(['tiles', 'signin', 'campaign', 'featured', 'services', 'news']) }, 'u2', '2026-09-29T15:30:00Z', 'Turn on the flu campaign and move it up for launch week');
-  g.versions[3] = ver(3, { head, modules: mods(['tiles', 'signin', 'featured', 'services', 'campaign', 'news']) }, 'u2', '2026-10-14T13:45:00Z', 'Move the campaign below UTSW resources after launch week');
+  const g = rec('home-layout-guest', 'homeLayout', 'Guest home layout', { head, modules: mods(['tiles', 'featured', 'services', 'news', 'campaign'], ['campaign']) }, { by: 'u1', at: '2026-09-08T14:05:00Z', comment: 'Initial guest home from the approved design' });
+  g.versions[2] = ver(2, { head, modules: mods(['tiles', 'campaign', 'featured', 'services', 'news']) }, 'u2', '2026-09-29T15:30:00Z', 'Turn on the flu campaign and move it up for launch week');
+  g.versions[3] = ver(3, { head, modules: mods(['tiles', 'featured', 'services', 'campaign', 'news']) }, 'u2', '2026-10-14T13:45:00Z', 'Move the campaign below UTSW resources after launch week');
   g.production = 3; g.demo = 3; g.nextVersion = 4;
   g.events.push(
     evt('Draft saved', 'draft', null, 'u3', '2026-09-26T19:12:00Z', 'Flu campaign launch'), evt('Review requested', 'draft', null, 'u3', '2026-09-26T19:14:00Z', 'Please review for the Sept. 29 launch'),
@@ -305,5 +304,5 @@ function seedDb() {
     { id: uid('au'), at: t('2026-09-01T15:00:00Z'), by: 'u1', action: 'User deactivated', target: 'Grace Liu', targetId: 'u7', targetType: 'user', environment: null, version: null, comment: 'Moved to another department', before: { status: 'Active' }, after: { status: 'Deactivated' } },
     { id: uid('au'), at: t('2026-08-10T15:00:00Z'), by: 'u1', action: 'Role changed', target: 'Theo Adams', targetId: 'u8', targetType: 'user', environment: null, version: null, comment: '', before: { role: 'Admin' }, after: { role: 'Marketing' } });
 
-  return { schema: 5, records: Object.fromEntries(records.map(r => [r.id, r])), users, notifications, wayfinding, integrations, settings, audit, zeroResults };
+  return { schema: 6, records: Object.fromEntries(records.map(r => [r.id, r])), users, notifications, wayfinding, integrations, settings, audit, zeroResults };
 }

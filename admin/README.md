@@ -20,7 +20,7 @@ The build writes `admin-portal.html`, a single self-contained file published as 
 | Module | Routes | Working flows |
 |---|---|---|
 | Sign-in | `login`, `mfa`, `signed-out`, `expired`, `denied` | Simulated UTSW SSO, then sample account, then simulated MFA approval. Never a password. Idle timeout from settings, sign out, access denied, and return to the requested page |
-| Dashboard | `dashboard` | Live emergency alerts, sample KPIs, "Needs attention" (reviews, demo versions waiting, unpublished wayfinding), campaigns, scheduled notifications, wayfinding, recent activity, DAU chart |
+| Dashboard | `dashboard` | Quick create (alert, campaign, notification), four sample KPIs, live emergency alerts, "Right now in the app" (live guest home phone, campaign showing, alerts, layout and indoor-map versions), what's coming up in the next 30 days, and recent activity |
 | Home layout | `home-layout` | Guest and Authenticated tabs: reorder by drag and drop (mouse, touch or pen), with the arrow keys on the handle, or from the handle's move menu (WCAG 2.5.7 alternative to dragging), show or hide, live preview, full lifecycle, change history with rollback |
 | Campaigns | `home-campaigns`, `-new`, `-:id` | List with search, filters and status. Create and edit: content, image and alt text, facts, CTA and destination, audience, schedule, time zone. Validation, live preview, lifecycle, delete never-published drafts |
 | Emergency alerts | `home-alerts`, `-new`, `-:id` | Styled apart from campaigns (red banner, red-ruled form). Type, icon, message, full text, CTA, priority, display duration, window, dismissible, on or off. Preview stacks alerts by priority |
@@ -85,8 +85,9 @@ Routes are plain hash names (`#home-layout`, `#home-campaigns-campaign-flu`) bec
 - **Sign-in, MFA and session:** simulated, with sample accounts only.
 - **Publishing, sending, uploading and integration checks:** simulated in the browser.
 - **Analytics, monitoring and zero-result counts:** deterministic sample data.
-- **Saving:** changes are saved in this browser's `localStorage` (`utsw-admin-mock-v1`, always wrapped in try/catch). "Reset mock data" in the user menu restores the seed.
-- **Errors:** "Simulate service errors" in the user menu makes every call fail, to show the error states with retry.
+- **Saving:** changes are saved in this browser's `localStorage` (`utsw-admin-mock-v1`, always wrapped in try/catch). Clearing site data restores the seed.
+- **Errors:** every page has an error state with retry; the user-menu switch that simulated failures was removed on request, so the mock services don't fail on their own.
+- **Roles:** the role comes from the sample account chosen at sign-in (Super Admin, Admin or Marketing). There is no role switcher in the user menu.
 - **Wayfinding files:** read in the browser with FileReader and never uploaded anywhere. The JSON schema checked is a placeholder until UTSW shares a real Gozio export.
 
 ## Permissions (proposed, pending confirmation)

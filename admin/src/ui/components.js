@@ -131,7 +131,7 @@ function dataTable(outer, cfg) {
           <div class="fp-body">${filters.map(f => `<div class="field"><label class="label" for="${id}-f-${f.key}">${esc(f.label)}</label><select class="input" id="${id}-f-${f.key}" data-filter="${f.key}" multiple data-all-label="All">${f.options.map(([v, l]) => `<option value="${esc(v)}">${esc(l)}</option>`).join('')}</select></div>`).join('')}</div>
           <div class="fp-foot">${btn({ label: 'Clear all', variant: 'text', attrs: 'data-fp="clear"' })}${btn({ label: 'Apply', variant: 'primary', attrs: 'data-fp="apply"' })}</div>
         </div></div>` : ''}
-      <p class="tbl-count" id="${id}-count" role="status"></p>
+      <p class="tbl-count${cfg.hideCount ? ' vh' : ''}" id="${id}-count" role="status"></p>
       ${cfg.actions ? `<div class="tbl-actions">${cfg.actions}</div>` : ''}
     </div>
     ${filters.length ? `<div class="tbl-chips" aria-label="Applied filters" role="group" hidden></div>` : ''}

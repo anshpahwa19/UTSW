@@ -3,6 +3,17 @@
    children: routes that aren't sidebar items (create and details pages). */
 const NAV = [
   { id: 'dashboard', label: 'Dashboard', icon: 'dashboard', items: [{ route: 'dashboard', label: 'Dashboard', area: 'dashboard' }] },
+  { id: 'analytics', label: 'Analytics and reporting', icon: 'monitoring', items: [
+    { route: 'analytics', label: 'Overview', area: 'analytics' },
+    { route: 'analytics-adoption', label: 'Adoption and engagement', area: 'analytics' },
+    { route: 'analytics-search', label: 'Search', area: 'analytics' },
+    { route: 'analytics-content', label: 'Content', area: 'analytics' },
+    { route: 'analytics-care', label: 'Care and wayfinding', area: 'analytics' },
+    { route: 'analytics-notifications', label: 'Notifications', area: 'analytics' }
+  ] },
+  { id: 'users', label: 'User management', icon: 'manage_accounts', items: [
+    { route: 'users', label: 'All users', area: 'users', children: [['users-new', 'Create user'], ['users-:id', 'User details']] }
+  ] },
   { id: 'home', label: 'Home Screen', icon: 'smartphone', items: [
     { route: 'home-layout', label: 'Layout', area: 'homeLayout' },
     { route: 'home-campaigns', label: 'Campaigns', area: 'campaigns', children: [['home-campaigns-new', 'New campaign'], ['home-campaigns-:id', 'Campaign']] },
@@ -22,7 +33,6 @@ const NAV = [
     { route: 'search-zero-results', label: 'Zero-result queries', area: 'search' },
     { route: 'search-ranking', label: 'Ranking', area: 'search' }
   ] },
-  { id: 'wayfinding', label: 'Wayfinding', icon: 'directions_walk', items: [{ route: 'wayfinding', label: 'Wayfinding files', area: 'wayfinding' }] },
   { id: 'audiences', label: 'Audience management', icon: 'groups', items: [
     { route: 'audiences', label: 'Audience segments', area: 'audiences', children: [['audiences-new', 'New segment'], ['audiences-:id', 'Segment']] },
     { route: 'audiences-rules', label: 'Segment rules', area: 'audiences' },
@@ -31,17 +41,7 @@ const NAV = [
   { id: 'notifications', label: 'Notifications', icon: 'notifications', items: [
     { route: 'notifications', label: 'All notifications', area: 'notifications', children: [['notifications-new', 'Create notification'], ['notifications-:id', 'Notification']] }
   ] },
-  { id: 'analytics', label: 'Analytics and reporting', icon: 'monitoring', items: [
-    { route: 'analytics', label: 'Overview', area: 'analytics' },
-    { route: 'analytics-adoption', label: 'Adoption and engagement', area: 'analytics' },
-    { route: 'analytics-search', label: 'Search', area: 'analytics' },
-    { route: 'analytics-content', label: 'Content', area: 'analytics' },
-    { route: 'analytics-care', label: 'Care and wayfinding', area: 'analytics' },
-    { route: 'analytics-notifications', label: 'Notifications', area: 'analytics' }
-  ] },
-  { id: 'users', label: 'User management', icon: 'manage_accounts', items: [
-    { route: 'users', label: 'All users', area: 'users', children: [['users-new', 'Create user'], ['users-:id', 'User details']] }
-  ] },
+  { id: 'wayfinding', label: 'Wayfinding', icon: 'directions_walk', items: [{ route: 'wayfinding', label: 'Wayfinding files', area: 'wayfinding' }] },
   { id: 'audit', label: 'Audit and versioning', icon: 'history', items: [
     { route: 'audit', label: 'Audit logs', area: 'audit' },
     { route: 'audit-history', label: 'Configuration history', area: 'audit' }

@@ -115,11 +115,10 @@ function Lifecycle(opts) {
 
 /* Change history table with rollback where the type supports it */
 function historyCard(id = 'hist') {
-  return `<section class="card" aria-labelledby="${id}-h"><div class="card-head"><h2 id="${id}-h" tabindex="-1">Change history</h2><div class="card-actions" id="${id}-rb"></div></div><div class="card-body" id="${id}"></div></section>`;
+  return `<section class="card" aria-labelledby="${id}-h"><div class="card-head"><h2 id="${id}-h" tabindex="-1">Change history</h2></div><div class="card-body" id="${id}"></div></section>`;
 }
 function mountHistory({ hostId = 'hist', getRec, describe, onSaved }) {
   const r0 = getRec(), type = CONFIG_TYPES[r0.type];
-  $(`#${hostId}-rb`).innerHTML = type.supportsRollback ? badge('pending', 'Rollback supported – assumed, pending confirmation') : badge('fixed', `No rollback for ${type.label.toLowerCase()}s`);
   const canRb = () => type.supportsRollback && canAct(Session.role(), type.area, 'rollback');
   const rollback = async (version, b) => {
     const r = getRec();
@@ -131,7 +130,7 @@ function mountHistory({ hostId = 'hist', getRec, describe, onSaved }) {
     try { const rec = await ConfigService.rollback(r.id, version, c.comment); onSaved(rec, 'rollback'); toast(`Rolled back. Production is now v${rec.production}, a copy of v${version}.`, { kind: 'success' }); $(`#${hostId}-h`).focus(); }
     catch (err) { setBusy(b, false); toast(err.message, { kind: 'error', ms: 8000 }); }
   };
-  return dataTable($(`#${hostId}`), {
+  return dataTable($(`#${hostId}`), { hideCount: true,
     id: hostId, caption: 'Change history', noun: 'change', searchPlaceholder: 'Search events, people and comments',
     rows: r0.events, defaultSort: { key: 'at', dir: 'desc' },
     searchText: e => `${e.action} ${UserService.name(e.by)} ${e.comment} v${e.version || ''}`,

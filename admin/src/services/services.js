@@ -6,7 +6,7 @@
 const MockSettings = { latency: [160, 380], simulateErrors: false };
 class ServiceError extends Error {}
 const wait = ms => new Promise(r => setTimeout(r, ms));
-const SCHEMA = 5;
+const SCHEMA = 6;
 let DB = null;
 function loadDb() {
   const saved = store.read();
