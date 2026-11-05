@@ -13,8 +13,8 @@ const NOTE_SECTIONS = [
     { key: 'destination', label: 'Opens', type: 'destination', hint: 'Where the app goes when the notification is tapped.' }] },
   { title: 'Delivery', fields: [
     { key: 'sendTo', label: 'Send to', type: 'segment' },
-    { key: 'timing', label: 'When', type: 'radio', options: [['now', 'Immediately'], ['scheduled', 'At a scheduled time']], rerender: true },
-    { key: 'scheduledAt', label: 'Scheduled date and time (Central Time)', type: 'datetime', required: true, show: d => d.timing === 'scheduled' }] }
+    { key: 'timing', label: 'Send', type: 'radio', options: [['now', 'Instant'], ['scheduled', 'Scheduled']], rerender: true },
+    { key: 'scheduledAt', label: 'Send on (Central Time)', type: 'datetime', required: true, show: d => d.timing === 'scheduled' }] }
 ];
 const noteFields = fields(NOTE_SECTIONS);
 const noteValidate = d => (d.timing === 'scheduled' && d.scheduledAt && d.scheduledAt <= nowLocal() ? { scheduledAt: 'Choose a time in the future.' } : {});
@@ -43,7 +43,7 @@ BUILT_PAGES.notifications = {
       columns: [
         { key: 'title', label: 'Title', sortable: true, sortValue: n => n.title.toLowerCase(), render: n => `<a class="row-link" href="#notifications-${n.id}">${esc(n.title)}</a>` },
         { key: 'sendTo', label: 'Audience', render: n => esc(segmentName(n.sendTo)) },
-        { key: 'when', label: 'Scheduled', sortable: true, sortValue: n => n.scheduledAt || '', render: n => n.timing === 'now' && !n.sentAt ? 'Immediately' : `<span class="nowrap">${esc(fmtLocal(n.scheduledAt))}</span>` },
+        { key: 'when', label: 'Scheduled', sortable: true, sortValue: n => n.scheduledAt || '', render: n => n.timing === 'now' && !n.sentAt ? 'Instant' : `<span class="nowrap">${esc(fmtLocal(n.scheduledAt))}</span>` },
         { key: 'created', label: 'Created', sortable: true, sortValue: n => n.createdAt, render: n => `<span class="nowrap">${esc(fmtDate(n.createdAt))}</span>` },
         { key: 'status', label: 'Status', sortable: true, sortValue: n => n.status, render: n => noteBadge(n.status) }]
     });

@@ -142,8 +142,10 @@ function defineCollection(cfg) {
 const TZ_OPTIONS = [['America/Chicago', 'Central Time – Dallas (default)'], ['America/New_York', 'Eastern Time'], ['America/Denver', 'Mountain Time'], ['America/Los_Angeles', 'Pacific Time']];
 const scheduleFields = [
   { key: 'audience', label: 'Audience', type: 'segment', hint: 'Who sees it. Segments are managed in Audience management.' },
-  { key: 'start', label: 'Starts', type: 'datetime', required: true, wide: false },
-  { key: 'end', label: 'Ends', type: 'datetime', required: true, wide: false },
+  { key: 'startMode', label: 'Starts', type: 'radio', options: [['now', 'Instant'], ['scheduled', 'Scheduled']], default: 'scheduled', rerender: true,
+    hint: 'Instant starts it as soon as it’s published.', onSet: d => { if (d.startMode === 'now') d.start = nowLocal().slice(0, 16); } },
+  { key: 'start', label: 'Start', type: 'datetime', required: true, show: d => d.startMode !== 'now' },
+  { key: 'end', label: 'End', type: 'datetime', required: true },
   { key: 'timeZone', label: 'Time zone', type: 'select', options: TZ_OPTIONS, hint: 'Pending confirmation: Central is the assumed default.' }
 ];
 const windowCheck = d => d.start && d.end && d.end <= d.start ? { end: 'The end must be after the start.' } : {};

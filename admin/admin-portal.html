@@ -605,7 +605,8 @@ fieldset.field legend{font-weight:600; font-size:var(--t14); padding:0; margin-b
 .sw-txt{display:grid; gap:2px}
 .sw-l{font-weight:600; font-size:var(--t14)}
 .switch[disabled]{cursor:not-allowed; opacity:.6}
-.color-row,.icon-row,.dest-row{display:flex; gap:var(--s2); align-items:center}
+.color-row,.icon-row{display:flex; gap:var(--s2); align-items:center}
+.dest-row{display:flex; gap:var(--s4); align-items:center}
 .dest-row > *{flex:1; min-width:0}
 .swatch{width:var(--hit); height:var(--hit); padding:0; border:0; border-radius:var(--r-md); background:none; flex:none; cursor:pointer}
 .swatch::-webkit-color-swatch-wrapper{padding:0}
@@ -943,6 +944,12 @@ label.btn:has(+ input:focus-visible){box-shadow:var(--focus)}
 .role-tag{display:inline-flex; align-items:center; min-height:24px; padding:0 var(--s3); border-radius:var(--r-pill); background:var(--ctl); color:#FFFFFF; font-size:var(--t12); font-weight:700; letter-spacing:.02em}
 .pf-me .avatar{background:var(--tint); color:var(--blue)}
 .pw-rules{margin-top:var(--s1)}
+/* Date and time pair: same column gap as the form grid */
+.dt-row{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:var(--s4)}
+.dt-part{display:grid; gap:4px}
+.field .dt-l{font-size:var(--t12); font-weight:600; color:var(--ink-2)}
+.field-dt > legend{font-weight:600; font-size:var(--t14); margin-bottom:6px}
+@container main (max-width: 420px){ .dt-row{grid-template-columns:minmax(0,1fr)} }
 
 </style>
 <div id="app" lang="en"></div>
@@ -2167,7 +2174,9 @@ function toast(msg, { kind = 'info', action, onAction, ms = 5000 } = {}) {
 /* ===== src/ui/forms.js ===== */
 /* ---------- Declarative forms: render, read, validate ----------
    Field: { key, label, type, hint, required, max, options, show(data), placeholder, min, maxNum, readonly }
-   Types: text, textarea, select, number, datetime, switch, color, icon, alertIcon, image, destination, segment, radio */
+   Types: text, textarea, select, number, datetime (a Date and a Time input, one YYYY-MM-DDTHH:MM value), switch, color, icon,
+   alertIcon, image, destination, segment, radio. Hints sit below their control. f.default: radio value when data has none;
+   f.onSet(data): runs after the field changes. */
 const segmentOptions = () => ConfigService.peekAll('segment').map(r => [r.id, (latestData(r) || {}).name || r.name]);
 const segmentName = id => { const r = ConfigService.peek(id); return r ? (latestData(r) || {}).name || r.name : 'Unknown audience'; };
 
@@ -2180,11 +2189,19 @@ function renderField(f, data, err, prefix) {
   const a = `id="${id}" data-key="${f.key}" aria-describedby="${desc}" ${err ? 'aria-invalid="true"' : ''} ${f.required ? 'aria-required="true"' : ''} ${f.readonly ? 'disabled' : ''}`;
   /* Long text always shows its count; short fields only once they near the limit */
   const counter = f.max ? `<p class="count-line" id="${id}-cnt" ${f.type === 'textarea' || (v || '').length >= f.max * .7 ? '' : 'hidden'}>${(v || '').length} of ${f.max} characters</p>` : '';
-  const wrap = control => `<div class="field${err ? ' has-error' : ''}" data-field="${f.key}"><label for="${id}">${esc(f.label)}${req}</label>${hint}${control}${counter}${errP}</div>`;
+  const wrap = control => `<div class="field${err ? ' has-error' : ''}" data-field="${f.key}"><label for="${id}">${esc(f.label)}${req}</label>${control}${hint}${counter}${errP}</div>`;
   switch (f.type) {
     case 'textarea': return wrap(`<textarea class="input" rows="${f.rows || 3}" ${a}>${esc(v || '')}</textarea>`);
     case 'number': return wrap(`<input class="input input-num" type="number" inputmode="numeric" value="${esc(v)}" ${f.min != null ? `min="${f.min}"` : ''} ${f.maxNum != null ? `max="${f.maxNum}"` : ''} ${a}>`);
-    case 'datetime': return wrap(`<input class="input input-dt" type="datetime-local" value="${esc(v || '')}" ${a}>`);
+    case 'datetime': {
+      const dv = (v || '').slice(0, 10), tv = (v || '').slice(11, 16);
+      const da = `data-key="${f.key}" aria-describedby="${desc}" ${err ? 'aria-invalid="true"' : ''} ${f.required ? 'aria-required="true"' : ''} ${f.readonly ? 'disabled' : ''}`;
+      return `<fieldset class="field field-dt${err ? ' has-error' : ''}" data-field="${f.key}"><legend>${esc(f.label)}${req}</legend>
+        <div class="dt-row">
+          <div class="dt-part"><label class="dt-l" for="${id}">Date</label><input class="input" type="date" id="${id}" data-part="date" value="${esc(dv)}" ${da}></div>
+          <div class="dt-part"><label class="dt-l" for="${id}-t">Time</label><input class="input" type="time" id="${id}-t" data-part="time" value="${esc(tv)}" ${da}></div>
+        </div>${hint}${errP}</fieldset>`;
+    }
     case 'color': return wrap(`<div class="color-row"><input type="color" class="swatch" value="${esc(v)}" data-key="${f.key}" aria-label="${esc(f.label)} picker" tabindex="-1"><input class="input input-hex" type="text" value="${esc(v)}" spellcheck="false" ${a}></div>`);
     case 'select': case 'segment': {
       const opts = f.type === 'segment' ? segmentOptions() : (typeof f.options === 'function' ? f.options(data) : f.options);
@@ -2198,26 +2215,26 @@ function renderField(f, data, err, prefix) {
       return `<div class="field field-switch" data-field="${f.key}"><span class="sw-txt"><span class="sw-l" id="${id}-l">${esc(f.label)}</span>${f.hint ? `<span class="hint" id="${id}-hint">${esc(f.hint)}</span>` : ''}</span>
         <button type="button" class="switch" role="switch" id="${id}" data-key="${f.key}" aria-checked="${!!v}" aria-labelledby="${id}-l" ${f.hint ? `aria-describedby="${id}-hint"` : ''} ${f.readonly ? 'disabled' : ''}><span class="track" aria-hidden="true"></span></button></div>`;
     case 'radio':
-      return `<fieldset class="field field-radio${err ? ' has-error' : ''}" data-field="${f.key}"><legend>${esc(f.label)}${req}</legend>${hint}<div class="radio-row">${f.options.map(([ov, ol]) =>
-        `<label class="radio-card" for="${id}-${ov}"><input type="radio" name="${id}" id="${id}-${ov}" value="${esc(ov)}" data-key="${f.key}" ${ov === v ? 'checked' : ''} ${f.readonly ? 'disabled' : ''}><span>${esc(ol)}</span></label>`).join('')}</div>${errP}</fieldset>`;
+      return `<fieldset class="field field-radio${err ? ' has-error' : ''}" data-field="${f.key}"><legend>${esc(f.label)}${req}</legend><div class="radio-row">${f.options.map(([ov, ol]) =>
+        `<label class="radio-card" for="${id}-${ov}"><input type="radio" name="${id}" id="${id}-${ov}" value="${esc(ov)}" data-key="${f.key}" ${ov === (v == null ? f.default : v) ? 'checked' : ''} ${f.readonly ? 'disabled' : ''}><span>${esc(ol)}</span></label>`).join('')}</div>${hint}${errP}</fieldset>`;
     case 'image':
-      return `<fieldset class="field" data-field="${f.key}"><legend>${esc(f.label)}</legend>${hint}<div class="img-grid">${['none', ...Object.keys(ART)].map(k =>
+      return `<fieldset class="field" data-field="${f.key}"><legend>${esc(f.label)}</legend><div class="img-grid">${['none', ...Object.keys(ART)].map(k =>
         `<label class="img-opt" for="${id}-${k}"><input type="radio" name="${id}" id="${id}-${k}" value="${k}" data-key="${f.key}" ${k === (v || 'none') ? 'checked' : ''} ${f.readonly ? 'disabled' : ''}>
           <span class="img-th">${k === 'none' ? `${ic('hide_image', 24)}` : `<svg viewBox="0 0 304 144" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${ART[k]}</svg>`}</span>
-          <span class="img-l">${k === 'none' ? 'No image' : `Sample ${k.toUpperCase()}`}</span></label>`).join('')}</div></fieldset>`;
+          <span class="img-l">${k === 'none' ? 'No image' : `Sample ${k.toUpperCase()}`}</span></label>`).join('')}</div>${hint}</fieldset>`;
     case 'destination': {
       const d = v || { type: 'none', value: '' };
       const valueCtl = d.type === 'screen' ? `<select class="input" id="${id}-v" data-key="${f.key}" data-part="value" aria-label="${esc(f.label)}: app screen" aria-describedby="${id}-err">${APP_SCREENS.map(s => `<option ${s === d.value ? 'selected' : ''}>${esc(s)}</option>`).join('')}</select>`
         : d.type === 'mychart' ? `<select class="input" id="${id}-v" data-key="${f.key}" data-part="value" aria-label="${esc(f.label)}: MyChart destination" aria-describedby="${id}-err">${MYCHART_TARGETS.map(s => `<option ${s === d.value ? 'selected' : ''}>${esc(s)}</option>`).join('')}</select>`
         : d.type === 'url' ? `<input class="input" type="url" id="${id}-v" data-key="${f.key}" data-part="value" value="${esc(d.value)}" placeholder="https://" aria-label="${esc(f.label)}: web address" aria-describedby="${id}-err" ${err ? 'aria-invalid="true"' : ''}>`
         : d.type === 'phone' ? `<input class="input" type="tel" id="${id}-v" data-key="${f.key}" data-part="value" value="${esc(d.value)}" placeholder="214-555-0100" aria-label="${esc(f.label)}: phone number" aria-describedby="${id}-err" ${err ? 'aria-invalid="true"' : ''}>` : '';
-      return `<fieldset class="field${err ? ' has-error' : ''}" data-field="${f.key}"><legend>${esc(f.label)}${req}</legend>${hint}
+      return `<fieldset class="field${err ? ' has-error' : ''}" data-field="${f.key}"><legend>${esc(f.label)}${req}</legend>
         <div class="dest-row"><select class="input" id="${id}" data-key="${f.key}" data-part="type" aria-label="${esc(f.label)}: type" data-rerender ${f.readonly ? 'disabled' : ''}>${DEST_TYPES.filter(([k]) => !f.noNone || k !== 'none').map(([k, l]) => `<option value="${k}" ${k === d.type ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select>${valueCtl}</div>
-        ${d.type === 'mychart' ? `<p class="hint">${ic('lock', 16)} Opens MyChart sign-in, then the MyChart screen. The Admin never edits MyChart content.</p>` : ''}${errP}</fieldset>`;
+        ${hint}${d.type === 'mychart' ? `<p class="hint">${ic('lock', 16)} Opens MyChart sign-in, then the MyChart screen. The Admin never edits MyChart content.</p>` : ''}${errP}</fieldset>`;
     }
     case 'rules': {
       const rules = v || [];
-      return `<fieldset class="field${err ? ' has-error' : ''}" data-field="${f.key}"><legend>${esc(f.label)}</legend>${hint}
+      return `<fieldset class="field${err ? ' has-error' : ''}" data-field="${f.key}"><legend>${esc(f.label)}</legend>
         ${rules.length ? `<ol class="rules">${rules.map((r, i) => { const A = AUDIENCE_ATTRS[r.attr]; return `<li class="rule-row">
           <span class="rule-n" aria-hidden="true">${i + 1}</span>
           <select class="input" id="${id}-a${i}" data-key="${f.key}" data-rule="${i}" data-part="attr" aria-label="Rule ${i + 1}: attribute" data-rerender ${f.readonly ? 'disabled' : ''}>${Object.entries(AUDIENCE_ATTRS).map(([k, a]) => `<option value="${k}" ${k === r.attr ? 'selected' : ''}>${esc(a.label)}</option>`).join('')}</select>
@@ -2225,7 +2242,7 @@ function renderField(f, data, err, prefix) {
           <select class="input" id="${id}-v${i}" data-key="${f.key}" data-rule="${i}" data-part="value" aria-label="Rule ${i + 1}: value" ${f.readonly ? 'disabled' : ''}>${A.values.map(o => `<option ${o === r.value ? 'selected' : ''}>${esc(o)}</option>`).join('')}</select>
           ${f.readonly ? '' : `<button type="button" class="btn btn-text btn-icon" data-rule-remove="${i}" data-key="${f.key}" aria-label="Remove rule ${i + 1}">${ic('remove_circle', 20)}</button>`}</li>`; }).join('')}</ol>`
           : `<p class="hint-line">No rules: this segment includes every app user.</p>`}
-        ${f.readonly ? '' : `<button type="button" class="btn btn-tonal" data-rule-add data-key="${f.key}" id="${id}-add">${ic('add', 20)}<span class="lbl">Add rule</span></button>`}${errP}</fieldset>`;
+        ${f.readonly ? '' : `<button type="button" class="btn btn-tonal" data-rule-add data-key="${f.key}" id="${id}-add">${ic('add', 20)}<span class="lbl">Add rule</span></button>`}${hint}${errP}</fieldset>`;
     }
     default: return wrap(`<input class="input" type="text" value="${esc(v == null ? '' : v)}" ${f.max ? `maxlength="${f.max + 20}"` : ''} ${f.placeholder ? `placeholder="${esc(f.placeholder)}"` : ''} ${a}>`);
   }
@@ -2255,10 +2272,15 @@ function applyInput(e, data, fields) {
     if (part === 'attr') { const A = AUDIENCE_ATTRS[t.value]; rules[i].op = A.ops[0]; rules[i].value = A.values[0]; }
     data[key] = rules; return part === 'attr';
   }
+  if (f.type === 'datetime') {
+    const row = t.closest('.dt-row'), d = row.querySelector('[data-part="date"]').value, tm = row.querySelector('[data-part="time"]').value;
+    data[key] = d && tm ? `${d}T${tm}` : ''; if (f.onSet) f.onSet(data); return false;
+  }
   if (f.type === 'switch') { data[key] = t.getAttribute('aria-checked') === 'true'; return !!f.rerender; }
   if (f.type === 'number') { data[key] = t.value === '' ? '' : Number(t.value); return false; }
   if (f.type === 'color') { const v = t.value.trim(); data[key] = v; const other = t.type === 'color' ? t.parentElement.querySelector('.input-hex') : t.parentElement.querySelector('.swatch'); if (/^#[0-9a-f]{6}$/i.test(v)) { other.value = v; } return false; }
   data[key] = t.value;
+  if (f.onSet) f.onSet(data);
   if (f.type === 'icon' || f.type === 'alertIcon') t.parentElement.querySelector('.icon-prev').innerHTML = ic(t.value);
   if (f.max) { const c = document.getElementById(`${t.id}-cnt`); if (c) { c.textContent = `${t.value.length} of ${f.max} characters`; c.hidden = f.type !== 'textarea' && t.value.length < f.max * .7; } }
   return !!f.rerender;
@@ -2297,6 +2319,7 @@ function validateData(fields, data, custom) {
   const errors = {};
   fields.filter(f => !f.show || f.show(data)).forEach(f => {
     const v = data[f.key];
+    if (f.required && f.type === 'datetime' && !v) { errors[f.key] = `Enter a date and a time for ${f.label.replace(/ \(.*\)$/, '').toLowerCase()}.`; return; }
     if (f.required && (v == null || v === '' || (f.type === 'destination' && v.type !== 'none' && !String(v.value || '').trim()))) { errors[f.key] = `Enter ${f.label.toLowerCase()}.`; return; }
     if (f.max && typeof v === 'string' && v.length > f.max) errors[f.key] = `${f.label} is ${v.length - f.max} characters too long. Keep it to ${f.max}.`;
     if (f.type === 'number' && v !== '' && v != null && ((f.min != null && v < f.min) || (f.maxNum != null && v > f.maxNum))) errors[f.key] = `${f.label} must be between ${f.min} and ${f.maxNum}.`;
@@ -3654,8 +3677,10 @@ function defineCollection(cfg) {
 const TZ_OPTIONS = [['America/Chicago', 'Central Time – Dallas (default)'], ['America/New_York', 'Eastern Time'], ['America/Denver', 'Mountain Time'], ['America/Los_Angeles', 'Pacific Time']];
 const scheduleFields = [
   { key: 'audience', label: 'Audience', type: 'segment', hint: 'Who sees it. Segments are managed in Audience management.' },
-  { key: 'start', label: 'Starts', type: 'datetime', required: true, wide: false },
-  { key: 'end', label: 'Ends', type: 'datetime', required: true, wide: false },
+  { key: 'startMode', label: 'Starts', type: 'radio', options: [['now', 'Instant'], ['scheduled', 'Scheduled']], default: 'scheduled', rerender: true,
+    hint: 'Instant starts it as soon as it’s published.', onSet: d => { if (d.startMode === 'now') d.start = nowLocal().slice(0, 16); } },
+  { key: 'start', label: 'Start', type: 'datetime', required: true, show: d => d.startMode !== 'now' },
+  { key: 'end', label: 'End', type: 'datetime', required: true },
   { key: 'timeZone', label: 'Time zone', type: 'select', options: TZ_OPTIONS, hint: 'Pending confirmation: Central is the assumed default.' }
 ];
 const windowCheck = d => d.start && d.end && d.end <= d.start ? { end: 'The end must be after the start.' } : {};
@@ -4300,8 +4325,8 @@ const NOTE_SECTIONS = [
     { key: 'destination', label: 'Opens', type: 'destination', hint: 'Where the app goes when the notification is tapped.' }] },
   { title: 'Delivery', fields: [
     { key: 'sendTo', label: 'Send to', type: 'segment' },
-    { key: 'timing', label: 'When', type: 'radio', options: [['now', 'Immediately'], ['scheduled', 'At a scheduled time']], rerender: true },
-    { key: 'scheduledAt', label: 'Scheduled date and time (Central Time)', type: 'datetime', required: true, show: d => d.timing === 'scheduled' }] }
+    { key: 'timing', label: 'Send', type: 'radio', options: [['now', 'Instant'], ['scheduled', 'Scheduled']], rerender: true },
+    { key: 'scheduledAt', label: 'Send on (Central Time)', type: 'datetime', required: true, show: d => d.timing === 'scheduled' }] }
 ];
 const noteFields = fields(NOTE_SECTIONS);
 const noteValidate = d => (d.timing === 'scheduled' && d.scheduledAt && d.scheduledAt <= nowLocal() ? { scheduledAt: 'Choose a time in the future.' } : {});
@@ -4330,7 +4355,7 @@ BUILT_PAGES.notifications = {
       columns: [
         { key: 'title', label: 'Title', sortable: true, sortValue: n => n.title.toLowerCase(), render: n => `<a class="row-link" href="#notifications-${n.id}">${esc(n.title)}</a>` },
         { key: 'sendTo', label: 'Audience', render: n => esc(segmentName(n.sendTo)) },
-        { key: 'when', label: 'Scheduled', sortable: true, sortValue: n => n.scheduledAt || '', render: n => n.timing === 'now' && !n.sentAt ? 'Immediately' : `<span class="nowrap">${esc(fmtLocal(n.scheduledAt))}</span>` },
+        { key: 'when', label: 'Scheduled', sortable: true, sortValue: n => n.scheduledAt || '', render: n => n.timing === 'now' && !n.sentAt ? 'Instant' : `<span class="nowrap">${esc(fmtLocal(n.scheduledAt))}</span>` },
         { key: 'created', label: 'Created', sortable: true, sortValue: n => n.createdAt, render: n => `<span class="nowrap">${esc(fmtDate(n.createdAt))}</span>` },
         { key: 'status', label: 'Status', sortable: true, sortValue: n => n.status, render: n => noteBadge(n.status) }]
     });
