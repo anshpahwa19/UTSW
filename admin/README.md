@@ -6,6 +6,8 @@ The UTSW MyCare 2.0 Admin Portal. All 12 modules from `handoff/admin-portal/BRIE
 
 ## Build
 
+`python3 build.py` writes two files from the same source: `admin-portal.html` (the full portal) and `dashboard.html` (Dashboard only: opens signed in as the sample Super Admin; every other page, link and user-menu action is locked and says so).
+
 ```
 cd admin
 python3 build.py

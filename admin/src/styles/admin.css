@@ -876,3 +876,10 @@ label.btn:has(+ input:focus-visible){box-shadow:var(--focus)}
 @container main (max-width: 420px){ .dt-row{grid-template-columns:minmax(0,1fr)} }
 .wf-status{margin-bottom:var(--s3)}
 .lc-status .badge{flex:none}
+/* Dashboard-only build: locked links read as unavailable */
+.dash-only a.locked,.dash-only .locked{cursor:not-allowed}
+.dash-only .sidebar a.locked,.dash-only .sidebar .nav-head.locked,.dash-only .ph-actions a.locked{opacity:.55}
+.dash-only .sidebar .nav-head.locked:hover{background:transparent}
+.dash-only #main a.locked{color:var(--ink-2); text-decoration:none}
+.dash-only .sidebar a.locked:hover{background:transparent}
+.dash-note{margin-top:var(--s3)}

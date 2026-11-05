@@ -67,7 +67,8 @@ pv_js = pv_js.replace("__LOGO_ICON__", logo_icon).replace("__LOGO_REVERSED__", l
 pv_html = pv_html.replace("__LOGO_REVERSED__", logo_rev)
 js = "\n".join(f"/* ===== src/{f} ===== */\n{code}" for f, code in js_parts.items())
 js = (js.replace("__LOGO_REVERSED__", logo_rev).replace("__LOGO_HORIZONTAL__", logo_hor))
-consts = (f"const ICON_FONT_URL = {json.dumps(icon_url)};\n"
+consts = ("const DASHBOARD_ONLY = __DASHBOARD_ONLY__;\n"
+          f"const ICON_FONT_URL = {json.dumps(icon_url)};\n"
           f"const PREVIEW_CSS = {json.dumps(pv_css)};\n"
           f"const PREVIEW_HTML = {json.dumps(pv_html)};\n"
           f"const PREVIEW_JS = {json.dumps(pv_js)};\n")
@@ -79,6 +80,9 @@ for name, text in [*[(f, read(f)) for f in CSS], ("preview/mobile.css", pv_css)]
     body = re.sub(r"/\*.*?\*/", "", text, flags=re.S)
     assert body.count("{") == body.count("}"), f"unbalanced braces in {name}: {body.count('{')} open, {body.count('}')} close"
 page = read("index.html").replace("__ICON_FONT_URL__", icon_url.replace("&", "&amp;")).replace("/*__CSS__*/", css).replace("/*__JS__*/", js)
-(here / "admin-portal.html").write_text(page, encoding="utf-8")
+(here / "admin-portal.html").write_text(page.replace("__DASHBOARD_ONLY__", "false"), encoding="utf-8")
+# Dashboard-only build: same code, every other page locked
+dash = page.replace("__DASHBOARD_ONLY__", "true").replace("<title>MyCare Admin</title>", "<title>MyCare Admin Dashboard</title>", 1)
+(here / "dashboard.html").write_text(dash, encoding="utf-8")
 print(f"{len(FILES)} JS files, {len(names)} glyphs in the icon subset, {len(page) // 1024} KB")
 print("glyphs:", ",".join(names))
