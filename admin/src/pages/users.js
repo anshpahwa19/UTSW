@@ -1,4 +1,4 @@
-/* ---------- User management: list, create, details ----------
+/* ---------- Admin management (admin users): list, create, details ----------
    Invitation and activation follow the approved identity provider (§10.16); here an invite is simulated. */
 const USER_STATUS = { active: ['live', 'Active'], invited: ['review', 'Invited'], deactivated: ['hidden', 'Deactivated'] };
 const userBadge = s => badge(USER_STATUS[s][0], USER_STATUS[s][1]);
@@ -20,7 +20,7 @@ const roleHelp = `<div class="role-help">${Object.entries(ROLES).map(([k, r]) =>
 BUILT_PAGES.users = {
   async render(main) {
     const canManage = can(Session.role(), 'users', 'manage');
-    main.innerHTML = `<div class="page">${pageHead({ crumbs: [['User management', null]], title: 'All users', lede: 'People who can sign in to MyCare Admin, with their role and account status.',
+    main.innerHTML = `<div class="page">${pageHead({ crumbs: [['Admin management', null]], title: 'All users', lede: 'People who can sign in to MyCare Admin, with their role and account status.',
       actions: canManage ? `<a class="btn btn-primary" href="#users-new">${ic('person_add', 20)}<span class="lbl">Create user</span></a>` : '' })}<div id="us-body">${loadingState('Loading users')}</div></div>`;
     let list;
     try { list = await UserService.list(); } catch (err) { $('#us-body').innerHTML = errorState(err.message); $('[data-retry]').onclick = () => this.render(main); return; }
@@ -46,7 +46,7 @@ BUILT_PAGES.users = {
 BUILT_PAGES['users-new'] = {
   render(main) {
     const d = { first: '', last: '', email: '', role: 'marketing' }; let errors = {};
-    main.innerHTML = `<div class="page">${pageHead({ crumbs: [['User management', null], ['All users', 'users']], title: 'Create user', lede: 'The person gets an invitation (simulated) and signs in with UTSW SSO and MFA.' })}
+    main.innerHTML = `<div class="page">${pageHead({ crumbs: [['Admin management', null], ['All users', 'users']], title: 'Create user', lede: 'The person gets an invitation (simulated) and signs in with UTSW SSO and MFA.' })}
       <div class="ed-grid"><section class="card"><div class="card-head"><h2>New user</h2></div><form class="card-body form" id="un" novalidate></form></section>
       <aside class="ed-side"><section class="card"><div class="card-body"><h2 class="side-h">Roles</h2>${roleHelp}</div></section></aside></div></div>`;
     const form = $('#un');
@@ -74,12 +74,12 @@ BUILT_PAGES['users-:id'] = {
     main.innerHTML = `<div class="page" id="ud">${loadingState('Loading the user')}</div>`;
     let u;
     try { u = await UserService.get(ctx.params.id); }
-    catch (err) { $('#ud').innerHTML = `${pageHead({ crumbs: [['User management', null], ['All users', 'users']], title: 'User not found' })}${errorState(err.message)}`; $('[data-retry]').onclick = () => this.render(main, ctx); return; }
+    catch (err) { $('#ud').innerHTML = `${pageHead({ crumbs: [['Admin management', null], ['All users', 'users']], title: 'User not found' })}${errorState(err.message)}`; $('[data-retry]').onclick = () => this.render(main, ctx); return; }
     const me = u.id === Session.current().userId, manage = can(Session.role(), 'users', 'manage');
     const d = { first: u.first, last: u.last, email: u.email, role: u.role }; let errors = {};
     const dirty = () => d.first !== u.first || d.last !== u.last || d.email !== u.email || d.role !== u.role;
     const activity = DB.db.audit.filter(a => a.by === u.id || a.targetId === u.id).sort((a, b) => b.at.localeCompare(a.at)).slice(0, 8);
-    $('#ud').innerHTML = `${pageHead({ crumbs: [['User management', null], ['All users', 'users']], title: fullName(u), badges: userBadge(u.status) })}
+    $('#ud').innerHTML = `${pageHead({ crumbs: [['Admin management', null], ['All users', 'users']], title: fullName(u), badges: userBadge(u.status) })}
       <div class="ed-grid">
         <div class="ed-main">
           <section class="card"><div class="card-head"><h2>Profile and role</h2>${manage ? '' : `<div class="card-actions">${badge('fixed', 'View only')}</div>`}</div><form class="card-body form" id="ud-form" novalidate></form></section>

@@ -11,7 +11,7 @@ const NAV = [
     { route: 'analytics-care', label: 'Care and wayfinding', area: 'analytics' },
     { route: 'analytics-notifications', label: 'Notifications', area: 'analytics' }
   ] },
-  { id: 'users', label: 'User management', icon: 'manage_accounts', items: [
+  { id: 'users', label: 'Admin management', icon: 'manage_accounts', items: [
     { route: 'users', label: 'All users', area: 'users', children: [['users-new', 'Create user'], ['users-:id', 'User details']] }
   ] },
   { id: 'home', label: 'Home Screen', icon: 'smartphone', tabs: true, items: [
