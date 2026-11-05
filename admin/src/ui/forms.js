@@ -25,7 +25,7 @@ function renderField(f, data, err, prefix) {
     }
     case 'icon': case 'alertIcon': {
       const list = f.type === 'icon' ? APPROVED_ICONS : ALERT_ICONS;
-      return wrap(`<div class="icon-row"><span class="icon-prev" aria-hidden="true">${ic(v || 'help')}</span><select class="input" ${a}>${list.map(i => `<option value="${i.glyph}" ${i.glyph === v ? 'selected' : ''}>${esc(i.label)}</option>`).join('')}</select></div>`);
+      return wrap(`<div class="icon-row"><span class="icon-prev" aria-hidden="true">${ic(v || 'help')}</span><select class="input" data-dd-icons ${a}>${list.map(i => `<option value="${i.glyph}" ${i.glyph === v ? 'selected' : ''}>${esc(i.label)}</option>`).join('')}</select></div>`);
     }
     case 'switch':
       return `<div class="field field-switch" data-field="${f.key}"><span class="sw-txt"><span class="sw-l" id="${id}-l">${esc(f.label)}</span>${f.hint ? `<span class="hint" id="${id}-hint">${esc(f.hint)}</span>` : ''}</span>

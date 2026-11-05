@@ -48,6 +48,8 @@ Confirmations list the exact changes, and leaving with unsaved edits asks first.
 
 Tables: every table shows 8 rows a page, with numbered pages once it has more than 8. Filters sit behind one Filters button (the count shows how many are applied); the panel holds all of a table's filters and applies them together with Apply, Escape or a click outside discards, and applied filters show as removable chips above the table.
 
+Dropdowns: every select uses one dropdown design (ui/select.js). The native select stays in the page, hidden, as the source of truth for forms and validation; a button shows the choice and opens a listbox in the top layer, so tables, cards and dialogs never clip it. Table filters are multi-select (checkboxes, an All row that clears, values within one filter combine with OR, filters combine with AND). Form fields stay single-select, since each holds one value. Keyboard: Down, Enter or Space opens; arrows, Home, End and typing move; Enter or Space picks; Escape closes.
+
 Theme: Light, Dark or System from the header (and on the sign-in screen). It is remembered on this device. Every color comes from the `designs/guest` tokens; dark values are the guest app's own dark palette.
 
 ## Stack decision
@@ -64,7 +66,7 @@ admin/
     styles/tokens.css     designs/guest tokens (lines 11–61, unchanged) + admin layout tokens + guest dark values
     styles/admin.css      components and layouts
     app/                  util, permissions (one matrix object), session, nav (IA), shell (header, sidebar, theme, user menu), router, boot
-    ui/                   components (button, badge, table, modal, toast…), forms, charts, lifecycle, preview
+    ui/                   components (button, badge, table, modal, toast…), forms, select (dropdown), charts, lifecycle, preview
     services/services.js  MOCK services: config + lifecycle, users, notifications, wayfinding, zero results, analytics, audit, platform, settings
     mock/seed.js          MOCK fixtures, seeded from designs/guest/src.html (line numbers in comments)
     preview/              mobile.css, mobile.html, mobile.js – designs/guest home, drawer, sign-in choice and sheet markup, copied

@@ -128,7 +128,7 @@ function dataTable(outer, cfg) {
         <button type="button" class="tbl-fbtn" id="${id}-fbtn" aria-expanded="false" aria-controls="${id}-fp" aria-label="Filters" title="Filters">${ic('filter_list', 20)}<span class="tbl-fcount" hidden></span></button>
         <div class="tbl-fpanel" id="${id}-fp" role="dialog" aria-labelledby="${id}-fp-h" hidden>
           <h3 class="fp-h" id="${id}-fp-h">Filter ${esc(cfg.caption.toLowerCase())}</h3>
-          <div class="fp-body">${filters.map(f => `<div class="field"><label class="label" for="${id}-f-${f.key}">${esc(f.label)}</label><select class="input" id="${id}-f-${f.key}" data-filter="${f.key}"><option value="">All</option>${f.options.map(([v, l]) => `<option value="${esc(v)}">${esc(l)}</option>`).join('')}</select></div>`).join('')}</div>
+          <div class="fp-body">${filters.map(f => `<div class="field"><label class="label" for="${id}-f-${f.key}">${esc(f.label)}</label><select class="input" id="${id}-f-${f.key}" data-filter="${f.key}" multiple data-all-label="All">${f.options.map(([v, l]) => `<option value="${esc(v)}">${esc(l)}</option>`).join('')}</select></div>`).join('')}</div>
           <div class="fp-foot">${btn({ label: 'Clear all', variant: 'text', attrs: 'data-fp="clear"' })}${btn({ label: 'Apply', variant: 'primary', attrs: 'data-fp="apply"' })}</div>
         </div></div>` : ''}
       <p class="tbl-count" id="${id}-count" role="status"></p>
@@ -144,7 +144,7 @@ function dataTable(outer, cfg) {
   const visible = () => {
     const q = st.q.trim().toLowerCase();
     let rows = st.rows.filter(r => (!q || cfg.searchText(r).toLowerCase().includes(q)) &&
-      filters.every(f => !st.filters[f.key] || f.match(r, st.filters[f.key])));
+      filters.every(f => !(st.filters[f.key] || []).length || st.filters[f.key].some(v => f.match(r, v))));
     if (st.sort) {
       const col = cfg.columns.find(c => c.key === st.sort.key), v = col.sortValue || (r => r[col.key]);
       rows = [...rows].sort((a, b) => (v(a) > v(b) ? 1 : v(a) < v(b) ? -1 : 0) * (st.sort.dir === 'asc' ? 1 : -1));
@@ -177,7 +177,7 @@ function dataTable(outer, cfg) {
     }
     chips();
     tbody.innerHTML = rows.map(r => `<tr>${cfg.columns.map((c, i) => i === 0 ? `<th scope="row" class="${c.cls || ''}">${c.render(r)}</th>` : `<td class="${c.key === 'acts' || c.key === 'v' || c.key === 'details' ? 'acts' : c.cls || ''}">${c.render(r)}</td>`).join('')}</tr>`).join('');
-    const filtered = st.q || Object.values(st.filters).some(Boolean);
+    const filtered = st.q || Object.values(st.filters).some(v => v && v.length);
     $(`#${id}-count`, host).textContent = `${plural(all.length, cfg.noun || 'row')}${filtered ? ` of ${st.rows.length}` : ''}`;
     wrap.hidden = !all.length; empty.hidden = !!all.length;
     if (!all.length) empty.innerHTML = filtered
@@ -191,37 +191,38 @@ function dataTable(outer, cfg) {
   /* Applied filters as chips, and the count on the Filters button */
   function chips() {
     if (!filters.length) return;
-    const on = filters.filter(f => st.filters[f.key]);
+    const on = filters.flatMap(f => (st.filters[f.key] || []).map(v => [f, v]));
     const c = $('.tbl-chips', host), n = $('.tbl-fcount', host), b = $(`#${id}-fbtn`, host);
     n.hidden = !on.length; n.textContent = on.length;
     b.setAttribute('aria-label', on.length ? `Filters, ${on.length} applied` : 'Filters'); b.classList.toggle('on', !!on.length);
     c.hidden = !on.length;
-    c.innerHTML = on.map(f => `<button type="button" class="tbl-chip" data-chip="${f.key}" aria-label="Remove filter ${esc(f.label)}: ${esc(fLabel(f, st.filters[f.key]))}"><span><span class="chip-k">${esc(f.label)}:</span> ${esc(fLabel(f, st.filters[f.key]))}</span>${ic('close', 16)}</button>`).join('')
+    c.innerHTML = on.map(([f, v]) => `<button type="button" class="tbl-chip" data-chip="${f.key}" data-v="${esc(v)}" aria-label="Remove filter ${esc(f.label)}: ${esc(fLabel(f, v))}"><span><span class="chip-k">${esc(f.label)}:</span> ${esc(fLabel(f, v))}</span>${ic('close', 16)}</button>`).join('')
       + (on.length > 1 ? `<button type="button" class="text-link tbl-chip-clear" data-clear>Clear all</button>` : '');
   }
   const panel = () => $(`#${id}-fp`, host);
   function openPanel() {
     const fp = panel(); if (!fp) return;
-    filters.forEach(f => { $(`#${id}-f-${f.key}`, host).value = st.filters[f.key] || ''; });
+    filters.forEach(f => { const s = $(`#${id}-f-${f.key}`, host); [...s.options].forEach(o => { o.selected = (st.filters[f.key] || []).includes(o.value); }); ddSync(s); });
     fp.hidden = false; $(`#${id}-fbtn`, host).setAttribute('aria-expanded', 'true');
-    $('select', fp).focus();
-    document.addEventListener('pointerdown', openPanel.outside = e => { if (!host.isConnected) return document.removeEventListener('pointerdown', openPanel.outside, true); if (!e.target.closest('.tbl-fwrap') || !host.contains(e.target)) closePanel(false); }, true);
+    ($('.dd-btn', fp) || $('select', fp)).focus();
+    document.addEventListener('pointerdown', openPanel.outside = e => { if (!host.isConnected) return document.removeEventListener('pointerdown', openPanel.outside, true); if (e.target.closest('.dd-list')) return; if (!e.target.closest('.tbl-fwrap') || !host.contains(e.target)) closePanel(false); }, true);
   }
   function closePanel(focusBtn) {
     const fp = panel(); if (!fp || fp.hidden) return;
+    if (ddOpen && fp.contains(ddOpen.sel)) ddClose();
     fp.hidden = true; $(`#${id}-fbtn`, host).setAttribute('aria-expanded', 'false');
     document.removeEventListener('pointerdown', openPanel.outside, true);
     if (focusBtn) $(`#${id}-fbtn`, host).focus();
   }
   function applyFilters(next) {
     st.filters = next; st.page = 0; body();
-    const n = Object.values(next).filter(Boolean).length, count = $(`#${id}-count`, host).textContent;
+    const n = Object.values(next).reduce((a, v) => a + (v ? v.length : 0), 0), count = $(`#${id}-count`, host).textContent;
     announce(`${n ? plural(n, 'filter') + ' applied' : 'Filters cleared'}. ${count}.`);
   }
   host.addEventListener('keydown', e => {
     if (e.key === 'Escape' && panel() && !panel().hidden) { e.preventDefault(); e.stopPropagation(); closePanel(true); }
     if (e.key === 'Tab' && panel() && !panel().hidden) {   /* keep Tab inside the open panel */
-      const f = $$('select,button', panel()), first = f[0], last = f[f.length - 1];
+      const f = $$('button', panel()).filter(x => !x.disabled), first = f[0], last = f[f.length - 1];
       if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
       else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
     }
@@ -230,13 +231,14 @@ function dataTable(outer, cfg) {
     if (e.target.closest(`#${id}-fbtn`)) { panel().hidden ? openPanel() : closePanel(true); return; }
     const fp = e.target.closest('[data-fp]');
     if (fp) {
-      if (fp.dataset.fp === 'clear') { $$('[data-filter]', host).forEach(s => { s.value = ''; }); applyFilters({}); }
-      else applyFilters(Object.fromEntries($$('[data-filter]', host).map(s => [s.dataset.filter, s.value]).filter(([, v]) => v)));
+      if (fp.dataset.fp === 'clear') { $$('[data-filter]', host).forEach(s => { [...s.options].forEach(o => { o.selected = false; }); ddSync(s); }); applyFilters({}); }
+      else applyFilters(Object.fromEntries($$('[data-filter]', host).map(s => [s.dataset.filter, [...s.selectedOptions].map(o => o.value)]).filter(([, v]) => v.length)));
       closePanel(true); return;
     }
     const chip = e.target.closest('[data-chip]');
     if (chip) {
-      const k = chip.dataset.chip, i = filters.findIndex(f => f.key === k), next = { ...st.filters }; delete next[k];
+      const k = chip.dataset.chip, i = $$('[data-chip]', host).indexOf(chip), next = { ...st.filters };
+      next[k] = (next[k] || []).filter(v => v !== chip.dataset.v); if (!next[k].length) delete next[k];
       applyFilters(next);
       const left = $$('[data-chip]', host); (left[Math.min(i, left.length - 1)] || $(`#${id}-fbtn`, host)).focus(); return;
     }
@@ -256,11 +258,11 @@ function dataTable(outer, cfg) {
       announce(`Sorted by ${s.textContent.trim()}, ${st.sort.dir === 'asc' ? 'ascending' : 'descending'}`);
     }
     if (e.target.closest('[data-clear]')) {
-      st.q = ''; st.filters = {}; st.page = 0; $(`#${id}-q`, host).value = ''; $$('[data-filter]', host).forEach(s => { s.value = ''; });
+      st.q = ''; st.filters = {}; st.page = 0; $(`#${id}-q`, host).value = ''; $$('[data-filter]', host).forEach(s => { [...s.options].forEach(o => { o.selected = false; }); ddSync(s); });
       body(); $(`#${id}-q`, host).focus();
     }
   });
-  if (cfg.initialFilters) Object.assign(st.filters, cfg.initialFilters);
+  if (cfg.initialFilters) Object.entries(cfg.initialFilters).forEach(([k, v]) => { st.filters[k] = [].concat(v); });
   head(); body();
   return { update(rows) { st.rows = rows; body(); } };
 }

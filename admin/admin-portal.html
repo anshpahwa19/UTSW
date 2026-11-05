@@ -249,6 +249,41 @@ select.input{appearance:none; -webkit-appearance:none; padding-right:40px; curso
   background-image:linear-gradient(45deg, transparent 50%, var(--ink-2) 50%), linear-gradient(135deg, var(--ink-2) 50%, transparent 50%);
   background-position:calc(100% - 20px) 50%, calc(100% - 15px) 50%; background-size:5px 5px, 5px 5px; background-repeat:no-repeat}
 select.input:disabled{cursor:not-allowed}
+/* ===================== Dropdown (custom listbox over a hidden native select) ===================== */
+.dd-native{position:absolute!important; width:1px!important; height:1px!important; min-height:0!important; padding:0!important; margin:-1px!important; border:0!important; overflow:hidden; clip-path:inset(50%); opacity:0; pointer-events:none}
+.dd-btn{display:flex; align-items:center; gap:var(--s2); text-align:left; cursor:pointer; padding-right:var(--s2)}
+.dd-btn .dd-v{flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.dd-btn .dd-chev{flex:none; color:var(--ink-2); transition:transform .15s ease}
+.dd-btn[aria-expanded="true"] .dd-chev{transform:rotate(180deg); color:var(--blue)}
+.dd-btn[aria-expanded="true"]{box-shadow:inset 0 0 0 2px var(--blue)}
+.dd-btn:hover:not(:disabled){box-shadow:inset 0 0 0 1px var(--blue)}
+.dd-btn[aria-expanded="true"]:hover{box-shadow:inset 0 0 0 2px var(--blue)}
+.dd-btn:focus-visible{box-shadow:inset 0 0 0 2px var(--blue), var(--focus)}
+.dd-btn:disabled{cursor:not-allowed; color:var(--ink-2); background:var(--bg)}
+.dd-btn:disabled .dd-chev{opacity:.5}
+.dd-btn.dd-placeholder .dd-v{color:var(--ink-2)}
+.dd-btn.dd-on{box-shadow:inset 0 0 0 1px var(--blue); background:var(--tint)}
+.dd-btn.dd-on .dd-v{color:var(--blue); font-weight:600}
+.dd-btn .dd-lead{display:grid; place-items:center; color:var(--blue)}
+.has-error .dd-btn,.dd-btn[aria-invalid="true"]{box-shadow:inset 0 0 0 2px var(--alert-ink)}
+.dd-list{position:fixed; inset:auto; margin:0; z-index:1000; overflow:auto; overscroll-behavior:contain; padding:var(--s1); border:0; border-radius:var(--r-md); background:var(--surface); color:var(--ink); box-shadow:0 0 0 1px var(--line-strong), 0 18px 40px -14px rgba(0,30,60,.45); font-size:var(--t16)}
+.dd-list:popover-open{display:block}
+.dd-opt{display:flex; align-items:center; gap:var(--s2); min-height:40px; padding:var(--s2) var(--s3); border-radius:var(--r-sm); cursor:pointer; line-height:1.3}
+.dd-opt .dd-t{flex:1; min-width:0}
+.dd-opt.active{background:var(--tint)}
+.dd-opt.active{box-shadow:inset 0 0 0 1px var(--blue)}
+.dd-opt[aria-selected="true"]{color:var(--blue); font-weight:600}
+.dd-opt[aria-disabled="true"]{color:var(--ink-2); cursor:default}
+.dd-tick{display:grid; color:var(--blue); visibility:hidden}
+.dd-opt[aria-selected="true"] .dd-tick{visibility:visible}
+.dd-oic{display:grid; place-items:center; width:28px; height:28px; border-radius:50%; background:var(--tint); color:var(--blue)}
+/* Multi-select: checkboxes; "All" separated from the options */
+.dd-box{flex:none; width:20px; height:20px; display:grid; place-items:center; border-radius:6px; box-shadow:inset 0 0 0 2px var(--line-strong); color:transparent; background:var(--surface)}
+.dd-opt[aria-selected="true"] .dd-box{background:var(--ctl); box-shadow:none; color:#FFFFFF}
+.dd-all{margin-bottom:var(--s1)}
+.dd-all::after{content:""}
+.dd-list[aria-multiselectable] .dd-all{border-bottom:1px solid var(--line); border-radius:var(--r-sm) var(--r-sm) 0 0; padding-bottom:var(--s2)}
+@media (prefers-reduced-motion: reduce){ .dd-btn .dd-chev{transition:none} }
 .input:focus-visible{box-shadow:inset 0 0 0 2px var(--blue), var(--focus)}
 .has-error .input{box-shadow:inset 0 0 0 2px var(--alert-ink)}
 .err{display:flex; align-items:center; gap:var(--s1); color:var(--alert-ink); font-size:var(--t14); font-weight:600}
@@ -630,7 +665,7 @@ fieldset.field legend{font-weight:600; font-size:var(--t14); padding:0; margin-b
 .rules{list-style:none; margin:0 0 var(--s3); padding:0; display:grid; gap:var(--s2)}
 .rule-row{display:grid; grid-template-columns:auto minmax(0,1.4fr) minmax(0,.8fr) minmax(0,1fr) auto; gap:var(--s2); align-items:center; padding:var(--s2); border-radius:var(--r-md); background:var(--bg); box-shadow:inset 0 0 0 1px var(--line)}
 .rule-n{width:24px; height:24px; border-radius:50%; display:grid; place-items:center; background:var(--tint); color:var(--blue); font-size:var(--t12); font-weight:700}
-@container main (max-width: 700px){ .rule-row{grid-template-columns:auto minmax(0,1fr) auto} .rule-row select{grid-column:2} }
+@container main (max-width: 700px){ .rule-row{grid-template-columns:auto minmax(0,1fr) auto} .rule-row .dd-btn{grid-column:2} }
 .chips-inline{display:flex; flex-wrap:wrap; gap:var(--s1)}
 .tagchip{display:inline-block; padding:0 var(--s2); border-radius:var(--r-pill); background:var(--tint); color:var(--ink); font-size:var(--t12); line-height:22px}
 .tester-out{margin-top:var(--s3); display:grid; gap:var(--s2); justify-items:start}
@@ -877,6 +912,7 @@ a.db-chip:hover{background:rgba(255,255,255,.2)}
 .db-legend li{display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:var(--s2); align-items:center; font-size:var(--t14)}
 .db-legend b{font-size:var(--t18); font-variant-numeric:tabular-nums}
 .key{width:12px; height:12px; border-radius:4px; display:inline-block}
+.icon-row:has(.dd-btn) .icon-prev{display:none}
 
 </style>
 <div id="app" lang="en"></div>
@@ -1892,7 +1928,7 @@ function dataTable(outer, cfg) {
         <button type="button" class="tbl-fbtn" id="${id}-fbtn" aria-expanded="false" aria-controls="${id}-fp" aria-label="Filters" title="Filters">${ic('filter_list', 20)}<span class="tbl-fcount" hidden></span></button>
         <div class="tbl-fpanel" id="${id}-fp" role="dialog" aria-labelledby="${id}-fp-h" hidden>
           <h3 class="fp-h" id="${id}-fp-h">Filter ${esc(cfg.caption.toLowerCase())}</h3>
-          <div class="fp-body">${filters.map(f => `<div class="field"><label class="label" for="${id}-f-${f.key}">${esc(f.label)}</label><select class="input" id="${id}-f-${f.key}" data-filter="${f.key}"><option value="">All</option>${f.options.map(([v, l]) => `<option value="${esc(v)}">${esc(l)}</option>`).join('')}</select></div>`).join('')}</div>
+          <div class="fp-body">${filters.map(f => `<div class="field"><label class="label" for="${id}-f-${f.key}">${esc(f.label)}</label><select class="input" id="${id}-f-${f.key}" data-filter="${f.key}" multiple data-all-label="All">${f.options.map(([v, l]) => `<option value="${esc(v)}">${esc(l)}</option>`).join('')}</select></div>`).join('')}</div>
           <div class="fp-foot">${btn({ label: 'Clear all', variant: 'text', attrs: 'data-fp="clear"' })}${btn({ label: 'Apply', variant: 'primary', attrs: 'data-fp="apply"' })}</div>
         </div></div>` : ''}
       <p class="tbl-count" id="${id}-count" role="status"></p>
@@ -1908,7 +1944,7 @@ function dataTable(outer, cfg) {
   const visible = () => {
     const q = st.q.trim().toLowerCase();
     let rows = st.rows.filter(r => (!q || cfg.searchText(r).toLowerCase().includes(q)) &&
-      filters.every(f => !st.filters[f.key] || f.match(r, st.filters[f.key])));
+      filters.every(f => !(st.filters[f.key] || []).length || st.filters[f.key].some(v => f.match(r, v))));
     if (st.sort) {
       const col = cfg.columns.find(c => c.key === st.sort.key), v = col.sortValue || (r => r[col.key]);
       rows = [...rows].sort((a, b) => (v(a) > v(b) ? 1 : v(a) < v(b) ? -1 : 0) * (st.sort.dir === 'asc' ? 1 : -1));
@@ -1941,7 +1977,7 @@ function dataTable(outer, cfg) {
     }
     chips();
     tbody.innerHTML = rows.map(r => `<tr>${cfg.columns.map((c, i) => i === 0 ? `<th scope="row" class="${c.cls || ''}">${c.render(r)}</th>` : `<td class="${c.key === 'acts' || c.key === 'v' || c.key === 'details' ? 'acts' : c.cls || ''}">${c.render(r)}</td>`).join('')}</tr>`).join('');
-    const filtered = st.q || Object.values(st.filters).some(Boolean);
+    const filtered = st.q || Object.values(st.filters).some(v => v && v.length);
     $(`#${id}-count`, host).textContent = `${plural(all.length, cfg.noun || 'row')}${filtered ? ` of ${st.rows.length}` : ''}`;
     wrap.hidden = !all.length; empty.hidden = !!all.length;
     if (!all.length) empty.innerHTML = filtered
@@ -1955,37 +1991,38 @@ function dataTable(outer, cfg) {
   /* Applied filters as chips, and the count on the Filters button */
   function chips() {
     if (!filters.length) return;
-    const on = filters.filter(f => st.filters[f.key]);
+    const on = filters.flatMap(f => (st.filters[f.key] || []).map(v => [f, v]));
     const c = $('.tbl-chips', host), n = $('.tbl-fcount', host), b = $(`#${id}-fbtn`, host);
     n.hidden = !on.length; n.textContent = on.length;
     b.setAttribute('aria-label', on.length ? `Filters, ${on.length} applied` : 'Filters'); b.classList.toggle('on', !!on.length);
     c.hidden = !on.length;
-    c.innerHTML = on.map(f => `<button type="button" class="tbl-chip" data-chip="${f.key}" aria-label="Remove filter ${esc(f.label)}: ${esc(fLabel(f, st.filters[f.key]))}"><span><span class="chip-k">${esc(f.label)}:</span> ${esc(fLabel(f, st.filters[f.key]))}</span>${ic('close', 16)}</button>`).join('')
+    c.innerHTML = on.map(([f, v]) => `<button type="button" class="tbl-chip" data-chip="${f.key}" data-v="${esc(v)}" aria-label="Remove filter ${esc(f.label)}: ${esc(fLabel(f, v))}"><span><span class="chip-k">${esc(f.label)}:</span> ${esc(fLabel(f, v))}</span>${ic('close', 16)}</button>`).join('')
       + (on.length > 1 ? `<button type="button" class="text-link tbl-chip-clear" data-clear>Clear all</button>` : '');
   }
   const panel = () => $(`#${id}-fp`, host);
   function openPanel() {
     const fp = panel(); if (!fp) return;
-    filters.forEach(f => { $(`#${id}-f-${f.key}`, host).value = st.filters[f.key] || ''; });
+    filters.forEach(f => { const s = $(`#${id}-f-${f.key}`, host); [...s.options].forEach(o => { o.selected = (st.filters[f.key] || []).includes(o.value); }); ddSync(s); });
     fp.hidden = false; $(`#${id}-fbtn`, host).setAttribute('aria-expanded', 'true');
-    $('select', fp).focus();
-    document.addEventListener('pointerdown', openPanel.outside = e => { if (!host.isConnected) return document.removeEventListener('pointerdown', openPanel.outside, true); if (!e.target.closest('.tbl-fwrap') || !host.contains(e.target)) closePanel(false); }, true);
+    ($('.dd-btn', fp) || $('select', fp)).focus();
+    document.addEventListener('pointerdown', openPanel.outside = e => { if (!host.isConnected) return document.removeEventListener('pointerdown', openPanel.outside, true); if (e.target.closest('.dd-list')) return; if (!e.target.closest('.tbl-fwrap') || !host.contains(e.target)) closePanel(false); }, true);
   }
   function closePanel(focusBtn) {
     const fp = panel(); if (!fp || fp.hidden) return;
+    if (ddOpen && fp.contains(ddOpen.sel)) ddClose();
     fp.hidden = true; $(`#${id}-fbtn`, host).setAttribute('aria-expanded', 'false');
     document.removeEventListener('pointerdown', openPanel.outside, true);
     if (focusBtn) $(`#${id}-fbtn`, host).focus();
   }
   function applyFilters(next) {
     st.filters = next; st.page = 0; body();
-    const n = Object.values(next).filter(Boolean).length, count = $(`#${id}-count`, host).textContent;
+    const n = Object.values(next).reduce((a, v) => a + (v ? v.length : 0), 0), count = $(`#${id}-count`, host).textContent;
     announce(`${n ? plural(n, 'filter') + ' applied' : 'Filters cleared'}. ${count}.`);
   }
   host.addEventListener('keydown', e => {
     if (e.key === 'Escape' && panel() && !panel().hidden) { e.preventDefault(); e.stopPropagation(); closePanel(true); }
     if (e.key === 'Tab' && panel() && !panel().hidden) {   /* keep Tab inside the open panel */
-      const f = $$('select,button', panel()), first = f[0], last = f[f.length - 1];
+      const f = $$('button', panel()).filter(x => !x.disabled), first = f[0], last = f[f.length - 1];
       if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
       else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
     }
@@ -1994,13 +2031,14 @@ function dataTable(outer, cfg) {
     if (e.target.closest(`#${id}-fbtn`)) { panel().hidden ? openPanel() : closePanel(true); return; }
     const fp = e.target.closest('[data-fp]');
     if (fp) {
-      if (fp.dataset.fp === 'clear') { $$('[data-filter]', host).forEach(s => { s.value = ''; }); applyFilters({}); }
-      else applyFilters(Object.fromEntries($$('[data-filter]', host).map(s => [s.dataset.filter, s.value]).filter(([, v]) => v)));
+      if (fp.dataset.fp === 'clear') { $$('[data-filter]', host).forEach(s => { [...s.options].forEach(o => { o.selected = false; }); ddSync(s); }); applyFilters({}); }
+      else applyFilters(Object.fromEntries($$('[data-filter]', host).map(s => [s.dataset.filter, [...s.selectedOptions].map(o => o.value)]).filter(([, v]) => v.length)));
       closePanel(true); return;
     }
     const chip = e.target.closest('[data-chip]');
     if (chip) {
-      const k = chip.dataset.chip, i = filters.findIndex(f => f.key === k), next = { ...st.filters }; delete next[k];
+      const k = chip.dataset.chip, i = $$('[data-chip]', host).indexOf(chip), next = { ...st.filters };
+      next[k] = (next[k] || []).filter(v => v !== chip.dataset.v); if (!next[k].length) delete next[k];
       applyFilters(next);
       const left = $$('[data-chip]', host); (left[Math.min(i, left.length - 1)] || $(`#${id}-fbtn`, host)).focus(); return;
     }
@@ -2020,11 +2058,11 @@ function dataTable(outer, cfg) {
       announce(`Sorted by ${s.textContent.trim()}, ${st.sort.dir === 'asc' ? 'ascending' : 'descending'}`);
     }
     if (e.target.closest('[data-clear]')) {
-      st.q = ''; st.filters = {}; st.page = 0; $(`#${id}-q`, host).value = ''; $$('[data-filter]', host).forEach(s => { s.value = ''; });
+      st.q = ''; st.filters = {}; st.page = 0; $(`#${id}-q`, host).value = ''; $$('[data-filter]', host).forEach(s => { [...s.options].forEach(o => { o.selected = false; }); ddSync(s); });
       body(); $(`#${id}-q`, host).focus();
     }
   });
-  if (cfg.initialFilters) Object.assign(st.filters, cfg.initialFilters);
+  if (cfg.initialFilters) Object.entries(cfg.initialFilters).forEach(([k, v]) => { st.filters[k] = [].concat(v); });
   head(); body();
   return { update(rows) { st.rows = rows; body(); } };
 }
@@ -2117,7 +2155,7 @@ function renderField(f, data, err, prefix) {
     }
     case 'icon': case 'alertIcon': {
       const list = f.type === 'icon' ? APPROVED_ICONS : ALERT_ICONS;
-      return wrap(`<div class="icon-row"><span class="icon-prev" aria-hidden="true">${ic(v || 'help')}</span><select class="input" ${a}>${list.map(i => `<option value="${i.glyph}" ${i.glyph === v ? 'selected' : ''}>${esc(i.label)}</option>`).join('')}</select></div>`);
+      return wrap(`<div class="icon-row"><span class="icon-prev" aria-hidden="true">${ic(v || 'help')}</span><select class="input" data-dd-icons ${a}>${list.map(i => `<option value="${i.glyph}" ${i.glyph === v ? 'selected' : ''}>${esc(i.label)}</option>`).join('')}</select></div>`);
     }
     case 'switch':
       return `<div class="field field-switch" data-field="${f.key}"><span class="sw-txt"><span class="sw-l" id="${id}-l">${esc(f.label)}</span>${f.hint ? `<span class="hint" id="${id}-hint">${esc(f.hint)}</span>` : ''}</span>
@@ -2248,6 +2286,182 @@ function describeData(from, to, fields) {
     out.push(a.length + b.length < 90 ? `${label(k)}: “${a || 'empty'}” → “${b || 'empty'}”` : `${label(k)} is edited`);
   });
   return out;
+}
+
+/* ===== src/ui/select.js ===== */
+/* ---------- Dropdown: one design for every select in the portal ----------
+   Each native <select> stays in the DOM as the source of truth (forms, validation and change listeners keep
+   working) but is hidden from view and from assistive tech. A button shows the current choice and opens a
+   listbox in the top layer (popover), so it is never clipped by a table, card or dialog.
+   - Single select: pick one option, the list closes.
+   - Multiple select (<select multiple>): options have checkboxes and the list stays open; an "All" row clears the
+     choice. Used by every table filter.
+   Keyboard: Enter, Space, Alt+Down or Down opens. Up, Down, Home, End and typing move. Enter or Space picks.
+   Escape closes without picking, Tab closes. The listbox uses aria-activedescendant, so focus stays on the button. */
+/* EXTRA_GLYPHS: expand_more check */
+let ddSeq = 0, ddOpen = null;
+const ddPopoverOk = typeof HTMLElement !== 'undefined' && 'popover' in HTMLElement.prototype;
+
+function ddText(sel) {
+  const on = [...sel.options].filter(o => o.selected);
+  if (sel.multiple) {
+    if (!on.length) return sel.dataset.allLabel || 'All';
+    return on.length === 1 ? on[0].text : `${on[0].text} +${on.length - 1}`;
+  }
+  return on[0] ? on[0].text : '';
+}
+function ddSync(sel) {
+  const b = sel && sel._dd; if (!b) return;
+  $('.dd-v', b).textContent = ddText(sel);
+  const icon = sel.dataset.ddIcons !== undefined ? sel.value : '';
+  const lead = $('.dd-lead', b); if (lead) lead.innerHTML = icon ? ic(icon, 20) : '';
+  b.disabled = sel.disabled;
+  ['aria-invalid', 'aria-describedby', 'aria-required'].forEach(a => { sel.hasAttribute(a) ? b.setAttribute(a, sel.getAttribute(a)) : b.removeAttribute(a); });
+  b.classList.toggle('dd-placeholder', !sel.multiple && sel.value === '' && !!sel.options[0] && sel.options[0].value === '' && !!sel.closest('[data-placeholder]'));
+  b.classList.toggle('dd-on', sel.multiple && [...sel.selectedOptions].length > 0);
+}
+function ddSyncAll(root = document) { $$('select[data-dd]', root).forEach(ddSync); }
+
+function enhanceSelect(sel) {
+  if (sel.dataset.dd !== undefined || sel.dataset.native !== undefined) return;
+  sel.dataset.dd = '';
+  const id = sel.id || (sel.id = `dd-${++ddSeq}`);
+  const b = document.createElement('button');
+  b.type = 'button';
+  b.id = `${id}-dd`;
+  b.className = `${sel.className} dd-btn`.replace(/\binput\b/, 'input');
+  b.setAttribute('aria-haspopup', 'listbox'); b.setAttribute('aria-expanded', 'false');
+  b.innerHTML = `${sel.dataset.ddIcons !== undefined ? '<span class="dd-lead" aria-hidden="true"></span>' : ''}<span class="dd-v"></span>${ic('expand_more', 20, 'dd-chev')}`;
+  /* Name: the visible label (moved to the button) or the select's own aria-label, then the current value */
+  const lab = document.querySelector(`label[for="${CSS.escape(id)}"]`);
+  if (lab) { lab.htmlFor = b.id; if (!lab.id) lab.id = `${id}-lbl`; }
+  const vid = `${id}-ddv`; $('.dd-v', b).id = vid;
+  if (lab) b.setAttribute('aria-labelledby', `${lab.id} ${vid}`);
+  else if (sel.getAttribute('aria-label')) { b.setAttribute('aria-label', sel.getAttribute('aria-label')); b.setAttribute('aria-describedby', vid); }
+  if (sel.multiple) b.dataset.multi = '';
+  sel.classList.add('dd-native'); sel.tabIndex = -1; sel.setAttribute('aria-hidden', 'true');
+  sel.after(b); sel._dd = b; b._sel = sel;
+  if (document.activeElement === sel) b.focus();
+  sel.addEventListener('change', () => ddSync(sel));
+  sel.addEventListener('focus', () => b.focus());        /* error-summary links and label clicks land on the button */
+  new MutationObserver(() => ddSync(sel)).observe(sel, { attributes: true, attributeFilter: ['disabled', 'aria-invalid', 'aria-describedby', 'aria-required'] });
+  b.addEventListener('click', () => { ddOpen && ddOpen.sel === sel ? ddClose() : ddShow(sel); });
+  b.addEventListener('keydown', e => ddKey(e, sel));
+  ddSync(sel);
+}
+
+function ddShow(sel) {
+  ddClose();
+  const b = sel._dd, multi = sel.multiple, icons = sel.dataset.ddIcons !== undefined;
+  const list = document.createElement('div');
+  list.className = 'dd-list'; list.id = `${sel.id}-lb`;
+  list.setAttribute('role', 'listbox'); list.setAttribute('aria-labelledby', b.getAttribute('aria-labelledby') || b.id);
+  if (!b.getAttribute('aria-labelledby') && b.getAttribute('aria-label')) list.setAttribute('aria-label', b.getAttribute('aria-label'));
+  if (multi) list.setAttribute('aria-multiselectable', 'true');
+  const opts = [...sel.options].filter(o => !o.hidden);
+  const rows = (multi ? [{ all: true, text: sel.dataset.allLabel || 'All' }] : []).concat(opts.map(o => ({ o, text: o.text })));
+  list.innerHTML = rows.map((r, k) => {
+    const on = r.all ? !sel.selectedOptions.length : r.o.selected;
+    return `<div class="dd-opt${r.all ? ' dd-all' : ''}" role="option" id="${sel.id}-o${k}" data-k="${k}" aria-selected="${on}" ${r.o && r.o.disabled ? 'aria-disabled="true"' : ''}>
+      ${multi ? `<span class="dd-box" aria-hidden="true">${ic('check', 16)}</span>` : ''}
+      ${icons && r.o ? `<span class="dd-oic" aria-hidden="true">${ic(r.o.value, 20)}</span>` : ''}
+      <span class="dd-t">${esc(r.text)}</span>
+      ${!multi ? `<span class="dd-tick" aria-hidden="true">${ic('check', 20)}</span>` : ''}</div>`;
+  }).join('');
+  /* Inside a modal dialog the list must live in the dialog, or the dialog makes it inert */
+  const host = sel.closest('dialog') || document.body;
+  host.appendChild(list);
+  if (ddPopoverOk) { list.setAttribute('popover', 'manual'); list.showPopover(); }
+  ddOpen = { sel, list, rows, active: Math.max(0, rows.findIndex(r => (r.all ? !sel.selectedOptions.length : r.o.selected))) };
+  b.setAttribute('aria-expanded', 'true'); b.setAttribute('aria-controls', list.id);
+  ddPlace(); ddActive(ddOpen.active);
+  list.addEventListener('pointerdown', e => e.preventDefault());   /* keep focus on the button */
+  list.addEventListener('click', e => { const o = e.target.closest('.dd-opt'); if (o) ddPick(+o.dataset.k); });
+  list.addEventListener('pointermove', e => { const o = e.target.closest('.dd-opt'); if (o && +o.dataset.k !== ddOpen.active) ddActive(+o.dataset.k, false); });
+  document.addEventListener('pointerdown', ddOutside, true);
+  addEventListener('resize', ddPlace); addEventListener('scroll', ddScroll, true);
+}
+function ddPlace() {
+  if (!ddOpen) return;
+  const { sel, list } = ddOpen, r = sel._dd.getBoundingClientRect(), gap = 4, vh = innerHeight;
+  list.style.minWidth = `${Math.max(r.width, 200)}px`;
+  list.style.maxWidth = `${Math.min(420, innerWidth - 16)}px`;
+  const below = vh - r.bottom - gap - 8, above = r.top - gap - 8, need = Math.min(list.scrollHeight, 320);
+  const up = below < need && above > below;
+  list.style.maxHeight = `${Math.max(120, Math.min(320, up ? above : below))}px`;
+  const left = Math.max(8, Math.min(r.left, innerWidth - list.offsetWidth - 8));
+  list.style.left = `${left}px`;
+  list.style.top = up ? `${Math.max(8, r.top - gap - list.offsetHeight)}px` : `${r.bottom + gap}px`;
+  list.classList.toggle('up', up);
+}
+function ddScroll(e) { if (ddOpen && !ddOpen.list.contains(e.target)) ddPlace(); }
+function ddOutside(e) { if (ddOpen && !ddOpen.list.contains(e.target) && e.target !== ddOpen.sel._dd && !ddOpen.sel._dd.contains(e.target)) ddClose(); }
+function ddClose(focus) {
+  if (!ddOpen) return;
+  const { sel, list } = ddOpen;
+  try { if (ddPopoverOk) list.hidePopover(); } catch (_) {}
+  list.remove();
+  sel._dd.setAttribute('aria-expanded', 'false'); sel._dd.removeAttribute('aria-controls'); sel._dd.removeAttribute('aria-activedescendant');
+  document.removeEventListener('pointerdown', ddOutside, true);
+  removeEventListener('resize', ddPlace); removeEventListener('scroll', ddScroll, true);
+  ddOpen = null;
+  if (focus) sel._dd.focus();
+}
+function ddActive(k, scroll = true) {
+  const { list, sel } = ddOpen, opts = $$('.dd-opt', list);
+  ddOpen.active = k = Math.max(0, Math.min(opts.length - 1, k));
+  opts.forEach((o, i) => o.classList.toggle('active', i === k));
+  sel._dd.setAttribute('aria-activedescendant', opts[k].id);
+  if (scroll) opts[k].scrollIntoView({ block: 'nearest' });
+}
+function ddPick(k) {
+  const { sel, rows, list } = ddOpen, r = rows[k];
+  if (r.o && r.o.disabled) return;
+  if (sel.multiple) {
+    if (r.all) [...sel.options].forEach(o => { o.selected = false; }); else r.o.selected = !r.o.selected;
+    $$('.dd-opt', list).forEach((el, i) => el.setAttribute('aria-selected', rows[i].all ? !sel.selectedOptions.length : rows[i].o.selected));
+    sel.dispatchEvent(new Event('input', { bubbles: true })); sel.dispatchEvent(new Event('change', { bubbles: true }));
+    ddActive(k, false);
+    announce(r.all ? 'All selected' : `${r.text} ${r.o.selected ? 'selected' : 'not selected'}`);
+    return;
+  }
+  const changed = sel.value !== r.o.value;
+  sel.value = r.o.value; ddClose(true);
+  if (changed) { sel.dispatchEvent(new Event('input', { bubbles: true })); sel.dispatchEvent(new Event('change', { bubbles: true })); }
+  ddSync(sel);
+}
+let ddType = '', ddTypeT = 0;
+function ddKey(e, sel) {
+  const open = ddOpen && ddOpen.sel === sel;
+  if (!open) {
+    if (['ArrowDown', 'ArrowUp', 'Enter', ' '].includes(e.key)) { e.preventDefault(); ddShow(sel); }
+    return;
+  }
+  const n = ddOpen.rows.length;
+  if (e.key === 'ArrowDown') { e.preventDefault(); ddActive(ddOpen.active + 1); }
+  else if (e.key === 'ArrowUp') { e.preventDefault(); e.altKey ? ddClose(true) : ddActive(ddOpen.active - 1); }
+  else if (e.key === 'Home' || e.key === 'PageUp') { e.preventDefault(); ddActive(0); }
+  else if (e.key === 'End' || e.key === 'PageDown') { e.preventDefault(); ddActive(n - 1); }
+  else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); ddPick(ddOpen.active); }
+  else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); ddClose(true); }
+  else if (e.key === 'Tab') ddClose(false);
+  else if (e.key.length === 1 && !e.ctrlKey && !e.metaKey) {        /* type to jump */
+    clearTimeout(ddTypeT); ddType += e.key.toLowerCase(); ddTypeT = setTimeout(() => { ddType = ''; }, 600);
+    const k = ddOpen.rows.findIndex((r, i) => r.text.toLowerCase().startsWith(ddType) && (ddType.length > 1 || i > ddOpen.active))
+      ; const k2 = k >= 0 ? k : ddOpen.rows.findIndex(r => r.text.toLowerCase().startsWith(ddType));
+    if (k2 >= 0) ddActive(k2);
+  }
+}
+/* Enhance every select as it appears, wherever it is rendered */
+function startDropdowns() {
+  $$('select').forEach(enhanceSelect);
+  new MutationObserver(ms => {
+    for (const m of ms) for (const n of m.addedNodes) {
+      if (n.nodeType !== 1) continue;
+      if (n.tagName === 'SELECT') enhanceSelect(n); else if (n.querySelector) n.querySelectorAll('select').forEach(enhanceSelect);
+    }
+    if (ddOpen && !ddOpen.sel.isConnected) ddClose();
+  }).observe(document.body, { childList: true, subtree: true });
 }
 
 /* ===== src/ui/charts.js ===== */
@@ -4886,6 +5100,7 @@ BUILT_PAGES['search-zero-results'] = {
 /* ---------- Boot ---------- */
 loadDb();
 applyTheme();
+startDropdowns();
 /* Activity keeps the simulated session alive; a check every 30 seconds ends it after the idle limit */
 let lastTouch = 0;
 ['pointerdown', 'keydown'].forEach(t => document.addEventListener(t, () => {
