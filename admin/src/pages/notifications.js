@@ -34,7 +34,7 @@ BUILT_PAGES.notifications = {
       <div class="stat">${ic('send', 20)}<span><b>${c('sent')}</b> sent</span></div></div>
       <section class="card"><div class="card-body" id="nt-table"></div></section>`;
     dataTable($('#nt-table'), {
-      id: 'nt', caption: 'Notifications', noun: 'notification', rows: list, defaultSort: { key: 'created', dir: 'desc' }, pageSize: 10, searchPlaceholder: 'Search titles and messages',
+      id: 'nt', caption: 'Notifications', noun: 'notification', rows: list, defaultSort: { key: 'created', dir: 'desc' }, searchPlaceholder: 'Search titles and messages',
       searchText: n => `${n.title} ${n.description}`,
       filters: [
         { key: 'status', label: 'Status', options: Object.entries(NOTE_STATUS), match: (n, v) => n.status === v },

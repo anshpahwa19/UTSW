@@ -109,21 +109,32 @@ function stepper(steps, label) {
     </li>`).join('')}</ol>`;
 }
 
-/* ---------- Table with search, filters and sortable headers ---------- */
-/* EXTRA_GLYPHS: arrow_upward arrow_downward unfold_more */
+/* ---------- Table with search, a filter panel, sortable headers and pagination (8 rows a page) ----------
+   Filters live behind one Filters button: the panel holds every filter and applies them together with Apply.
+   Applied filters show as removable chips, so nothing is hidden from view once it's in effect. */
+/* EXTRA_GLYPHS: arrow_upward arrow_downward unfold_more filter_list close */
+const TABLE_PAGE_SIZE = 8;
 function dataTable(outer, cfg) {
   /* A fresh root each time, so re-mounting on the same host never stacks listeners */
   const host = document.createElement('div'); host.className = 'tbl-root'; outer.replaceChildren(host);
   const st = { q: '', filters: {}, sort: cfg.defaultSort || null, rows: cfg.rows, page: 0 };
-  const size = cfg.pageSize || 0;
-  const id = cfg.id;
+  const size = TABLE_PAGE_SIZE;
+  const id = cfg.id, filters = cfg.filters || [];
+  const fLabel = (f, v) => { const o = f.options.find(x => String(x[0]) === String(v)); return o ? o[1] : v; };
   host.innerHTML = `
     <div class="tbl-tools" role="search" aria-label="${esc(cfg.caption)}">
       <div class="tbl-search"><label for="${id}-q" class="vh">Search ${esc(cfg.caption.toLowerCase())}</label>${ic('search', 20)}<input class="input" type="search" id="${id}-q" placeholder="${esc(cfg.searchPlaceholder || 'Search')}"></div>
-      ${(cfg.filters || []).map(f => `<label class="tbl-filter" for="${id}-f-${f.key}"><span>${esc(f.label)}</span><select class="input" id="${id}-f-${f.key}" data-filter="${f.key}"><option value="">All</option>${f.options.map(([v, l]) => `<option value="${esc(v)}">${esc(l)}</option>`).join('')}</select></label>`).join('')}
+      ${filters.length ? `<div class="tbl-fwrap">
+        <button type="button" class="tbl-fbtn" id="${id}-fbtn" aria-expanded="false" aria-controls="${id}-fp" aria-label="Filters" title="Filters">${ic('filter_list', 20)}<span class="tbl-fcount" hidden></span></button>
+        <div class="tbl-fpanel" id="${id}-fp" role="dialog" aria-labelledby="${id}-fp-h" hidden>
+          <h3 class="fp-h" id="${id}-fp-h">Filter ${esc(cfg.caption.toLowerCase())}</h3>
+          <div class="fp-body">${filters.map(f => `<div class="field"><label class="label" for="${id}-f-${f.key}">${esc(f.label)}</label><select class="input" id="${id}-f-${f.key}" data-filter="${f.key}"><option value="">All</option>${f.options.map(([v, l]) => `<option value="${esc(v)}">${esc(l)}</option>`).join('')}</select></div>`).join('')}</div>
+          <div class="fp-foot">${btn({ label: 'Clear all', variant: 'text', attrs: 'data-fp="clear"' })}${btn({ label: 'Apply', variant: 'primary', attrs: 'data-fp="apply"' })}</div>
+        </div></div>` : ''}
       <p class="tbl-count" id="${id}-count" role="status"></p>
       ${cfg.actions ? `<div class="tbl-actions">${cfg.actions}</div>` : ''}
     </div>
+    ${filters.length ? `<div class="tbl-chips" aria-label="Applied filters" role="group" hidden></div>` : ''}
     <div class="tbl-wrap" tabindex="0" role="region" aria-labelledby="${id}-cap">
       <table class="tbl"><caption id="${id}-cap" class="vh">${esc(cfg.caption)}</caption><thead></thead><tbody></tbody></table>
     </div>
@@ -133,7 +144,7 @@ function dataTable(outer, cfg) {
   const visible = () => {
     const q = st.q.trim().toLowerCase();
     let rows = st.rows.filter(r => (!q || cfg.searchText(r).toLowerCase().includes(q)) &&
-      (cfg.filters || []).every(f => !st.filters[f.key] || f.match(r, st.filters[f.key])));
+      filters.every(f => !st.filters[f.key] || f.match(r, st.filters[f.key])));
     if (st.sort) {
       const col = cfg.columns.find(c => c.key === st.sort.key), v = col.sortValue || (r => r[col.key]);
       rows = [...rows].sort((a, b) => (v(a) > v(b) ? 1 : v(a) < v(b) ? -1 : 0) * (st.sort.dir === 'asc' ? 1 : -1));
@@ -155,7 +166,16 @@ function dataTable(outer, cfg) {
     const rows = size ? all.slice(st.page * size, st.page * size + size) : all;
     const pager = $('.pager', host);
     pager.hidden = pages < 2;
-    if (pages > 1) pager.innerHTML = `<span class="pg-info">${st.page * size + 1}–${st.page * size + rows.length} of ${all.length}</span>${btn({ label: 'Previous page', icon: 'chevron_left', variant: 'text', iconOnly: true, attrs: `data-page="-1" ${st.page === 0 ? 'disabled' : ''}` })}${btn({ label: 'Next page', icon: 'chevron_right', variant: 'text', iconOnly: true, attrs: `data-page="1" ${st.page >= pages - 1 ? 'disabled' : ''}` })}`;
+    if (pages > 1) {
+      /* Page numbers: all of them up to 7, otherwise first, last and the pages around the current one */
+      const nums = [];
+      for (let k = 0; k < pages; k++) if (pages <= 7 || k === 0 || k === pages - 1 || Math.abs(k - st.page) <= 1) nums.push(k); else if (nums[nums.length - 1] !== '…') nums.push('…');
+      pager.innerHTML = `<span class="pg-info">${st.page * size + 1}–${st.page * size + rows.length} of ${all.length}</span>
+        <span class="pg-btns">${btn({ label: 'Previous page', icon: 'chevron_left', variant: 'text', iconOnly: true, attrs: `data-page="prev" ${st.page === 0 ? 'disabled' : ''}` })}
+        ${nums.map(k => k === '…' ? '<span class="pg-gap" aria-hidden="true">…</span>' : `<button type="button" class="pg-n" data-page="${k}" aria-label="Page ${k + 1}" ${k === st.page ? 'aria-current="page"' : ''}>${k + 1}</button>`).join('')}
+        ${btn({ label: 'Next page', icon: 'chevron_right', variant: 'text', iconOnly: true, attrs: `data-page="next" ${st.page >= pages - 1 ? 'disabled' : ''}` })}</span>`;
+    }
+    chips();
     tbody.innerHTML = rows.map(r => `<tr>${cfg.columns.map((c, i) => i === 0 ? `<th scope="row" class="${c.cls || ''}">${c.render(r)}</th>` : `<td class="${c.key === 'acts' || c.key === 'v' || c.key === 'details' ? 'acts' : c.cls || ''}">${c.render(r)}</td>`).join('')}</tr>`).join('');
     const filtered = st.q || Object.values(st.filters).some(Boolean);
     $(`#${id}-count`, host).textContent = `${plural(all.length, cfg.noun || 'row')}${filtered ? ` of ${st.rows.length}` : ''}`;
@@ -168,12 +188,66 @@ function dataTable(outer, cfg) {
   host.addEventListener('input', e => {
     if (e.target.id === `${id}-q`) { st.q = e.target.value; st.page = 0; body(); }
   });
-  host.addEventListener('change', e => {
-    if (e.target.dataset.filter) { st.filters[e.target.dataset.filter] = e.target.value; st.page = 0; body(); }
+  /* Applied filters as chips, and the count on the Filters button */
+  function chips() {
+    if (!filters.length) return;
+    const on = filters.filter(f => st.filters[f.key]);
+    const c = $('.tbl-chips', host), n = $('.tbl-fcount', host), b = $(`#${id}-fbtn`, host);
+    n.hidden = !on.length; n.textContent = on.length;
+    b.setAttribute('aria-label', on.length ? `Filters, ${on.length} applied` : 'Filters'); b.classList.toggle('on', !!on.length);
+    c.hidden = !on.length;
+    c.innerHTML = on.map(f => `<button type="button" class="tbl-chip" data-chip="${f.key}" aria-label="Remove filter ${esc(f.label)}: ${esc(fLabel(f, st.filters[f.key]))}"><span><span class="chip-k">${esc(f.label)}:</span> ${esc(fLabel(f, st.filters[f.key]))}</span>${ic('close', 16)}</button>`).join('')
+      + (on.length > 1 ? `<button type="button" class="text-link tbl-chip-clear" data-clear>Clear all</button>` : '');
+  }
+  const panel = () => $(`#${id}-fp`, host);
+  function openPanel() {
+    const fp = panel(); if (!fp) return;
+    filters.forEach(f => { $(`#${id}-f-${f.key}`, host).value = st.filters[f.key] || ''; });
+    fp.hidden = false; $(`#${id}-fbtn`, host).setAttribute('aria-expanded', 'true');
+    $('select', fp).focus();
+    document.addEventListener('pointerdown', openPanel.outside = e => { if (!host.isConnected) return document.removeEventListener('pointerdown', openPanel.outside, true); if (!e.target.closest('.tbl-fwrap') || !host.contains(e.target)) closePanel(false); }, true);
+  }
+  function closePanel(focusBtn) {
+    const fp = panel(); if (!fp || fp.hidden) return;
+    fp.hidden = true; $(`#${id}-fbtn`, host).setAttribute('aria-expanded', 'false');
+    document.removeEventListener('pointerdown', openPanel.outside, true);
+    if (focusBtn) $(`#${id}-fbtn`, host).focus();
+  }
+  function applyFilters(next) {
+    st.filters = next; st.page = 0; body();
+    const n = Object.values(next).filter(Boolean).length, count = $(`#${id}-count`, host).textContent;
+    announce(`${n ? plural(n, 'filter') + ' applied' : 'Filters cleared'}. ${count}.`);
+  }
+  host.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && panel() && !panel().hidden) { e.preventDefault(); e.stopPropagation(); closePanel(true); }
+    if (e.key === 'Tab' && panel() && !panel().hidden) {   /* keep Tab inside the open panel */
+      const f = $$('select,button', panel()), first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
   });
   host.addEventListener('click', e => {
+    if (e.target.closest(`#${id}-fbtn`)) { panel().hidden ? openPanel() : closePanel(true); return; }
+    const fp = e.target.closest('[data-fp]');
+    if (fp) {
+      if (fp.dataset.fp === 'clear') { $$('[data-filter]', host).forEach(s => { s.value = ''; }); applyFilters({}); }
+      else applyFilters(Object.fromEntries($$('[data-filter]', host).map(s => [s.dataset.filter, s.value]).filter(([, v]) => v)));
+      closePanel(true); return;
+    }
+    const chip = e.target.closest('[data-chip]');
+    if (chip) {
+      const k = chip.dataset.chip, i = filters.findIndex(f => f.key === k), next = { ...st.filters }; delete next[k];
+      applyFilters(next);
+      const left = $$('[data-chip]', host); (left[Math.min(i, left.length - 1)] || $(`#${id}-fbtn`, host)).focus(); return;
+    }
     const pg = e.target.closest('[data-page]');
-    if (pg && !pg.disabled) { st.page += +pg.dataset.page; body(); const again = $(`[data-page="${pg.dataset.page}"]`, host); (again && !again.disabled ? again : $(`#${id}-q`, host)).focus(); return; }
+    if (pg && !pg.disabled) {
+      const v = pg.dataset.page;
+      st.page = v === 'prev' ? st.page - 1 : v === 'next' ? st.page + 1 : +v; body();
+      const again = $(`[data-page="${v}"]`, host) || $(`[data-page="${st.page}"]`, host);
+      (again && !again.disabled ? again : $(`[data-page="${st.page}"]`, host)).focus();
+      announce(`Page ${st.page + 1}`); return;
+    }
     const s = e.target.closest('[data-sort]');
     if (s) {
       const k = s.dataset.sort;
@@ -182,11 +256,11 @@ function dataTable(outer, cfg) {
       announce(`Sorted by ${s.textContent.trim()}, ${st.sort.dir === 'asc' ? 'ascending' : 'descending'}`);
     }
     if (e.target.closest('[data-clear]')) {
-      st.q = ''; st.filters = {}; $(`#${id}-q`, host).value = ''; $$('[data-filter]', host).forEach(s => { s.value = ''; });
+      st.q = ''; st.filters = {}; st.page = 0; $(`#${id}-q`, host).value = ''; $$('[data-filter]', host).forEach(s => { s.value = ''; });
       body(); $(`#${id}-q`, host).focus();
     }
   });
-  if (cfg.initialFilters) { Object.assign(st.filters, cfg.initialFilters); Object.entries(cfg.initialFilters).forEach(([k, v]) => { const sel = $(`[data-filter="${k}"]`, host); if (sel) sel.value = v; }); }
+  if (cfg.initialFilters) Object.assign(st.filters, cfg.initialFilters);
   head(); body();
   return { update(rows) { st.rows = rows; body(); } };
 }

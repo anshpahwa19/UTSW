@@ -133,7 +133,7 @@ function mountHistory({ hostId = 'hist', getRec, describe, onSaved }) {
   };
   return dataTable($(`#${hostId}`), {
     id: hostId, caption: 'Change history', noun: 'change', searchPlaceholder: 'Search events, people and comments',
-    rows: r0.events, defaultSort: { key: 'at', dir: 'desc' }, pageSize: 10,
+    rows: r0.events, defaultSort: { key: 'at', dir: 'desc' },
     searchText: e => `${e.action} ${UserService.name(e.by)} ${e.comment} v${e.version || ''}`,
     filters: [
       { key: 'env', label: 'Environment', options: [['draft', 'Draft'], ['demo', 'Demo'], ['production', 'Production']], match: (e, v) => e.environment === v },

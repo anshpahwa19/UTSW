@@ -19,7 +19,7 @@ BUILT_PAGES.audit = {
     $('#au').innerHTML = `<section class="card"><div class="card-body" id="au-t"></div></section>`;
     const types = [...new Set(rows.map(r => r.targetType))].filter(Boolean);
     dataTable($('#au-t'), {
-      id: 'au', caption: 'Audit log', noun: 'entry', rows, defaultSort: { key: 'at', dir: 'desc' }, pageSize: 15, searchPlaceholder: 'Search actions, items and comments',
+      id: 'au', caption: 'Audit log', noun: 'entry', rows, defaultSort: { key: 'at', dir: 'desc' }, searchPlaceholder: 'Search actions, items and comments',
       searchText: r => `${r.action} ${r.target} ${r.comment} ${UserService.name(r.by)}`,
       filters: [
         { key: 'by', label: 'Actor', options: DB.db.users.map(u => [u.id, `${u.first} ${u.last}`]), match: (r, v) => r.by === v },
@@ -46,7 +46,7 @@ BUILT_PAGES['audit-history'] = {
       try { recs = await ConfigService.list(); } catch (err) { $('#ch').innerHTML = errorState(err.message); $('[data-retry]').onclick = load; return; }
       $('#ch').innerHTML = `<section class="card"><div class="card-body" id="ch-t"></div></section>`;
       dataTable($('#ch-t'), {
-        id: 'ch', caption: 'Configurations', noun: 'configuration', rows: recs, defaultSort: { key: 'updated', dir: 'desc' }, pageSize: 15, searchText: r => `${r.name} ${TYPE_LABEL(r.type)}`,
+        id: 'ch', caption: 'Configurations', noun: 'configuration', rows: recs, defaultSort: { key: 'updated', dir: 'desc' }, searchText: r => `${r.name} ${TYPE_LABEL(r.type)}`,
         filters: [{ key: 'type', label: 'Type', options: [...new Set(recs.map(r => r.type))].map(t => [t, TYPE_LABEL(t)]), match: (r, v) => r.type === v },
           { key: 'rb', label: 'Rollback', options: [['yes', 'Supported'], ['no', 'Not supported']], match: (r, v) => CONFIG_TYPES[r.type].supportsRollback === (v === 'yes') }],
         columns: [

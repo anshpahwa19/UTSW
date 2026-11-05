@@ -30,7 +30,7 @@ function formModal({ title, sections, data, validate, confirmLabel = 'Save', not
 /* Editable rows (search tables, locations) on top of dataTable */
 function rowsEditor(host, { rows, noun, caption, columns, sections, blank, validate, ro, onChange, searchText, rowTitle, extraActions, onExtraClick }) {
   const t = dataTable(host, {
-    id: 'rows', caption, noun, rows, searchPlaceholder: `Search ${caption.toLowerCase()}`, pageSize: 10,
+    id: 'rows', caption, noun, rows, searchPlaceholder: `Search ${caption.toLowerCase()}`,
     searchText, actions: ro ? '' : btn({ label: `Add ${noun}`, icon: 'add', variant: 'primary', attrs: 'data-row-add' }),
     empty: { icon: 'table_rows', title: `No ${noun}s yet`, text: ro ? '' : `Add the first ${noun}.` },
     columns: [...columns, { key: 'acts', label: 'Actions', hideLabel: true, render: r => ro ? '' : `<span class="row-acts">${extraActions ? extraActions(r) : ''}${btn({ label: `Edit ${rowTitle(r)}`, icon: 'edit', variant: 'text', iconOnly: true, attrs: `data-row-edit="${r.id}"` })}${btn({ label: `Delete ${rowTitle(r)}`, icon: 'delete', variant: 'text', iconOnly: true, attrs: `data-row-del="${r.id}"` })}</span>` }]

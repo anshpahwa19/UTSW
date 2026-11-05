@@ -72,7 +72,7 @@ BUILT_PAGES.wayfinding = {
           { key: 'acts', label: 'Actions', hideLabel: true, render: v => canPub && v.version !== w.production && ['retired', 'demo'].includes(v.status) ? btn({ label: `Roll back to v${v.version}`, icon: 'history', variant: 'text', attrs: `data-w="rollback" data-v="${v.version}"` }) : '' }]
       });
       dataTable($('#wf-hist'), {
-        id: 'wfh', caption: 'Publication history', noun: 'event', rows: w.history, defaultSort: { key: 'at', dir: 'desc' }, pageSize: 8, searchText: h => `${h.action} ${h.comment} ${UserService.name(h.by)}`,
+        id: 'wfh', caption: 'Publication history', noun: 'event', rows: w.history, defaultSort: { key: 'at', dir: 'desc' }, searchText: h => `${h.action} ${h.comment} ${UserService.name(h.by)}`,
         filters: [{ key: 'env', label: 'Environment', options: [['draft', 'Upload'], ['demo', 'Demo'], ['production', 'Production']], match: (h, v) => h.environment === v }],
         columns: [
           { key: 'at', label: 'When', sortable: true, render: h => `<span class="nowrap">${esc(fmtDateTime(h.at))}</span>` },

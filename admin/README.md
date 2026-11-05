@@ -46,6 +46,8 @@ Every configuration editor shares the same lifecycle:
 
 Confirmations list the exact changes, and leaving with unsaved edits asks first.
 
+Tables: every table shows 8 rows a page, with numbered pages once it has more than 8. Filters sit behind one Filters button (the count shows how many are applied); the panel holds all of a table's filters and applies them together with Apply, Escape or a click outside discards, and applied filters show as removable chips above the table.
+
 Theme: Light, Dark or System from the header (and on the sign-in screen). It is remembered on this device. Every color comes from the `designs/guest` tokens; dark values are the guest app's own dark palette.
 
 ## Stack decision
