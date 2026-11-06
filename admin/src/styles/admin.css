@@ -912,3 +912,38 @@ label.btn:has(+ input:focus-visible){box-shadow:var(--focus)}
 /* When the preview is taller, the modules card grows to meet it */
 .hl-edit{display:flex; flex-direction:column}
 .hl-edit > .card{flex:1 0 auto}
+/* Module list: one grouped list with dividers instead of a stack of boxed cards */
+.mod-list{gap:0; border-radius:var(--r-md); box-shadow:inset 0 0 0 1px var(--line-strong); background:var(--surface)}
+.mod-row{border-radius:0; box-shadow:none; padding:var(--s3) var(--s4) var(--s3) var(--s2); background:transparent}
+.mod-row + .mod-row{box-shadow:inset 0 1px 0 var(--line)}
+.mod-row:first-child{border-radius:var(--r-md) var(--r-md) 0 0}
+.mod-row:last-child{border-radius:0 0 var(--r-md) var(--r-md)}
+.mod-row:not(.ro):not(.is-dragging):hover{background:var(--bg)}
+.mod-row.is-dragging{border-radius:var(--r-md)}
+.mod-pos{width:20px; height:auto; background:none; color:var(--ink-2); font-weight:600}
+.mod-ic{width:40px; height:40px; border-radius:var(--r-sm)}
+.mod-row.is-off .mod-ic{background:var(--bg); color:var(--ink-2)}
+.mod-row.is-off .mod-d{color:var(--ink-3, var(--ink-2))}
+.mod-sum{display:flex; align-items:center; gap:var(--s2); margin-top:var(--s3); font-size:var(--t14); color:var(--ink-2)}
+/* Rows sit inside the list's border, so a tinted (hidden) row never covers it */
+.mod-list{padding:1px}
+.mod-row:first-child{border-radius:calc(var(--r-md) - 1px) calc(var(--r-md) - 1px) 0 0}
+.mod-row:last-child{border-radius:0 0 calc(var(--r-md) - 1px) calc(var(--r-md) - 1px)}
+.mod-row:only-child{border-radius:calc(var(--r-md) - 1px)}
+/* Narrow: switch stays on the title line; the Hidden tag goes under the text */
+.mod-row{grid-template-columns:auto auto auto minmax(0,1fr) auto; grid-template-areas:"drag pos ic txt ctl" ". . . badge badge"}
+.mod-row.ro{grid-template-columns:auto auto minmax(0,1fr); grid-template-areas:"pos ic txt" ". . badge"}
+.mod-row > .badge{grid-area:badge}
+.mod-ctl{align-self:center}
+@container edit (min-width: 560px){
+  .mod-row{grid-template-columns:auto auto auto minmax(0,1fr) auto auto; grid-template-areas:"drag pos ic txt badge ctl"}
+  .mod-row.ro{grid-template-columns:auto auto minmax(0,1fr) auto; grid-template-areas:"pos ic txt badge"}
+}
+@container edit (max-width: 420px){
+  .mod-pos{display:none}
+  .mod-row:not(.ro){grid-template-columns:auto auto minmax(0,1fr) auto; grid-template-areas:"drag ic txt ctl" ". . badge badge"}
+}
+/* The shown-count sits at the foot of the card, so any extra height reads as the card's footer, not a gap */
+.hl-edit > .card{display:flex; flex-direction:column}
+.hl-edit > .card > .card-body{flex:1; display:flex; flex-direction:column}
+

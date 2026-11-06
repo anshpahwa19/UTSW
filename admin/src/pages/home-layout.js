@@ -121,7 +121,7 @@ BUILT_PAGES['home-layout'] = (() => {
         <span class="mod-pos" aria-hidden="true">${i + 1}</span>
         <span class="mod-ic">${ic(meta.icon, 20)}</span>
         <span class="mod-txt"><span class="mod-t" id="mt-${m.id}">${esc(meta.label)}<span class="vh">, position ${i + 1} of ${n}</span></span><span class="mod-d">${esc(meta.desc)}${meta.link ? ` <a class="text-link" href="#${meta.link}">Manage</a>` : ''}</span></span>
-        ${badge(m.on ? 'visible' : 'hidden')}
+        ${m.on ? '' : badge('hidden')}
         ${ro ? '' : `<span class="mod-ctl">
           ${switchBtn({ id: `vis-${m.id}`, checked: m.on, label: `Show ${meta.label} on the home screen`, attrs: 'data-act="vis"' })}
         </span>`}
@@ -129,8 +129,9 @@ BUILT_PAGES['home-layout'] = (() => {
     };
     $('#editor').innerHTML = card({ title: `${st.aud === 'guest' ? 'Guest' : 'Authenticated'} home modules`, titleId: 'ed-h', actions: ro ? badge('fixed', 'View only') : `<span id="lc-badges">${dirty() ? badge('unsaved') : st.rec.draft ? badge('draft', 'Saved draft') : ''}</span>${dirty() ? btn({ label: 'Discard changes', variant: 'text', size: 'sm', attrs: 'data-hl="discard"' }) : ''}${btn({ label: 'Save draft', icon: 'save', variant: 'primary', size: 'sm', attrs: `data-hl="save" ${dirty() ? '' : 'disabled'}` })}`, body: `
       <h3 class="sub-h" id="ord-h" tabindex="-1">Modules, in order</h3>
-      <p class="hint-line" id="drag-help">${ro ? 'Hidden modules keep their place but patients don’t see them.' : 'Drag a module by its handle to reorder it, or select the handle for move options. With a keyboard, focus the handle and press the up or down arrow. Hidden modules keep their place but patients don’t see them.'}</p>
-      ${n ? `<ol class="mod-list" aria-labelledby="ord-h">${st.working.modules.map(row).join('')}</ol>`
+      <p class="hint-line" id="drag-help">${ro ? 'Hidden modules keep their place but patients don’t see them.' : 'Drag a handle to reorder, or focus it and use the arrow keys. Hidden modules keep their place but patients don’t see them.'}</p>
+      ${n ? `<ol class="mod-list" aria-labelledby="ord-h">${st.working.modules.map(row).join('')}</ol>
+        <p class="mod-sum">${ic('visibility', 16)}<span>${st.working.modules.filter(m => m.on).length} of ${n} modules shown to ${st.aud === 'guest' ? 'guests' : 'signed-in patients'}</span></p>`
         : emptyState({ icon: 'view_agenda', title: 'No modules on this layout', text: '', level: 4 })}` });
     $('#editor').onclick = editorClick;
     const list = $('.mod-list', main);

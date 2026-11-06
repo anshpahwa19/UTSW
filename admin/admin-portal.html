@@ -988,6 +988,41 @@ label.btn:has(+ input:focus-visible){box-shadow:var(--focus)}
 /* When the preview is taller, the modules card grows to meet it */
 .hl-edit{display:flex; flex-direction:column}
 .hl-edit > .card{flex:1 0 auto}
+/* Module list: one grouped list with dividers instead of a stack of boxed cards */
+.mod-list{gap:0; border-radius:var(--r-md); box-shadow:inset 0 0 0 1px var(--line-strong); background:var(--surface)}
+.mod-row{border-radius:0; box-shadow:none; padding:var(--s3) var(--s4) var(--s3) var(--s2); background:transparent}
+.mod-row + .mod-row{box-shadow:inset 0 1px 0 var(--line)}
+.mod-row:first-child{border-radius:var(--r-md) var(--r-md) 0 0}
+.mod-row:last-child{border-radius:0 0 var(--r-md) var(--r-md)}
+.mod-row:not(.ro):not(.is-dragging):hover{background:var(--bg)}
+.mod-row.is-dragging{border-radius:var(--r-md)}
+.mod-pos{width:20px; height:auto; background:none; color:var(--ink-2); font-weight:600}
+.mod-ic{width:40px; height:40px; border-radius:var(--r-sm)}
+.mod-row.is-off .mod-ic{background:var(--bg); color:var(--ink-2)}
+.mod-row.is-off .mod-d{color:var(--ink-3, var(--ink-2))}
+.mod-sum{display:flex; align-items:center; gap:var(--s2); margin-top:var(--s3); font-size:var(--t14); color:var(--ink-2)}
+/* Rows sit inside the list's border, so a tinted (hidden) row never covers it */
+.mod-list{padding:1px}
+.mod-row:first-child{border-radius:calc(var(--r-md) - 1px) calc(var(--r-md) - 1px) 0 0}
+.mod-row:last-child{border-radius:0 0 calc(var(--r-md) - 1px) calc(var(--r-md) - 1px)}
+.mod-row:only-child{border-radius:calc(var(--r-md) - 1px)}
+/* Narrow: switch stays on the title line; the Hidden tag goes under the text */
+.mod-row{grid-template-columns:auto auto auto minmax(0,1fr) auto; grid-template-areas:"drag pos ic txt ctl" ". . . badge badge"}
+.mod-row.ro{grid-template-columns:auto auto minmax(0,1fr); grid-template-areas:"pos ic txt" ". . badge"}
+.mod-row > .badge{grid-area:badge}
+.mod-ctl{align-self:center}
+@container edit (min-width: 560px){
+  .mod-row{grid-template-columns:auto auto auto minmax(0,1fr) auto auto; grid-template-areas:"drag pos ic txt badge ctl"}
+  .mod-row.ro{grid-template-columns:auto auto minmax(0,1fr) auto; grid-template-areas:"pos ic txt badge"}
+}
+@container edit (max-width: 420px){
+  .mod-pos{display:none}
+  .mod-row:not(.ro){grid-template-columns:auto auto minmax(0,1fr) auto; grid-template-areas:"drag ic txt ctl" ". . badge badge"}
+}
+/* The shown-count sits at the foot of the card, so any extra height reads as the card's footer, not a gap */
+.hl-edit > .card{display:flex; flex-direction:column}
+.hl-edit > .card > .card-body{flex:1; display:flex; flex-direction:column}
+
 
 </style>
 <div id="app" lang="en"></div>
@@ -3490,7 +3525,7 @@ BUILT_PAGES['home-layout'] = (() => {
         <span class="mod-pos" aria-hidden="true">${i + 1}</span>
         <span class="mod-ic">${ic(meta.icon, 20)}</span>
         <span class="mod-txt"><span class="mod-t" id="mt-${m.id}">${esc(meta.label)}<span class="vh">, position ${i + 1} of ${n}</span></span><span class="mod-d">${esc(meta.desc)}${meta.link ? ` <a class="text-link" href="#${meta.link}">Manage</a>` : ''}</span></span>
-        ${badge(m.on ? 'visible' : 'hidden')}
+        ${m.on ? '' : badge('hidden')}
         ${ro ? '' : `<span class="mod-ctl">
           ${switchBtn({ id: `vis-${m.id}`, checked: m.on, label: `Show ${meta.label} on the home screen`, attrs: 'data-act="vis"' })}
         </span>`}
@@ -3498,8 +3533,9 @@ BUILT_PAGES['home-layout'] = (() => {
     };
     $('#editor').innerHTML = card({ title: `${st.aud === 'guest' ? 'Guest' : 'Authenticated'} home modules`, titleId: 'ed-h', actions: ro ? badge('fixed', 'View only') : `<span id="lc-badges">${dirty() ? badge('unsaved') : st.rec.draft ? badge('draft', 'Saved draft') : ''}</span>${dirty() ? btn({ label: 'Discard changes', variant: 'text', size: 'sm', attrs: 'data-hl="discard"' }) : ''}${btn({ label: 'Save draft', icon: 'save', variant: 'primary', size: 'sm', attrs: `data-hl="save" ${dirty() ? '' : 'disabled'}` })}`, body: `
       <h3 class="sub-h" id="ord-h" tabindex="-1">Modules, in order</h3>
-      <p class="hint-line" id="drag-help">${ro ? 'Hidden modules keep their place but patients don’t see them.' : 'Drag a module by its handle to reorder it, or select the handle for move options. With a keyboard, focus the handle and press the up or down arrow. Hidden modules keep their place but patients don’t see them.'}</p>
-      ${n ? `<ol class="mod-list" aria-labelledby="ord-h">${st.working.modules.map(row).join('')}</ol>`
+      <p class="hint-line" id="drag-help">${ro ? 'Hidden modules keep their place but patients don’t see them.' : 'Drag a handle to reorder, or focus it and use the arrow keys. Hidden modules keep their place but patients don’t see them.'}</p>
+      ${n ? `<ol class="mod-list" aria-labelledby="ord-h">${st.working.modules.map(row).join('')}</ol>
+        <p class="mod-sum">${ic('visibility', 16)}<span>${st.working.modules.filter(m => m.on).length} of ${n} modules shown to ${st.aud === 'guest' ? 'guests' : 'signed-in patients'}</span></p>`
         : emptyState({ icon: 'view_agenda', title: 'No modules on this layout', text: '', level: 4 })}` });
     $('#editor').onclick = editorClick;
     const list = $('.mod-list', main);
