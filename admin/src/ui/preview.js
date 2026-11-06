@@ -99,7 +99,11 @@ function fitPreview(aside) {
   const phone = $('.pv-host', aside);
   if (!left || !phone) return { stop() {} };
   /* When the editor is shorter than even the smallest phone, its last card grows to meet the preview */
-  const last = () => (left.matches('.ed-main, .hl-main') ? left.lastElementChild : left);
+  const last = () => {
+    const t = left.matches('.ed-main, .hl-main') ? left.lastElementChild : left;
+    /* Grow the card itself, not a plain wrapper around it, so its border meets the preview's */
+    return t && !t.matches('.card') ? (t.querySelector(':scope > .card:last-child') || t) : t;
+  };
   const fit = () => {
     if (!grid.isConnected) { ro.disconnect(); return; }
     phone.style.removeProperty('--s');

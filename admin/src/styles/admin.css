@@ -901,3 +901,14 @@ label.btn:has(+ input:focus-visible){box-shadow:var(--focus)}
 .acc-panel > div > .form-sec:first-child,.acc-panel > div > .err-summary:first-child{margin-top:var(--s4)}
 .acc-more{display:flex; flex-wrap:wrap; align-items:center; gap:var(--s3); margin-top:var(--s4)}
 @media (prefers-reduced-motion: reduce){ .acc-chev{transition:none} }
+/* Profile: both cards the same height, even spacing, actions pinned to the bottom */
+@container main (min-width: 980px){ .pf-grid{align-items:stretch} }
+.pf-grid > .card{display:flex; flex-direction:column}
+.pf-grid .card-body.form{flex:1; display:flex; flex-direction:column; gap:var(--s4)}
+.pf-grid .form > .field + .field{margin-top:0}
+.pf-grid .pf-me,.pf-grid .pf-facts,.pf-grid .pw-rules{margin:0}
+.pf-grid .pf-facts{align-items:baseline}
+.pf-grid .form-acts{margin-top:auto; padding-top:var(--s2)}
+/* When the preview is taller, the modules card grows to meet it */
+.hl-edit{display:flex; flex-direction:column}
+.hl-edit > .card{flex:1 0 auto}
