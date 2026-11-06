@@ -11,7 +11,7 @@ function defineCollection(cfg) {
     async render(main) {
       const role = Session.role(), canEdit = can(role, cfg.area, 'draft');
       main.innerHTML = `<div class="page ${cfg.cls || ''}">${pageHead({ crumbs: [[cfg.section, null]], title: cfg.title, lede: cfg.lede,
-        actions: canEdit ? `${cfg.bulk ? `<a class="btn btn-secondary" href="#${cfg.route}-bulk">${ic('library_add', 20)}<span class="lbl">Create several</span></a>` : ''}<a class="btn btn-primary" href="#${cfg.route}-new">${ic('add', 20)}<span class="lbl">${esc(cfg.newLabel)}</span></a>` : '' })}
+        actions: canEdit ? `<a class="btn btn-primary" href="#${cfg.route}-new">${ic('add', 20)}<span class="lbl">${esc(cfg.newLabel)}</span></a>` : '' })}
         <div id="col-body">${loadingState(`Loading ${cfg.title.toLowerCase()}`)}</div></div>`;
       let list;
       try { list = await ConfigService.list(cfg.type); }
@@ -47,18 +47,20 @@ function defineCollection(cfg) {
     st: null,
     async render(main, ctx) {
       const isNewRoute = ctx.route.pattern.endsWith('-new');
-      const st = this.st = { rec: null, working: null, errors: {}, isNew: isNewRoute };
+      const st = this.st = { rec: null, working: null, errors: {}, isNew: isNewRoute, items: null, itemErrors: null, active: 0, open: 0 };
       const crumbs = [[cfg.section, null], [cfg.title, cfg.route]];
       main.innerHTML = `<div class="page ${cfg.cls || ''}" id="ed-page">${loadingState(`Loading the ${cfg.noun}`)}</div>`;
       if (!isNewRoute) {
         try { st.rec = await ConfigService.get(ctx.params.id); }
         catch (err) { $('#ed-page').innerHTML = `${pageHead({ crumbs, title: `${cfg.noun[0].toUpperCase()}${cfg.noun.slice(1)} not found` })}${errorState(err.message)}`; $('[data-retry]').onclick = () => this.render(main, ctx); return; }
         st.working = clone(latestData(st.rec));
-      } else st.working = cfg.defaults();
+      } else { st.items = [cfg.defaults()]; st.itemErrors = [{}]; st.working = st.items[0]; }
       const base = () => st.isNew ? cfg.defaults() : latestData(st.rec);
-      const dirty = () => !same(st.working, base());
+      const blankJson = JSON.stringify(cfg.defaults());
+      const dirty = () => st.isNew ? st.items.some(d => JSON.stringify(d) !== blankJson) : !same(st.working, base());
+      const one = cfg.noun, cap = one[0].toUpperCase() + one.slice(1);
       const ro = !can(Session.role(), cfg.area, 'draft');
-      const title = () => recName(st.working) || (st.isNew ? cfg.newLabel : cfg.title);
+      const title = () => st.isNew && st.items.length > 1 ? `New ${cfg.title.toLowerCase()} (${st.items.length})` : recName(st.working) || (st.isNew ? cfg.newLabel : cfg.title);
       const secs = () => cfg.sections.map(s => ({ ...s, fields: s.fields.map(f => ro ? { ...f, readonly: true } : f) }));
       $('#ed-page').innerHTML = `${pageHead({ crumbs, title: title(), badges: `<span id="ed-badges">${st.isNew ? badge('unsaved', 'New') : envBadges(st.rec)}</span>`, lede: cfg.editorLede || '' })}
         ${cfg.banner ? cfg.banner : ''}
@@ -70,7 +72,35 @@ function defineCollection(cfg) {
         </div>
         ${st.isNew ? '' : historyCard()}`;
       const form = $('#ed-form');
-      const drawForm = () => { form.innerHTML = renderForm(secs(), st.working, st.errors, 'f'); };
+      /* New items: an accordion, one panel per item, Add more at the bottom. The open panel drives the preview.
+         Item 1 keeps the f- ids of the single form; item n uses f<n>-. */
+      const pre = i => (i === 0 ? 'f' : `f${i}`);
+      const accHead = i => { const d = st.items[i], n = Object.keys(st.itemErrors[i]).length;
+        return `${ic('expand_more', 20, 'acc-chev')}<span class="acc-t">${esc(cap)} ${i + 1}</span>${d.title || d.name ? `<span class="acc-name">${esc(d.title || d.name)}</span>` : '<span class="acc-name muted">Untitled</span>'}${n ? `<span class="acc-err">${ic('error', 16)}${plural(n, 'problem')}</span>` : ''}`; };
+      const drawPanel = i => { const host = $(`#acc-f${i}`); if (host) host.innerHTML = renderForm(secs(), st.items[i], st.itemErrors[i], pre(i)); };
+      const drawAcc = () => {
+        form.innerHTML = `<div class="acc">${st.items.map((d, i) => `<section class="acc-item${st.open === i ? ' open' : ''}" data-i="${i}">
+            <div class="acc-row"><h3 class="acc-h"><button type="button" class="acc-btn" id="acc-b${i}" data-acc="${i}" aria-expanded="${st.open === i}" aria-controls="acc-p${i}">${accHead(i)}</button></h3>
+              ${st.items.length > 1 ? btn({ label: `Remove ${one} ${i + 1}`, icon: 'delete', variant: 'text', size: 'sm', iconOnly: true, attrs: `data-acc-rm="${i}"` }) : ''}</div>
+            <div class="acc-panel" id="acc-p${i}" role="region" aria-labelledby="acc-b${i}" ${st.open === i ? '' : 'hidden'}><div id="acc-f${i}"></div></div></section>`).join('')}</div>
+          <div class="acc-more">${btn({ label: `Add more`, icon: 'add', variant: 'secondary', attrs: `data-acc-add ${st.items.length >= 10 ? 'disabled title="Up to 10 at a time"' : ''}` })}<span class="muted small">${st.items.length > 1 ? `${plural(st.items.length, one)} will be saved as drafts together.` : `Add more to create several ${cfg.title.toLowerCase()} at once.`}</span></div>`;
+        st.items.forEach((d, i) => { drawPanel(i); wireForm($(`#acc-f${i}`), allFields, st.items[i], debounce(() => { onItemChange(i); }, 120), () => drawPanel(i)); });
+      };
+      const onItemChange = i => {
+        const errs = st.itemErrors[i];
+        if (Object.keys(errs).length) { const fresh = validateData(allFields(), st.items[i], cfg.validate); const before = Object.keys(errs).length; Object.keys(errs).forEach(k => { if (!fresh[k]) delete errs[k]; });
+          if (Object.keys(errs).length !== before) { const id = document.activeElement && document.activeElement.id; drawPanel(i); const el = id && document.getElementById(id); if (el) el.focus(); } }
+        const b = $(`#acc-b${i}`); if (b) b.innerHTML = accHead(i);
+        refresh();
+      };
+      const openItem = (i, focusField) => {
+        st.open = st.open === i && !focusField ? -1 : i;
+        if (st.open >= 0) { st.active = i; st.working = st.items[i]; st.errors = st.itemErrors[i]; }
+        $$('.acc-item', form).forEach((el, k) => { const on = k === st.open; el.classList.toggle('open', on); $('.acc-btn', el).setAttribute('aria-expanded', on); $('.acc-panel', el).hidden = !on; });
+        refresh();
+        if (focusField) { const f = $(`#${pre(i)}-${allFields()[0].key}`); f && f.focus(); }
+      };
+      const drawForm = () => { if (st.isNew) drawAcc(); else form.innerHTML = renderForm(secs(), st.working, st.errors, 'f'); };
       let pvCard = null;
       const refresh = () => {
         $('#ed-badges').innerHTML = st.isNew ? badge('unsaved', 'New') : `${envBadges(st.rec)}${dirty() ? badge('unsaved') : ''}`;
@@ -80,14 +110,39 @@ function defineCollection(cfg) {
         if (cfg.side) $('#ed-side').innerHTML = cfg.side(st.working, st.rec);
       };
       const validate = () => {
+        if (st.isNew) {
+          st.items.forEach((d, i) => { st.itemErrors[i] = validateData(allFields(), d, cfg.validate); });
+          const bad = st.itemErrors.findIndex(x => Object.keys(x).length);
+          if (bad < 0) return true;
+          st.open = bad; st.active = bad; st.working = st.items[bad]; st.errors = st.itemErrors[bad]; drawForm(); refresh();
+          const n = st.itemErrors.filter(x => Object.keys(x).length).length;
+          if (st.items.length > 1) toast(`Fix ${plural(n, one)} before saving. Nothing was saved.`, { kind: 'error', ms: 7000 });
+          $(`#${pre(bad)}-errsum`).focus(); return false;
+        }
         st.errors = validateData(allFields(), st.working, cfg.validate);
         drawForm();
         if (Object.keys(st.errors).length) { $('#f-errsum').focus(); return false; }
         return true;
       };
       form.addEventListener('submit', e => e.preventDefault());
+      if (st.isNew) form.addEventListener('click', e => {
+        const h = e.target.closest('[data-acc]'), rm = e.target.closest('[data-acc-rm]'), add = e.target.closest('[data-acc-add]');
+        if (h) openItem(+h.dataset.acc);
+        if (add && !add.disabled) {
+          const last = st.items[st.items.length - 1];
+          st.items.push(cfg.defaults()); st.itemErrors.push({});
+          st.open = st.items.length - 1; st.active = st.open; st.working = st.items[st.open]; st.errors = st.itemErrors[st.open];
+          drawForm(); refresh(); const f = $(`#${pre(st.open)}-${allFields()[0].key}`); f && f.focus();
+          announce(`${cap} ${st.items.length} added and opened`); void last;
+        }
+        if (rm) {
+          const i = +rm.dataset.accRm; st.items.splice(i, 1); st.itemErrors.splice(i, 1);
+          st.open = Math.min(Math.max(0, i - 1), st.items.length - 1); st.active = st.open; st.working = st.items[st.open]; st.errors = st.itemErrors[st.open];
+          drawForm(); refresh(); $(`#acc-b${st.open}`).focus(); announce(`${cap} ${i + 1} removed`);
+        }
+      });
       drawForm();
-      wireForm(form, allFields, st.working, debounce(() => {
+      if (!st.isNew) wireForm(form, allFields, st.working, debounce(() => {
         if (Object.keys(st.errors).length) { const fresh = validateData(allFields(), st.working, cfg.validate); Object.keys(st.errors).forEach(k => { if (!fresh[k]) { delete st.errors[k]; const el = $(`[data-field="${k}"]`, form); if (el) { el.classList.remove('has-error'); const er = $('.err', el); if (er) er.hidden = true; $$('[aria-invalid]', el).forEach(x => x.removeAttribute('aria-invalid')); } } }); }
         refresh();
       }, 120), drawForm);
@@ -95,9 +150,16 @@ function defineCollection(cfg) {
       const lc = Lifecycle({
         host: () => $('#lc'), area: cfg.area, noun: cfg.noun,
         getRec: () => st.rec, getWorking: () => clone(st.working), isDirty: dirty, isNew: () => st.isNew, describe, validate,
-        create: data => ConfigService.create(cfg.type, data, 'Created in the Admin'),
+        newSaveLabel: () => st.items && st.items.length > 1 ? `Save ${plural(st.items.length, one)} as drafts` : 'Save as draft',
+        createdMsg: () => st.items && st.items.length > 1 ? `${plural(st.items.length, one)} saved as drafts. Deploy or publish them together from the Publishing bar.` : null,
+        /* New items: save every accordion item, in order; positions follow the existing ones */
+        create: async () => {
+          const recs = [];
+          for (const d of st.items) { const data = clone(d); if ('order' in data) data.order = ConfigService.peekAll(cfg.type).length + 1; recs.push(await ConfigService.create(cfg.type, data, 'Created in the Admin')); }
+          return recs.length === 1 ? recs[0] : { many: recs };
+        },
         onSaved: (rec, kind) => {
-          if (kind === 'created') { Router.clearGuard(); Router.go(`${cfg.route}-${rec.id}`); return; }
+          if (kind === 'created') { Router.clearGuard(); Router.go(rec.many ? cfg.route : `${cfg.route}-${rec.id}`); return; }
           st.rec = rec; const fresh = clone(latestData(rec)); Object.keys(st.working).forEach(k => delete st.working[k]); Object.assign(st.working, fresh);
           drawForm(); refresh(); if (hist) hist.update(rec.events); $('#lc-h').focus();
         },
@@ -126,95 +188,6 @@ function defineCollection(cfg) {
   };
   BUILT_PAGES[`${cfg.route}-new`] = editor;
   BUILT_PAGES[`${cfg.route}-:id`] = editor;
-  if (cfg.bulk) defineBulk(cfg);
-}
-
-/* ---------- Create several at once ----------
-   One page with a compact card per new item: only the fields each needs (cfg.bulk keys, taken from the
-   feature's own form, so labels, validation and Instant / Scheduled behave the same). Everything else uses
-   the defaults of a new item. Save all as drafts checks every card first, then creates them; they then show
-   in the feature's Publishing bar to deploy or publish together. Up to 10 at a time. */
-/* EXTRA_GLYPHS: library_add content_copy */
-const BULK_MAX = 10;
-function defineBulk(cfg) {
-  const item = NAV.flatMap(s => s.items.map(i => ({ s, i }))).find(x => x.i.route === cfg.route);
-  const one = cfg.noun, many = cfg.title.toLowerCase(), cap = one[0].toUpperCase() + one.slice(1);
-  ROUTES.push({ pattern: `${cfg.route}-bulk`, section: item.s, item: item.i, title: `Create several ${many}`, parent: item.i });
-  BUILT_PAGES[`${cfg.route}-bulk`] = {
-    render(main) {
-      /* Short fields sit two to a row so each card stays compact */
-      const SHORT = ['title', 'type', 'tag', 'ctaLabel', 'priority', 'subtitle', 'icon', 'audience'];
-      const all = fields(cfg.sections), bf = cfg.bulk.map(k => all.find(f => f.key === k)).filter(Boolean).map(f => (SHORT.includes(f.key) ? { ...f, wide: false } : f));
-      const items = [cfg.defaults(), cfg.defaults()], errors = [{}, {}];
-      const blank = JSON.stringify(cfg.defaults());
-      const dirty = () => items.some(d => JSON.stringify(d) !== blank);
-      main.innerHTML = `<div class="page bulk ${cfg.cls || ''}">${pageHead({ crumbs: [[cfg.section, null], [cfg.title, cfg.route]], title: `Create several ${many}`,
-        lede: `Fill in each ${one}, then save them all as drafts. Anything not shown here uses the defaults of a new ${one}; open a draft later to add more.` })}
-        <form id="bk" novalidate><div id="bk-list" class="bk-list"></div>
-          <div class="bk-acts">
-            <span class="bk-add">${btn({ label: `Add another ${one}`, icon: 'add', variant: 'secondary', attrs: 'data-bk="add"' })}${btn({ label: 'Copy the last one', icon: 'content_copy', variant: 'text', attrs: 'data-bk="copy"' })}</span>
-            <span class="bk-save"><a class="btn btn-text" href="#${cfg.route}"><span class="lbl">Cancel</span></a>${btn({ label: 'Save all as drafts', icon: 'save', variant: 'primary', type: 'submit', attrs: 'id="bk-save"' })}</span>
-          </div></form></div>`;
-      const list = $('#bk-list');
-      const drawItem = i => { const host = $(`#bk-f${i}`); if (host) host.innerHTML = renderForm([{ fields: bf }], items[i], errors[i], `b${i}`); };
-      const draw = () => {
-        list.innerHTML = items.map((d, i) => `<section class="card bk-item" aria-labelledby="bk-h${i}"><div class="card-head"><h2 id="bk-h${i}" tabindex="-1">${esc(cap)} ${i + 1}${d.title ? `<span class="bk-name"> – ${esc(d.title)}</span>` : ''}</h2>
-          ${items.length > 1 ? `<div class="card-actions">${btn({ label: `Remove ${one} ${i + 1}`, icon: 'delete', variant: 'text', size: 'sm', attrs: `data-bk="rm" data-i="${i}"` })}</div>` : ''}</div>
-          <div class="card-body form" id="bk-f${i}"></div></section>`).join('');
-        items.forEach((d, i) => { drawItem(i); wireForm($(`#bk-f${i}`), () => bf, items[i], () => {
-          $(`#bk-h${i}`).innerHTML = `${esc(cap)} ${i + 1}${items[i].title ? `<span class="bk-name"> – ${esc(items[i].title)}</span>` : ''}`; label();
-          /* Once a card has been checked, clear each problem as soon as it is fixed */
-          if (Object.keys(errors[i]).length) {
-            const now = validateData(all, items[i], cfg.validate), before = Object.keys(errors[i]).length;
-            Object.keys(errors[i]).forEach(k => { if (!now[k]) delete errors[i][k]; });
-            if (Object.keys(errors[i]).length !== before) { const id = document.activeElement && document.activeElement.id; drawItem(i); const el = id && document.getElementById(id); if (el) el.focus(); }
-          }
-        }, () => drawItem(i)); });
-        label();
-        const full = items.length >= BULK_MAX;
-        $$('[data-bk="add"], [data-bk="copy"]').forEach(b => { b.disabled = full; b.title = full ? `Up to ${BULK_MAX} at a time` : ''; });
-      };
-      const label = () => { $('#bk-save .lbl').textContent = `Save ${plural(items.length, one)} as drafts`; };
-      draw();
-      $('#bk').addEventListener('click', e => {
-        const b = e.target.closest('[data-bk]'); if (!b || b.disabled) return;
-        e.preventDefault();
-        if (b.dataset.bk === 'add' || b.dataset.bk === 'copy') {
-          items.push(b.dataset.bk === 'copy' ? { ...clone(items[items.length - 1]), title: '' } : cfg.defaults()); errors.push({});
-          draw(); const f = $(`#b${items.length - 1}-${bf[0].key}`); f && f.focus();
-          announce(`${cap} ${items.length} added${b.dataset.bk === 'copy' ? ', copied from the one before' : ''}`);
-        }
-        if (b.dataset.bk === 'rm') {
-          const i = +b.dataset.i; items.splice(i, 1); errors.splice(i, 1); draw();
-          ($(`#bk-h${Math.max(0, i - 1)}`) || $('[data-bk="add"]')).focus(); announce(`${cap} ${i + 1} removed`);
-        }
-      });
-      $('#bk').addEventListener('submit', async e => {
-        e.preventDefault();
-        let bad = 0;
-        items.forEach((d, i) => { errors[i] = validateData(all, d, cfg.validate); if (Object.keys(errors[i]).length) bad++; });
-        if (bad) {
-          draw();
-          const first = errors.findIndex(x => Object.keys(x).length); const s = $(`#b${first}-errsum`); (s || $(`#bk-h${first}`)).focus();
-          toast(`Fix ${plural(bad, one)} before saving. Nothing was saved.`, { kind: 'error', ms: 7000 }); return;
-        }
-        const go = $('#bk-save'); setBusy(go, true, 'Saving');
-        let done = 0; const failed = [];
-        for (const d of items) {
-          const data = clone(d); if ('order' in data) data.order = ConfigService.peekAll(cfg.type).length + 1;
-          try { await ConfigService.create(cfg.type, data, 'Created with Create several'); done++; } catch (err) { failed.push(`${d.title}: ${err.message}`); }
-        }
-        Router.clearGuard();
-        toast(`Saved ${plural(done, one)} as drafts. Deploy or publish them from the Publishing bar.${failed.length ? ` ${failed.length} didn’t save: ${failed.join('; ')}` : ''}`, { kind: failed.length ? 'error' : 'success', ms: 7000 });
-        Router.go(cfg.route);
-      });
-      Router.setGuard(async () => {
-        if (!dirty()) return true;
-        const r = await confirmDialog({ title: 'Leave without saving?', body: `<p>None of these ${many} are saved yet. If you leave, they’re lost.</p>`, confirmLabel: 'Leave page', variant: 'danger', cancelLabel: 'Stay on this page' });
-        return r.ok;
-      });
-    }
-  };
 }
 
 /* Shared field groups */
@@ -238,7 +211,6 @@ const homePreview = (audience = 'guest', type = null) => (data, id, src, focus, 
 
 /* ---- Campaigns ---- */
 defineCollection({
-  bulk: ['title', 'type', 'description', 'ctaLabel', 'audience', 'destination', 'startMode', 'start', 'end'],
   route: 'home-campaigns', type: 'campaign', area: 'campaigns', section: 'Home Screen', title: 'Campaigns', noun: 'campaign', newLabel: 'New campaign', icon: 'campaign',
   lede: 'Promotional banners on the home screen. The SOW proposes three to five campaigns for the MVP, pending confirmation. One active campaign shows at a time; emergency alerts are managed separately.',
   summary: list => { const n = list.length; return n > 5 ? `<p class="note-line">${ic('info', 20)}<span>${n} campaigns – more than the five the SOW proposes.</span></p>` : ''; },
@@ -272,7 +244,6 @@ defineCollection({
 
 /* ---- Emergency alerts: styled and worded apart from campaigns ---- */
 defineCollection({
-  bulk: ['title', 'type', 'message', 'priority', 'audience', 'startMode', 'start', 'end'],
   route: 'home-alerts', type: 'alert', area: 'alerts', section: 'Home Screen', title: 'Emergency alerts', noun: 'emergency alert', newLabel: 'New emergency alert', icon: 'warning', cls: 'alert-page',
   lede: 'Urgent safety and service messages that sit above everything on the home screen. Use them only for emergencies and disruptions – never for promotions.',
   banner: `<div class="alert-banner" role="note">${ic('warning', 24, 'f1')}<div><p class="ab-t">Emergency alerts reach every patient in the audience as soon as they’re active</p><p>Check the wording on demo first. Two alerts can show at once; priority 1 shows on top.</p></div></div>`,
@@ -329,7 +300,6 @@ defineCollection({
 
 /* ---- Featured cards (UTSW resources rows, §10.4) ---- */
 defineCollection({
-  bulk: ['title', 'subtitle', 'icon', 'destination'],
   route: 'home-featured-cards', type: 'featuredCard', area: 'featuredCards', section: 'Home Screen', title: 'Featured cards', noun: 'featured card', newLabel: 'New featured card', icon: 'library_books',
   lede: 'Rows in the UTSW resources module. Assumed to be these rows rather than the MedBlog carousel – pending confirmation.',
   nameIcon: d => d.icon, nameSub: d => d.subtitle, defaultSort: { key: 'order', dir: 'asc' },

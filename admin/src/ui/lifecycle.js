@@ -37,7 +37,7 @@ function Lifecycle(opts) {
     if (!isNew && d) acts.push(btn({ label: 'Discard changes', variant: 'text', size: 'sm', attrs: 'data-lc="discard"' }));
     else if (hasDraft && may('saveDraft')) acts.push(btn({ label: 'Discard draft', variant: 'text', size: 'sm', attrs: 'data-lc="discardDraft"' }));
     if (r && !r.production && !r.demo && may('saveDraft')) acts.push(btn({ label: 'Delete', icon: 'delete', variant: 'text', size: 'sm', attrs: 'data-lc="delete"' }));
-    if (may('saveDraft')) add('save', isNew ? 'Save as draft' : 'Save draft', v('save'), d || isNew, 'There are no unsaved changes to save.', 'save');
+    if (may('saveDraft')) add('save', isNew ? (opts.newSaveLabel ? opts.newSaveLabel() : 'Save as draft') : 'Save draft', v('save'), d || isNew, 'There are no unsaved changes to save.', 'save');
     if (!isNew && may('requestReview') && !may('deployDemo')) add('review', r.review ? 'Review requested' : 'Request review', v('review'), !!hasDraft && !d && !r.review,
       d ? 'Save the draft before you request a review.' : r.review ? 'A review is already requested for this draft.' : 'Save a draft first, then request a review.', 'rate_review');
     if (!isNew && !draftOnly && may('deployDemo')) add('deploy', 'Deploy to demo', v('deploy'), !!hasDraft && !d, d ? 'Save the draft first. Demo only takes saved drafts.' : 'Save a draft first. Demo only takes saved drafts.', 'science');
@@ -74,7 +74,7 @@ function Lifecycle(opts) {
     const needComment = DB.db.settings.requirePublishComment;
     if (key === 'save') {
       if (opts.validate && !opts.validate()) { toast('Fix the highlighted fields, then save again.', { kind: 'error' }); return; }
-      if (opts.isNew && opts.isNew()) return run(() => opts.create(opts.getWorking()), 'Saving draft', `Draft saved. The ${opts.noun} isn’t on demo or production yet.`, 'created');
+      if (opts.isNew && opts.isNew()) return run(() => opts.create(opts.getWorking()), 'Saving draft', (opts.createdMsg && opts.createdMsg()) || `Draft saved. The ${opts.noun} isn’t on demo or production yet.`, 'created');
       return run(() => ConfigService.saveDraft(r.id, opts.getWorking(), ''), 'Saving draft', 'Draft saved. It isn’t on demo or production yet.', 'save');
     }
     if (key === 'discard') {
