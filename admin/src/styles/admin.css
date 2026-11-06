@@ -888,13 +888,14 @@ label.btn:has(+ input:focus-visible){box-shadow:var(--focus)}
 .fb-row input{width:20px; height:20px; accent-color:var(--ctl); flex:none}
 /* ===================== Accordion: several new items in one form ===================== */
 .acc{display:grid; gap:var(--s3)}
-.acc-item{border-radius:var(--r-md); box-shadow:inset 0 0 0 1px var(--line-strong); background:var(--surface)}
-.acc-item.open{box-shadow:inset 0 0 0 2px var(--blue)}
-.acc-row{display:flex; align-items:center; gap:var(--s2); padding-right:var(--s2)}
+.acc-item{border-radius:var(--r-md); border:1px solid var(--line-strong); background:var(--surface); overflow:hidden}
+.acc-item.open{border-color:var(--blue); box-shadow:0 0 0 1px var(--blue)}
+.acc-row{display:flex; align-items:center; gap:var(--s2); padding-right:var(--s2); transition:background .12s ease}
+.acc-row:hover{background:var(--tint)}
 .acc-h{flex:1; min-width:0; margin:0; font-size:inherit}
 .acc-btn{display:flex; align-items:center; gap:var(--s3); width:100%; min-height:56px; padding:var(--s2) var(--s4); border:0; border-radius:var(--r-md); background:none; color:var(--ink); font:inherit; text-align:left; cursor:pointer}
-.acc-btn:hover{background:var(--tint)}
-.acc-btn:focus-visible{outline:none; box-shadow:var(--focus)}
+.acc-btn:focus-visible{outline:none; box-shadow:none}
+.acc-row:has(.acc-btn:focus-visible){box-shadow:inset 0 0 0 2px var(--blue); background:var(--tint)}
 .acc-chev{color:var(--blue); transition:transform .15s ease; transform:rotate(-90deg); flex:none}
 .acc-btn[aria-expanded="true"] .acc-chev{transform:none}
 .acc-t{font-weight:700; white-space:nowrap}
