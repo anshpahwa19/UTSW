@@ -63,17 +63,17 @@ const effectiveTheme = () => 'light';   /* the Admin is light only; each preview
 /* Preview card: source switch (your edits / demo / production), appearance, optional extras; payload(src) builds the message */
 function mountPreviewCard(host, { title, sources, payload, extras = '', onExtras }) {
   const st = { src: sources()[0][0], theme: effectiveTheme() };
-  host.innerHTML = `<section class="card pv-card" aria-labelledby="${host.id}-h"><div class="card-head"><h2 id="${host.id}-h">Mobile preview</h2></div><div class="card-body">
-    <div class="pv-ctl"></div>${extras ? `<div class="pv-row pv-extras">${extras}</div>` : ''}<div class="pv-host"></div>
-    <p class="pv-note">${ic('info', 16)}<span>Drawn with the designs/guest app components and sample content. It is not the live app.</span></p></div></section>`;
+  host.innerHTML = `<section class="card pv-card" aria-labelledby="${host.id}-h"><div class="card-head"><h2 id="${host.id}-h">Mobile preview</h2><div class="card-actions pv-theme"></div></div><div class="card-body">
+    <div class="pv-top"><div class="pv-ctl"></div>${extras ? `<div class="pv-extras">${extras}</div>` : ''}</div><div class="pv-host"></div>
+    <p class="pv-note">${ic('info', 16)}<span>Sample content drawn with the guest app designs. Not the live app.</span></p></div></section>`;
   const pv = mountPreview($('.pv-host', host), { title });
   if (onExtras) onExtras($('.pv-extras', host), () => send());
   function controls() {
     const opts = sources();
     if (!opts.some(o => o[0] === st.src)) st.src = opts[0][0];
     const cur = opts.find(o => o[0] === st.src);
-    $('.pv-ctl', host).innerHTML = `<div class="pv-row">${opts.length > 1 ? segmented({ id: `${host.id}-src`, label: 'Preview source', options: opts.map(o => [o[0], o[1]]), value: st.src }) : ''}
-        ${segmented({ id: `${host.id}-theme`, label: 'Preview appearance', options: [['light', 'Light'], ['dark', 'Dark']], value: st.theme })}</div>
+    $('.pv-theme', host).innerHTML = segmented({ id: `${host.id}-theme`, label: 'Preview appearance', options: [['light', 'Light'], ['dark', 'Dark']], value: st.theme });
+    $('.pv-ctl', host).innerHTML = `${opts.length > 1 ? `<div class="pv-row">${segmented({ id: `${host.id}-src`, label: 'Preview source', options: opts.map(o => [o[0], o[1]]), value: st.src })}</div>` : ''}
       <p class="pv-what">${cur[2]}</p>`;
     if (opts.length > 1) wireSegmented($(`#${host.id}-src`), v => { st.src = v; controls(); $(`#${host.id}-src [aria-checked="true"]`).focus(); });
     wireSegmented($(`#${host.id}-theme`), v => { st.theme = v; send(); });
@@ -106,13 +106,18 @@ function fitPreview(aside) {
   };
   const fit = () => {
     if (!grid.isConnected) { ro.disconnect(); return; }
-    phone.style.removeProperty('--s');
+    phone.style.removeProperty('--s'); phone.style.removeProperty('--ph');
     const tail = last(); if (tail) tail.style.removeProperty('min-height');
     if (getComputedStyle(grid).gridTemplateColumns.trim().split(/\s+/).length < 2) return;
     const max = parseFloat(getComputedStyle(phone).getPropertyValue('--s')) || .8;
     const chrome = aside.offsetHeight - 844 * max;
-    const s = Math.max(.5, Math.min(max, (left.offsetHeight - chrome) / 844));
+    /* First scale the phone down a little (never below a readable size), then show a shorter screen that
+       scrolls inside, like a smaller phone. The editor card only grows if even that is too tall. */
+    const avail = left.offsetHeight - chrome;
+    const s = Math.max(Math.min(max, .5), Math.min(max, avail / 844));
     if (s < max - .002) phone.style.setProperty('--s', s.toFixed(3));
+    const ph = Math.round(Math.max(600, Math.min(844, avail / s)));
+    if (ph < 844) phone.style.setProperty('--ph', ph);
     const short = aside.offsetHeight - left.offsetHeight;
     if (short > 1 && tail) tail.style.minHeight = `${tail.offsetHeight + short}px`;
   };
