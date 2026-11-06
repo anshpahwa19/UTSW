@@ -3383,7 +3383,7 @@ BUILT_PAGES['home-layout'] = (() => {
     main = host;
     main.innerHTML = `<div class="page hl">
       ${pageHead({ crumbs: [['Home Screen', null]], title: 'Home screen layout',
-        lede: 'Choose which modules patients see on the MyCare home screen and in what order, for guests and for signed-in patients.' })}
+        lede: 'Choose which modules patients see on the home screen, and in what order.' })}
       <section class="card hub-pub" aria-labelledby="hub-pub-h" id="hub-pub"></section>
       <div class="tabs" role="tablist" aria-label="Audience">${AUDIENCES.map(([k, l]) =>
         `<button type="button" role="tab" id="aud-${k}" aria-controls="aud-panel" aria-selected="${k === st.aud}" tabindex="${k === st.aud ? 0 : -1}" data-aud="${k}">${esc(l)}</button>`).join('')}</div>
