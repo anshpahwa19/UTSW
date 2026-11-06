@@ -143,6 +143,17 @@ const ConfigService = {
     logEvent(r, 'Published to production', 'production', r.demo, comment, before, r.versions[r.demo].data);
     return r;
   }),
+  publishDirect: (id, comment) => mockCall('publishing', () => {
+    const r = rec(id); guard(r, 'publish');
+    if (!r.draft) throw new ServiceError('There is no saved draft to publish.');
+    if (DB.db.settings.requirePublishComment && !comment) throw new ServiceError('A comment is required to publish (Administrative settings).');
+    const before = dataAt(r, 'production');
+    const v = r.nextVersion++;
+    r.versions[v] = { version: v, data: clone(r.draft.data), updatedBy: actor(), updatedAt: nowIso(), comment: comment || r.draft.comment || 'Published directly' };
+    r.demo = v; r.production = v; r.draft = null; r.review = null;
+    logEvent(r, 'Published directly to production (skipped demo)', 'production', v, comment, before, r.versions[v].data);
+    return r;
+  }),
   rollback: (id, toVersion, comment) => mockCall('publishing', () => {
     const r = rec(id); guard(r, 'rollback');
     if (!CONFIG_TYPES[r.type].supportsRollback) throw new ServiceError(`${CONFIG_TYPES[r.type].label} does not support rollback.`);

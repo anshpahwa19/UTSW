@@ -17,16 +17,10 @@ function defineCollection(cfg) {
       try { list = await ConfigService.list(cfg.type); }
       catch (err) { $('#col-body').innerHTML = errorState(err.message); $('[data-retry]').onclick = () => this.render(main); return; }
       const counts = { live: list.filter(r => r.production && latestOn(r)).length, demo: list.filter(r => r.demo && r.demo !== r.production).length, draft: list.filter(r => r.draft).length, review: list.filter(r => r.review).length };
-      /* Inside the Home Screen page, items with an audience show only when they reach the chosen home screen */
-      const byAud = HUB_TAB && ['campaign', 'alert'].includes(cfg.type), allCount = list.length;
-      if (byAud) list = list.filter(r => segReaches((latestData(r) || {}).audience));
-      $('#col-body').innerHTML = `${byAud ? `<p class="note-line hub-aud-note">${ic('groups', 20)}<span>Showing ${plural(list.length, cfg.noun)} that reach ${hubAudLabel()}.${allCount > list.length ? ` ${allCount - list.length} more only reach${allCount - list.length === 1 ? 'es' : ''} ${hubAud === 'guest' ? 'signed-in patients' : 'guests'}; switch the home screen above to see ${allCount - list.length === 1 ? 'it' : 'them'}.` : ''}</span></p>` : ''}${cfg.summary ? cfg.summary(list) : ''}
-        <div class="stat-strip">
-          <div class="stat">${ic('public', 20)}<span><b>${counts.live}</b> live in production</span></div>
-          <div class="stat">${ic('science', 20)}<span><b>${counts.demo}</b> on demo, waiting for production</span></div>
-          <div class="stat">${ic('edit_note', 20)}<span><b>${counts.draft}</b> with an open draft${counts.review ? `, ${counts.review} waiting for review` : ''}</span></div>
-        </div>
+      $('#col-body').innerHTML = `${cfg.summary ? cfg.summary(list) : ''}
+        <section class="card hub-pub" aria-labelledby="hub-pub-h" id="hub-pub"></section>
         <section class="card"><div class="card-body" id="col-table"></div></section>`;
+      featureBar([cfg.type], cfg.title);
       dataTable($('#col-table'), {
         id: 'col', caption: cfg.title, noun: cfg.noun, searchPlaceholder: `Search ${cfg.title.toLowerCase()}`,
         rows: list, defaultSort: cfg.defaultSort || { key: 'updated', dir: 'desc' },
@@ -54,8 +48,7 @@ function defineCollection(cfg) {
     async render(main, ctx) {
       const isNewRoute = ctx.route.pattern.endsWith('-new');
       const st = this.st = { rec: null, working: null, errors: {}, isNew: isNewRoute };
-      const homeItem = cfg.section === 'Home Screen';
-      const crumbs = [[cfg.section, homeItem ? 'home-layout' : null], [cfg.title, cfg.route]];
+      const crumbs = [[cfg.section, null], [cfg.title, cfg.route]];
       main.innerHTML = `<div class="page ${cfg.cls || ''}" id="ed-page">${loadingState(`Loading the ${cfg.noun}`)}</div>`;
       if (!isNewRoute) {
         try { st.rec = await ConfigService.get(ctx.params.id); }
@@ -69,9 +62,7 @@ function defineCollection(cfg) {
       const secs = () => cfg.sections.map(s => ({ ...s, fields: s.fields.map(f => ro ? { ...f, readonly: true } : f) }));
       $('#ed-page').innerHTML = `${pageHead({ crumbs, title: title(), badges: `<span id="ed-badges">${st.isNew ? badge('unsaved', 'New') : envBadges(st.rec)}</span>`, lede: cfg.editorLede || '' })}
         ${cfg.banner ? cfg.banner : ''}
-        ${homeItem ? `<section class="card hub-pub" aria-labelledby="hub-pub-h" id="hub-pub"></section>
-        <section class="card lc lc-slim" aria-labelledby="lc-h"><div class="card-body" id="lc"></div></section>`
-        : `<section class="card lc lc-slim" aria-labelledby="lc-h"><div class="card-body" id="lc"></div></section>`}
+        <section class="card lc lc-slim" aria-labelledby="lc-h"><div class="card-body" id="lc"></div></section>
         <div class="ed-grid${cfg.preview || cfg.side ? '' : ' single'}">
           <section class="card ${cfg.formCls || ''}" aria-labelledby="form-h"><div class="card-head"><h2 id="form-h">${esc(cfg.formTitle || 'Details')}</h2>${ro ? `<div class="card-actions">${badge('fixed', 'View only')}</div>` : ''}</div>
             <form class="card-body form" id="ed-form" novalidate></form></section>
@@ -101,9 +92,8 @@ function defineCollection(cfg) {
         refresh();
       }, 120), drawForm);
       const describe = (a, b) => cfg.describe ? cfg.describe(a, b) : describeData(a, b, allFields());
-      if (homeItem) hubRenderBar();
       const lc = Lifecycle({
-        host: () => $('#lc'), draftOnly: homeItem, area: cfg.area, noun: cfg.noun,
+        host: () => $('#lc'), area: cfg.area, noun: cfg.noun,
         getRec: () => st.rec, getWorking: () => clone(st.working), isDirty: dirty, isNew: () => st.isNew, describe, validate,
         create: data => ConfigService.create(cfg.type, data, 'Created in the Admin'),
         onSaved: (rec, kind) => {

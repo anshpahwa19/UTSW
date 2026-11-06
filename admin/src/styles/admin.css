@@ -825,7 +825,6 @@ label.btn:has(+ input:focus-visible){box-shadow:var(--focus)}
 .hub-panel > .page{padding:0; max-width:none}
 .tab-head h2{font-size:var(--t24, 24px)}
 @container main (max-width: 760px){ .hub-stages{grid-template-columns:minmax(0,1fr)} .hub-acts{justify-content:stretch} .hub-acts .btn{flex:1} }
-.hub-panel .stat-strip{display:none}
 .lc-status{display:flex; flex-wrap:wrap; align-items:center; gap:var(--s2); font-size:var(--t14); color:var(--ink-2)}
 .hub-aud{display:flex; align-items:center; gap:var(--s3); flex-wrap:wrap}
 .hub-aud-l{font-size:var(--t14); font-weight:600; color:var(--ink-2)}
@@ -883,3 +882,7 @@ label.btn:has(+ input:focus-visible){box-shadow:var(--focus)}
 .dash-only #main a.locked{color:var(--ink-2); text-decoration:none}
 .dash-only .sidebar a.locked:hover{background:transparent}
 .dash-note{margin-top:var(--s3)}
+.fb-pick li{padding:0; background:none}
+.fb-row{display:flex; align-items:center; gap:var(--s3); width:100%; padding:var(--s2) var(--s3); border-radius:var(--r-sm); background:var(--bg); cursor:pointer}
+.fb-row .ms{color:var(--blue)}
+.fb-row input{width:20px; height:20px; accent-color:var(--ctl); flex:none}

@@ -50,7 +50,6 @@ const Router = {
     const role = Session.role();
     const m = name === 'denied' ? null : matchRoute(name);
     let title;
-    HUB_TAB = false;
     if (name === 'denied') { title = 'Access denied'; renderSidebar(null); main.innerHTML = deniedView(null); }
     else if (!m) { title = 'Page not found'; renderSidebar(null); main.innerHTML = notFoundView(name); }
     else if (!can(role, m.route.item.area, 'view')) { title = 'Access denied'; renderSidebar(m.route); main.innerHTML = deniedView(m.route); }
@@ -58,18 +57,12 @@ const Router = {
       renderSidebar(m.route);
       title = m.route.title;
       const page = BUILT_PAGES[m.route.pattern];
-      const isTab = !!(m.route.section.tabs && m.route.item.route === m.route.pattern);
-      HUB_TAB = isTab;
-      if (page) { this.active = page; page.render(isTab ? homeHub(main, m.route) : main, { route: m.route, params: m.params, role }); }
+      if (page) { this.active = page; page.render(main, { route: m.route, params: m.params, role }); }
       else { title = 'Page not found'; main.innerHTML = notFoundView(name); }
     }
     document.title = `${title} – MyCare Admin (prototype)`;
     /* Move focus to the new heading on navigation, but not on first load, so Tab starts at the skip link */
-    if (!isRefresh && this.loaded) {
-      const tab = hubFromTab && $('.hub-tabs [aria-current]'); hubFromTab = false;
-      if (tab) tab.focus({ preventScroll: true });
-      else { const h = $('#hub-h') || $('#page-h'); (h || main).focus({ preventScroll: true }); window.scrollTo(0, 0); }
-    } else hubFromTab = false;
+    if (!isRefresh && this.loaded) { const h = $('#page-h'); (h || main).focus({ preventScroll: true }); window.scrollTo(0, 0); }
     this.loaded = true;
     announce(`${title} page`);
   }

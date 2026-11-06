@@ -27,14 +27,15 @@ BUILT_PAGES['home-layout'] = (() => {
 
   function render(host) {
     main = host;
-    if (HUB_TAB) st.aud = hubAud;
     main.innerHTML = `<div class="page hl">
       ${pageHead({ crumbs: [['Home Screen', null]], title: 'Home screen layout',
         lede: 'Choose which modules patients see on the MyCare home screen and in what order, for guests and for signed-in patients.' })}
-      ${HUB_TAB ? '<div id="aud-panel"></div>' : `<div class="tabs" role="tablist" aria-label="Audience">${AUDIENCES.map(([k, l]) =>
+      <section class="card hub-pub" aria-labelledby="hub-pub-h" id="hub-pub"></section>
+      <div class="tabs" role="tablist" aria-label="Audience">${AUDIENCES.map(([k, l]) =>
         `<button type="button" role="tab" id="aud-${k}" aria-controls="aud-panel" aria-selected="${k === st.aud}" tabindex="${k === st.aud ? 0 : -1}" data-aud="${k}">${esc(l)}</button>`).join('')}</div>
-      <div id="aud-panel" role="tabpanel" aria-labelledby="aud-${st.aud}"></div>`}
+      <div id="aud-panel" role="tabpanel" aria-labelledby="aud-${st.aud}"></div>
     </div>`;
+    featureBar(['homeLayout'], 'Layout');
     const tabs = $$('[role="tab"]', main);
     const pick = async (t, focus) => {
       if (t.dataset.aud === st.aud) return;
@@ -66,14 +67,14 @@ BUILT_PAGES['home-layout'] = (() => {
       ${st.aud === 'authenticated' ? `<p class="note-line">${ic('info', 20)}<span>The signed-in home has no approved design yet (§10.5). These modules come from the personalised homepage prototype; “Your next visits” is read only from MyChart – Epic stays the source.</span></p>` : ''}
       <div class="hl-grid">
         <div class="hl-main">
-          ${HUB_TAB ? `<section class="card lc lc-slim" aria-labelledby="lc-h"><span id="lc-badges" hidden></span><div class="card-body" id="lc"></div></section>` : `<section class="card lc lc-slim" aria-labelledby="lc-h"><span id="lc-badges" hidden></span><div class="card-body" id="lc"></div></section>`}
+          <section class="card lc lc-slim" aria-labelledby="lc-h"><span id="lc-badges" hidden></span><div class="card-body" id="lc"></div></section>
           <div class="hl-edit" id="editor"></div>
         </div>
         <aside class="hl-preview" id="hl-pv"></aside>
       </div>
       ${historyCard()}`;
     const lc = Lifecycle({
-      host: () => $('#lc'), draftOnly: HUB_TAB, area: 'homeLayout', noun: 'layout', getRec: () => st.rec, getWorking: () => clone(st.working), isDirty: dirty, describe: describeLayout,
+      host: () => $('#lc'), title: () => `${st.aud === 'guest' ? 'Guest' : 'Authenticated'} layout`, area: 'homeLayout', noun: 'layout', getRec: () => st.rec, getWorking: () => clone(st.working), isDirty: dirty, describe: describeLayout,
       onSaved: rec => { st.rec = rec; st.working = clone(base()); update(); hist.update(rec.events); $('#lc-h').focus(); },
       onDiscard: () => { st.working = clone(base()); update(); $('#lc-h').focus(); }, afterDelete: () => {}
     });

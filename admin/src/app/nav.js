@@ -14,7 +14,7 @@ const NAV = [
   { id: 'users', label: 'Admin management', icon: 'manage_accounts', items: [
     { route: 'users', label: 'All users', area: 'users', children: [['users-new', 'Create user'], ['users-:id', 'User details']] }
   ] },
-  { id: 'home', label: 'Home Screen', icon: 'smartphone', tabs: true, items: [
+  { id: 'home', label: 'Home Screen', icon: 'smartphone', items: [
     { route: 'home-layout', label: 'Layout', area: 'homeLayout' },
     { route: 'home-campaigns', label: 'Campaigns', area: 'campaigns', children: [['home-campaigns-new', 'New campaign'], ['home-campaigns-:id', 'Campaign']] },
     { route: 'home-alerts', label: 'Emergency alerts', area: 'alerts', children: [['home-alerts-new', 'New emergency alert'], ['home-alerts-:id', 'Emergency alert']] },

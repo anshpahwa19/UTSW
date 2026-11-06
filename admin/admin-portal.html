@@ -901,7 +901,6 @@ label.btn:has(+ input:focus-visible){box-shadow:var(--focus)}
 .hub-panel > .page{padding:0; max-width:none}
 .tab-head h2{font-size:var(--t24, 24px)}
 @container main (max-width: 760px){ .hub-stages{grid-template-columns:minmax(0,1fr)} .hub-acts{justify-content:stretch} .hub-acts .btn{flex:1} }
-.hub-panel .stat-strip{display:none}
 .lc-status{display:flex; flex-wrap:wrap; align-items:center; gap:var(--s2); font-size:var(--t14); color:var(--ink-2)}
 .hub-aud{display:flex; align-items:center; gap:var(--s3); flex-wrap:wrap}
 .hub-aud-l{font-size:var(--t14); font-weight:600; color:var(--ink-2)}
@@ -959,6 +958,10 @@ label.btn:has(+ input:focus-visible){box-shadow:var(--focus)}
 .dash-only #main a.locked{color:var(--ink-2); text-decoration:none}
 .dash-only .sidebar a.locked:hover{background:transparent}
 .dash-note{margin-top:var(--s3)}
+.fb-pick li{padding:0; background:none}
+.fb-row{display:flex; align-items:center; gap:var(--s3); width:100%; padding:var(--s2) var(--s3); border-radius:var(--r-sm); background:var(--bg); cursor:pointer}
+.fb-row .ms{color:var(--blue)}
+.fb-row input{width:20px; height:20px; accent-color:var(--ctl); flex:none}
 
 </style>
 <div id="app" lang="en"></div>
@@ -1538,6 +1541,17 @@ const ConfigService = {
     const before = dataAt(r, 'production');
     r.production = r.demo;
     logEvent(r, 'Published to production', 'production', r.demo, comment, before, r.versions[r.demo].data);
+    return r;
+  }),
+  publishDirect: (id, comment) => mockCall('publishing', () => {
+    const r = rec(id); guard(r, 'publish');
+    if (!r.draft) throw new ServiceError('There is no saved draft to publish.');
+    if (DB.db.settings.requirePublishComment && !comment) throw new ServiceError('A comment is required to publish (Administrative settings).');
+    const before = dataAt(r, 'production');
+    const v = r.nextVersion++;
+    r.versions[v] = { version: v, data: clone(r.draft.data), updatedBy: actor(), updatedAt: nowIso(), comment: comment || r.draft.comment || 'Published directly' };
+    r.demo = v; r.production = v; r.draft = null; r.review = null;
+    logEvent(r, 'Published directly to production (skipped demo)', 'production', v, comment, before, r.versions[v].data);
     return r;
   }),
   rollback: (id, toVersion, comment) => mockCall('publishing', () => {
@@ -2774,6 +2788,7 @@ function recSources(rec, dirty, isNew) {
 }
 
 /* ===== src/ui/lifecycle.js ===== */
+/* EXTRA_GLYPHS: bolt */
 /* ---------- Publishing workflow panel (Draft → Demo → Production), shared by every config editor ----------
    opts: { host, area, noun, getRec, getWorking, isDirty, isNew, describe(from, to), validate(), onSaved(rec, kind), onDiscard(), afterDelete() } */
 const changeList = items => items.length
@@ -2817,6 +2832,7 @@ function Lifecycle(opts) {
       d ? 'Save the draft before you request a review.' : r.review ? 'A review is already requested for this draft.' : 'Save a draft first, then request a review.', 'rate_review');
     if (!isNew && !draftOnly && may('deployDemo')) add('deploy', 'Deploy to demo', v('deploy'), !!hasDraft && !d, d ? 'Save the draft first. Demo only takes saved drafts.' : 'Save a draft first. Demo only takes saved drafts.', 'science');
     if (!isNew && !draftOnly && may('requestChanges') && demoAhead(r)) acts.push(btn({ label: 'Request changes', icon: 'undo', variant: 'secondary', size: 'sm', attrs: 'data-lc="changes"' }));
+    if (!isNew && !draftOnly && may('publish') && hasDraft) add('direct', 'Publish directly', 'secondary', !d, 'Save the draft first. Only saved drafts can be published.', 'bolt');
     if (!isNew && !draftOnly && may('publish')) add('publish', 'Publish to production', v('publish'), demoAhead(r), r && r.production ? `Production v${r.production} already matches demo. Deploy a new version to demo first.` : 'Deploy to demo and check it there first.', 'public');
     const lvl = levelOf(role(), opts.area);
     const note = lvl === 'view' ? `You can view this ${opts.noun}. Your role, ${ROLES[role()].label}, can’t change it.`
@@ -2828,7 +2844,7 @@ function Lifecycle(opts) {
     /* Full mode, same row: where the newest changes are, as three tags */
     const chips = `${d || isNew ? badge('unsaved', isNew ? 'New – not saved' : 'Unsaved changes') : hasDraft ? (r.draft.changesRequested ? badge('changes') : r.review ? badge('review') : badge('draft', 'Saved draft')) : '<span class="muted">No open draft</span>'}
       ${r && r.demo ? badge('demo', `Demo v${r.demo}`) : ''}${r && r.production ? badge('production', `Production v${r.production}`) : '<span class="muted">Not published</span>'}`;
-    host.innerHTML = `<div class="lc-row"><h2 id="lc-h" class="lc-row-h" tabindex="-1">${draftOnly ? 'Draft' : 'Publishing'}</h2>
+    host.innerHTML = `<div class="lc-row"><h2 id="lc-h" class="lc-row-h" tabindex="-1">${draftOnly ? 'Draft' : esc(opts.title ? opts.title() : 'Publishing')}</h2>
       <p class="lc-status">${draftOnly ? status : chips}</p>${acts.length ? `<div class="lc-actions">${acts.join('')}</div>` : ''}</div>`;
     host.innerHTML += `
       ${Object.entries(reason).map(([k, t]) => `<span class="vh" id="why-${k}">${esc(t)}</span>`).join('')}
@@ -2842,7 +2858,7 @@ function Lifecycle(opts) {
     const r = opts.getRec();
     const run = async (fn, busyLabel, msg, kind) => {
       setBusy(b, true, busyLabel);
-      try { const rec = await fn(); opts.onSaved(rec, kind); hubRenderBar(); toast(msg, { kind: 'success' }); announce(msg); }
+      try { const rec = await fn(); opts.onSaved(rec, kind); renderFeatureBar(); toast(msg, { kind: 'success' }); announce(msg); }
       catch (err) { setBusy(b, false); toast(err.message, { kind: 'error', ms: 8000 }); }
     };
     const needComment = DB.db.settings.requirePublishComment;
@@ -2883,6 +2899,13 @@ function Lifecycle(opts) {
     if (key === 'changes') {
       const c = await confirmDialog({ title: `Request changes to demo v${r.demo}?`, body: '<p>The demo version goes back to a draft with your comment, so it can be fixed and deployed again. Production doesn’t change.</p>', confirmLabel: 'Request changes', comment: { label: 'What needs to change', required: true } });
       if (c.ok) run(() => ConfigService.requestChanges(r.id, c.comment), 'Requesting changes', 'Changes requested. The demo version is back in draft.', 'changes');
+      return;
+    }
+    if (key === 'direct') {
+      const c = await confirmDialog({ title: `Publish the draft directly as v${r.nextVersion}?`, wide: true, body: `<div class="warn-box">${ic('bolt', 20)}<p>This skips demo: the draft goes straight to production, where patients see it, without a check on test devices. In this prototype, publishing is simulated.</p></div>
+        <h3 class="sub-h">Changes from ${r.production ? `production v${r.production}` : 'nothing published'}</h3>${changeList(opts.describe(dataAt(r, 'production'), r.draft.data))}`,
+        confirmLabel: 'Publish directly', variant: 'danger', comment: { label: 'Comment', required: needComment, hint: needComment ? 'Required by Administrative settings.' : 'Optional. Shown in the change history.' } });
+      if (c.ok) run(() => ConfigService.publishDirect(r.id, c.comment), 'Publishing', `Published the draft directly to production as v${r.nextVersion}.`, 'publish');
       return;
     }
     if (key === 'publish') {
@@ -2995,7 +3018,7 @@ const NAV = [
   { id: 'users', label: 'Admin management', icon: 'manage_accounts', items: [
     { route: 'users', label: 'All users', area: 'users', children: [['users-new', 'Create user'], ['users-:id', 'User details']] }
   ] },
-  { id: 'home', label: 'Home Screen', icon: 'smartphone', tabs: true, items: [
+  { id: 'home', label: 'Home Screen', icon: 'smartphone', items: [
     { route: 'home-layout', label: 'Layout', area: 'homeLayout' },
     { route: 'home-campaigns', label: 'Campaigns', area: 'campaigns', children: [['home-campaigns-new', 'New campaign'], ['home-campaigns-:id', 'Campaign']] },
     { route: 'home-alerts', label: 'Emergency alerts', area: 'alerts', children: [['home-alerts-new', 'New emergency alert'], ['home-alerts-:id', 'Emergency alert']] },
@@ -3102,10 +3125,6 @@ function renderSidebar(currentRoute) {
     return `<a href="#${item.route}" class="nav-link${nested ? ' nested' : ''}" ${here ? 'aria-current="page"' : ''}><span class="nav-l">${esc(label)}</span></a>`;
   };
   side.innerHTML = `<ul class="nav">${visibleNav(role).map(sec => {
-    if (sec.tabs) {
-      const here = currentRoute && currentRoute.section && currentRoute.section.id === sec.id;
-      return `<li class="nav-sec single"><a href="#${sec.items[0].route}" class="nav-link" ${here ? 'aria-current="page"' : ''}>${ic(sec.icon, 20)}<span class="nav-l">${esc(sec.label)}</span></a></li>`;
-    }
     if (sec.items.length === 1 && NAV.find(s => s.id === sec.id).items.length === 1) {
       return `<li class="nav-sec single">${link(sec.items[0], sec.label).replace('<span class="nav-l">', `${ic(sec.icon, 20)}<span class="nav-l">`)}</li>`;
     }
@@ -3148,10 +3167,6 @@ function renderUser() {
 
 /* Page heading with breadcrumbs */
 function pageHead({ crumbs, title, lede = '', badges = '', actions = '' }) {
-  if (HUB_TAB) return `<div class="page-head tab-head">
-    <div class="ph-row"><div class="ph-main"><h2 id="page-h" tabindex="-1">${esc(title)}</h2>${badges ? `<div class="ph-badges">${badges}</div>` : ''}</div>${actions ? `<div class="ph-actions">${actions}</div>` : ''}</div>
-    ${lede ? `<p class="lede">${lede}</p>` : ''}
-  </div>`;
   return `<div class="page-head">
     ${crumbs.length ? `<nav aria-label="Breadcrumb" class="crumbs"><ol>${crumbs.map(([label, href]) => `<li>${href ? `<a href="#${href}">${esc(label)}</a>` : `<span>${esc(label)}</span>`}</li>`).join('')}<li><span aria-current="page">${esc(title)}</span></li></ol></nav>` : ''}
     <div class="ph-row"><div class="ph-main"><h1 id="page-h" tabindex="-1">${esc(title)}</h1>${badges ? `<div class="ph-badges">${badges}</div>` : ''}</div>${actions ? `<div class="ph-actions">${actions}</div>` : ''}</div>
@@ -3160,8 +3175,7 @@ function pageHead({ crumbs, title, lede = '', badges = '', actions = '' }) {
 }
 const crumbsFor = r => {
   const c = [];
-  if (r.section.tabs) c.push([r.section.label, r.section.items[0].route]);
-  else if (r.section.items.length > 1) c.push([r.section.label, null]);
+  if (r.section.items.length > 1) c.push([r.section.label, null]);
   if (r.parent) c.push([r.parent.label, r.parent.route]);
   return c;
 };
@@ -3219,7 +3233,6 @@ const Router = {
     const role = Session.role();
     const m = name === 'denied' ? null : matchRoute(name);
     let title;
-    HUB_TAB = false;
     if (name === 'denied') { title = 'Access denied'; renderSidebar(null); main.innerHTML = deniedView(null); }
     else if (!m) { title = 'Page not found'; renderSidebar(null); main.innerHTML = notFoundView(name); }
     else if (!can(role, m.route.item.area, 'view')) { title = 'Access denied'; renderSidebar(m.route); main.innerHTML = deniedView(m.route); }
@@ -3227,18 +3240,12 @@ const Router = {
       renderSidebar(m.route);
       title = m.route.title;
       const page = BUILT_PAGES[m.route.pattern];
-      const isTab = !!(m.route.section.tabs && m.route.item.route === m.route.pattern);
-      HUB_TAB = isTab;
-      if (page) { this.active = page; page.render(isTab ? homeHub(main, m.route) : main, { route: m.route, params: m.params, role }); }
+      if (page) { this.active = page; page.render(main, { route: m.route, params: m.params, role }); }
       else { title = 'Page not found'; main.innerHTML = notFoundView(name); }
     }
     document.title = `${title} – MyCare Admin (prototype)`;
     /* Move focus to the new heading on navigation, but not on first load, so Tab starts at the skip link */
-    if (!isRefresh && this.loaded) {
-      const tab = hubFromTab && $('.hub-tabs [aria-current]'); hubFromTab = false;
-      if (tab) tab.focus({ preventScroll: true });
-      else { const h = $('#hub-h') || $('#page-h'); (h || main).focus({ preventScroll: true }); window.scrollTo(0, 0); }
-    } else hubFromTab = false;
+    if (!isRefresh && this.loaded) { const h = $('#page-h'); (h || main).focus({ preventScroll: true }); window.scrollTo(0, 0); }
     this.loaded = true;
     announce(`${title} page`);
   }
@@ -3359,14 +3366,15 @@ BUILT_PAGES['home-layout'] = (() => {
 
   function render(host) {
     main = host;
-    if (HUB_TAB) st.aud = hubAud;
     main.innerHTML = `<div class="page hl">
       ${pageHead({ crumbs: [['Home Screen', null]], title: 'Home screen layout',
         lede: 'Choose which modules patients see on the MyCare home screen and in what order, for guests and for signed-in patients.' })}
-      ${HUB_TAB ? '<div id="aud-panel"></div>' : `<div class="tabs" role="tablist" aria-label="Audience">${AUDIENCES.map(([k, l]) =>
+      <section class="card hub-pub" aria-labelledby="hub-pub-h" id="hub-pub"></section>
+      <div class="tabs" role="tablist" aria-label="Audience">${AUDIENCES.map(([k, l]) =>
         `<button type="button" role="tab" id="aud-${k}" aria-controls="aud-panel" aria-selected="${k === st.aud}" tabindex="${k === st.aud ? 0 : -1}" data-aud="${k}">${esc(l)}</button>`).join('')}</div>
-      <div id="aud-panel" role="tabpanel" aria-labelledby="aud-${st.aud}"></div>`}
+      <div id="aud-panel" role="tabpanel" aria-labelledby="aud-${st.aud}"></div>
     </div>`;
+    featureBar(['homeLayout'], 'Layout');
     const tabs = $$('[role="tab"]', main);
     const pick = async (t, focus) => {
       if (t.dataset.aud === st.aud) return;
@@ -3398,14 +3406,14 @@ BUILT_PAGES['home-layout'] = (() => {
       ${st.aud === 'authenticated' ? `<p class="note-line">${ic('info', 20)}<span>The signed-in home has no approved design yet (§10.5). These modules come from the personalised homepage prototype; “Your next visits” is read only from MyChart – Epic stays the source.</span></p>` : ''}
       <div class="hl-grid">
         <div class="hl-main">
-          ${HUB_TAB ? `<section class="card lc lc-slim" aria-labelledby="lc-h"><span id="lc-badges" hidden></span><div class="card-body" id="lc"></div></section>` : `<section class="card lc lc-slim" aria-labelledby="lc-h"><span id="lc-badges" hidden></span><div class="card-body" id="lc"></div></section>`}
+          <section class="card lc lc-slim" aria-labelledby="lc-h"><span id="lc-badges" hidden></span><div class="card-body" id="lc"></div></section>
           <div class="hl-edit" id="editor"></div>
         </div>
         <aside class="hl-preview" id="hl-pv"></aside>
       </div>
       ${historyCard()}`;
     const lc = Lifecycle({
-      host: () => $('#lc'), draftOnly: HUB_TAB, area: 'homeLayout', noun: 'layout', getRec: () => st.rec, getWorking: () => clone(st.working), isDirty: dirty, describe: describeLayout,
+      host: () => $('#lc'), title: () => `${st.aud === 'guest' ? 'Guest' : 'Authenticated'} layout`, area: 'homeLayout', noun: 'layout', getRec: () => st.rec, getWorking: () => clone(st.working), isDirty: dirty, describe: describeLayout,
       onSaved: rec => { st.rec = rec; st.working = clone(base()); update(); hist.update(rec.events); $('#lc-h').focus(); },
       onDiscard: () => { st.working = clone(base()); update(); $('#lc-h').focus(); }, afterDelete: () => {}
     });
@@ -3619,16 +3627,10 @@ function defineCollection(cfg) {
       try { list = await ConfigService.list(cfg.type); }
       catch (err) { $('#col-body').innerHTML = errorState(err.message); $('[data-retry]').onclick = () => this.render(main); return; }
       const counts = { live: list.filter(r => r.production && latestOn(r)).length, demo: list.filter(r => r.demo && r.demo !== r.production).length, draft: list.filter(r => r.draft).length, review: list.filter(r => r.review).length };
-      /* Inside the Home Screen page, items with an audience show only when they reach the chosen home screen */
-      const byAud = HUB_TAB && ['campaign', 'alert'].includes(cfg.type), allCount = list.length;
-      if (byAud) list = list.filter(r => segReaches((latestData(r) || {}).audience));
-      $('#col-body').innerHTML = `${byAud ? `<p class="note-line hub-aud-note">${ic('groups', 20)}<span>Showing ${plural(list.length, cfg.noun)} that reach ${hubAudLabel()}.${allCount > list.length ? ` ${allCount - list.length} more only reach${allCount - list.length === 1 ? 'es' : ''} ${hubAud === 'guest' ? 'signed-in patients' : 'guests'}; switch the home screen above to see ${allCount - list.length === 1 ? 'it' : 'them'}.` : ''}</span></p>` : ''}${cfg.summary ? cfg.summary(list) : ''}
-        <div class="stat-strip">
-          <div class="stat">${ic('public', 20)}<span><b>${counts.live}</b> live in production</span></div>
-          <div class="stat">${ic('science', 20)}<span><b>${counts.demo}</b> on demo, waiting for production</span></div>
-          <div class="stat">${ic('edit_note', 20)}<span><b>${counts.draft}</b> with an open draft${counts.review ? `, ${counts.review} waiting for review` : ''}</span></div>
-        </div>
+      $('#col-body').innerHTML = `${cfg.summary ? cfg.summary(list) : ''}
+        <section class="card hub-pub" aria-labelledby="hub-pub-h" id="hub-pub"></section>
         <section class="card"><div class="card-body" id="col-table"></div></section>`;
+      featureBar([cfg.type], cfg.title);
       dataTable($('#col-table'), {
         id: 'col', caption: cfg.title, noun: cfg.noun, searchPlaceholder: `Search ${cfg.title.toLowerCase()}`,
         rows: list, defaultSort: cfg.defaultSort || { key: 'updated', dir: 'desc' },
@@ -3656,8 +3658,7 @@ function defineCollection(cfg) {
     async render(main, ctx) {
       const isNewRoute = ctx.route.pattern.endsWith('-new');
       const st = this.st = { rec: null, working: null, errors: {}, isNew: isNewRoute };
-      const homeItem = cfg.section === 'Home Screen';
-      const crumbs = [[cfg.section, homeItem ? 'home-layout' : null], [cfg.title, cfg.route]];
+      const crumbs = [[cfg.section, null], [cfg.title, cfg.route]];
       main.innerHTML = `<div class="page ${cfg.cls || ''}" id="ed-page">${loadingState(`Loading the ${cfg.noun}`)}</div>`;
       if (!isNewRoute) {
         try { st.rec = await ConfigService.get(ctx.params.id); }
@@ -3671,9 +3672,7 @@ function defineCollection(cfg) {
       const secs = () => cfg.sections.map(s => ({ ...s, fields: s.fields.map(f => ro ? { ...f, readonly: true } : f) }));
       $('#ed-page').innerHTML = `${pageHead({ crumbs, title: title(), badges: `<span id="ed-badges">${st.isNew ? badge('unsaved', 'New') : envBadges(st.rec)}</span>`, lede: cfg.editorLede || '' })}
         ${cfg.banner ? cfg.banner : ''}
-        ${homeItem ? `<section class="card hub-pub" aria-labelledby="hub-pub-h" id="hub-pub"></section>
-        <section class="card lc lc-slim" aria-labelledby="lc-h"><div class="card-body" id="lc"></div></section>`
-        : `<section class="card lc lc-slim" aria-labelledby="lc-h"><div class="card-body" id="lc"></div></section>`}
+        <section class="card lc lc-slim" aria-labelledby="lc-h"><div class="card-body" id="lc"></div></section>
         <div class="ed-grid${cfg.preview || cfg.side ? '' : ' single'}">
           <section class="card ${cfg.formCls || ''}" aria-labelledby="form-h"><div class="card-head"><h2 id="form-h">${esc(cfg.formTitle || 'Details')}</h2>${ro ? `<div class="card-actions">${badge('fixed', 'View only')}</div>` : ''}</div>
             <form class="card-body form" id="ed-form" novalidate></form></section>
@@ -3703,9 +3702,8 @@ function defineCollection(cfg) {
         refresh();
       }, 120), drawForm);
       const describe = (a, b) => cfg.describe ? cfg.describe(a, b) : describeData(a, b, allFields());
-      if (homeItem) hubRenderBar();
       const lc = Lifecycle({
-        host: () => $('#lc'), draftOnly: homeItem, area: cfg.area, noun: cfg.noun,
+        host: () => $('#lc'), area: cfg.area, noun: cfg.noun,
         getRec: () => st.rec, getWorking: () => clone(st.working), isDirty: dirty, isNew: () => st.isNew, describe, validate,
         create: data => ConfigService.create(cfg.type, data, 'Created in the Admin'),
         onSaved: (rec, kind) => {
@@ -3911,123 +3909,88 @@ defineCollection({
   }
 });
 
-/* ===== src/pages/home-hub.js ===== */
-/* ---------- Home Screen: one page, a tab per area, one publishing bar for all of them ----------
-   The tabs are Layout, Campaigns, Emergency alerts, Quick links and Featured cards. Each tab keeps its own
-   address (#home-layout, #home-campaigns…), so links, history and the leave-with-unsaved-changes guard work
-   as before; the tabs are navigation links (aria-current), not an ARIA tablist.
-   The publishing bar sums every Home Screen configuration by stage and moves them together:
-   Deploy every saved draft to demo, then Publish everything on demo to production. One item at a time still
-   works from its own editor. Batch actions only include what the signed-in role may do; the rest is named. */
-/* EXTRA_GLYPHS: edit_note science public rocket_launch view_agenda campaign warning apps library_books */
-const HUB_TYPES = ['homeLayout', 'campaign', 'alert', 'quickLink', 'featuredCard'];
-const HUB_ICONS = { homeLayout: 'view_agenda', campaign: 'campaign', alert: 'warning', quickLink: 'apps', featuredCard: 'library_books' };
-let HUB_TAB = false;          /* true while a Home Screen tab is rendering: page headings become h2 inside the hub */
-let hubFromTab = false;
-let hubAud = 'guest';         /* the home screen being worked on, kept while moving between tabs */
-const HUB_AUDS = [['guest', 'Guest'], ['authenticated', 'Authenticated']];
-const hubAudLabel = () => hubAud === 'guest' ? 'guests' : 'signed-in patients';
-/* Does an audience segment reach guests or signed-in patients? Judged by its sign-in rule; no rule reaches both. */
-function segReaches(segId, aud = hubAud) {
-  if (!segId || segId === 'seg-all') return true;
-  const r = ConfigService.peek(segId), d = r && latestData(r);
-  if (!d) return true;
-  const all = d.rules || [], rules = all.filter(x => x.attr === 'signedIn');
-  if (!rules.length) return true;
-  const want = aud === 'guest' ? 'Guest' : 'Signed in to MyChart', ok = x => (x.op === 'is' ? x.value === want : x.value !== want);
-  return d.match === 'any' ? rules.some(ok) || rules.length < all.length : rules.every(ok);
-}
+/* ===== src/pages/feature-bar.js ===== */
+/* ---------- Feature publishing bar ----------
+   On each feature's page (Layout, Campaigns, Emergency alerts, Quick links, Featured cards, Audience segments),
+   a slim bar counts that feature's items by stage and moves several at once:
+   - Deploy drafts to demo        (saved draft → new version on demo)
+   - Publish demo to production   (the version on demo → production)
+   - Publish drafts directly      (saved draft → new version on demo and production, skipping the demo check)
+   Each batch opens a list of the items it can move, all ticked; untick any to leave them out.
+   Only what the signed-in role may do is offered; the rest is named in a note. */
+/* EXTRA_GLYPHS: edit_note science public rocket_launch bolt view_agenda campaign warning apps library_books groups */
+const FB_ICONS = { homeLayout: 'view_agenda', campaign: 'campaign', alert: 'warning', quickLink: 'apps', featuredCard: 'library_books', segment: 'groups' };
+let fbCurrent = null;          /* { types, noun } for the bar on the page now */
 
-function hubRecords() { return HUB_TYPES.flatMap(t => ConfigService.peekAll(t)); }
-function hubStages() {
-  const recs = hubRecords();
-  return {
-    drafts: recs.filter(r => r.draft),
-    demo: recs.filter(r => r.demo && r.demo !== r.production),
-    live: recs.filter(r => r.production)
-  };
+function featureBar(types, noun) { fbCurrent = { types, noun }; renderFeatureBar(); }
+function fbStages(types) {
+  const recs = types.flatMap(t => ConfigService.peekAll(t));
+  return { drafts: recs.filter(r => r.draft), demo: recs.filter(r => r.demo && r.demo !== r.production), live: recs.filter(r => r.production) };
 }
-const hubName = r => `${r.name} (${CONFIG_TYPES[r.type].label.toLowerCase()})`;
-
-function homeHub(main, route) {
-  const sec = NAV.find(s => s.id === route.section.id), role = Session.role();
-  const tabs = sec.items.filter(i => can(role, i.area, 'view'));
-  main.innerHTML = `<div class="page hub">
-    <div class="page-head hub-head"><div class="ph-row"><div class="ph-main"><h1 id="hub-h" tabindex="-1">Home Screen</h1></div>
-      <div class="ph-actions hub-aud"><span class="hub-aud-l" id="hub-aud-l">Home screen for</span>${segmented({ id: 'hub-aud', label: 'Home screen for', options: HUB_AUDS, value: hubAud })}</div></div>
-      <p class="lede">Everything on the MyCare home screen: its layout, campaigns, emergency alerts, quick links and featured cards.</p></div>
-    <section class="card hub-pub" aria-labelledby="hub-pub-h" id="hub-pub"></section>
-    <nav class="hub-tabs" aria-label="Home Screen sections"><ul>${tabs.map(i => `<li><a href="#${i.route}" ${i.route === route.pattern ? 'aria-current="page"' : ''}>${esc(i.label)}<span class="hub-n" data-n="${i.area}"></span></a></li>`).join('')}</ul></nav>
-    <div class="hub-panel" id="hub-panel"></div>
-  </div>`;
-  $('.hub-tabs', main).addEventListener('click', e => { if (e.target.closest('a')) hubFromTab = true; });
-  const audCtl = $('#hub-aud', main);
-  wireSegmented(audCtl, async v => {
-    if (v === hubAud) return;
-    const sync = k => $$('[role="radio"]', audCtl).forEach(r => { const on = r.dataset.value === k; r.setAttribute('aria-checked', on); r.tabIndex = on ? 0 : -1; });
-    if ($('#hub-panel .badge-unsaved') && !(await Router.canLeave())) { sync(hubAud); $(`[data-value="${hubAud}"]`, audCtl).focus(); return; }
-    Router.clearGuard();
-    hubAud = v;
-    Router.refresh();
-    const again = $(`#hub-aud [data-value="${v}"]`); if (again) again.focus();
-    announce(`Showing the home screen for ${hubAudLabel()}`);
-  });
-  hubRenderBar();
-  return $('#hub-panel', main);
-}
-
-/* Stage tiles and the two batch actions */
-function hubRenderBar() {
-  const host = $('#hub-pub'); if (!host) return;
-  const role = Session.role(), st = hubStages();
+function renderFeatureBar() {
+  const host = $('#hub-pub'); if (!host || !fbCurrent) return;
+  const role = Session.role(), st = fbStages(fbCurrent.types), noun = fbCurrent.noun;
   const may = (r, a) => canAct(role, CONFIG_TYPES[r.type].area, a);
-  const dep = st.drafts.filter(r => may(r, 'deployDemo')), pub = st.demo.filter(r => may(r, 'publish'));
-  /* One slim row: three counts and the two batch actions */
+  const lists = {
+    demo: st.drafts.filter(r => may(r, 'deployDemo')),
+    prod: st.demo.filter(r => may(r, 'publish')),
+    direct: st.drafts.filter(r => may(r, 'publish'))
+  };
   const count = (k, icon, n, label) => `<li class="hub-c hub-${k}">${ic(icon, 20)}<b>${n}</b><span>${label}</span></li>`;
+  const off = k => (lists[k].length ? '' : 'disabled');
   host.innerHTML = `<div class="hub-bar">
       <h2 id="hub-pub-h" class="hub-bar-h" tabindex="-1">Publishing</h2>
-      <ul class="hub-counts" aria-label="Home Screen items by stage">
+      <ul class="hub-counts" aria-label="${esc(noun)} items by stage">
         ${count('draft', 'edit_note', st.drafts.length, st.drafts.length === 1 ? 'draft' : 'drafts')}
         ${count('demo', 'science', st.demo.length, 'on demo')}
         ${count('prod', 'public', st.live.length, 'live')}
       </ul>
       <div class="hub-acts">
-        ${btn({ label: dep.length ? `Deploy ${plural(dep.length, 'draft')} to demo` : 'Deploy to demo', icon: 'science', variant: 'secondary', size: 'sm', attrs: `data-hub="demo" ${dep.length ? '' : 'disabled'}` })}
-        ${btn({ label: pub.length ? `Publish ${pub.length} to production` : 'Publish to production', icon: 'rocket_launch', variant: 'primary', size: 'sm', attrs: `data-hub="prod" ${pub.length ? '' : 'disabled'}` })}
+        ${btn({ label: lists.demo.length ? `Deploy ${plural(lists.demo.length, 'draft')} to demo` : 'Deploy to demo', icon: 'science', variant: 'secondary', size: 'sm', attrs: `data-hub="demo" ${off('demo')}` })}
+        ${btn({ label: lists.prod.length ? `Publish ${lists.prod.length} to production` : 'Publish to production', icon: 'rocket_launch', variant: 'primary', size: 'sm', attrs: `data-hub="prod" ${off('prod')}` })}
+        ${role === 'marketing' ? '' : btn({ label: lists.direct.length ? `Publish ${plural(lists.direct.length, 'draft')} directly` : 'Publish drafts directly', icon: 'bolt', variant: 'secondary', size: 'sm', attrs: `data-hub="direct" ${off('direct')}` })}
       </div>
     </div>
-      ${st.drafts.length > dep.length || st.demo.length > pub.length ? `<p class="role-note">${ic('info', 20)}<span>${[
-        st.drafts.length > dep.length ? `${plural(st.drafts.length - dep.length, 'draft')} need${st.drafts.length - dep.length === 1 ? 's' : ''} a role that can deploy it` : '',
-        st.demo.length > pub.length ? `${plural(st.demo.length - pub.length, 'item')} on demo need${st.demo.length - pub.length === 1 ? 's' : ''} an Admin or Super Admin to publish` : ''].filter(Boolean).join('. ')}.</span></p>` : ''}`;
-  /* Counts on the tabs: anything waiting in that area */
-  $$('.hub-n').forEach(n => {
-    const area = n.dataset.n, c = [...st.drafts, ...st.demo].filter((r, i, a) => CONFIG_TYPES[r.type].area === area && a.indexOf(r) === i).length;
-    n.textContent = c || ''; n.hidden = !c;
-    n.setAttribute('aria-label', c ? `, ${plural(c, 'item')} waiting` : '');
-  });
+    ${st.drafts.length > lists.demo.length || st.demo.length > lists.prod.length ? `<p class="role-note">${ic('info', 20)}<span>${[
+      st.drafts.length > lists.demo.length ? `${plural(st.drafts.length - lists.demo.length, 'draft')} need${st.drafts.length - lists.demo.length === 1 ? 's' : ''} a role that can deploy it` : '',
+      st.demo.length > lists.prod.length ? `${plural(st.demo.length - lists.prod.length, 'item')} on demo need${st.demo.length - lists.prod.length === 1 ? 's' : ''} an Admin or Super Admin to publish` : ''].filter(Boolean).join('. ')}.</span></p>` : ''}`;
+
   host.onclick = async e => {
     const b = e.target.closest('[data-hub]'); if (!b || b.disabled) return;
-    if ($('#main .lc .badge-unsaved, #hub-panel .badge-unsaved')) { toast('Save or discard the changes on this tab first. Batch actions use saved drafts only.', { kind: 'error', ms: 7000 }); return; }
-    const toDemo = b.dataset.hub === 'demo', list = toDemo ? dep : pub;
-    const needComment = !toDemo && DB.db.settings.requirePublishComment;
+    if ($('#main .lc .badge-unsaved')) { toast('Save or discard your changes first. Batches use saved drafts only.', { kind: 'error', ms: 7000 }); return; }
+    const kind = b.dataset.hub, list = lists[kind];
+    const T = {
+      demo: { title: 'Deploy drafts to demo', verb: 'Deploy', lede: 'Each saved draft becomes a new version on demo, for checking on test devices. Production doesn’t change.', confirm: 'Deploy to demo', busy: 'Deploying', done: 'to demo' },
+      prod: { title: 'Publish demo to production', verb: 'Publish', lede: 'Each item publishes the version that is on demo now. What patients see in the app changes.', confirm: 'Publish to production', busy: 'Publishing', done: 'to production' },
+      direct: { title: 'Publish drafts directly to production', verb: 'Publish', lede: 'Each saved draft goes straight to production as a new version, skipping the check on demo. Use it for urgent or trivial changes.', confirm: 'Publish directly', busy: 'Publishing', done: 'directly to production' }
+    }[kind];
+    const needComment = kind !== 'demo' && DB.db.settings.requirePublishComment;
+    /* Ticked items are tracked while the dialog is open */
+    const picked = new Set(list.map(r => r.id));
+    const onPick = ev => { const cb = ev.target.closest && ev.target.closest('[data-pick]'); if (cb) { cb.checked ? picked.add(cb.dataset.pick) : picked.delete(cb.dataset.pick); } };
+    document.addEventListener('change', onPick, true);
     const c = await confirmDialog({
-      title: toDemo ? `Deploy ${plural(list.length, 'draft')} to demo?` : `Publish ${plural(list.length, 'item')} to production?`,
-      body: `<p>${toDemo ? 'Each saved draft becomes a new version on demo, where you can check it on test devices. Production doesn’t change.' : 'What patients see in the app changes for each of these. Each one publishes the version that is on demo now.'}</p>
-        <ul class="hub-confirm">${list.map(r => `<li>${ic(HUB_ICONS[r.type], 20)}<span><b>${esc(r.name)}</b> <span class="muted">${esc(CONFIG_TYPES[r.type].label)}${toDemo ? '' : ` · v${r.demo}`}</span></span></li>`).join('')}</ul>`,
-      confirmLabel: toDemo ? 'Deploy to demo' : 'Publish to production',
+      title: `${T.title}?`, wide: true,
+      body: `${kind === 'direct' ? `<div class="warn-box">${ic('bolt', 20)}<p>This skips demo: the drafts aren’t checked on test devices before patients see them.</p></div>` : ''}<p>${T.lede} Untick any you want to leave out.</p>
+        <ul class="hub-confirm fb-pick">${list.map(r => `<li><label class="checkbox fb-row" for="pick-${r.id}"><input type="checkbox" id="pick-${r.id}" data-pick="${r.id}" checked>
+          ${ic(FB_ICONS[r.type] || 'description', 20)}<span><b>${esc(r.name)}</b> <span class="muted">${kind === 'prod' ? `v${r.demo} on demo` : `draft saved ${esc(fmtDateTime(r.draft.updatedAt))}`}</span></span></label></li>`).join('')}</ul>`,
+      confirmLabel: T.confirm, variant: kind === 'direct' ? 'danger' : 'primary',
       comment: { label: 'Comment', required: needComment, hint: needComment ? 'Required by Administrative settings. Added to each item’s history.' : 'Optional. Added to each item’s history.' }
     });
+    document.removeEventListener('change', onPick, true);
     if (!c.ok) return;
-    setBusy(b, true, toDemo ? 'Deploying' : 'Publishing');
+    const chosen = list.filter(r => picked.has(r.id));
+    if (!chosen.length) { toast('Nothing was selected, so nothing changed.'); return; }
+    setBusy(b, true, T.busy);
     let done = 0; const failed = [];
-    for (const r of list) {
-      try { await (toDemo ? ConfigService.deployToDemo(r.id, c.comment) : ConfigService.publish(r.id, c.comment)); done++; }
+    for (const r of chosen) {
+      try { await (kind === 'demo' ? ConfigService.deployToDemo(r.id, c.comment) : kind === 'prod' ? ConfigService.publish(r.id, c.comment) : ConfigService.publishDirect(r.id, c.comment)); done++; }
       catch (err) { failed.push(`${r.name}: ${err.message}`); }
     }
     Router.clearGuard();
-    toast(`${toDemo ? 'Deployed' : 'Published'} ${plural(done, 'item')} ${toDemo ? 'to demo' : 'to production'}.${failed.length ? ` ${failed.length} didn’t: ${failed.join('; ')}` : ''}`, { kind: failed.length ? 'error' : 'success', ms: failed.length ? 9000 : 5000 });
+    toast(`${T.verb === 'Deploy' ? 'Deployed' : 'Published'} ${plural(done, 'item')} ${T.done}.${failed.length ? ` ${failed.length} didn’t: ${failed.join('; ')}` : ''}`, { kind: failed.length ? 'error' : 'success', ms: failed.length ? 9000 : 5000 });
     Router.refresh();
-    const again = $(`[data-hub="${toDemo ? 'prod' : 'demo'}"]`); if (again && !again.disabled) again.focus(); else { const h = $('#hub-pub-h'); if (h) h.focus(); }
+    const h = $('#hub-pub-h'); if (h) h.focus();
   };
 }
 

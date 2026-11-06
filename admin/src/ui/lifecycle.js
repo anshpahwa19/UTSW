@@ -1,3 +1,4 @@
+/* EXTRA_GLYPHS: bolt */
 /* ---------- Publishing workflow panel (Draft → Demo → Production), shared by every config editor ----------
    opts: { host, area, noun, getRec, getWorking, isDirty, isNew, describe(from, to), validate(), onSaved(rec, kind), onDiscard(), afterDelete() } */
 const changeList = items => items.length
@@ -41,6 +42,7 @@ function Lifecycle(opts) {
       d ? 'Save the draft before you request a review.' : r.review ? 'A review is already requested for this draft.' : 'Save a draft first, then request a review.', 'rate_review');
     if (!isNew && !draftOnly && may('deployDemo')) add('deploy', 'Deploy to demo', v('deploy'), !!hasDraft && !d, d ? 'Save the draft first. Demo only takes saved drafts.' : 'Save a draft first. Demo only takes saved drafts.', 'science');
     if (!isNew && !draftOnly && may('requestChanges') && demoAhead(r)) acts.push(btn({ label: 'Request changes', icon: 'undo', variant: 'secondary', size: 'sm', attrs: 'data-lc="changes"' }));
+    if (!isNew && !draftOnly && may('publish') && hasDraft) add('direct', 'Publish directly', 'secondary', !d, 'Save the draft first. Only saved drafts can be published.', 'bolt');
     if (!isNew && !draftOnly && may('publish')) add('publish', 'Publish to production', v('publish'), demoAhead(r), r && r.production ? `Production v${r.production} already matches demo. Deploy a new version to demo first.` : 'Deploy to demo and check it there first.', 'public');
     const lvl = levelOf(role(), opts.area);
     const note = lvl === 'view' ? `You can view this ${opts.noun}. Your role, ${ROLES[role()].label}, can’t change it.`
@@ -52,7 +54,7 @@ function Lifecycle(opts) {
     /* Full mode, same row: where the newest changes are, as three tags */
     const chips = `${d || isNew ? badge('unsaved', isNew ? 'New – not saved' : 'Unsaved changes') : hasDraft ? (r.draft.changesRequested ? badge('changes') : r.review ? badge('review') : badge('draft', 'Saved draft')) : '<span class="muted">No open draft</span>'}
       ${r && r.demo ? badge('demo', `Demo v${r.demo}`) : ''}${r && r.production ? badge('production', `Production v${r.production}`) : '<span class="muted">Not published</span>'}`;
-    host.innerHTML = `<div class="lc-row"><h2 id="lc-h" class="lc-row-h" tabindex="-1">${draftOnly ? 'Draft' : 'Publishing'}</h2>
+    host.innerHTML = `<div class="lc-row"><h2 id="lc-h" class="lc-row-h" tabindex="-1">${draftOnly ? 'Draft' : esc(opts.title ? opts.title() : 'Publishing')}</h2>
       <p class="lc-status">${draftOnly ? status : chips}</p>${acts.length ? `<div class="lc-actions">${acts.join('')}</div>` : ''}</div>`;
     host.innerHTML += `
       ${Object.entries(reason).map(([k, t]) => `<span class="vh" id="why-${k}">${esc(t)}</span>`).join('')}
@@ -66,7 +68,7 @@ function Lifecycle(opts) {
     const r = opts.getRec();
     const run = async (fn, busyLabel, msg, kind) => {
       setBusy(b, true, busyLabel);
-      try { const rec = await fn(); opts.onSaved(rec, kind); hubRenderBar(); toast(msg, { kind: 'success' }); announce(msg); }
+      try { const rec = await fn(); opts.onSaved(rec, kind); renderFeatureBar(); toast(msg, { kind: 'success' }); announce(msg); }
       catch (err) { setBusy(b, false); toast(err.message, { kind: 'error', ms: 8000 }); }
     };
     const needComment = DB.db.settings.requirePublishComment;
@@ -107,6 +109,13 @@ function Lifecycle(opts) {
     if (key === 'changes') {
       const c = await confirmDialog({ title: `Request changes to demo v${r.demo}?`, body: '<p>The demo version goes back to a draft with your comment, so it can be fixed and deployed again. Production doesn’t change.</p>', confirmLabel: 'Request changes', comment: { label: 'What needs to change', required: true } });
       if (c.ok) run(() => ConfigService.requestChanges(r.id, c.comment), 'Requesting changes', 'Changes requested. The demo version is back in draft.', 'changes');
+      return;
+    }
+    if (key === 'direct') {
+      const c = await confirmDialog({ title: `Publish the draft directly as v${r.nextVersion}?`, wide: true, body: `<div class="warn-box">${ic('bolt', 20)}<p>This skips demo: the draft goes straight to production, where patients see it, without a check on test devices. In this prototype, publishing is simulated.</p></div>
+        <h3 class="sub-h">Changes from ${r.production ? `production v${r.production}` : 'nothing published'}</h3>${changeList(opts.describe(dataAt(r, 'production'), r.draft.data))}`,
+        confirmLabel: 'Publish directly', variant: 'danger', comment: { label: 'Comment', required: needComment, hint: needComment ? 'Required by Administrative settings.' : 'Optional. Shown in the change history.' } });
+      if (c.ok) run(() => ConfigService.publishDirect(r.id, c.comment), 'Publishing', `Published the draft directly to production as v${r.nextVersion}.`, 'publish');
       return;
     }
     if (key === 'publish') {
