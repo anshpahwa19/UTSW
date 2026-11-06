@@ -64,22 +64,14 @@ BUILT_PAGES['home-layout'] = (() => {
     catch (err) { panel.innerHTML = errorState(err.message); $('[data-retry]', panel).onclick = load; return; }
     st.working = clone(base());
     panel.innerHTML = `
-      ${st.aud === 'authenticated' ? `<p class="note-line">${ic('info', 20)}<span>The signed-in home has no approved design yet (§10.5). These modules come from the personalised homepage prototype; “Your next visits” is read only from MyChart – Epic stays the source.</span></p>` : ''}
       <div class="hl-grid">
         <div class="hl-main">
-          <section class="card lc lc-slim" aria-labelledby="lc-h"><span id="lc-badges" hidden></span><div class="card-body" id="lc"></div></section>
           <div class="hl-edit" id="editor"></div>
         </div>
         <aside class="hl-preview" id="hl-pv"></aside>
       </div>
       ${historyCard()}`;
-    const lc = Lifecycle({
-      host: () => $('#lc'), title: () => `${st.aud === 'guest' ? 'Guest' : 'Authenticated'} layout`, area: 'homeLayout', noun: 'layout', getRec: () => st.rec, getWorking: () => clone(st.working), isDirty: dirty, describe: describeLayout,
-      onSaved: rec => { st.rec = rec; st.working = clone(base()); update(); hist.update(rec.events); $('#lc-h').focus(); },
-      onDiscard: () => { st.working = clone(base()); update(); $('#lc-h').focus(); }, afterDelete: () => {}
-    });
-    st.lc = lc;
-    const hist = mountHistory({ getRec: () => st.rec, describe: describeLayout, onSaved: rec => { st.rec = rec; st.working = clone(base()); update(); hist.update(rec.events); } });
+    const hist = st.hist = mountHistory({ getRec: () => st.rec, describe: describeLayout, onSaved: rec => { st.rec = rec; st.working = clone(base()); update(); hist.update(rec.events); renderFeatureBar(); } });
     pv = mountPreviewCard($('#hl-pv'), {
       title: `Mobile preview of the ${st.aud} home screen`,
       sources: () => recSources(st.rec, dirty(), false),
@@ -101,9 +93,22 @@ BUILT_PAGES['home-layout'] = (() => {
     update();
   }
 
-  function update(focus) {
-    $('#lc-badges').innerHTML = `${badge('mock')}${dirty() ? badge('unsaved') : ''}`;
-    st.lc.render(); renderEditor(focus); pv.update();
+  function update(focus) { renderEditor(focus); pv.update(); }
+
+  /* Save draft and Discard live on the modules card; deploy and publish are in the page's Publishing bar */
+  async function saveLayout(b) {
+    setBusy(b, true, 'Saving draft');
+    try {
+      const rec = await ConfigService.saveDraft(st.rec.id, clone(st.working), '');
+      st.rec = rec; st.working = clone(base()); update(); st.hist.update(rec.events); renderFeatureBar();
+      toast('Draft saved. Deploy or publish it from Publishing above.', { kind: 'success' }); announce('Draft saved');
+      $('#ed-h').focus();
+    } catch (err) { setBusy(b, false); toast(err.message, { kind: 'error', ms: 8000 }); }
+  }
+  async function discardLayout() {
+    const c = await confirmDialog({ title: 'Discard unsaved changes?', body: `<p>The layout goes back to ${st.rec.draft ? 'your saved draft' : `production v${st.rec.production}`}. These changes are lost:</p>${changeList(describeLayout(base(), st.working))}`, confirmLabel: 'Discard changes', variant: 'danger', cancelLabel: 'Keep editing' });
+    if (!c.ok) return;
+    st.working = clone(base()); update(); $('#ed-h').focus(); announce('Changes discarded');
   }
 
   function renderEditor(focus) {
@@ -122,7 +127,7 @@ BUILT_PAGES['home-layout'] = (() => {
         </span>`}
       </li>`;
     };
-    $('#editor').innerHTML = card({ title: `${st.aud === 'guest' ? 'Guest' : 'Authenticated'} home modules`, titleId: 'ed-h', actions: ro ? badge('fixed', 'View only') : '', body: `
+    $('#editor').innerHTML = card({ title: `${st.aud === 'guest' ? 'Guest' : 'Authenticated'} home modules`, titleId: 'ed-h', actions: ro ? badge('fixed', 'View only') : `<span id="lc-badges">${dirty() ? badge('unsaved') : st.rec.draft ? badge('draft', 'Saved draft') : ''}</span>${dirty() ? btn({ label: 'Discard changes', variant: 'text', size: 'sm', attrs: 'data-hl="discard"' }) : ''}${btn({ label: 'Save draft', icon: 'save', variant: 'primary', size: 'sm', attrs: `data-hl="save" ${dirty() ? '' : 'disabled'}` })}`, body: `
       <h3 class="sub-h" id="ord-h" tabindex="-1">Modules, in order</h3>
       <p class="hint-line" id="drag-help">${ro ? 'Hidden modules keep their place but patients don’t see them.' : 'Drag a module by its handle to reorder it, or select the handle for move options. With a keyboard, focus the handle and press the up or down arrow. Hidden modules keep their place but patients don’t see them.'}</p>
       ${n ? `<ol class="mod-list" aria-labelledby="ord-h">${st.working.modules.map(row).join('')}</ol>`
@@ -255,6 +260,8 @@ BUILT_PAGES['home-layout'] = (() => {
   }
 
   function editorClick(e) {
+    const hl = e.target.closest('[data-hl]');
+    if (hl && !hl.disabled) { if (hl.dataset.hl === 'save') saveLayout(hl); else discardLayout(); return; }
     const b = e.target.closest('[data-act]'); if (!b || b.disabled) return;
     const rowEl = b.closest('[data-id]'), id = rowEl && rowEl.dataset.id, list = st.working.modules, i = list.findIndex(m => m.id === id);
     const label = modLabel(id);
