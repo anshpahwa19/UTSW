@@ -1,6 +1,6 @@
 /* ---------- Feature publishing bar ----------
    On each feature's page (Layout, Campaigns, Emergency alerts, Quick links, Featured cards, Audience segments),
-   a slim bar counts that feature's items by stage and moves several at once:
+   a slim bar moves several of that feature's items at once:
    - Deploy drafts to demo        (saved draft → new version on demo)
    - Publish demo to production   (the version on demo → production)
    - Publish drafts directly      (saved draft → new version on demo and production, skipping the demo check)
@@ -24,15 +24,11 @@ function renderFeatureBar() {
     prod: st.demo.filter(r => may(r, 'publish')),
     direct: st.drafts.filter(r => may(r, 'publish'))
   };
-  const count = (k, icon, n, label) => `<li class="hub-c hub-${k}">${ic(icon, 20)}<b>${n}</b><span>${label}</span></li>`;
   const off = k => (lists[k].length ? '' : 'disabled');
+  /* Stage counts stay as data for scripts and tests; they aren't shown */
+  Object.assign(host.dataset, { draft: st.drafts.length, demo: st.demo.length, prod: st.live.length });
   host.innerHTML = `<div class="hub-bar">
       <h2 id="hub-pub-h" class="hub-bar-h" tabindex="-1">Publishing</h2>
-      <ul class="hub-counts" aria-label="${esc(noun)} items by stage">
-        ${count('draft', 'edit_note', st.drafts.length, st.drafts.length === 1 ? 'draft' : 'drafts')}
-        ${count('demo', 'science', st.demo.length, 'on demo')}
-        ${count('prod', 'public', st.live.length, 'live')}
-      </ul>
       <div class="hub-acts">
         ${btn({ label: lists.demo.length ? `Deploy ${plural(lists.demo.length, 'draft')} to demo` : 'Deploy to demo', icon: 'science', variant: 'secondary', size: 'sm', attrs: `data-hub="demo" ${off('demo')}` })}
         ${btn({ label: lists.prod.length ? `Publish ${lists.prod.length} to production` : 'Publish to production', icon: 'rocket_launch', variant: 'primary', size: 'sm', attrs: `data-hub="prod" ${off('prod')}` })}

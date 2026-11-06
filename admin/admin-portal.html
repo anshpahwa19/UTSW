@@ -909,10 +909,6 @@ label.btn:has(+ input:focus-visible){box-shadow:var(--focus)}
 .hub-pub{padding:var(--s3) var(--s4) var(--s3) var(--s5, 20px)}
 .hub-bar{display:flex; flex-wrap:wrap; align-items:center; gap:var(--s2) var(--s5, 20px)}
 .hub-bar-h{font-size:var(--t16); font-weight:700; color:var(--ink); margin:0}
-.hub-counts{list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:var(--s2)}
-.hub-c{display:inline-flex; align-items:center; gap:6px; min-height:32px; padding:0 var(--s3); border-radius:var(--r-pill); background:var(--bg); box-shadow:inset 0 0 0 1px var(--line); font-size:var(--t14); color:var(--ink-2)}
-.hub-c .ms{color:var(--blue)}
-.hub-c b{color:var(--ink); font-variant-numeric:tabular-nums}
 .hub-bar .hub-acts{margin:0 0 0 auto}
 .hub-pub .role-note{margin-top:var(--s2)}
 @container main (max-width: 760px){ .hub-bar .hub-acts{margin-left:0; width:100%} }
@@ -3993,7 +3989,7 @@ defineCollection({
 /* ===== src/pages/feature-bar.js ===== */
 /* ---------- Feature publishing bar ----------
    On each feature's page (Layout, Campaigns, Emergency alerts, Quick links, Featured cards, Audience segments),
-   a slim bar counts that feature's items by stage and moves several at once:
+   a slim bar moves several of that feature's items at once:
    - Deploy drafts to demo        (saved draft → new version on demo)
    - Publish demo to production   (the version on demo → production)
    - Publish drafts directly      (saved draft → new version on demo and production, skipping the demo check)
@@ -4017,15 +4013,11 @@ function renderFeatureBar() {
     prod: st.demo.filter(r => may(r, 'publish')),
     direct: st.drafts.filter(r => may(r, 'publish'))
   };
-  const count = (k, icon, n, label) => `<li class="hub-c hub-${k}">${ic(icon, 20)}<b>${n}</b><span>${label}</span></li>`;
   const off = k => (lists[k].length ? '' : 'disabled');
+  /* Stage counts stay as data for scripts and tests; they aren't shown */
+  Object.assign(host.dataset, { draft: st.drafts.length, demo: st.demo.length, prod: st.live.length });
   host.innerHTML = `<div class="hub-bar">
       <h2 id="hub-pub-h" class="hub-bar-h" tabindex="-1">Publishing</h2>
-      <ul class="hub-counts" aria-label="${esc(noun)} items by stage">
-        ${count('draft', 'edit_note', st.drafts.length, st.drafts.length === 1 ? 'draft' : 'drafts')}
-        ${count('demo', 'science', st.demo.length, 'on demo')}
-        ${count('prod', 'public', st.live.length, 'live')}
-      </ul>
       <div class="hub-acts">
         ${btn({ label: lists.demo.length ? `Deploy ${plural(lists.demo.length, 'draft')} to demo` : 'Deploy to demo', icon: 'science', variant: 'secondary', size: 'sm', attrs: `data-hub="demo" ${off('demo')}` })}
         ${btn({ label: lists.prod.length ? `Publish ${lists.prod.length} to production` : 'Publish to production', icon: 'rocket_launch', variant: 'primary', size: 'sm', attrs: `data-hub="prod" ${off('prod')}` })}
