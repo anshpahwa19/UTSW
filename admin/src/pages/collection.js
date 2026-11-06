@@ -11,7 +11,7 @@ function defineCollection(cfg) {
     async render(main) {
       const role = Session.role(), canEdit = can(role, cfg.area, 'draft');
       main.innerHTML = `<div class="page ${cfg.cls || ''}">${pageHead({ crumbs: [[cfg.section, null]], title: cfg.title, lede: cfg.lede,
-        actions: canEdit ? `<a class="btn btn-primary" href="#${cfg.route}-new">${ic('add', 20)}<span class="lbl">${esc(cfg.newLabel)}</span></a>` : '' })}
+        actions: canEdit ? `${cfg.bulk ? `<a class="btn btn-secondary" href="#${cfg.route}-bulk">${ic('library_add', 20)}<span class="lbl">Create several</span></a>` : ''}<a class="btn btn-primary" href="#${cfg.route}-new">${ic('add', 20)}<span class="lbl">${esc(cfg.newLabel)}</span></a>` : '' })}
         <div id="col-body">${loadingState(`Loading ${cfg.title.toLowerCase()}`)}</div></div>`;
       let list;
       try { list = await ConfigService.list(cfg.type); }
@@ -126,6 +126,95 @@ function defineCollection(cfg) {
   };
   BUILT_PAGES[`${cfg.route}-new`] = editor;
   BUILT_PAGES[`${cfg.route}-:id`] = editor;
+  if (cfg.bulk) defineBulk(cfg);
+}
+
+/* ---------- Create several at once ----------
+   One page with a compact card per new item: only the fields each needs (cfg.bulk keys, taken from the
+   feature's own form, so labels, validation and Instant / Scheduled behave the same). Everything else uses
+   the defaults of a new item. Save all as drafts checks every card first, then creates them; they then show
+   in the feature's Publishing bar to deploy or publish together. Up to 10 at a time. */
+/* EXTRA_GLYPHS: library_add content_copy */
+const BULK_MAX = 10;
+function defineBulk(cfg) {
+  const item = NAV.flatMap(s => s.items.map(i => ({ s, i }))).find(x => x.i.route === cfg.route);
+  const one = cfg.noun, many = cfg.title.toLowerCase(), cap = one[0].toUpperCase() + one.slice(1);
+  ROUTES.push({ pattern: `${cfg.route}-bulk`, section: item.s, item: item.i, title: `Create several ${many}`, parent: item.i });
+  BUILT_PAGES[`${cfg.route}-bulk`] = {
+    render(main) {
+      /* Short fields sit two to a row so each card stays compact */
+      const SHORT = ['title', 'type', 'tag', 'ctaLabel', 'priority', 'subtitle', 'icon', 'audience'];
+      const all = fields(cfg.sections), bf = cfg.bulk.map(k => all.find(f => f.key === k)).filter(Boolean).map(f => (SHORT.includes(f.key) ? { ...f, wide: false } : f));
+      const items = [cfg.defaults(), cfg.defaults()], errors = [{}, {}];
+      const blank = JSON.stringify(cfg.defaults());
+      const dirty = () => items.some(d => JSON.stringify(d) !== blank);
+      main.innerHTML = `<div class="page bulk ${cfg.cls || ''}">${pageHead({ crumbs: [[cfg.section, null], [cfg.title, cfg.route]], title: `Create several ${many}`,
+        lede: `Fill in each ${one}, then save them all as drafts. Anything not shown here uses the defaults of a new ${one}; open a draft later to add more.` })}
+        <form id="bk" novalidate><div id="bk-list" class="bk-list"></div>
+          <div class="bk-acts">
+            <span class="bk-add">${btn({ label: `Add another ${one}`, icon: 'add', variant: 'secondary', attrs: 'data-bk="add"' })}${btn({ label: 'Copy the last one', icon: 'content_copy', variant: 'text', attrs: 'data-bk="copy"' })}</span>
+            <span class="bk-save"><a class="btn btn-text" href="#${cfg.route}"><span class="lbl">Cancel</span></a>${btn({ label: 'Save all as drafts', icon: 'save', variant: 'primary', type: 'submit', attrs: 'id="bk-save"' })}</span>
+          </div></form></div>`;
+      const list = $('#bk-list');
+      const drawItem = i => { const host = $(`#bk-f${i}`); if (host) host.innerHTML = renderForm([{ fields: bf }], items[i], errors[i], `b${i}`); };
+      const draw = () => {
+        list.innerHTML = items.map((d, i) => `<section class="card bk-item" aria-labelledby="bk-h${i}"><div class="card-head"><h2 id="bk-h${i}" tabindex="-1">${esc(cap)} ${i + 1}${d.title ? `<span class="bk-name"> – ${esc(d.title)}</span>` : ''}</h2>
+          ${items.length > 1 ? `<div class="card-actions">${btn({ label: `Remove ${one} ${i + 1}`, icon: 'delete', variant: 'text', size: 'sm', attrs: `data-bk="rm" data-i="${i}"` })}</div>` : ''}</div>
+          <div class="card-body form" id="bk-f${i}"></div></section>`).join('');
+        items.forEach((d, i) => { drawItem(i); wireForm($(`#bk-f${i}`), () => bf, items[i], () => {
+          $(`#bk-h${i}`).innerHTML = `${esc(cap)} ${i + 1}${items[i].title ? `<span class="bk-name"> – ${esc(items[i].title)}</span>` : ''}`; label();
+          /* Once a card has been checked, clear each problem as soon as it is fixed */
+          if (Object.keys(errors[i]).length) {
+            const now = validateData(all, items[i], cfg.validate), before = Object.keys(errors[i]).length;
+            Object.keys(errors[i]).forEach(k => { if (!now[k]) delete errors[i][k]; });
+            if (Object.keys(errors[i]).length !== before) { const id = document.activeElement && document.activeElement.id; drawItem(i); const el = id && document.getElementById(id); if (el) el.focus(); }
+          }
+        }, () => drawItem(i)); });
+        label();
+        const full = items.length >= BULK_MAX;
+        $$('[data-bk="add"], [data-bk="copy"]').forEach(b => { b.disabled = full; b.title = full ? `Up to ${BULK_MAX} at a time` : ''; });
+      };
+      const label = () => { $('#bk-save .lbl').textContent = `Save ${plural(items.length, one)} as drafts`; };
+      draw();
+      $('#bk').addEventListener('click', e => {
+        const b = e.target.closest('[data-bk]'); if (!b || b.disabled) return;
+        e.preventDefault();
+        if (b.dataset.bk === 'add' || b.dataset.bk === 'copy') {
+          items.push(b.dataset.bk === 'copy' ? { ...clone(items[items.length - 1]), title: '' } : cfg.defaults()); errors.push({});
+          draw(); const f = $(`#b${items.length - 1}-${bf[0].key}`); f && f.focus();
+          announce(`${cap} ${items.length} added${b.dataset.bk === 'copy' ? ', copied from the one before' : ''}`);
+        }
+        if (b.dataset.bk === 'rm') {
+          const i = +b.dataset.i; items.splice(i, 1); errors.splice(i, 1); draw();
+          ($(`#bk-h${Math.max(0, i - 1)}`) || $('[data-bk="add"]')).focus(); announce(`${cap} ${i + 1} removed`);
+        }
+      });
+      $('#bk').addEventListener('submit', async e => {
+        e.preventDefault();
+        let bad = 0;
+        items.forEach((d, i) => { errors[i] = validateData(all, d, cfg.validate); if (Object.keys(errors[i]).length) bad++; });
+        if (bad) {
+          draw();
+          const first = errors.findIndex(x => Object.keys(x).length); const s = $(`#b${first}-errsum`); (s || $(`#bk-h${first}`)).focus();
+          toast(`Fix ${plural(bad, one)} before saving. Nothing was saved.`, { kind: 'error', ms: 7000 }); return;
+        }
+        const go = $('#bk-save'); setBusy(go, true, 'Saving');
+        let done = 0; const failed = [];
+        for (const d of items) {
+          const data = clone(d); if ('order' in data) data.order = ConfigService.peekAll(cfg.type).length + 1;
+          try { await ConfigService.create(cfg.type, data, 'Created with Create several'); done++; } catch (err) { failed.push(`${d.title}: ${err.message}`); }
+        }
+        Router.clearGuard();
+        toast(`Saved ${plural(done, one)} as drafts. Deploy or publish them from the Publishing bar.${failed.length ? ` ${failed.length} didn’t save: ${failed.join('; ')}` : ''}`, { kind: failed.length ? 'error' : 'success', ms: 7000 });
+        Router.go(cfg.route);
+      });
+      Router.setGuard(async () => {
+        if (!dirty()) return true;
+        const r = await confirmDialog({ title: 'Leave without saving?', body: `<p>None of these ${many} are saved yet. If you leave, they’re lost.</p>`, confirmLabel: 'Leave page', variant: 'danger', cancelLabel: 'Stay on this page' });
+        return r.ok;
+      });
+    }
+  };
 }
 
 /* Shared field groups */
@@ -149,6 +238,7 @@ const homePreview = (audience = 'guest', type = null) => (data, id, src, focus, 
 
 /* ---- Campaigns ---- */
 defineCollection({
+  bulk: ['title', 'type', 'description', 'ctaLabel', 'audience', 'destination', 'startMode', 'start', 'end'],
   route: 'home-campaigns', type: 'campaign', area: 'campaigns', section: 'Home Screen', title: 'Campaigns', noun: 'campaign', newLabel: 'New campaign', icon: 'campaign',
   lede: 'Promotional banners on the home screen. The SOW proposes three to five campaigns for the MVP, pending confirmation. One active campaign shows at a time; emergency alerts are managed separately.',
   summary: list => { const n = list.length; return n > 5 ? `<p class="note-line">${ic('info', 20)}<span>${n} campaigns – more than the five the SOW proposes.</span></p>` : ''; },
@@ -182,6 +272,7 @@ defineCollection({
 
 /* ---- Emergency alerts: styled and worded apart from campaigns ---- */
 defineCollection({
+  bulk: ['title', 'type', 'message', 'priority', 'audience', 'startMode', 'start', 'end'],
   route: 'home-alerts', type: 'alert', area: 'alerts', section: 'Home Screen', title: 'Emergency alerts', noun: 'emergency alert', newLabel: 'New emergency alert', icon: 'warning', cls: 'alert-page',
   lede: 'Urgent safety and service messages that sit above everything on the home screen. Use them only for emergencies and disruptions – never for promotions.',
   banner: `<div class="alert-banner" role="note">${ic('warning', 24, 'f1')}<div><p class="ab-t">Emergency alerts reach every patient in the audience as soon as they’re active</p><p>Check the wording on demo first. Two alerts can show at once; priority 1 shows on top.</p></div></div>`,
@@ -238,6 +329,7 @@ defineCollection({
 
 /* ---- Featured cards (UTSW resources rows, §10.4) ---- */
 defineCollection({
+  bulk: ['title', 'subtitle', 'icon', 'destination'],
   route: 'home-featured-cards', type: 'featuredCard', area: 'featuredCards', section: 'Home Screen', title: 'Featured cards', noun: 'featured card', newLabel: 'New featured card', icon: 'library_books',
   lede: 'Rows in the UTSW resources module. Assumed to be these rows rather than the MedBlog carousel – pending confirmation.',
   nameIcon: d => d.icon, nameSub: d => d.subtitle, defaultSort: { key: 'order', dir: 'asc' },

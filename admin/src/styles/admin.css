@@ -886,3 +886,12 @@ label.btn:has(+ input:focus-visible){box-shadow:var(--focus)}
 .fb-row{display:flex; align-items:center; gap:var(--s3); width:100%; padding:var(--s2) var(--s3); border-radius:var(--r-sm); background:var(--bg); cursor:pointer}
 .fb-row .ms{color:var(--blue)}
 .fb-row input{width:20px; height:20px; accent-color:var(--ctl); flex:none}
+/* Create several */
+.bk-list{display:grid; gap:var(--s4)}
+.bk-item .card-head h2{font-size:var(--t18, 18px)}
+.bk-name{font-weight:400; color:var(--ink-2)}
+.bk-acts{position:sticky; bottom:0; z-index:5; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:var(--s3); margin-top:var(--s4); padding:var(--s3) var(--s4); border-radius:var(--r-lg); background:var(--surface); box-shadow:var(--shadow-2), 0 0 0 1px var(--line)}
+.bk-add,.bk-save{display:flex; flex-wrap:wrap; gap:var(--s2)}
+/* Keep messages clear of the sticky Create several bar */
+body:has(.bk-acts) #toasts{bottom:calc(100px + env(safe-area-inset-bottom, 0px))}
+@media (max-width: 600px){ body:has(.bk-acts) #toasts{bottom:calc(180px + env(safe-area-inset-bottom, 0px))} }
