@@ -956,3 +956,16 @@ label.btn:has(+ input:focus-visible){box-shadow:var(--focus)}
 .pv-top .pv-what{margin:0}
 .pv-top .pv-extras{display:flex; align-items:center}
 .pv-card .pv-note{margin-top:var(--s3)}
+/* "Showing now" line under each module: what patients get from it today */
+.mod-row{padding-top:var(--s4); padding-bottom:var(--s4); align-items:start}
+.mod-row > .drag-h,.mod-row > .mod-pos,.mod-row > .mod-ic{align-self:start}
+.mod-row > .mod-pos{line-height:44px}
+.mod-row > .drag-h{margin-top:-2px}
+.mod-row > .mod-ctl,.mod-row > .badge{align-self:start; margin-top:6px}
+.mod-txt{gap:2px}
+.mod-now{display:flex; align-items:baseline; gap:var(--s2); min-width:0; max-width:100%; margin-top:var(--s2); padding:6px var(--s3); border-radius:var(--r-sm); background:var(--bg); font-size:var(--t12); color:var(--ink-2); justify-self:start}
+.mod-now b{flex:none; color:var(--blue); font-weight:700}
+.mod-now span{min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.mod-row.is-off .mod-now{opacity:.7}
+.mod-row.is-off .mod-now b{color:var(--ink-2)}
+.mod-row:not(.ro):hover .mod-now,.mod-row.is-off .mod-now{background:var(--surface); box-shadow:inset 0 0 0 1px var(--line)}

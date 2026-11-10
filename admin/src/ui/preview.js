@@ -111,13 +111,11 @@ function fitPreview(aside) {
     if (getComputedStyle(grid).gridTemplateColumns.trim().split(/\s+/).length < 2) return;
     const max = parseFloat(getComputedStyle(phone).getPropertyValue('--s')) || .8;
     const chrome = aside.offsetHeight - 844 * max;
-    /* First scale the phone down a little (never below a readable size), then show a shorter screen that
-       scrolls inside, like a smaller phone. The editor card only grows if even that is too tall. */
+    /* Scale the whole phone (never below a readable size); the editor card grows if it is still shorter */
     const avail = left.offsetHeight - chrome;
     const s = Math.max(Math.min(max, .5), Math.min(max, avail / 844));
     if (s < max - .002) phone.style.setProperty('--s', s.toFixed(3));
-    const ph = Math.round(Math.max(600, Math.min(844, avail / s)));
-    if (ph < 844) phone.style.setProperty('--ph', ph);
+
     const short = aside.offsetHeight - left.offsetHeight;
     if (short > 1 && tail) tail.style.minHeight = `${tail.offsetHeight + short}px`;
   };

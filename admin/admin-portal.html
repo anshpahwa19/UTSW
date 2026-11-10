@@ -1032,6 +1032,19 @@ label.btn:has(+ input:focus-visible){box-shadow:var(--focus)}
 .pv-top .pv-what{margin:0}
 .pv-top .pv-extras{display:flex; align-items:center}
 .pv-card .pv-note{margin-top:var(--s3)}
+/* "Showing now" line under each module: what patients get from it today */
+.mod-row{padding-top:var(--s4); padding-bottom:var(--s4); align-items:start}
+.mod-row > .drag-h,.mod-row > .mod-pos,.mod-row > .mod-ic{align-self:start}
+.mod-row > .mod-pos{line-height:44px}
+.mod-row > .drag-h{margin-top:-2px}
+.mod-row > .mod-ctl,.mod-row > .badge{align-self:start; margin-top:6px}
+.mod-txt{gap:2px}
+.mod-now{display:flex; align-items:baseline; gap:var(--s2); min-width:0; max-width:100%; margin-top:var(--s2); padding:6px var(--s3); border-radius:var(--r-sm); background:var(--bg); font-size:var(--t12); color:var(--ink-2); justify-self:start}
+.mod-now b{flex:none; color:var(--blue); font-weight:700}
+.mod-now span{min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.mod-row.is-off .mod-now{opacity:.7}
+.mod-row.is-off .mod-now b{color:var(--ink-2)}
+.mod-row:not(.ro):hover .mod-now,.mod-row.is-off .mod-now{background:var(--surface); box-shadow:inset 0 0 0 1px var(--line)}
 
 </style>
 <div id="app" lang="en"></div>
@@ -2842,13 +2855,11 @@ function fitPreview(aside) {
     if (getComputedStyle(grid).gridTemplateColumns.trim().split(/\s+/).length < 2) return;
     const max = parseFloat(getComputedStyle(phone).getPropertyValue('--s')) || .8;
     const chrome = aside.offsetHeight - 844 * max;
-    /* First scale the phone down a little (never below a readable size), then show a shorter screen that
-       scrolls inside, like a smaller phone. The editor card only grows if even that is too tall. */
+    /* Scale the whole phone (never below a readable size); the editor card grows if it is still shorter */
     const avail = left.offsetHeight - chrome;
     const s = Math.max(Math.min(max, .5), Math.min(max, avail / 844));
     if (s < max - .002) phone.style.setProperty('--s', s.toFixed(3));
-    const ph = Math.round(Math.max(600, Math.min(844, avail / s)));
-    if (ph < 844) phone.style.setProperty('--ph', ph);
+
     const short = aside.offsetHeight - left.offsetHeight;
     if (short > 1 && tail) tail.style.minHeight = `${tail.offsetHeight + short}px`;
   };
@@ -3529,8 +3540,24 @@ BUILT_PAGES['home-layout'] = (() => {
     st.working = clone(base()); update(); $('#ed-h').focus(); announce('Changes discarded');
   }
 
+  /* What each module is showing patients right now, from the same content the preview draws */
+  function nowShowing(id, c) {
+    const list = (items, noun, key = 'title') => items.length ? `<b>${items.length} ${noun}${items.length === 1 ? '' : 's'}</b><span>${items.map(x => esc(x[key])).join(' · ')}</span>` : '<span>Nothing to show yet</span>';
+    switch (id) {
+      case 'tiles': return list(c.quickLinks, 'tile');
+      case 'featured': return list(c.featured.slice(0, 4), 'article');
+      case 'services': return list(c.resources, 'card');
+      case 'campaign': return c.campaign ? `<b>Live</b><span>${esc(c.campaign.title)}</span>` : '<b>None live</b><span>The banner is skipped until a campaign is active</span>';
+      case 'news': return list(c.announcements.slice(0, 3), 'announcement', 't');
+      case 'visits': return '<b>Per patient</b><span>Read from MyChart when the patient signs in</span>';
+      case 'near': return '<b>Per patient</b><span>Uses the patient’s location, if they allow it</span>';
+      default: return '';
+    }
+  }
+
   function renderEditor(focus) {
     const ro = !may('saveDraft');
+    const content = appContent({ audience: st.aud });
     const n = st.working.modules.length;
     const row = (m, i) => {
       const meta = HOME_MODULES[m.id];
@@ -3538,7 +3565,7 @@ BUILT_PAGES['home-layout'] = (() => {
         ${ro ? '' : `<button type="button" class="drag-h" data-act="drag" aria-haspopup="menu" aria-expanded="false" aria-label="Reorder ${esc(meta.label)}, position ${i + 1} of ${n}" aria-describedby="drag-help" title="Drag to reorder">${ic('drag_indicator', 20)}</button>`}
         <span class="mod-pos" aria-hidden="true">${i + 1}</span>
         <span class="mod-ic">${ic(meta.icon, 20)}</span>
-        <span class="mod-txt"><span class="mod-t" id="mt-${m.id}">${esc(meta.label)}<span class="vh">, position ${i + 1} of ${n}</span></span><span class="mod-d">${esc(meta.desc)}${meta.link ? ` <a class="text-link" href="#${meta.link}">Manage</a>` : ''}</span></span>
+        <span class="mod-txt"><span class="mod-t" id="mt-${m.id}">${esc(meta.label)}<span class="vh">, position ${i + 1} of ${n}</span></span><span class="mod-d">${esc(meta.desc)}${meta.link ? ` <a class="text-link" href="#${meta.link}">Manage</a>` : ''}</span><span class="mod-now">${nowShowing(m.id, content)}</span></span>
         ${m.on ? '' : badge('hidden')}
         ${ro ? '' : `<span class="mod-ctl">
           ${switchBtn({ id: `vis-${m.id}`, checked: m.on, label: `Show ${meta.label} on the home screen`, attrs: 'data-act="vis"' })}
