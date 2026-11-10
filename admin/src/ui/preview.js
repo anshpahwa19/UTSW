@@ -97,6 +97,7 @@ function fitPreview(aside) {
   if (!grid || !window.ResizeObserver) return { stop() {} };
   const left = [...grid.children].find(c => c !== aside && !c.contains(aside));
   const phone = $('.pv-host', aside);
+  const scales = grid.matches('.hl-grid');
   if (!left || !phone) return { stop() {} };
   /* When the editor is shorter than even the smallest phone, its last card grows to meet the preview */
   const last = () => {
@@ -114,7 +115,8 @@ function fitPreview(aside) {
     /* Scale the whole phone (never below a readable size); the editor card grows if it is still shorter */
     const avail = left.offsetHeight - chrome;
     const s = Math.max(Math.min(max, .5), Math.min(max, avail / 844));
-    if (s < max - .002) phone.style.setProperty('--s', s.toFixed(3));
+    /* Editors (with accordions that open and close) keep a steady phone; only the layout page scales it */
+    if (scales && s < max - .002) phone.style.setProperty('--s', s.toFixed(3));
 
     const short = aside.offsetHeight - left.offsetHeight;
     if (short > 1 && tail) tail.style.minHeight = `${tail.offsetHeight + short}px`;

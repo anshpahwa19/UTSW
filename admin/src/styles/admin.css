@@ -969,3 +969,24 @@ label.btn:has(+ input:focus-visible){box-shadow:var(--focus)}
 .mod-row.is-off .mod-now{opacity:.7}
 .mod-row.is-off .mod-now b{color:var(--ink-2)}
 .mod-row:not(.ro):hover .mod-now,.mod-row.is-off .mod-now{background:var(--surface); box-shadow:inset 0 0 0 1px var(--line)}
+/* ===================== Collapsible sidebar (desktop) ===================== */
+.topbar .rail-toggle{display:none}
+@media (min-width: 1024px){
+  .topbar .rail-toggle{display:inline-flex; color:#FFFFFF; flex:none; margin-left:calc(-1 * var(--s2))}
+  .topbar .rail-toggle:hover{background:rgba(255,255,255,.12)}
+  .topbar .brand{margin-left:0}
+  .layout{transition:grid-template-columns var(--d-base) var(--ease-out)}
+  .app.nav-rail{--a-sidebar:72px}
+  .app.nav-rail .sidebar{padding:var(--s3) var(--s2) var(--s6); overflow-x:hidden; z-index:30}
+  .app.nav-rail .nav-head,.app.nav-rail .nav-sec.single .nav-link{justify-content:center; min-height:44px; padding:0}
+  .app.nav-rail .nav-head > .nav-l,.app.nav-rail .nav-sec.single .nav-link > .nav-l{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
+  .app.nav-rail .nav-head .chev,.app.nav-rail .nav-foot{display:none}
+  .app.nav-rail .nav-sec.here > .nav-head{background:var(--tint)}
+  .app.nav-rail .nav-sec.here > .nav-head .ms{--fill:1}
+  .app.nav-rail .nav-head[aria-expanded="true"]{background:var(--tint); box-shadow:inset 0 0 0 1px var(--line-strong)}
+  .nav-sub.fly{position:fixed; z-index:45; left:calc(72px + var(--s2)); width:max-content; min-width:220px; max-width:300px; margin:0; padding:var(--s2); border:0; border-radius:var(--r-md); background:var(--surface); box-shadow:var(--shadow-2), 0 0 0 1px var(--line)}
+  .nav-sub.fly[hidden]{display:none}
+  .nav-sub.fly::before{content:attr(data-label); display:block; padding:var(--s1) var(--s3) var(--s2); font-size:var(--t12); font-weight:700; letter-spacing:.02em; color:var(--ink-2)}
+  .nav-sub.fly .nav-link.nested[aria-current="page"]::before{display:none}
+}
+@media (min-width: 1024px) and (prefers-reduced-motion: reduce){ .layout{transition:none} }
