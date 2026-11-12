@@ -4,7 +4,7 @@
 const NAV = [
   { id: 'dashboard', label: 'Dashboard', icon: 'dashboard', items: [{ route: 'dashboard', label: 'Dashboard', area: 'dashboard' }] },
   { id: 'analytics', label: 'Analytics and reporting', icon: 'monitoring', items: [
-    { route: 'analytics', label: 'Overview', area: 'analytics' },
+    { route: 'analytics-home', label: 'Home screen overview', area: 'analytics' },
     { route: 'analytics-adoption', label: 'Adoption and engagement', area: 'analytics' },
     { route: 'analytics-search', label: 'Search', area: 'analytics' },
     { route: 'analytics-content', label: 'Content', area: 'analytics' },

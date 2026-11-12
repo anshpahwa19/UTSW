@@ -111,24 +111,8 @@ BUILT_PAGES['home-layout'] = (() => {
     st.working = clone(base()); update(); $('#ed-h').focus(); announce('Changes discarded');
   }
 
-  /* What each module is showing patients right now, from the same content the preview draws */
-  function nowShowing(id, c) {
-    const list = (items, noun, key = 'title') => items.length ? `<b>${items.length} ${noun}${items.length === 1 ? '' : 's'}</b><span>${items.map(x => esc(x[key])).join(' · ')}</span>` : '<span>Nothing to show yet</span>';
-    switch (id) {
-      case 'tiles': return list(c.quickLinks, 'tile');
-      case 'featured': return list(c.featured.slice(0, 4), 'article');
-      case 'services': return list(c.resources, 'card');
-      case 'campaign': return c.campaign ? `<b>Live</b><span>${esc(c.campaign.title)}</span>` : '<b>None live</b><span>The banner is skipped until a campaign is active</span>';
-      case 'news': return list(c.announcements.slice(0, 3), 'announcement', 't');
-      case 'visits': return '<b>Per patient</b><span>Read from MyChart when the patient signs in</span>';
-      case 'near': return '<b>Per patient</b><span>Uses the patient’s location, if they allow it</span>';
-      default: return '';
-    }
-  }
-
   function renderEditor(focus) {
     const ro = !may('saveDraft');
-    const content = appContent({ audience: st.aud });
     const n = st.working.modules.length;
     const row = (m, i) => {
       const meta = HOME_MODULES[m.id];
@@ -136,14 +120,14 @@ BUILT_PAGES['home-layout'] = (() => {
         ${ro ? '' : `<button type="button" class="drag-h" data-act="drag" aria-haspopup="menu" aria-expanded="false" aria-label="Reorder ${esc(meta.label)}, position ${i + 1} of ${n}" aria-describedby="drag-help" title="Drag to reorder">${ic('drag_indicator', 20)}</button>`}
         <span class="mod-pos" aria-hidden="true">${i + 1}</span>
         <span class="mod-ic">${ic(meta.icon, 20)}</span>
-        <span class="mod-txt"><span class="mod-t" id="mt-${m.id}">${esc(meta.label)}<span class="vh">, position ${i + 1} of ${n}</span></span><span class="mod-d">${esc(meta.desc)}${meta.link ? ` <a class="text-link" href="#${meta.link}">Manage</a>` : ''}</span><span class="mod-now">${nowShowing(m.id, content)}</span></span>
+        <span class="mod-txt"><span class="mod-t" id="mt-${m.id}">${esc(meta.label)}<span class="vh">, position ${i + 1} of ${n}</span></span><span class="mod-d">${esc(meta.desc)}${meta.link ? ` <a class="text-link" href="#${meta.link}">Manage</a>` : ''}</span></span>
         ${m.on ? '' : badge('hidden')}
         ${ro ? '' : `<span class="mod-ctl">
           ${switchBtn({ id: `vis-${m.id}`, checked: m.on, label: `Show ${meta.label} on the home screen`, attrs: 'data-act="vis"' })}
         </span>`}
       </li>`;
     };
-    $('#editor').innerHTML = card({ title: `${st.aud === 'guest' ? 'Guest' : 'Authenticated'} home modules`, titleId: 'ed-h', actions: ro ? badge('fixed', 'View only') : `<span id="lc-badges">${dirty() ? badge('unsaved') : st.rec.draft ? badge('draft', 'Saved draft') : ''}</span>${dirty() ? btn({ label: 'Discard changes', variant: 'text', size: 'sm', attrs: 'data-hl="discard"' }) : ''}${btn({ label: 'Save draft', icon: 'save', variant: 'primary', size: 'sm', attrs: `data-hl="save" ${dirty() ? '' : 'disabled'}` })}`, body: `
+    $('#editor').innerHTML = card({ title: `${st.aud === 'guest' ? 'Guest' : 'Authenticated'} home modules`, titleId: 'ed-h', actions: ro ? badge('fixed', 'View only') : `<span id="lc-badges">${dirty() ? badge('unsaved') : ''}</span>${dirty() ? btn({ label: 'Discard changes', variant: 'text', size: 'sm', attrs: 'data-hl="discard"' }) : ''}${btn({ label: 'Save draft', icon: 'save', variant: 'primary', size: 'sm', attrs: `data-hl="save" ${dirty() ? '' : 'disabled'}` })}`, body: `
       <h3 class="sub-h" id="ord-h" tabindex="-1">Modules, in order</h3>
       <p class="hint-line" id="drag-help">${ro ? 'Hidden modules keep their place but patients don’t see them.' : 'Drag a handle to reorder, or focus it and use the arrow keys. Hidden modules keep their place but patients don’t see them.'}</p>
       ${n ? `<ol class="mod-list" aria-labelledby="ord-h">${st.working.modules.map(row).join('')}</ol>

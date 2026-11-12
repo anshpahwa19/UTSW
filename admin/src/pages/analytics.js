@@ -16,9 +16,7 @@ const articleRows = days => STATIC_CONTENT.featured.map((f, i) => ({ t: f.title,
 function extraFor(cat, days) {
   if (cat === 'search') {
     const z = [...DB.db.zeroResults].filter(x => x.status === 'open').sort((a, b) => b.count - a.count).slice(0, 6);
-    const mods = [['Quick links', 38.2], ['Search and top searches', 31.5], ['Campaign banner', 12.4], ['MedBlog (featured)', 9.8], ['UTSW resources', 6.1], ['Announcements', 2.0]];
-    return `<div class="two-col"><section class="card"><div class="card-head"><h2>Home module click-through share</h2></div><div class="card-body">${barList(mods.map(([label, value]) => ({ label, value })), { unit: '%' })}</div></section>
-      <section class="card"><div class="card-head"><h2>Top zero-result searches</h2><div class="card-actions"><a class="text-link" href="#search-zero-results">Fix them</a></div></div><div class="card-body">${z.length ? barList(z.map(x => ({ label: `“${x.query}”`, value: x.count }))) : '<p class="muted">No open zero-result searches.</p>'}</div></section></div>`;
+    return `<section class="card"><div class="card-head"><h2>Top zero-result searches</h2><div class="card-actions"><a class="text-link" href="#search-zero-results">Fix them</a></div></div><div class="card-body">${z.length ? barList(z.map(x => ({ label: `“${x.query}”`, value: x.count }))) : '<p class="muted">No open zero-result searches.</p>'}</div></section>`;
   }
   if (cat === 'content') {
     return `<section class="card"><div class="card-head"><h2>MedBlog articles</h2></div><div class="card-body" id="an-art"></div></section>`;
@@ -72,18 +70,14 @@ function analyticsPage(key) {
 }
 Object.keys(ANALYTICS_PAGES).forEach(k => { BUILT_PAGES[k] = analyticsPage(k); });
 
-BUILT_PAGES.analytics = {
+/* Home screen overview: how patients use each home module (sample data) */
+const HOME_CLICK_SHARE = [['Quick links', 38.2], ['Search and top searches', 31.5], ['Campaign banner', 12.4], ['MedBlog (featured)', 9.8], ['UTSW resources', 6.1], ['Announcements', 2.0]];
+BUILT_PAGES['analytics-home'] = {
   async render(main) {
-    main.innerHTML = `<div class="page">${pageHead({ crumbs: [['Analytics and reporting', null]], title: 'Analytics overview', badges: badge('mock') })}${mockNote}${rangeControl()}<div id="an-body">${loadingState('Loading metrics')}</div></div>`;
-    const load = async () => {
-      $('#an-body').innerHTML = loadingState('Loading metrics');
-      let all;
-      try { all = await Promise.all(Object.entries(ANALYTICS_PAGES).map(async ([route, d]) => [route, d, await AnalyticsService.get(d.cat, analyticsDays)])); }
-      catch (err) { $('#an-body').innerHTML = errorState(err.message); $('[data-retry]').onclick = load; return; }
-      $('#an-body').innerHTML = all.map(([route, d, ms]) => `<section class="card" aria-labelledby="ov-${d.cat}"><div class="card-head"><h2 id="ov-${d.cat}">${esc(d.title)}</h2><div class="card-actions"><a class="btn btn-text" href="#${route}"><span class="lbl">Open ${esc(d.title.toLowerCase())}</span>${ic('chevron_right', 20)}</a></div></div>
-        <div class="card-body"><div class="metric-row">${ms.map(metricTile).join('')}</div></div></section>`).join('');
-    };
-    wireSegmented($('#rng'), v => { analyticsDays = +v; load(); });
-    await load();
+    main.innerHTML = `<div class="page">${pageHead({ crumbs: [['Analytics and reporting', null]], title: 'Home screen overview', badges: badge('mock'),
+      lede: 'Which home screen modules patients tap, as a share of all home screen taps.' })}
+      ${mockNote}
+      <section class="card" aria-labelledby="hs-h"><div class="card-head"><h2 id="hs-h">Home module click-through share</h2><div class="card-actions"><a class="text-link" href="#home-layout">Edit the layout</a></div></div>
+        <div class="card-body">${barList(HOME_CLICK_SHARE.map(([label, value]) => ({ label, value })), { unit: '%' })}</div></section></div>`;
   }
 };

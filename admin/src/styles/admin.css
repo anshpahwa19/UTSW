@@ -990,3 +990,12 @@ label.btn:has(+ input:focus-visible){box-shadow:var(--focus)}
   .nav-sub.fly .nav-link.nested[aria-current="page"]::before{display:none}
 }
 @media (min-width: 1024px) and (prefers-reduced-motion: reduce){ .layout{transition:none} }
+/* ===================== Floating Publishing bar (every page that has one) =====================
+   The bar moves to the end of its page and sticks to the bottom of the window while the page scrolls,
+   then settles in place at the end of the page. */
+:is(.page, #col-body, #sg-body, #ed-page, #ne) > :is(.hub-pub, .lc-slim){order:99; position:sticky; bottom:calc(var(--s4) + env(safe-area-inset-bottom, 0px)); z-index:20;
+  box-shadow:0 12px 32px -8px rgba(0,30,60,.28), 0 0 0 1px var(--line-strong)}
+/* Toasts sit above the floating bar instead of covering it */
+body:has(:is(.hub-pub, .lc-slim)) #toasts{bottom:calc(var(--s4) + 92px + env(safe-area-inset-bottom, 0px))}
+@container main (max-width: 760px){ :is(.page, #col-body, #sg-body, #ed-page, #ne) > :is(.hub-pub, .lc-slim){bottom:var(--s2)} }
+@media (max-width: 760px){ body:has(:is(.hub-pub, .lc-slim)) #toasts{bottom:calc(var(--s2) + 150px + env(safe-area-inset-bottom, 0px))} }

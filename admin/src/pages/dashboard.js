@@ -85,7 +85,7 @@ BUILT_PAGES.dashboard = {
     $('#db-stats').innerHTML = heroStats.map((m, i) => `<a class="db-stat" href="#${['analytics-adoption', 'analytics-adoption', 'analytics-search', 'analytics-content'][i]}">
         <span class="db-stat-l">${esc(m.label)}</span>
         <span class="db-stat-v">${num(m.value, m.unit)}</span>
-        <span class="db-stat-f">${delta(m)}${sparkline(m.series)}</span></a>`).join('');
+        <span class="db-stat-f">${delta(m)}</span></a>`).join('');
 
     $('#db').innerHTML = `
       ${live.length ? `<section class="db-live db-in" style="--i:0" aria-labelledby="dl-h"><span class="db-live-ic">${ic('warning', 20, 'f1')}</span><h2 id="dl-h" class="vh">Live emergency alerts</h2>

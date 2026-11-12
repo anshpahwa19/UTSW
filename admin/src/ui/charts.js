@@ -60,12 +60,6 @@ function lineChart(host, { points, unit, label, height = 220, zeroBase = false }
   draw();
   if (window.ResizeObserver) { const ro = new ResizeObserver(debounce(() => { if (!host.isConnected) { ro.disconnect(); return; } draw(); }, 80)); ro.observe(plot); }
 }
-/* Sparkline for metric tiles (decorative; the tile states the value in text) */
-function sparkline(points) {
-  const W = 120, H = 32, ys = points.map(p => p.y), lo = Math.min(...ys), hi = Math.max(...ys) || 1;
-  const d = points.map((p, i) => `${i ? 'L' : 'M'}${(i / (points.length - 1) * W).toFixed(1)},${(H - 3 - (p.y - lo) / ((hi - lo) || 1) * (H - 6)).toFixed(1)}`).join('');
-  return `<svg class="spark" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" aria-hidden="true"><path d="${d}" class="c-line" pathLength="1"/></svg>`;
-}
 /* Horizontal bars: a labeled list, readable without the bars */
 function barList(rows, { unit = 'count', max } = {}) {
   const top = max || Math.max(...rows.map(r => r.value), 1);
@@ -78,7 +72,6 @@ function metricTile(m, link) {
     <p class="metric-l">${esc(m.label)}</p>
     <p class="metric-v">${fmtNum(m.value, m.unit)}</p>
     <p class="metric-c ${good ? 'good' : 'bad'}">${ic(up ? 'trending_up' : 'trending_down', 16)}<span>${up ? '+' : '−'}${Math.abs(m.change * 100).toFixed(1)}%<span class="vh"> compared with the previous period, ${good ? 'an improvement' : 'a decline'}</span></span><span class="metric-p" aria-hidden="true">vs. previous period</span></p>
-    ${sparkline(m.series)}
     ${link ? `<a class="metric-link" href="#${link}" aria-label="${esc(m.label)} details">Details</a>` : ''}
   </div>`;
 }
