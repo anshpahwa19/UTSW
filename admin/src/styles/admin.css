@@ -1018,3 +1018,9 @@ body:has(:is(.hub-pub, .lc-slim)) #toasts{bottom:calc(var(--s4) + 92px + env(saf
   .hs-row{grid-template-columns:24px 40px minmax(0,1fr) auto; grid-template-areas:"rank ic txt v" ". . bar bar"; row-gap:var(--s2)}
 }
 .hs-stat .metric-c{font-weight:400; font-size:var(--t14); color:var(--ink-2)}
+/* Metric tiles in a row share row lines, so a label that wraps to two lines doesn't push its value out of line */
+@supports (grid-template-rows: subgrid){
+  .metric-row{grid-auto-rows:auto}
+  .metric-row > .metric:has(> :nth-child(3)):not(:has(> :nth-child(4))){grid-row:span 3; grid-template-rows:subgrid; row-gap:var(--s1)}
+  .metric-row > .metric > .metric-l{align-self:start}
+}

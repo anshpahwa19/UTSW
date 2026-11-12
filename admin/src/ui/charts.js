@@ -66,12 +66,11 @@ function barList(rows, { unit = 'count', max } = {}) {
   return `<ul class="bars">${rows.map(r => `<li><span class="bar-l">${esc(r.label)}</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:${Math.max(2, r.value / top * 100)}%"></span></span><span class="bar-v">${fmtNum(r.value, unit)}</span></li>`).join('')}</ul>`;
 }
 /* EXTRA_GLYPHS: trending_up trending_down */
-function metricTile(m, link) {
+function metricTile(m) {
   const up = m.change >= 0, good = m.lowerBetter ? !up : up;
   return `<div class="metric">
     <p class="metric-l">${esc(m.label)}</p>
     <p class="metric-v">${fmtNum(m.value, m.unit)}</p>
     <p class="metric-c ${good ? 'good' : 'bad'}">${ic(up ? 'trending_up' : 'trending_down', 16)}<span>${up ? '+' : '−'}${Math.abs(m.change * 100).toFixed(1)}%<span class="vh"> compared with the previous period, ${good ? 'an improvement' : 'a decline'}</span></span><span class="metric-p" aria-hidden="true">vs. previous period</span></p>
-    ${link ? `<a class="metric-link" href="#${link}" aria-label="${esc(m.label)} details">Details</a>` : ''}
   </div>`;
 }
