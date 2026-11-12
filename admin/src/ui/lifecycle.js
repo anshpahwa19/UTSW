@@ -48,8 +48,8 @@ function Lifecycle(opts) {
     const note = lvl === 'view' ? `You can view this ${opts.noun}. Your role, ${ROLES[role()].label}, can’t change it.`
       : !may('deployDemo') ? `As ${ROLES[role()].label}, you can save drafts and request a review. An Admin or Super Admin deploys to demo and publishes.`
       : !may('publish') ? `As ${ROLES[role()].label}, you can deploy to demo. An Admin or Super Admin publishes to production.` : '';
-    const status = !draftOnly ? '' : d || isNew ? `${badge('unsaved', isNew ? 'New – not saved' : 'Unsaved changes')}<span>Save a draft, then deploy it from Publishing above.</span>`
-      : hasDraft ? `${r.draft.changesRequested ? badge('changes') : r.review ? badge('review') : badge('draft', 'Saved draft')}<span>${when(lastEvent(r, 'draft'))}. Deploy it with the other drafts from Publishing above.</span>`
+    const status = !draftOnly ? '' : d || isNew ? `${badge('unsaved', isNew ? 'New – not saved' : 'Unsaved changes')}<span>Save a draft, then deploy it from the Publishing bar.</span>`
+      : hasDraft ? `${r.draft.changesRequested ? badge('changes') : r.review ? badge('review') : badge('draft', 'Saved draft')}<span>${when(lastEvent(r, 'draft'))}. Deploy it with the other drafts from the Publishing bar.</span>`
       : `${r.production ? badge('production', `Production v${r.production}`) : ''}${demoAhead(r) ? badge('demo', `Demo v${r.demo}`) : ''}<span>No open draft. Edit below to start one.</span>`;
     /* Full mode, same row: where the newest changes are, as three tags */
     const chips = `${d || isNew ? badge('unsaved', isNew ? 'New – not saved' : 'Unsaved changes') : hasDraft ? (r.draft.changesRequested ? badge('changes') : r.review ? badge('review') : badge('draft', 'Saved draft')) : '<span class="muted">No open draft</span>'}

@@ -1075,6 +1075,25 @@ label.btn:has(+ input:focus-visible){box-shadow:var(--focus)}
 body:has(:is(.hub-pub, .lc-slim)) #toasts{bottom:calc(var(--s4) + 92px + env(safe-area-inset-bottom, 0px))}
 @container main (max-width: 760px){ :is(.page, #col-body, #sg-body, #ed-page, #ne) > :is(.hub-pub, .lc-slim){bottom:var(--s2)} }
 @media (max-width: 760px){ body:has(:is(.hub-pub, .lc-slim)) #toasts{bottom:calc(var(--s2) + 150px + env(safe-area-inset-bottom, 0px))} }
+/* ===================== Home screen overview ===================== */
+.hs-stat .metric-v{font-size:var(--t24, 24px); line-height:1.2}
+.hs-list{list-style:none; margin:0; padding:0; display:grid}
+.hs-row{display:grid; grid-template-columns:24px 40px minmax(180px, 1fr) minmax(120px, 1.6fr) 64px; grid-template-areas:"rank ic txt bar v"; align-items:center; gap:var(--s3) var(--s4); padding:var(--s3) var(--s2); border-radius:var(--r-md)}
+.hs-row + .hs-row{box-shadow:inset 0 1px 0 var(--line)}
+.hs-row:hover{background:var(--bg)}
+.hs-rank{grid-area:rank; color:var(--ink-2); font-weight:600; font-variant-numeric:tabular-nums; text-align:center}
+.hs-ic{grid-area:ic; width:40px; height:40px; border-radius:var(--r-sm); display:grid; place-items:center; background:var(--tint); color:var(--blue)}
+.hs-txt{grid-area:txt; display:grid; min-width:0}
+.hs-name{font-weight:600}
+.hs-where{font-size:var(--t12); color:var(--ink-2)}
+.hs-track{grid-area:bar; height:8px; border-radius:4px; background:var(--tint)}
+.hs-fill{display:block; height:100%; border-radius:4px; background:var(--blue); min-width:4px}
+.hs-v{grid-area:v; text-align:right; font-weight:700; font-size:var(--t18, 18px); font-variant-numeric:tabular-nums}
+.hs-foot{margin-top:var(--s3)}
+@container main (max-width: 640px){
+  .hs-row{grid-template-columns:24px 40px minmax(0,1fr) auto; grid-template-areas:"rank ic txt v" ". . bar bar"; row-gap:var(--s2)}
+}
+.hs-stat .metric-c{font-weight:400; font-size:var(--t14); color:var(--ink-2)}
 
 </style>
 <div id="app" lang="en"></div>
@@ -2953,8 +2972,8 @@ function Lifecycle(opts) {
     const note = lvl === 'view' ? `You can view this ${opts.noun}. Your role, ${ROLES[role()].label}, can’t change it.`
       : !may('deployDemo') ? `As ${ROLES[role()].label}, you can save drafts and request a review. An Admin or Super Admin deploys to demo and publishes.`
       : !may('publish') ? `As ${ROLES[role()].label}, you can deploy to demo. An Admin or Super Admin publishes to production.` : '';
-    const status = !draftOnly ? '' : d || isNew ? `${badge('unsaved', isNew ? 'New – not saved' : 'Unsaved changes')}<span>Save a draft, then deploy it from Publishing above.</span>`
-      : hasDraft ? `${r.draft.changesRequested ? badge('changes') : r.review ? badge('review') : badge('draft', 'Saved draft')}<span>${when(lastEvent(r, 'draft'))}. Deploy it with the other drafts from Publishing above.</span>`
+    const status = !draftOnly ? '' : d || isNew ? `${badge('unsaved', isNew ? 'New – not saved' : 'Unsaved changes')}<span>Save a draft, then deploy it from the Publishing bar.</span>`
+      : hasDraft ? `${r.draft.changesRequested ? badge('changes') : r.review ? badge('review') : badge('draft', 'Saved draft')}<span>${when(lastEvent(r, 'draft'))}. Deploy it with the other drafts from the Publishing bar.</span>`
       : `${r.production ? badge('production', `Production v${r.production}`) : ''}${demoAhead(r) ? badge('demo', `Demo v${r.demo}`) : ''}<span>No open draft. Edit below to start one.</span>`;
     /* Full mode, same row: where the newest changes are, as three tags */
     const chips = `${d || isNew ? badge('unsaved', isNew ? 'New – not saved' : 'Unsaved changes') : hasDraft ? (r.draft.changesRequested ? badge('changes') : r.review ? badge('review') : badge('draft', 'Saved draft')) : '<span class="muted">No open draft</span>'}
@@ -3597,7 +3616,7 @@ BUILT_PAGES['home-layout'] = (() => {
     try {
       const rec = await ConfigService.saveDraft(st.rec.id, clone(st.working), '');
       st.rec = rec; st.working = clone(base()); update(); st.hist.update(rec.events); renderFeatureBar();
-      toast('Draft saved. Deploy or publish it from Publishing above.', { kind: 'success' }); announce('Draft saved');
+      toast('Draft saved. Deploy or publish it from the Publishing bar.', { kind: 'success' }); announce('Draft saved');
       $('#ed-h').focus();
     } catch (err) { setBusy(b, false); toast(err.message, { kind: 'error', ms: 8000 }); }
   }
@@ -5086,15 +5105,43 @@ function analyticsPage(key) {
 }
 Object.keys(ANALYTICS_PAGES).forEach(k => { BUILT_PAGES[k] = analyticsPage(k); });
 
-/* Home screen overview: how patients use each home module (sample data) */
-const HOME_CLICK_SHARE = [['Quick links', 38.2], ['Search and top searches', 31.5], ['Campaign banner', 12.4], ['MedBlog (featured)', 9.8], ['UTSW resources', 6.1], ['Announcements', 2.0]];
+/* Home screen overview: how patients use each home module (sample data).
+   One measure (share of taps), so one hue; values are printed on every row, the bars only help compare. */
+const HOME_CLICK_SHARE = [
+  { id: 'tiles', label: 'Quick links', icon: 'apps', share: 38.2 },
+  { id: 'search', label: 'Search and top searches', icon: 'search', share: 31.5 },
+  { id: 'campaign', label: 'Campaign banner', icon: 'campaign', share: 12.4 },
+  { id: 'featured', label: 'MedBlog (featured)', icon: 'article', share: 9.8 },
+  { id: 'services', label: 'UTSW resources', icon: 'library_books', share: 6.1 },
+  { id: 'news', label: 'Announcements', icon: 'feed', share: 2.0 }
+];
 BUILT_PAGES['analytics-home'] = {
   async render(main) {
+    const rows = [...HOME_CLICK_SHARE].sort((a, b) => b.share - a.share);
+    const guest = (layoutFor('guest').modules || []).filter(m => m.on !== false).map(m => m.id);
+    const where = r => r.id === 'search' ? 'Top of the screen' : guest.includes(r.id) ? `Position ${guest.indexOf(r.id) + 1} on the guest home` : 'Not on the guest home';
+    const top = rows[0], top2 = rows[0].share + rows[1].share, low = rows[rows.length - 1], max = top.share;
+    const tile = (k, v, sub) => `<div class="metric hs-stat"><p class="metric-l">${k}</p><p class="metric-v">${v}</p><p class="metric-c">${sub}</p></div>`;
     main.innerHTML = `<div class="page">${pageHead({ crumbs: [['Analytics and reporting', null]], title: 'Home screen overview', badges: badge('mock'),
       lede: 'Which home screen modules patients tap, as a share of all home screen taps.' })}
       ${mockNote}
-      <section class="card" aria-labelledby="hs-h"><div class="card-head"><h2 id="hs-h">Home module click-through share</h2><div class="card-actions"><a class="text-link" href="#home-layout">Edit the layout</a></div></div>
-        <div class="card-body">${barList(HOME_CLICK_SHARE.map(([label, value]) => ({ label, value })), { unit: '%' })}</div></section></div>`;
+      <div class="metric-row">
+        ${tile('Most tapped', esc(top.label), `${top.share.toFixed(1)}% of home screen taps`)}
+        ${tile('Top two modules', `${top2.toFixed(1)}%`, `of home screen taps go to ${esc(rows[0].label.toLowerCase())} and ${esc(rows[1].label.split(' ')[0].toLowerCase())}`)}
+        ${tile('Least tapped', esc(low.label), `${low.share.toFixed(1)}% of home screen taps`)}
+      </div>
+      <section class="card" aria-labelledby="hs-h"><div class="card-head"><h2 id="hs-h">Click-through share by module</h2><div class="card-actions"><a class="btn btn-text btn-sm" href="#home-layout">${ic('edit', 20)}<span class="lbl">Edit the layout</span></a></div></div>
+        <div class="card-body">
+          <ol class="hs-list" aria-label="Modules, most tapped first">${rows.map((r, i) => `
+            <li class="hs-row" title="${esc(r.label)}: ${r.share.toFixed(1)}% of home screen taps">
+              <span class="hs-rank" aria-hidden="true">${i + 1}</span>
+              <span class="hs-ic" aria-hidden="true">${ic(r.icon, 20)}</span>
+              <span class="hs-txt"><span class="hs-name">${esc(r.label)}</span><span class="hs-where">${esc(where(r))}</span></span>
+              <span class="hs-track" aria-hidden="true"><span class="hs-fill" style="width:${(r.share / max * 100).toFixed(1)}%"></span></span>
+              <span class="hs-v">${r.share.toFixed(1)}%<span class="vh"> of home screen taps</span></span>
+            </li>`).join('')}</ol>
+          <p class="chart-sub hs-foot">Share of all taps on the home screen in the last 30 days. Shares add up to 100%.</p>
+        </div></section></div>`;
   }
 };
 

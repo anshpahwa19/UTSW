@@ -101,7 +101,7 @@ BUILT_PAGES['home-layout'] = (() => {
     try {
       const rec = await ConfigService.saveDraft(st.rec.id, clone(st.working), '');
       st.rec = rec; st.working = clone(base()); update(); st.hist.update(rec.events); renderFeatureBar();
-      toast('Draft saved. Deploy or publish it from Publishing above.', { kind: 'success' }); announce('Draft saved');
+      toast('Draft saved. Deploy or publish it from the Publishing bar.', { kind: 'success' }); announce('Draft saved');
       $('#ed-h').focus();
     } catch (err) { setBusy(b, false); toast(err.message, { kind: 'error', ms: 8000 }); }
   }
