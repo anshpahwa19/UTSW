@@ -5063,7 +5063,7 @@ function extraFor(cat, days) {
   }
   if (cat === 'care') {
     const b = [['Clements University Hospital', 9120], ['Zale Lipshy Pavilion', 6340], ['Sample Outpatient Building', 4210], ['UTSW RedBird (sample)', 1180]].map(([label, v]) => ({ label, value: Math.round(v * days / 30) }));
-    return `<section class="card"><div class="card-head"><h2>Indoor routes started, by building</h2></div><div class="card-body">${barList(b)}</div></section>`;
+    return `<section class="card"><div class="card-head"><h2>Top buildings</h2></div><div class="card-body">${barList(b)}</div></section>`;
   }
   if (cat === 'notifications') {
     return `<section class="card"><div class="card-head"><h2>Sent notifications</h2></div><div class="card-body" id="an-notes"></div></section>`;
