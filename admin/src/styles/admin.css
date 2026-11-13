@@ -1026,8 +1026,9 @@ body:has(:is(.hub-pub, .lc-slim)) #toasts{bottom:calc(var(--s4) + 92px + env(saf
 }
 /* Pinned modules on the Layout page (alerts and the Find Care hero): fixed, no controls */
 .pin-list{list-style:none; margin:0 0 var(--s2); padding:1px; display:grid; border-radius:var(--r-md); background:var(--bg); box-shadow:inset 0 0 0 1px var(--line)}
-.pin-row{display:grid; grid-template-columns:20px 40px minmax(0,1fr) auto; align-items:start; gap:var(--s2) var(--s3); padding:var(--s4) var(--s4) var(--s4) var(--s2)}
+.pin-row{display:grid; grid-template-columns:20px 40px minmax(0,1fr) auto; grid-template-areas:"pos ic txt badge"; align-items:start; gap:var(--s2) var(--s3); padding:var(--s4) var(--s4) var(--s4) var(--s2)}
+.pin-row > .mod-pos{grid-area:pos} .pin-row > .mod-ic{grid-area:ic} .pin-row > .mod-txt{grid-area:txt} .pin-row > .badge{grid-area:badge}
 .pin-row + .pin-row{box-shadow:inset 0 1px 0 var(--line)}
 .pin-row > .mod-pos{line-height:40px; text-align:center}
 .pin-row > .badge{margin-top:var(--s2)}
-@container edit (max-width: 420px){ .pin-row{grid-template-columns:40px minmax(0,1fr)} .pin-row > .mod-pos{display:none} .pin-row > .badge{grid-column:2; justify-self:start; margin-top:0} }
+@container edit (max-width: 420px){ .pin-row{grid-template-columns:40px minmax(0,1fr); grid-template-areas:"ic txt" ". badge"} .pin-row > .mod-pos{display:none} .pin-row > .badge{justify-self:start; margin-top:0} }
