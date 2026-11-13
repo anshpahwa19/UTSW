@@ -155,7 +155,7 @@ const BLOG=[
  {t:"Sun safety doesn’t end with summer",cat:"Cancer",d:"Aug. 28",m:"3 min read",a:"a"}
 ];
 const BLOG_CATS=["All",...new Set(BLOG.map(b=>b.cat))];
-const SLIDES=BLOG.slice(0,3).map(b=>({eb:"MedBlog · "+b.cat,t:b.t,m:`${b.d} · ${b.m}`,a:b.a}));
+const SLIDES=BLOG.slice(0,5).map(b=>({eb:"MedBlog · "+b.cat,t:b.t,m:`${b.d} · ${b.m}`,a:b.a}));
 const INBOX=[
  {id:"m1",t:"Garage C entrance closed Oct. 14–16",s:"Use the north entrance on Sample Parkway. Valet parking is free.",d:"Oct. 12",g:"local_parking"},
  {id:"m2",t:"Flu shots are here",s:"Get yours at any primary care clinic. Most insurance covers it.",d:"Oct. 1",g:"medical_services"},
@@ -386,15 +386,9 @@ M.saved=()=>{const ps=S.saved.map(id=>PBY[id]).filter(Boolean);
   <div class="h-scroll">${ps.map(p=>`<button class="card mini press" data-action="profile" data-id="${p.id}">${avatar(p,56)}<b>${esc(name(p))}</b><span>${esc(p.spec)}</span></button>`).join("")}</div>
   <p class="fine">Saved on this device only.</p>`};
 M.featured=()=>`<div class="mod-head"><h2 class="sec-h" id="h-featured">MedBlog</h2><button class="btn btn-ghost btn-sm" data-action="push" data-v="medblog" aria-label="See all MedBlog stories">See all</button></div>
-  <div class="carousel" role="region" aria-roledescription="carousel" aria-labelledby="h-featured">
-    <div class="h-scroll" id="car-scroll">${SLIDES.map((s,i)=>`<div class="slide" role="group" aria-roledescription="slide" aria-label="${i+1} of ${SLIDES.length}"><button class="card slide-btn press" data-action="toast" data-kind="go" data-msg="Opens: ${esc(s.t)}">
+  <ul class="h-scroll blog-row" id="car-scroll" aria-labelledby="h-featured">${SLIDES.map(s=>`<li class="slide"><button class="card slide-btn press" data-action="toast" data-kind="go" data-msg="Opens: ${esc(s.t)}">
       <span class="art art-${s.a}" aria-hidden="true"><i></i><i></i><i></i></span>
-      <span class="slide-txt"><span class="eyebrow">${s.eb}</span><span class="st">${esc(s.t)}</span><span class="meta">${s.m}</span></span></button></div>`).join("")}</div>
-    <div class="car-ctrl">
-      <button class="icon-btn" data-action="car-pause" id="car-pause" aria-label="${S.playing?"Pause slideshow":"Play slideshow"}">${icf(S.playing?"pause":"play_arrow")}</button>
-      <div class="dots${S.playing&&!rm()?" playing":""}" id="car-dots" aria-hidden="true">${SLIDES.map((_,i)=>`<i class="${i?"":"on"}"></i>`).join("")}</div>
-      <div class="car-nav"><button class="icon-btn" data-action="car-prev" aria-label="Previous slide">${ic("chevron_left")}</button><button class="icon-btn" data-action="car-next" aria-label="Next slide">${ic("chevron_right")}</button></div>
-    </div></div>`;
+      <span class="slide-txt"><span class="eyebrow">${s.eb}</span><span class="st">${esc(s.t)}</span><span class="meta">${s.m}</span></span></button></li>`).join("")}</ul>`;
 M.campaign=()=>`<div class="campaign"><span class="shape1" aria-hidden="true"></span><span class="shape2" aria-hidden="true"></span>
   <span class="eyebrow">Seasonal care</span><h2 id="h-campaign">Flu shots are here</h2>
   <p>Get yours at any primary care clinic. Most insurance covers it.</p>
@@ -695,19 +689,8 @@ function rerenderKeep(animate){const y=view.scrollTop;render(null,{instant:!anim
 function slideIndex(sc){const first=sc.firstElementChild;if(!first)return 0;const w=first.getBoundingClientRect().width+12;return Math.round(sc.scrollLeft/w)}
 function setDots(dots,i){$$("i",dots).forEach((d,k)=>d.classList.toggle("on",k===i))}
 function goSlide(sc,i){const kids=sc.children;const n=kids.length;i=(i+n)%n;sc.scrollTo({left:kids[i].offsetLeft-sc.firstElementChild.offsetLeft,behavior:rm()?"auto":"smooth"})}
-function initCarousel(){
-  const sc=$("#car-scroll");if(!sc)return;const dots=$("#car-dots");
-  sc.addEventListener("scroll",()=>setDots(dots,slideIndex(sc)),{passive:true});
-  const car=sc.closest(".carousel");let hold=false;
-  sc.addEventListener("touchstart",()=>{if(S.playing){S.playing=false;updatePause()}},{passive:true});
-  const setHold=v=>{hold=v;car.classList.toggle("hold",v)};
-  car.addEventListener("pointerenter",()=>setHold(true));car.addEventListener("pointerleave",()=>setHold(false));
-  car.addEventListener("focusin",()=>setHold(true));car.addEventListener("focusout",()=>setHold(false));
-  /* The active dot's fill is the timer: when it completes, advance (or start over if the carousel isn't in view) */
-  dots.addEventListener("animationend",e=>{if(e.animationName!=="dwell"||!S.playing||rm())return;
-    if(top().v!=="home"||!$("#layer").hidden||!$("#search").hidden){const on=$("i.on",dots);if(on){on.classList.remove("on");void on.offsetWidth;on.classList.add("on")}return}
-    goSlide(sc,slideIndex(sc)+1)});
-}
+/* MedBlog row scrolls by hand only: no autoplay, arrows, or dots */
+function initCarousel(){}
 function updatePause(){$("#car-dots")?.classList.toggle("playing",S.playing&&!rm());const b=$("#car-pause");if(!b)return;b.setAttribute("aria-label",S.playing?"Pause slideshow":"Play slideshow");b.innerHTML=icf(S.playing?"pause":"play_arrow")}
 
 /* Pull to refresh (home) */
@@ -1076,9 +1059,6 @@ screen.addEventListener("click",e=>{
    case "toast":toast(el.dataset.msg,el.dataset.kind);break;
    case "toast-close":closeSheet();toast(el.dataset.msg,el.dataset.kind);break;
    case "copy":{const txt=el.dataset.text;const done=()=>toast(el.dataset.msg||"Copied");try{navigator.clipboard.writeText(txt).then(done,done)}catch(_){done()}break}
-   case "car-pause":S.playing=!S.playing;updatePause();sayPolite(S.playing?"Slideshow playing":"Slideshow paused");break;
-   case "car-prev":{const sc=$("#car-scroll");goSlide(sc,slideIndex(sc)-1);break}
-   case "car-next":{const sc=$("#car-scroll");goSlide(sc,slideIndex(sc)+1);break}
   }
 });
 screen.addEventListener("keydown",e=>{
@@ -1308,11 +1288,7 @@ function onScroll(){
   });
 }
 view.addEventListener("scroll",onScroll,{passive:true});
-function carouselScale(sc){
-  if(!sc)return;const r=sc.getBoundingClientRect(),move=canMove();
-  [...sc.children].forEach(sl=>{const b=sl.getBoundingClientRect();const d=Math.min(1,Math.abs(b.left-r.left-16)/b.width);
-    sl.style.transform=move?`scale(${(1-d*.06).toFixed(4)})`:"";sl.style.opacity=move?(1-d*.4).toFixed(3):""});
-}
+function carouselScale(){}
 document.addEventListener("scroll",e=>{if(e.target&&e.target.id==="car-scroll")requestAnimationFrame(()=>carouselScale(e.target))},true);
 
 /* Results count runs up to its value */
