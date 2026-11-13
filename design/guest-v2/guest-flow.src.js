@@ -155,7 +155,9 @@ const BLOG=[
  {t:"Sun safety doesn’t end with summer",cat:"Cancer",d:"Aug. 28",m:"3 min read",a:"a"}
 ];
 const BLOG_CATS=["All",...new Set(BLOG.map(b=>b.cat))];
-const SLIDES=BLOG.slice(0,5).map(b=>({eb:"MedBlog · "+b.cat,t:b.t,m:`${b.d} · ${b.m}`,a:b.a}));
+/* MedBlog topic look: [icon, art class] */
+const TOPIC={"Medicines":["medication","t-blue"],"Bones and joints":["directions_run","t-orange"],"Heart health":["favorite","t-clay"],"Prevention":["vaccines","t-green"],"Cancer":["health_and_safety","t-purple"],"Pregnancy":["pregnant_woman","t-sky"]};
+const SLIDES=BLOG.slice(0,5);
 const INBOX=[
  {id:"m1",t:"Garage C entrance closed Oct. 14–16",s:"Use the north entrance on Sample Parkway. Valet parking is free.",d:"Oct. 12",g:"local_parking"},
  {id:"m2",t:"Flu shots are here",s:"Get yours at any primary care clinic. Most insurance covers it.",d:"Oct. 1",g:"medical_services"},
@@ -386,9 +388,10 @@ M.saved=()=>{const ps=S.saved.map(id=>PBY[id]).filter(Boolean);
   <div class="h-scroll">${ps.map(p=>`<button class="card mini press" data-action="profile" data-id="${p.id}">${avatar(p,56)}<b>${esc(name(p))}</b><span>${esc(p.spec)}</span></button>`).join("")}</div>
   <p class="fine">Saved on this device only.</p>`};
 M.featured=()=>`<div class="mod-head"><h2 class="sec-h" id="h-featured">MedBlog</h2><button class="btn btn-ghost btn-sm" data-action="push" data-v="medblog" aria-label="See all MedBlog stories">See all</button></div>
-  <ul class="h-scroll blog-row" id="car-scroll" aria-labelledby="h-featured">${SLIDES.map(s=>`<li class="slide"><button class="card slide-btn press" data-action="toast" data-kind="go" data-msg="Opens: ${esc(s.t)}">
-      <span class="art art-${s.a}" aria-hidden="true"><i></i><i></i><i></i></span>
-      <span class="slide-txt"><span class="eyebrow">${s.eb}</span><span class="st">${esc(s.t)}</span><span class="meta">${s.m}</span></span></button></li>`).join("")}</ul>`;
+  <ul class="h-scroll mb-row" id="car-scroll" aria-labelledby="h-featured">${SLIDES.map(b=>{const [g,t]=TOPIC[b.cat]||["article","t-blue"];
+    return `<li class="mb-item"><button class="card mb-card press" data-action="toast" data-kind="go" data-msg="Opens: ${esc(b.t)}">
+      <span class="mb-art ${t}" aria-hidden="true"><i class="r1"></i><i class="r2"></i><span class="mb-ic">${icf(g)}</span><span class="mb-read">${ic("schedule",16)}${b.m.replace(" read","")}</span></span>
+      <span class="mb-txt"><span class="mb-cat">${esc(b.cat)}</span><span class="mb-t">${esc(b.t)}</span><span class="mb-d">${b.d}</span></span></button></li>`}).join("")}</ul>`;
 M.campaign=()=>`<div class="campaign"><span class="shape1" aria-hidden="true"></span><span class="shape2" aria-hidden="true"></span>
   <span class="eyebrow">Seasonal care</span><h2 id="h-campaign">Flu shots are here</h2>
   <p>Get yours at any primary care clinic. Most insurance covers it.</p>

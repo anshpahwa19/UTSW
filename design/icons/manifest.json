@@ -142,7 +142,8 @@
     "schedule": [
       "20",
       "24",
-      "24f"
+      "24f",
+      "16"
     ],
     "call": [
       "24",
@@ -430,6 +431,18 @@
     ],
     "videocam": [
       "24"
+    ],
+    "directions_run": [
+      "24f"
+    ],
+    "vaccines": [
+      "24f"
+    ],
+    "health_and_safety": [
+      "24f"
+    ],
+    "pregnant_woman": [
+      "24f"
     ]
   }
 }
