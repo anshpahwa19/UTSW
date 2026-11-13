@@ -643,14 +643,13 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
 
 /* ---------- Tab bar ---------- */
 /* Floating tab bar: a glass pill above the home indicator; content scrolls underneath */
-.tabbar{position:absolute;left:var(--sp-12);right:var(--sp-12);bottom:28px;z-index:3;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));padding:var(--sp-4);border-radius:var(--r-full);
+.tabbar{position:absolute;left:var(--sp-12);right:var(--sp-12);bottom:28px;z-index:3;display:flex;padding:var(--sp-4);border-radius:var(--r-full);
   background:color-mix(in srgb,var(--c-surface) 94%,transparent);-webkit-backdrop-filter:blur(20px) saturate(1.5);backdrop-filter:blur(20px) saturate(1.5);
   box-shadow:0 0 0 1px color-mix(in srgb,var(--c-border) 80%,transparent),0 12px 32px rgba(0,30,60,.16),0 2px 6px rgba(0,30,60,.06)}
 .view::after{content:"";display:block;height:calc(var(--tabbar-h) - var(--sp-24))}
-.tab{min-height:64px;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:2px;font-size:var(--fs-12);line-height:var(--lh-12);font-weight:500;color:var(--c-text-2);cursor:pointer;padding:var(--sp-8) 2px var(--sp-4);border-radius:var(--r-full);position:relative}
-.tab>span:last-child{text-align:center;max-width:64px}
-.tab[aria-current="page"]{font-weight:600}
-.screen.large .tab>span:last-child{white-space:normal;text-align:center}
+.tab{flex:1 1 0;min-width:max-content;min-height:76px;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:var(--fs-12);line-height:var(--lh-12);font-weight:500;color:var(--c-text-2);cursor:pointer;padding:var(--sp-4) var(--sp-4);border-radius:var(--r-full);position:relative}
+.tab>span:last-child{white-space:nowrap;letter-spacing:-.01em}
+.tab[aria-current="page"]{font-weight:500}
 .tab .pill{width:32px;height:28px;border-radius:var(--r-full);display:grid;place-items:center;transition:background var(--dur-base) var(--ease-out);position:relative}
 .tab-ic path{transition:opacity var(--dur-base) var(--ease-std)}
 .tab-ic .f{opacity:0}
