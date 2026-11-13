@@ -545,17 +545,20 @@ function renderResultsBody0(){
 }
 
 /* ---------- Profile ---------- */
+const paSave=on=>`<span class="pa-c">${on?heart(24):ic("favorite")}</span><span>${on?"Saved":"Save"}</span>`;
 function viewProfile(id){
   const p=PBY[id],saved=isSaved(id),rel=PROV.filter(x=>x.id!==id&&x.specs.some(s=>p.specs.includes(s))).slice(0,4);
   const locs=p.locs.map(k=>LOCS[k]).sort((a,b)=>(locDist(a)??0)-(locDist(b)??0));
   return `<div class="v-inner">
    <section class="p-hero on-blue" aria-labelledby="p-name">
-     <div class="p-id">${avatar(p,72)}<div class="stack" style="gap:var(--sp-4);min-width:0"><h2 id="p-name">${esc(name(p))}</h2><p>${esc(p.spec)}</p></div></div>
-     <div class="tags">${p.accepting?`<span class="tag">${icf("check_circle",16)}Accepting new patients</span>`:`<span class="tag">${ic("do_not_disturb_on",16)}Not accepting new patients</span>`}${p.online?`<span class="tag">${ic("event_available",16)}Online scheduling</span>`:""}</div>
-     <div class="p-acts">
-       <button class="btn btn-white press" data-action="request" data-id="${id}">${ic("calendar_add_on",20)}<span>Request an appointment</span></button>
-       <button class="btn btn-tonal btn-sm press" data-action="fav" data-id="${id}" data-style="hero" aria-pressed="${saved}">${saved?heart(20):ic("favorite",20)}<span>${saved?"Saved":"Save"}</span></button>
-       <button class="btn btn-tonal btn-sm press" data-action="share" data-id="${id}">${ic("share",20)}<span>Share</span></button>
+     <div class="p-id">${avatar(p,72)}<h2 id="p-name">${esc(name(p))}</h2><p>${esc(p.specs.join(" · "))}</p></div>
+     <div class="tags">${p.featured?`<span class="tag">${ic("workspace_premium",16)}Featured</span>`:""}${p.accepting?`<span class="tag">${icf("check_circle",16)}Accepting new patients</span>`:`<span class="tag">${ic("do_not_disturb_on",16)}Not accepting new patients</span>`}${p.online?`<span class="tag">${ic("event_available",16)}Online scheduling</span>`:""}</div>
+     <button class="btn btn-white btn-block press" data-action="request" data-id="${id}">${ic("calendar_month",20)}<span>Schedule an appointment</span></button>
+     <div class="p-quick">
+       <button class="pa press" data-action="toast" data-kind="out" data-msg="Opens the phone app: ${locs[0].ph}"><span class="pa-c">${ic("call")}</span><span>Call</span></button>
+       <button class="pa press" data-action="toast" data-kind="out" data-msg="Opens your maps app: ${esc(locs[0].n)}"><span class="pa-c">${ic("near_me")}</span><span>Directions</span></button>
+       <button class="pa press" data-action="fav" data-id="${id}" data-style="hero" aria-pressed="${saved}">${paSave(saved)}</button>
+       <button class="pa press" data-action="share" data-id="${id}"><span class="pa-c">${ic("ios_share")}</span><span>Share</span></button>
      </div>
    </section>
    ${!p.accepting?`<div class="pad"><div class="notice"><span class="lead">${ic("info",20)}</span><span class="nb"><span>${drName(p)} isn’t accepting new patients right now. Current patients can still schedule.</span><span class="row-btns"><button class="btn btn-secondary btn-sm" data-action="run-accepting" data-q="${esc(p.spec)}">See ${esc(p.spec)} doctors accepting new patients</button></span></span></div></div>`:""}
@@ -899,7 +902,7 @@ function toggleFav(id,src){
   if(t.v==="saved"&&!on){const card=$(`[data-card="${id}"]`);if(card&&canMove())collapseOut(card,()=>rerenderKeep());else rerenderKeep()}
   else{
     $$(`[data-action="fav"][data-id="${id}"]`).forEach(b=>{
-      if(b.dataset.style==="hero"){b.setAttribute("aria-pressed",String(on));b.innerHTML=(on?heart(20):ic("favorite",20))+`<span>${on?"Saved":"Save"}</span>`}
+      if(b.dataset.style==="hero"){b.setAttribute("aria-pressed",String(on));b.innerHTML=paSave(on)}
       else b.outerHTML=favBtn(p);
     });
     $$(`[data-action="fav"][data-id="${id}"]`).forEach(b=>{if(on){b.classList.add("popping","filling");setTimeout(()=>b.classList.remove("popping","filling"),480)}});
