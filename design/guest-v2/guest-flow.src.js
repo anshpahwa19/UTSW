@@ -161,11 +161,12 @@ const INBOX=[
  {id:"m2",t:"Flu shots are here",s:"Get yours at any primary care clinic. Most insurance covers it.",d:"Oct. 1",g:"medical_services"},
  {id:"m3",t:"Saturday hours at Lakeview Primary Care",s:"Open 8 a.m. to noon starting Oct. 17.",d:"Sept. 30",g:"schedule",read:true}
 ];
+/* Services and resources: [icon, category label, title, description, destination] */
 const RESOURCES=[
- ["map","Getting around our campuses","Indoor maps and parking, step by step"],
- ["video_camera_front","Prepare for a video visit","Test your device before your visit"],
- ["article","New patient guide","Insurance, forms, and what to bring"],
- ["receipt_long","Billing and insurance","Estimates, payment plans, and help"]
+ ["route","Wayfinding","Directions on campus","Turn-by-turn directions inside and outside our main campuses","Opens Wayfinding"],
+ ["videocam","Video visits","Prepare for a video visit","Check your device and connection before your visit","Opens the video visit checklist"],
+ ["article","Resources","New patient guide","Insurance, forms, and what to bring","Opens the new patient guide"],
+ ["receipt_long","Resources","Billing and insurance","Estimates, payment plans, and help","Opens Billing and insurance"]
 ];
 const ANN=[
  {d:"Oct. 9",t:"Saturday hours at Lakeview Primary Care",s:"Open 8 a.m. to noon starting Oct. 17.",isNew:true},
@@ -255,7 +256,7 @@ const MODS={
  saved:{name:"Your saved providers",meta:"Shows only when this device has saved providers"},
  featured:{name:"MedBlog",meta:"Carousel · three stories"},
  campaign:{name:"Campaign banner · Flu shots",meta:"Live Oct. 1 – Nov. 30"},
- resources:{name:"UTSW resources",meta:"Four links"},
+ resources:{name:"Services and resources",meta:"Wayfinding, video visits, and resources"},
  mychart:{name:"MyChart sign-in card",meta:"Guest only"},
  announcements:{name:"Announcements",meta:"Newest first"},
  summer:{name:"Campaign banner · Summer safety",meta:"Ended Sept. 30 – hidden automatically",expired:true}
@@ -398,8 +399,10 @@ M.campaign=()=>`<div class="campaign"><span class="shape1" aria-hidden="true"></
   <span class="eyebrow">Seasonal care</span><h2 id="h-campaign">Flu shots are here</h2>
   <p>Get yours at any primary care clinic. Most insurance covers it.</p>
   <button class="btn btn-white press" data-action="run" data-q="Primary care">${ic("stethoscope",20)}<span>Find a primary care clinic</span></button></div>`;
-M.resources=()=>`<div class="mod-head"><h2 class="sec-h" id="h-resources">UTSW resources</h2></div>
-  <div class="card list">${RESOURCES.map(([g,t,d])=>`<button class="row" data-action="toast" data-kind="go" data-msg="Opens ${t}">${well(g)}<span class="rt"><b>${t}</b><span>${d}</span></span>${ic("chevron_right",20)}</button>`).join("")}</div>`;
+M.resources=()=>`<div class="mod-head"><h2 class="sec-h" id="h-resources">Services and resources</h2></div>
+  <div class="h-scroll svc-row">${RESOURCES.map(([g,c,t,d,msg],i)=>`<button class="card svc press" data-action="toast" data-kind="go" data-msg="${msg}">
+    <span class="svc-art a${i%3}" aria-hidden="true"><i class="s1"></i><i class="s2"></i>${ic(g,24,"svc-ic")}</span>
+    <span class="svc-body"><span class="svc-cat">${c}</span><b>${t}</b><span>${d}</span></span></button>`).join("")}</div>`;
 M.mychart=()=>`<div class="mychart"><span class="mc-glow" aria-hidden="true"></span>
   <div class="mc-txt"><span class="eyebrow">Already a patient?</span><h2 id="h-mychart">Sign in for more</h2></div>
   <p>Sign in to message your doctor, get your test results, manage your visits, and manage billing.</p>
