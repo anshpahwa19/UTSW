@@ -392,7 +392,7 @@ M.featured=()=>`<div class="mod-head"><h2 class="sec-h" id="h-featured">MedBlog<
     return `<li class="mb-item"><button class="card mb-card press" data-action="toast" data-kind="go" data-msg="Opens: ${esc(b.t)}">
       <span class="mb-art ${t}" aria-hidden="true"><i class="r1"></i><i class="r2"></i><span class="mb-ic">${icf(g)}</span><span class="mb-read">${ic("schedule",16)}${b.m.replace(" read","")}</span></span>
       <span class="mb-txt"><span class="mb-cat">${esc(b.cat)}</span><span class="mb-t">${esc(b.t)}</span><span class="mb-d">${b.d}</span></span></button></li>`}).join("")}</ul>`;
-M.campaign=()=>`<div class="campaign cp"><span class="cp-glow" aria-hidden="true"></span>
+M.campaign=()=>`<div class="campaign cp"><span class="cp-glow" aria-hidden="true"></span><span class="cp-glass" aria-hidden="true"></span><span class="cp-sheen" aria-hidden="true"></span>
   <span class="cp-badge" aria-hidden="true"><i class="cp-ring"></i><span class="cp-core">${ic("syringe",24,"cp-ic")}</span></span>
   <span class="eyebrow">Flu season</span><h2 id="h-campaign">Flu shots are here</h2>
   <p>Walk-in flu shot clinics are open weekdays, 8 a.m. to 5 p.m., through Dec.&nbsp;18.</p>

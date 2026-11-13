@@ -901,8 +901,22 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
 .cp-cta{border-radius:var(--r-full);padding-inline:var(--sp-24) var(--sp-16);gap:var(--sp-8);box-shadow:0 6px 16px rgba(0,20,40,.24);color:var(--c-blue)}
 .cp-cta .ic{transition:transform var(--dur-base) var(--ease-std)}
 .cp-cta:hover .ic{transform:translateX(3px)}
-.screen.rm .cp-glow,.screen.rm .cp-ring,.screen.rm .cp-ic{animation:none}
-@media (prefers-reduced-motion:reduce){.cp-glow,.cp-ring,.cp-ic{animation:none}}
+/* Glass: a frosted gloss on the top half, a soft inner edge, and a light sheen that sweeps across the card every few seconds */
+.cp-glass{position:absolute;inset:0;z-index:-1;pointer-events:none;border-radius:inherit;
+  background:linear-gradient(180deg,rgba(255,255,255,.16) 0%,rgba(255,255,255,.05) 38%,rgba(255,255,255,0) 52%),radial-gradient(120% 60% at 50% -10%,rgba(255,255,255,.14),rgba(255,255,255,0) 60%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.35),inset 0 -1px 0 rgba(0,0,0,.18)}
+.cp-sheen{position:absolute;top:-20%;bottom:-20%;left:0;width:45%;z-index:-1;pointer-events:none;
+  background:linear-gradient(100deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.06) 30%,rgba(255,255,255,.32) 50%,rgba(255,255,255,.06) 70%,rgba(255,255,255,0) 100%);
+  transform:translateX(-120%) skewX(-12deg);animation:cpSheen 6.5s cubic-bezier(0.32,0.72,0,1) 1.2s infinite}
+@keyframes cpSheen{0%{transform:translateX(-120%) skewX(-12deg)}38%,100%{transform:translateX(330%) skewX(-12deg)}}
+.cp-cta{position:relative;overflow:hidden}
+.cp-cta::after{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(100deg,transparent 30%,rgba(0,169,224,.18) 50%,transparent 70%);transform:translateX(-100%);animation:cpCta 6.5s cubic-bezier(0.32,0.72,0,1) 1.9s infinite;pointer-events:none}
+@keyframes cpCta{0%{transform:translateX(-100%)}30%,100%{transform:translateX(100%)}}
+.cp-core::after{content:"";position:absolute;inset:0;border-radius:50%;background:linear-gradient(160deg,rgba(255,255,255,.35),rgba(255,255,255,0) 45%);pointer-events:none}
+.cp-core{position:relative}
+.screen.rm .cp-glow,.screen.rm .cp-ring,.screen.rm .cp-ic,.screen.rm .cp-sheen,.screen.rm .cp-cta::after{animation:none}
+.screen.rm .cp-sheen{display:none}
+@media (prefers-reduced-motion:reduce){.cp-glow,.cp-ring,.cp-ic,.cp-sheen,.cp-cta::after{animation:none}.cp-sheen{display:none}}
 
 /* Sheet presentation: the screen behind steps back into a card, like iOS page sheets */
 #screen{transition:width var(--dur-slow) var(--ease-std),background-color 500ms var(--ease-std)}
