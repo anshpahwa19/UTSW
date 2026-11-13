@@ -948,7 +948,7 @@ function sfSummary(){const n=filterCount();if(!n)return"";const f=S.filters,part
 function renderYours(focusTab){const y=$("#search-body .yours");if(!y)return;y.outerHTML=yoursHTML();if(focusTab)$(`#yt-${S.yours}`)?.focus()}
 function renderSearch(q){
   const b=$("#search-body");q=q.trim();$("#q-clear").hidden=!q;
-  if(!q){b.innerHTML=sfSummary()+yoursHTML()+`<section class="res-group" aria-labelledby="gtop-h"><h2 class="lbl-h" id="gtop-h">Top searches</h2><div class="chips">${GS_TOP.map(t=>`<button class="chip" data-action="search-term" data-q="${t}">${ic("trending_up",16)}${t}</button>`).join("")}</div></section>
+  if(!q){b.innerHTML=sfSummary()+yoursHTML()+`<section class="res-group" aria-labelledby="gtop-h"><h2 class="lbl-h" id="gtop-h">Top searches</h2><div class="chips chips-row">${GS_TOP.map(t=>`<button class="chip chip-sm" data-action="search-term" data-q="${t}">${ic("trending_up",16)}${t}</button>`).join("")}</div></section>
      <section class="res-group" aria-labelledby="by-h"><h2 class="lbl-h" id="by-h">Search for</h2><div class="card list">${Object.values(KIND).map(([l,g,d])=>`<div class="row" style="cursor:default">${well(g)}<span class="rt"><b>${l}</b><span>${d}</span></span></div>`).join("")}</div></section>`;return}
   const pq=parse(q);const saveP=S.pq;S.pq=pq;const provs=results(S.filters);S.pq=saveP;
   const words=q.toLowerCase().split(/\s+/);

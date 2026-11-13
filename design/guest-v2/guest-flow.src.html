@@ -760,6 +760,12 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
 .sf-sum b{color:var(--c-blue)}
 .search-body{flex:1;overflow-y:auto;padding:var(--sp-16);display:flex;flex-direction:column;gap:var(--sp-24)}
 .res-group{display:flex;flex-direction:column;gap:var(--sp-12)}
+/* Compact one-line chip row (Top searches on the search screen): scrolls sideways, edges fade; 36.0 chips keep a 44.0 touch area */
+.chips-row{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-inline:calc(var(--sp-16) * -1);padding:var(--sp-4) var(--sp-16);scroll-padding-inline:var(--sp-16);
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 var(--sp-16),#000 calc(100% - var(--sp-24)),transparent);mask-image:linear-gradient(90deg,transparent 0,#000 var(--sp-16),#000 calc(100% - var(--sp-24)),transparent)}
+.chips-row::-webkit-scrollbar{display:none}
+.chip-sm{min-height:36px;padding-inline:var(--sp-12);gap:var(--sp-4);flex:none;white-space:nowrap;position:relative}
+.chip-sm::after{content:"";position:absolute;inset:-4px 0}
 /* Saved providers / Search history toggle on the search screen */
 .yt{display:grid;grid-template-columns:1fr 1fr;padding:var(--sp-4);border-radius:var(--r-full);background:var(--c-tint);gap:var(--sp-4)}
 .yt-btn{min-height:44px;border:0;border-radius:var(--r-full);background:transparent;font:inherit;font-size:var(--fs-14);line-height:var(--lh-14);font-weight:600;color:var(--c-text-2);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:var(--sp-4);white-space:nowrap;transition:background var(--dur-base) var(--ease-std),color var(--dur-base) var(--ease-std),box-shadow var(--dur-base) var(--ease-std)}
@@ -909,7 +915,7 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
               <div class="field">
                 <span id="search-ic"></span>
                 <label class="sr-only" for="q">Search UT&nbsp;Southwestern</label>
-                <input id="q" type="search" placeholder="Doctors, locations, and more" autocomplete="off" enterkeyhint="search">
+                <input id="q" type="search" placeholder="Doctors, places, and more" autocomplete="off" enterkeyhint="search">
                 <button class="icon-btn" id="q-clear" data-action="clear-search" aria-label="Clear search" hidden></button>
               </div>
               <button class="icon-btn sf-btn" id="search-filters" data-action="search-filters" aria-haspopup="dialog" aria-label="Filters"></button>
