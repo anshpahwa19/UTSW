@@ -885,6 +885,24 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
 .hero-copy{will-change:transform,opacity}
 .search-entry>span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .campaign .shape1,.campaign .shape2{will-change:transform}
+/* Campaign card: UTSW Blue gradient with a slow cyan glow, glass icon badge with a turning dashed ring and a gently rocking icon, white pill CTA */
+.campaign.cp{background:linear-gradient(140deg,#0A4E86 0%,var(--c-blue) 46%,#00264A 100%);box-shadow:0 10px 28px rgba(0,30,60,.22),inset 0 0 0 1px rgba(255,255,255,.14);isolation:isolate;padding:var(--sp-24) var(--sp-16) var(--sp-24) var(--sp-24)}
+.cp-glow{position:absolute;z-index:-1;inset:-40%;background:radial-gradient(40% 40% at 70% 70%,rgba(0,169,224,.32),rgba(0,169,224,0) 70%),radial-gradient(35% 35% at 20% 10%,rgba(123,175,212,.22),rgba(123,175,212,0) 70%);animation:cpGlow 14s ease-in-out infinite alternate;pointer-events:none}
+@keyframes cpGlow{from{transform:translate3d(-6%,-4%,0) rotate(0deg)}to{transform:translate3d(6%,4%,0) rotate(14deg)}}
+.cp-badge{position:absolute;top:var(--sp-16);right:var(--sp-16);width:76px;height:76px;display:grid;place-items:center}
+.cp-ring{position:absolute;inset:0;border-radius:50%;border:2px dashed rgba(255,255,255,.38);animation:cpSpin 18s linear infinite}
+@keyframes cpSpin{to{transform:rotate(360deg)}}
+.cp-core{transform:scaleX(-1);width:58px;height:58px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.28),rgba(255,255,255,.10));box-shadow:inset 0 0 0 1px rgba(255,255,255,.34),0 6px 18px rgba(0,20,40,.25);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.cp-core svg.cp-ic{width:30px;height:30px;color:#FFFFFF;animation:cpRock 3.2s ease-in-out infinite;transform-origin:50% 60%}
+@keyframes cpRock{0%,100%{transform:rotate(0deg) translateY(0)}25%{transform:rotate(-10deg) translateY(-2px)}50%{transform:rotate(0deg) translateY(0)}75%{transform:rotate(8deg) translateY(-1px)}}
+.campaign.cp h2{font-size:var(--fs-24);line-height:var(--lh-24);max-width:calc(100% - 76px)}
+.campaign.cp .eyebrow{color:#FFFFFF;letter-spacing:.08em;padding-top:var(--sp-8)}
+.campaign.cp p{color:var(--c-on-blue-2);max-width:none}
+.cp-cta{border-radius:var(--r-full);padding-inline:var(--sp-24) var(--sp-16);gap:var(--sp-8);box-shadow:0 6px 16px rgba(0,20,40,.24);color:var(--c-blue)}
+.cp-cta .ic{transition:transform var(--dur-base) var(--ease-std)}
+.cp-cta:hover .ic{transform:translateX(3px)}
+.screen.rm .cp-glow,.screen.rm .cp-ring,.screen.rm .cp-ic{animation:none}
+@media (prefers-reduced-motion:reduce){.cp-glow,.cp-ring,.cp-ic{animation:none}}
 
 /* Sheet presentation: the screen behind steps back into a card, like iOS page sheets */
 #screen{transition:width var(--dur-slow) var(--ease-std),background-color 500ms var(--ease-std)}
