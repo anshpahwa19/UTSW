@@ -38,7 +38,7 @@
 
   --font:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
   --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  --fw:390px; --status-h:48px; --tabbar-h:84px;
+  --fw:390px; --status-h:48px; --tabbar-h:108px;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){ --page-bg:#0D1620; --page-fg:#E6EDF3; --page-muted:#A3B1BD; --page-card:#16222E; --page-border:#2A3A49; --page-accent:#7BAFD4; --page-accent-fg:#0D1620; --page-chip:#1F2E3C; --page-device:#000000; color-scheme:dark }
@@ -642,18 +642,24 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
 .rel{flex:0 0 160px}
 
 /* ---------- Tab bar ---------- */
-.tabbar{flex:none;background:var(--c-surface);box-shadow:0 -1px 0 var(--c-border);display:grid;grid-template-columns:repeat(5,minmax(0,1fr));padding:var(--sp-4) var(--sp-4) var(--sp-24);position:relative;z-index:3}
-.tab{min-height:56px;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--sp-4);font-size:var(--fs-12);line-height:var(--lh-12);font-weight:600;color:var(--c-text-2);cursor:pointer;padding:var(--sp-4) 0;border-radius:var(--r-12);position:relative}
-.tab>span:last-child{white-space:nowrap}
+/* Floating tab bar: a glass pill above the home indicator; content scrolls underneath */
+.tabbar{position:absolute;left:var(--sp-12);right:var(--sp-12);bottom:28px;z-index:3;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));padding:var(--sp-4);border-radius:var(--r-full);
+  background:color-mix(in srgb,var(--c-surface) 94%,transparent);-webkit-backdrop-filter:blur(20px) saturate(1.5);backdrop-filter:blur(20px) saturate(1.5);
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--c-border) 80%,transparent),0 12px 32px rgba(0,30,60,.16),0 2px 6px rgba(0,30,60,.06)}
+.view::after{content:"";display:block;height:calc(var(--tabbar-h) - var(--sp-24))}
+.tab{min-height:64px;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:2px;font-size:var(--fs-12);line-height:var(--lh-12);font-weight:500;color:var(--c-text-2);cursor:pointer;padding:var(--sp-8) 2px var(--sp-4);border-radius:var(--r-full);position:relative}
+.tab>span:last-child{text-align:center;max-width:64px}
+.tab[aria-current="page"]{font-weight:600}
 .screen.large .tab>span:last-child{white-space:normal;text-align:center}
-.tab .pill{width:56px;height:32px;border-radius:var(--r-full);display:grid;place-items:center;transition:background var(--dur-base) var(--ease-out);position:relative}
+.tab .pill{width:32px;height:28px;border-radius:var(--r-full);display:grid;place-items:center;transition:background var(--dur-base) var(--ease-out);position:relative}
 .tab-ic path{transition:opacity var(--dur-base) var(--ease-std)}
 .tab-ic .f{opacity:0}
 .tab[aria-current="page"]{color:var(--c-blue)}
 .tab[aria-current="page"] .pill{background:transparent}
 .tab{z-index:1}
-.tab-ind{position:absolute;left:0;top:0;width:56px;height:32px;border-radius:var(--r-full);background:var(--c-tint);z-index:0;pointer-events:none;opacity:0}
-.tab-ind.ready{opacity:1;transition:transform 460ms cubic-bezier(0.32,0.72,0,1)}
+.tab-ind{position:absolute;left:0;top:0;width:64px;height:64px;border-radius:50%;background:color-mix(in srgb,var(--c-tint) 85%,transparent);box-shadow:inset 0 0 0 1px rgba(0,169,224,.55),0 4px 12px rgba(0,66,120,.10);z-index:0;pointer-events:none;opacity:0}
+.tab-ind.none{visibility:hidden}
+.tab-ind.ready{opacity:1;transition:transform 460ms cubic-bezier(0.32,0.72,0,1),width 460ms cubic-bezier(0.32,0.72,0,1),height 460ms cubic-bezier(0.32,0.72,0,1)}
 .tab[aria-current="page"] .tab-ic .o{opacity:0}
 .tab[aria-current="page"] .tab-ic .f{opacity:1}
 @keyframes pill{from{transform:scaleX(.6)}to{transform:none}}
@@ -782,7 +788,7 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
 #screen.stacked{background:var(--c-stack-bg)}
 #screen.stacked #appbar,#screen.stacked #views,#screen.stacked #tabbar{transform:translate3d(0,8px,0) scale(.94)}
 #screen.stacked #appbar{border-radius:var(--r-16) var(--r-16) 0 0}
-#screen.stacked #tabbar{border-radius:0 0 var(--r-16) var(--r-16)}
+#screen.stacked #tabbar{border-radius:var(--r-full)}
 
 /* Shared element: the doctor's avatar travels between the card and the profile */
 [data-flying]{visibility:hidden}

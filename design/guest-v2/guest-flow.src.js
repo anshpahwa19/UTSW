@@ -329,7 +329,7 @@ function switchTab(t,reset){
 function focusTitle(){setTimeout(()=>{const h=$("#appbar .ttl")||$("#view h1");if(h){h.setAttribute("tabindex","-1");h.focus({preventScroll:true})}},rm()?0:50)}
 
 /* ---------- App bar + tab bar ---------- */
-const TABS=[["home","Home","home"],["find","Find my care","stethoscope"],["locations","Locations","location_on"],["saved","Saved","favorite"],["mychart","MyChart","login"]];
+const TABS=[["home","Home","home"],["find","Find my care","stethoscope"],["search","Search","search"],["locations","Locations","location_on"],["mychart","Sign in","login"]];
 const TITLES={find:"Find my care",results:"Doctors",profile:"Doctor profile",saved:"Saved providers",locations:"Locations",menu:"Menu",mychart:"MyChart",medblog:"MedBlog",inbox:"Inbox"};
 function renderAppbar(){
   const t=top(),depth=S.stacks[S.tab].length;
@@ -341,12 +341,14 @@ function renderAppbar(){
   $("#appbar").innerHTML=`${back}<h1 class="ttl with-back"><span class="t1">${TITLES[t.v]}</span>${t.v==="profile"?`<span class="t2" aria-hidden="true">${esc(name(PBY[t.id]))}</span>`:""}</h1>`;
 }
 function renderTabbar(){
-  $("#tabbar").innerHTML=TABS.map(([k,l,g])=>`<button class="tab" data-action="tab" data-tab="${k}"${k==="saved"&&S.saved.length?` aria-label="${l}, ${S.saved.length} provider${S.saved.length>1?"s":""}"`:""}><span class="pill">${ict(g)}${k==="saved"&&S.saved.length?`<span class="cnt" aria-hidden="true">${S.saved.length}</span>`:""}</span><span>${l}</span></button>`).join("")+`<span class="tab-ind" id="tab-ind" aria-hidden="true"></span>`;
+  $("#tabbar").innerHTML=TABS.map(([k,l,g])=>`<button class="tab" ${k==="search"?`data-action="open-search" aria-haspopup="dialog"`:`data-action="tab" data-tab="${k}"`}${k==="mychart"?` aria-label="Sign in to MyChart"`:""}${k==="saved"&&S.saved.length?` aria-label="${l}, ${S.saved.length} provider${S.saved.length>1?"s":""}"`:""}><span class="pill">${ict(g)}${k==="saved"&&S.saved.length?`<span class="cnt" aria-hidden="true">${S.saved.length}</span>`:""}</span><span>${l}</span></button>`).join("")+`<span class="tab-ind" id="tab-ind" aria-hidden="true"></span>`;
   markTab();
 }
 function markTab(){$$("#tabbar .tab").forEach(b=>b.dataset.tab===S.tab?b.setAttribute("aria-current","page"):b.removeAttribute("aria-current"));placeInd()}
-function placeInd(){const ind=$("#tab-ind"),cur=$('#tabbar .tab[aria-current="page"]');if(!ind||!cur)return;const pill=$(".pill",cur);
-  ind.style.transform=`translate(${cur.offsetLeft+pill.offsetLeft}px,${cur.offsetTop+pill.offsetTop}px)`;if(!ind.classList.contains("ready"))requestAnimationFrame(()=>requestAnimationFrame(()=>ind.classList.add("ready")))}
+function placeInd(){const ind=$("#tab-ind"),cur=$('#tabbar .tab[aria-current="page"]');if(!ind)return;ind.classList.toggle("none",!cur);if(!cur)return;
+  /* Selected tab: a circle around icon and label, centered on the tab */
+  const d=Math.min(cur.offsetWidth+4,cur.offsetHeight+8);ind.style.width=ind.style.height=d+"px";
+  ind.style.transform=`translate(${cur.offsetLeft+(cur.offsetWidth-d)/2}px,${cur.offsetTop+(cur.offsetHeight-d)/2}px)`;if(!ind.classList.contains("ready"))requestAnimationFrame(()=>requestAnimationFrame(()=>ind.classList.add("ready")))}
 
 /* ---------- Home ---------- */
 function activeAlerts(){return ALERTS.slice(0,S.alerts).filter(a=>!S.dismissed.has(a.id)).sort((a,b)=>(b.level==="emergency")-(a.level==="emergency"))}
@@ -594,6 +596,7 @@ function viewMenu(){
   return `<div class="res-body" style="gap:var(--sp-24)">
    <section class="grp" aria-labelledby="mn-1"><h2 class="lbl-h" id="mn-1">Updates</h2><div class="card list">
      ${mrow("inbox","Inbox",n?`${n} new message${n>1?"s":""} from UTSW MyCare`:"No new messages",`data-action="push" data-v="inbox"${n?` aria-label="Inbox, ${n} new"`:""}`,(n?`<span class="new-pill" aria-hidden="true">${n} new</span>`:"")+CHEV)}
+     ${mrow("favorite","Saved providers",S.saved.length?`${S.saved.length} saved on this device`:"Doctors you save appear here",`data-action="tab" data-tab="saved"`,CHEV)}
      ${mrow("newspaper","MedBlog","Health news and tips from our experts",`data-action="push" data-v="medblog"`,CHEV)}</div></section>
    <section class="grp" aria-labelledby="mn-2"><h2 class="lbl-h" id="mn-2">Patients and visitors</h2><div class="card list">
      ${mrow("folder_open","Patient resources","Billing, records, forms, and support",`data-action="toast" data-kind="go" data-msg="Opens Patient resources"`,CHEV)}
