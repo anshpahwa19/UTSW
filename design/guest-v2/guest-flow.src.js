@@ -336,8 +336,9 @@ function renderAppbar(){
   const t=top(),depth=S.stacks[S.tab].length;
   const menuBtn=`<button class="icon-btn" data-action="open-menu" aria-label="Menu">${ico("menu")}</button>`;
   const back=depth>1?`<button class="icon-btn" data-action="back" aria-label="Back">${ico("arrow_back")}</button>`:menuBtn;
-  if(t.v==="home"){$("#appbar").innerHTML=`${menuBtn}<span class="logo" role="img" aria-label="UTSW MyCare"><!--LOGO_REVERSED--></span><span class="spacer"></span>
-    <button class="icon-btn" data-action="mychart" aria-label="Sign in to MyChart">${ico("account_circle")}</button>`;return}
+  if(t.v==="home"){const n=unread();$("#appbar").innerHTML=`<span class="logo" role="img" aria-label="UTSW MyCare"><!--LOGO_REVERSED--></span><span class="spacer"></span>
+    <button class="ab-sign" data-action="mychart" aria-label="Sign in to MyChart">${ic("login",20)}<span>Sign in</span></button>
+    <button class="icon-btn ab-menu" data-action="open-menu" aria-label="${n?`Menu, ${n} new in Inbox`:"Menu"}">${ico("menu")}${n?`<i class="ab-dot" aria-hidden="true"></i>`:""}</button>`;return}
   $("#appbar").innerHTML=`${back}<h1 class="ttl with-back"><span class="t1">${TITLES[t.v]}</span>${t.v==="profile"?`<span class="t2" aria-hidden="true">${esc(name(PBY[t.id]))}</span>`:""}</h1>`;
 }
 function renderTabbar(){
@@ -1056,7 +1057,7 @@ screen.addEventListener("keydown",e=>{
 function syncControls(){
   const v={alerts:String(S.alerts),fw:String(S.fw),ts:String(S.ts),rm:S.rm?"1":"0",perm:S.perm,data:S.data};
   $$(".seg").forEach(g=>$$("button",g).forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.v===v[g.dataset.ctl]))));
-  screen.style.setProperty("--fw",S.fw+"px");screen.classList.toggle("large",S.ts===2);screen.classList.toggle("rm",S.rm);
+  screen.style.setProperty("--fw",S.fw+"px");screen.classList.toggle("large",S.ts===2);screen.classList.toggle("rm",S.rm);screen.classList.toggle("narrow",S.fw<380);
   screen.classList.toggle("offline",S.data==="offline");setTimeout(placeInd,320);$("#sb-off").innerHTML=S.data==="offline"?"No connection":"";
 }
 function setMotion(reduced){S.rm=reduced;S.playing=!rm();syncControls();updatePause();rerenderKeep();carouselScale($("#car-scroll"))}

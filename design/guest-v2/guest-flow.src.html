@@ -150,6 +150,16 @@ ul,ol{padding:0}
 .logo{display:block;width:224px;flex:none;line-height:0}
 .logo svg{width:224px;height:auto;display:block}
 .appbar .spacer{flex:1}
+/* Home bar: logo left; Sign in pill and round menu right (menu dot = unread Inbox) */
+.appbar:has(.ab-menu){padding-inline:var(--sp-16) var(--sp-12);gap:var(--sp-8)}
+.appbar:has(.ab-menu) .logo,.appbar:has(.ab-menu) .logo svg{width:188px}
+.ab-sign{height:44px;flex:none;display:inline-flex;align-items:center;gap:var(--sp-8);padding:0 var(--sp-16) 0 var(--sp-12);border:0;border-radius:var(--r-full);background:var(--c-on-blue-tonal);color:var(--c-on-blue);font:inherit;font-size:var(--fs-14);font-weight:600;cursor:pointer;transition:background var(--dur-fast) var(--ease-std),transform var(--dur-fast) var(--ease-std)}
+.ab-sign:hover,.appbar .ab-menu:hover{background:var(--c-on-blue-tonal-hover)}
+.ab-sign:active{transform:scale(.96)}
+.appbar .ab-menu{background:var(--c-on-blue-tonal)}
+.ab-dot{position:absolute;top:6px;right:6px;width:10px;height:10px;border-radius:var(--r-full);background:var(--c-cyan);box-shadow:0 0 0 2px var(--c-blue)}
+.screen.narrow .ab-sign svg{display:none}
+.screen.narrow .ab-sign{padding-inline:var(--sp-12)}
 .icon-btn{width:44px;height:44px;border-radius:var(--r-full);border:0;background:transparent;display:grid;place-items:center;cursor:pointer;position:relative;color:inherit;flex:none;transition:background var(--dur-fast) var(--ease-std),transform var(--dur-fast) var(--ease-std)}
 .icon-btn:active{transform:scale(.94)}
 .appbar .icon-btn:hover{background:var(--c-on-blue-fill)}
