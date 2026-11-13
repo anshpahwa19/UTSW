@@ -747,7 +747,7 @@ function openSheet(kind,title,body,foot,tall){
 }
 function closeSheet(cb){
   const L=$("#layer");if(L.hidden){cb&&cb();return}L.classList.remove("open");sheetKind=null;stackBg(false);
-  setTimeout(()=>{L.hidden=true;setInert(false);if(lastFocus&&document.contains(lastFocus))lastFocus.focus();cb&&cb()},rm()?0:460);
+  setTimeout(()=>{L.hidden=true;setInert(!$("#search").hidden);S.fSearch=false;if(lastFocus&&document.contains(lastFocus))lastFocus.focus();cb&&cb()},rm()?0:460);
 }
 function alertSheet(a){
   openSheet("alert",a.title,`<div class="kv"><div>${well(a.cat,48)}<p><b>${a.label}</b><span>${a.catLabel}</span></p></div>
@@ -777,7 +777,7 @@ function filtersBody(){
    <p class="fine">Within a group, a doctor needs to match any choice. Across groups, they need to match all of them.</p>`;
 }
 function filtersFoot(){const n=results(S.draft).length;
-  return `<button class="btn btn-ghost" data-action="f-clear"${filterCount(S.draft)?"":" disabled"}>Clear all</button><button class="btn btn-primary" data-action="f-apply"${n?"":""}><span>${n?`Show <span class="n">${n}</span> doctor${n>1?"s":""}`:"No matches – change filters"}</span></button>`}
+  return `<button class="btn btn-ghost" data-action="f-clear"${filterCount(S.draft)?"":" disabled"}>Clear all</button><button class="btn btn-primary" data-action="f-apply"${n?"":""}><span>${n?`${S.fSearch?"Apply":"Show"} <span class="n">${n}</span> doctor${n>1?"s":""}`:"No matches – change filters"}</span></button>`}
 function openFilters(){S.draft=cloneF(S.filters);S.footN=results(S.draft).length;openSheet("filters","Filters",filtersBody(),filtersFoot(),true)}
 function refreshFilters(keepFocusSel){const y=$("#sheet-body").scrollTop;$("#sheet-body").innerHTML=filtersBody();rollFoot();$("#sheet-body").scrollTop=y;if(keepFocusSel)$(keepFocusSel)?.focus();
   sayPolite(`${results(S.draft).length} doctors match`)}
@@ -939,26 +939,32 @@ function yoursHTML(){
     <div class="card list" role="tabpanel" id="yt-panel" aria-labelledby="yt-${t}">${body}</div>
     <div class="grp-h"><p class="fine">On this device</p>${t==="history"&&S.recent.length?`<button class="btn btn-ghost btn-sm" data-action="clear-history">Clear</button>`:""}</div></section>`;
 }
+/* Provider filters right in search: tune button beside the field (count badge); a summary line with Clear when any are on */
+function syncSearchFilters(){const n=filterCount(),b=$("#search-filters");if(!b)return;
+  b.innerHTML=ic("tune",20)+(n?`<span class="sf-n" aria-hidden="true">${n}</span>`:"");b.setAttribute("aria-label",n?`Filters, ${n} on`:"Filters");b.classList.toggle("on",!!n)}
+function sfSummary(){const n=filterCount();if(!n)return"";const f=S.filters,parts=[...f.specs,...f.conds,...f.langs,...f.hosp];
+  if(f.gender!=="any")parts.push(f.gender==="f"?"Female":f.gender==="m"?"Male":f.gender);if(f.dist!=="any")parts.push(`Within ${f.dist} miles`);if(f.accepting)parts.push("Accepting new patients");if(f.online)parts.push("Online scheduling");
+  return `<div class="sf-sum" role="group" aria-label="Provider filters">${ic("tune",20)}<span><b>${n} filter${n>1?"s":""} on</b> ${esc(parts.slice(0,3).join(", "))}${parts.length>3?` and ${parts.length-3} more`:""}</span><button class="btn btn-ghost btn-sm" data-action="search-clear-filters">Clear</button></div>`}
 function renderYours(focusTab){const y=$("#search-body .yours");if(!y)return;y.outerHTML=yoursHTML();if(focusTab)$(`#yt-${S.yours}`)?.focus()}
 function renderSearch(q){
   const b=$("#search-body");q=q.trim();$("#q-clear").hidden=!q;
-  if(!q){b.innerHTML=yoursHTML()+`<section class="res-group" aria-labelledby="gtop-h"><h2 class="lbl-h" id="gtop-h">Top searches</h2><div class="chips">${GS_TOP.map(t=>`<button class="chip" data-action="search-term" data-q="${t}">${ic("trending_up",16)}${t}</button>`).join("")}</div></section>
+  if(!q){b.innerHTML=sfSummary()+yoursHTML()+`<section class="res-group" aria-labelledby="gtop-h"><h2 class="lbl-h" id="gtop-h">Top searches</h2><div class="chips">${GS_TOP.map(t=>`<button class="chip" data-action="search-term" data-q="${t}">${ic("trending_up",16)}${t}</button>`).join("")}</div></section>
      <section class="res-group" aria-labelledby="by-h"><h2 class="lbl-h" id="by-h">Search for</h2><div class="card list">${Object.values(KIND).map(([l,g,d])=>`<div class="row" style="cursor:default">${well(g)}<span class="rt"><b>${l}</b><span>${d}</span></span></div>`).join("")}</div></section>`;return}
-  const pq=parse(q);const saveP=S.pq;S.pq=pq;const provs=results(blankFilters());S.pq=saveP;
+  const pq=parse(q);const saveP=S.pq;S.pq=pq;const provs=results(S.filters);S.pq=saveP;
   const words=q.toLowerCase().split(/\s+/);
   const other=GS_OTHER.filter(r=>{const hay=(r.t+" "+r.s+" "+r.kw).toLowerCase();return words.some(w=>w.length>2&&hay.includes(w))||[...pq.specs,...pq.conds].some(s=>hay.includes(s.toLowerCase().split(" ")[0]))});
   const groups=[["provider",provs.slice(0,3)],...["location","content","resource"].map(k=>[k,other.filter(r=>r.k===k).slice(0,3)])].filter(([,l])=>l.length);
-  b.innerHTML=(groups.length?groups.map(([k,l])=>`<section class="res-group" aria-labelledby="g-${k}"><h2 class="lbl-h" id="g-${k}">${KIND[k][0]}</h2><div class="card list">${
+  b.innerHTML=sfSummary()+(groups.length?groups.map(([k,l])=>`<section class="res-group" aria-labelledby="g-${k}"><h2 class="lbl-h" id="g-${k}">${KIND[k][0]}</h2><div class="card list">${
      k==="provider"?l.map(p=>`<button class="row" data-action="gs-profile" data-id="${p.id}">${avatar(p,40)}<span class="rt"><b>${hl(name(p),q)}</b><span>${esc(p.spec)} · ${esc(LOCS[p.locs[0]].n)}</span></span>${ic("chevron_right",20)}</button>`).join("")
      +(provs.length>3?`<button class="row" data-action="search-all" data-q="${esc(q)}"><span class="rt"><b>See all ${provs.length} doctors</b></span>${ic("chevron_right",20)}</button>`:"")
      :l.map(r=>`<button class="row" data-action="search-pick" data-msg="${esc(r.t)}">${well(KIND[k][1])}<span class="rt"><b>${hl(r.t,q)}</b><span>${esc(r.s)}</span></span>${ic("chevron_right",20)}</button>`).join("")}</div></section>`).join("")
     :`<div class="card state">${well("search_off",48)}<h2>No matches for “${esc(q)}”</h2><p>Try a specialty, such as cardiology, a condition, or a clinic name.</p></div>`)
-    +`<button class="btn btn-secondary btn-block" data-action="search-all" data-q="${esc(q)}">${ic("stethoscope",20)}<span>Search Find my care for “${esc(q)}”</span></button>`;
+    +`<button class="btn btn-secondary btn-block" data-action="search-all" data-q="${esc(q)}">${ic("stethoscope",20)}<span>Search Find care for “${esc(q)}”</span></button>`;
   sayPolite(groups.length?"Results updated":"No results");
 }
 $("#q").addEventListener("input",e=>renderSearch(e.target.value));
 $("#search-body").addEventListener("keydown",e=>{const t=e.target.closest(".yt-btn");if(!t||!["ArrowLeft","ArrowRight"].includes(e.key))return;e.preventDefault();S.yours=S.yours==="history"?"saved":"history";renderYours(true)});
-$("#q").addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.value.trim()){const v=e.target.value.trim();closeSearch(()=>runSearch(v))}});
+$("#q").addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.value.trim()){const v=e.target.value.trim();closeSearch(()=>runSearch(v,{keepFilters:true}))}});
 
 /* ---------- Events ---------- */
 view.addEventListener("input",e=>{
@@ -1005,7 +1011,7 @@ screen.addEventListener("click",e=>{
    case "clear-search":$("#q").value="";renderSearch("");$("#q").focus();break;
    case "search-term":if($("#search").hidden)openSearch(el.dataset.q);else{$("#q").value=el.dataset.q;renderSearch(el.dataset.q);$("#q").focus()}break;
    case "search-pick":closeSearch();toast("Opens: "+el.dataset.msg,"go");break;
-   case "search-all":closeSearch(()=>runSearch(el.dataset.q));break;
+   case "search-all":closeSearch(()=>runSearch(el.dataset.q,{keepFilters:true}));break;
    case "yours":S.yours=el.dataset.k;renderYours(true);break;
    case "search-saved":closeSearch(()=>switchTab("saved",true));break;
    case "clear-history":S.recent=[];store.set("recent",[]);renderYours(false);$("#yt-history")?.focus();sayPolite("Search history cleared");break;
@@ -1025,7 +1031,10 @@ screen.addEventListener("click",e=>{
    case "filters":openFilters();break;
    case "ftog":{const g=el.dataset.g,v=el.dataset.v,set=S.draft[g];set.has(v)?set.delete(v):set.add(v);const on=set.has(v);el.setAttribute("aria-pressed",String(on));updateFoot();$('[data-action="f-clear"]').disabled=!filterCount(S.draft);break}
    case "f-clear":S.draft=blankFilters();refreshFilters('[data-action="f-apply"]');sayPolite("All filters cleared");break;
-   case "f-apply":S.filters=S.draft;S.draft=null;closeSheet(()=>{render();load()});break;
+   case "f-apply":if(S.fSearch){S.filters=S.draft;S.draft=null;closeSheet(()=>{syncSearchFilters();renderSearch($("#q").value);$("#search-filters").focus();sayPolite(`${filterCount()} filter${filterCount()===1?"":"s"} on`)});break}
+     S.filters=S.draft;S.draft=null;closeSheet(()=>{render();load()});break;
+   case "search-filters":S.fSearch=true;S.pq=parse($("#q").value);openFilters();break;
+   case "search-clear-filters":S.filters=blankFilters();syncSearchFilters();renderSearch($("#q").value);$("#search-filters").focus();sayPolite("Filters cleared");break;
    case "sort":openSort();break;
    case "rm-filter":{const k=el.dataset.k,v=el.dataset.v,f=S.filters;if(f[k] instanceof Set)f[k].delete(v);else if(k==="gender")f.gender="any";else if(k==="dist")f.dist="any";else f[k]=false;
      {const before=captureCards();rollNext=true;render(null,{instant:true,scroll:view.scrollTop});flipCards(before)}($(".fchip")||$('[data-action="filters"]')).focus();sayPolite(`Filter removed. ${results().length} doctors.`);break}
@@ -1490,7 +1499,7 @@ function closeDrawer(keepFocus){
 }
 
 /* ---------- Boot ---------- */
-$("#search-back").innerHTML=ico("arrow_back");
+$("#search-back").innerHTML=ico("arrow_back");syncSearchFilters();
 $("#search-ic").outerHTML=ic("search");
 $("#q-clear").innerHTML=ic("close",20);
 $("#sheet-close").innerHTML=ic("close");
