@@ -261,7 +261,7 @@ const S={
   perm:"ask",osAnswer:null,loc:null,data:"live",
   q:"",pq:null,filters:blankFilters(),sort:"relevance",loading:false,
   saved:store.get("saved",[]),recent:store.get("recent",[]),
-  layout:["tiles","finddoc","saved","featured","campaign","resources","mychart","announcements","summer"].map(id=>({id,on:!MODS[id].expired})),
+  layout:["tiles","mychart","finddoc","saved","featured","campaign","resources","announcements","summer"].map(id=>({id,on:!MODS[id].expired})),
   dismissed:new Set(),draft:null,fcText:"",blogCat:"All",blogMore:false,inboxRead:new Set(INBOX.filter(m=>m.read).map(m=>m.id))
 };
 const rm=()=>S.rm||osRM.matches;
@@ -401,10 +401,11 @@ M.campaign=()=>`<div class="campaign"><span class="shape1" aria-hidden="true"></
   <button class="btn btn-white press" data-action="run" data-q="Primary care">${ic("stethoscope",20)}<span>Find a primary care clinic</span></button></div>`;
 M.resources=()=>`<div class="mod-head"><h2 class="sec-h" id="h-resources">UTSW resources</h2></div>
   <div class="card list">${RESOURCES.map(([g,t,d])=>`<button class="row" data-action="toast" data-kind="go" data-msg="Opens ${t}">${well(g)}<span class="rt"><b>${t}</b><span>${d}</span></span>${ic("chevron_right",20)}</button>`).join("")}</div>`;
-M.mychart=()=>`<div class="mychart"><h2 id="h-mychart">Already a UT&nbsp;Southwestern patient?</h2>
-  <p>Sign in with MyChart to see your visits, messages, and test results.</p>
-  <div class="row-btns"><button class="btn btn-primary" data-action="mychart">${ic("lock",20)}<span>Sign in with MyChart</span></button>
-  <button class="btn btn-ghost" data-action="toast" data-kind="out" data-msg="Opens MyChart sign-up"><span>Create an account</span></button></div></div>`;
+M.mychart=()=>`<div class="mychart"><span class="mc-glow" aria-hidden="true"></span>
+  <div class="mc-txt"><span class="eyebrow">Already a patient?</span><h2 id="h-mychart">Sign in for more</h2></div>
+  <p>Sign in to message your doctor, get your test results, manage your visits, and manage billing.</p>
+  <div class="mc-btns"><button class="mc-b mc-solid press" data-action="mychart">${ic("login",20)}<span>Sign in</span></button>
+  <button class="mc-b mc-line press" data-action="toast" data-kind="out" data-msg="Opens MyChart sign-up">Create an account</button></div></div>`;
 M.announcements=()=>`<div class="mod-head"><h2 class="sec-h" id="h-announcements">Announcements</h2></div>
   <div class="card list">${ANN.map(a=>`<button class="row" data-action="toast" data-kind="go" data-msg="Opens: ${esc(a.t)}"><span class="ann-date">${a.d}</span><span class="rt"><b>${esc(a.t)}</b><span>${esc(a.s)}</span></span>${a.isNew?`<span class="new-pill">New</span>`:ic("chevron_right",20)}</button>`).join("")}</div>`;
 M.summer=()=>"";
