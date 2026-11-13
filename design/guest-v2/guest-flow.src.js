@@ -127,6 +127,12 @@ const PROV=[
   edu:[["Medical school","Sample University School of Medicine"],["Residency","Internal Medicine, Sample Regional Hospital"]]})
 ];
 const PBY=Object.fromEntries(PROV.map(p=>[p.id,p]));
+/* Sample ratings, review counts, video visits, and next opening for the provider list (fictional) */
+const AVAIL={"avery-morgan":[4.9,312,1,"Tomorrow, 9:30 a.m."],"sam-okafor":[4.7,141,0,"Thursday, 1 p.m."],"priya-shah":[4.9,268,1,"Today, 3:15 p.m."],"daniel-reyes":[4.8,198,0,"Thursday, 1 p.m."],
+ "jordan-avery":[4.8,225,1,"Tomorrow, 11 a.m."],"morgan-lee":[4.9,402,1,"Friday, 8:45 a.m."],"elena-petrova":[4.6,87,1,"Oct. 22, 10 a.m."],"marcus-bell":[4.7,156,1,"Tomorrow, 2:30 p.m."],
+ "lin-chen":[4.9,289,0,"Monday, 9 a.m."],"omar-haddad":[4.5,64,1,"Oct. 24, 1:30 p.m."],"grace-nwosu":[4.8,173,1,"Today, 4 p.m."],"rafael-santos":[4.7,118,0,"Wednesday, 10:15 a.m."],
+ "hannah-kim":[4.9,231,1,"Tomorrow, 8 a.m."],"theo-brooks":[4.6,92,0,"Friday, 3 p.m."]};
+const avail=p=>{const a=AVAIL[p.id]||[4.7,100,0,"Tomorrow, 10 a.m."];return {rating:a[0],reviews:a[1],video:!!a[2],next:a[3]}};
 const CONDS=[...new Set(PROV.flatMap(p=>p.conds))].sort();
 const TOP_CONDS=["Knee pain","High blood pressure","Diabetes","Asthma","Eczema","Migraine","Atrial fibrillation","Pregnancy care"];
 const name=p=>`${p.first} ${p.last}, ${p.cred}`;
@@ -488,15 +494,17 @@ function locBanner(){
   return "";
 }
 function pcard(p,i,opts={}){
-  const d=distTo(p),l=nearestLoc(p),saved=isSaved(p.id);
+  const d=distTo(p),l=nearestLoc(p),a=avail(p);
   return `<article class="card pcard rise" style="--i:${i}" data-card="${p.id}">
-    <button class="pc-main" data-action="profile" data-id="${p.id}">${avatar(p,56)}
-      <span class="pc-info"><span class="nm">${esc(name(p))}</span><span class="sp">${esc(p.spec)}</span>
-        <span class="meta-line"><span class="lead">${ic("location_on",16)}</span><span>${esc(l.n)}${d!=null?` · ${fmtMi(d)}`:` · ${esc(l.city)}`}</span></span>
-        <span class="meta-line"><span class="lead">${ic("translate",16)}</span><span>${esc(p.langs.join(", "))}</span></span>
-        <span class="tags">${S.sort==="featured"&&p.featured?`<span class="tag feat">${ic("workspace_premium",16)}Featured</span>`:""}
-          ${p.accepting?`<span class="tag yes">${icf("check_circle",16)}Accepting new patients</span>`:`<span class="tag no">${ic("do_not_disturb_on",16)}Not accepting new patients</span>`}
-          ${p.online?`<span class="tag">${ic("event_available",16)}Online scheduling</span>`:""}</span></span></button>
+    <button class="pc-main" data-action="profile" data-id="${p.id}">
+      <span class="pc-top"><span class="avatar av-56 pc-av" aria-hidden="true">${inits(p)}</span>
+        <span class="pc-info"><span class="nm">${esc(name(p))}</span><span class="sp">${esc(p.spec)}</span>
+          <span class="meta-line"><span class="lead">${ic("location_on",16)}</span><span>${esc(l.n)}${d!=null?` · ${fmtMi(d)}`:""}</span></span></span></span>
+      <span class="pc-tags"><span class="pc-rate">${icf("star",16)}<b>${a.rating.toFixed(1)}</b><span>(${a.reviews})</span><span class="sr-only"> stars from ${a.reviews} reviews</span></span>
+        ${S.sort==="featured"&&p.featured?`<span class="pt pt-feat">Featured</span>`:""}
+        ${p.accepting?`<span class="pt pt-new">New patients</span>`:`<span class="pt pt-no">No new patients</span>`}
+        ${a.video?`<span class="pt pt-video">Video visits</span>`:""}</span>
+      <span class="pc-foot">${p.accepting?`<span>Next available <b>${esc(a.next)}</b></span>`:`<span>Call the clinic to ask about openings</span>`}${ic("chevron_right",20)}</span></button>
     ${favBtn(p,"card")}</article>`;
 }
 const heart=s=>`<span class="hrt">${ic("favorite",s)}${icf("favorite",s,"hf")}</span>`;
