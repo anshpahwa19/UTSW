@@ -329,7 +329,7 @@ function switchTab(t,reset){
 function focusTitle(){setTimeout(()=>{const h=$("#appbar .ttl")||$("#view h1");if(h){h.setAttribute("tabindex","-1");h.focus({preventScroll:true})}},rm()?0:50)}
 
 /* ---------- App bar + tab bar ---------- */
-const TABS=[["home","Home","home"],["find","Find my care","stethoscope"],["search","Search","search"],["locations","Locations","location_on"],["mychart","Sign in","login"]];
+const TABS=[["home","Home","home"],["find","Find care","stethoscope"],["search","Search","search"],["locations","Locations","location_on"],["mychart","Sign in","login"]];
 const TITLES={find:"Find my care",results:"Doctors",profile:"Doctor profile",saved:"Saved providers",locations:"Locations",menu:"Menu",mychart:"MyChart",medblog:"MedBlog",inbox:"Inbox"};
 function renderAppbar(){
   const t=top(),depth=S.stacks[S.tab].length;

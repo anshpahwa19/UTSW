@@ -647,9 +647,9 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
   background:color-mix(in srgb,var(--c-surface) 94%,transparent);-webkit-backdrop-filter:blur(20px) saturate(1.5);backdrop-filter:blur(20px) saturate(1.5);
   box-shadow:0 0 0 1px color-mix(in srgb,var(--c-border) 80%,transparent),0 12px 32px rgba(0,30,60,.16),0 2px 6px rgba(0,30,60,.06)}
 .view::after{content:"";display:block;height:calc(var(--tabbar-h) - var(--sp-24))}
-.tab{flex:1 1 0;min-width:max-content;min-height:76px;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:var(--fs-12);line-height:var(--lh-12);font-weight:500;color:var(--c-text-2);cursor:pointer;padding:var(--sp-4) var(--sp-4);border-radius:var(--r-full);position:relative}
+.tab{flex:1 1 0;min-width:max-content;min-height:68px;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:var(--fs-12);line-height:var(--lh-12);font-weight:500;color:var(--c-text-2);cursor:pointer;padding:var(--sp-4) var(--sp-4);border-radius:var(--r-full);position:relative}
 .tab>span:last-child{white-space:nowrap;letter-spacing:-.01em}
-.tab[aria-current="page"]{font-weight:500}
+.tab[aria-current="page"]{font-weight:600}
 .tab .pill{width:32px;height:28px;border-radius:var(--r-full);display:grid;place-items:center;transition:background var(--dur-base) var(--ease-out);position:relative}
 .tab-ic path{transition:opacity var(--dur-base) var(--ease-std)}
 .tab-ic .f{opacity:0}
@@ -1333,7 +1333,7 @@ function switchTab(t,reset){
 function focusTitle(){setTimeout(()=>{const h=$("#appbar .ttl")||$("#view h1");if(h){h.setAttribute("tabindex","-1");h.focus({preventScroll:true})}},rm()?0:50)}
 
 /* ---------- App bar + tab bar ---------- */
-const TABS=[["home","Home","home"],["find","Find my care","stethoscope"],["search","Search","search"],["locations","Locations","location_on"],["mychart","Sign in","login"]];
+const TABS=[["home","Home","home"],["find","Find care","stethoscope"],["search","Search","search"],["locations","Locations","location_on"],["mychart","Sign in","login"]];
 const TITLES={find:"Find my care",results:"Doctors",profile:"Doctor profile",saved:"Saved providers",locations:"Locations",menu:"Menu",mychart:"MyChart",medblog:"MedBlog",inbox:"Inbox"};
 function renderAppbar(){
   const t=top(),depth=S.stacks[S.tab].length;
