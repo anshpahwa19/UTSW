@@ -1764,7 +1764,7 @@ function viewMenu(){
      ${mrow("inbox","Inbox",n?`${n} new message${n>1?"s":""} from UTSW MyCare`:"No new messages",`data-action="push" data-v="inbox"${n?` aria-label="Inbox, ${n} new"`:""}`,(n?`<span class="new-pill" aria-hidden="true">${n} new</span>`:"")+CHEV)}
      ${mrow("favorite","Saved providers",S.saved.length?`${S.saved.length} saved on this device`:"Doctors you save appear here",`data-action="tab" data-tab="saved"`,CHEV)}
      ${mrow("location_on","Locations","Hospitals, clinics, and urgent care",`data-action="tab" data-tab="locations"`,CHEV)}
-     ${mrow("login","Sign in to MyChart","Messages, test results, visits, and billing",`data-action="tab" data-tab="mychart"`,CHEV)}
+     ${mrow("login","Sign in to MyChart","Messages, test results, visits, and billing",`data-action="mychart"`,CHEV)}
      ${mrow("newspaper","MedBlog","Health news and tips from our experts",`data-action="push" data-v="medblog"`,CHEV)}</div></section>
    <section class="grp" aria-labelledby="mn-2"><h2 class="lbl-h" id="mn-2">Patients and visitors</h2><div class="card list">
      ${mrow("folder_open","Patient resources","Billing, records, forms, and support",`data-action="toast" data-kind="go" data-msg="Opens Patient resources"`,CHEV)}
@@ -1783,10 +1783,12 @@ function viewMenu(){
      ${mrow("accessibility_new","Accessibility","",`data-action="toast" data-kind="out" data-msg="Opens the accessibility statement"`,OUT)}</div></section>
    <p class="fine">UTSW MyCare version 2.0 (prototype) · Sample menu destinations</p></div>`;
 }
+/* MyChart sign-in opens as a page on the current tab (Sign in, Quick links, menu), so Back returns to where you were */
+function openMyChart(why){if(top().v==="mychart"){if(why){top().why=why;rerenderKeep()}return}push(why?{v:"mychart",why}:{v:"mychart"});setTimeout(()=>$("#mc-user")?.focus(),rm()?0:450)}
 function viewMyChart(err){
   const e=err||{};
   return `<div class="res-body" style="gap:var(--sp-24)">
-   <p class="mc-lead">Sign in for visits, messages, results, and bills.</p>
+   <p class="mc-lead">${top().why?`Sign in to ${esc(top().why.toLowerCase())}.`:"Sign in for visits, messages, results, and bills."}</p>
    <form class="mc-card on-blue" data-form="mc" novalidate aria-labelledby="mc-h">
      <span class="mc-orb" aria-hidden="true"></span>
      <h2 id="mc-h">Sign in to MyChart</h2>
@@ -2171,7 +2173,7 @@ screen.addEventListener("click",e=>{
    case "search-saved":closeSearch(()=>switchTab("saved",true));break;
    case "clear-history":S.recent=[];store.set("recent",[]);renderYours(false);$("#yt-history")?.focus();sayPolite("Search history cleared");break;
    case "gs-profile":closeSearch(()=>push({v:"profile",id}));break;
-   case "tile":{const k=el.dataset.k;if(k==="find")switchTab("find",true);else if(k==="locations")switchTab("locations",true);else toast(`Opens MyChart: ${el.dataset.l}. Sign-in is part of MyChart, not this guest prototype.`,"out");break}
+   case "tile":{const k=el.dataset.k;if(k==="find")switchTab("find",true);else if(k==="locations")switchTab("locations",true);else openMyChart(el.dataset.l);break}
    case "near-me":S.fcText="";runSearch("",{});if(!S.loc)setTimeout(useMyLocation,rm()?0:350);break;
    case "run":{const go=()=>{S.fcText="";runSearch(el.dataset.q)};if(!$("#layer").hidden)closeSheet(go);else go();break}
    case "run-accepting":S.fcText="";runSearch(el.dataset.q);S.filters.accepting=true;render();load();break;
@@ -2205,7 +2207,7 @@ screen.addEventListener("click",e=>{
    case "share":openShare(id);break;
    case "request":openRequest(id);break;
    case "bio":{const b=$("#bio");const open=!b.classList.contains("open");const h0=b.offsetHeight;b.classList.toggle("open",open);if(canMove())b.animate([{height:h0+"px"},{height:b.offsetHeight+"px"}],{duration:440,easing:EASE_IOS});el.setAttribute("aria-expanded",String(open));el.firstElementChild.textContent=open?"Show less":"Read more";break}
-   case "mychart":if(!$("#layer").hidden)closeSheet(()=>switchTab("mychart",true));else switchTab("mychart",true);break;
+   case "mychart":if(!$("#layer").hidden)closeSheet(()=>openMyChart());else openMyChart();break;
    case "open-menu":openDrawer();break;
    case "ob-next":if(obIdx>=OB.length-1)obWelcome();else obGo(obIdx+1);break;
    case "ob-skip":obWelcome();break;
@@ -2617,7 +2619,7 @@ function obWelcome(instant){
 }
 function finishOnboarding(dest){
   store.set("onboarded",true);const O=$("#ob");
-  const done=()=>{O.hidden=true;O.innerHTML="";setInert(false);S.tab=dest;S.stacks[dest].splice(1);markTab();S.heroDone=false;render("fade",{scroll:0});
+  const done=()=>{O.hidden=true;O.innerHTML="";setInert(false);if(dest==="mychart"){S.tab="home";S.stacks.home=[{v:"home"},{v:"mychart"}]}else{S.tab=dest;S.stacks[dest].splice(1)}markTab();S.heroDone=false;render("fade",{scroll:0});
     if(dest==="mychart")setTimeout(()=>$("#mc-user")?.focus(),rm()?0:300);};
   if(!canMove())return done();
   O.animate([{opacity:1,transform:"none"},{opacity:0,transform:"scale(1.04)"}],{duration:420,easing:EASE_IOS,fill:"forwards"}).onfinish=done;
