@@ -6,7 +6,7 @@
 const MockSettings = { latency: [160, 380], simulateErrors: false };
 class ServiceError extends Error {}
 const wait = ms => new Promise(r => setTimeout(r, ms));
-const SCHEMA = 6;
+const SCHEMA = 7;
 let DB = null;
 function loadDb() {
   const saved = store.read();
@@ -44,13 +44,14 @@ const CONFIG_TYPES = {
   campaign: { label: 'Campaign', area: 'campaigns', supportsRollback: true, route: 'home-campaigns' },
   alert: { label: 'Emergency alert', area: 'alerts', supportsRollback: true, route: 'home-alerts' },
   quickLink: { label: 'Quick link', area: 'quickLinks', supportsRollback: true, route: 'home-quick-links' },
-  featuredCard: { label: 'Featured card', area: 'featuredCards', supportsRollback: true, route: 'home-featured-cards' },
-  drawer: { label: 'Drawer / More options', area: 'drawer', supportsRollback: true, route: 'content-drawer' },
+  featuredCard: { label: 'Services and resources card', area: 'featuredCards', supportsRollback: true, route: 'home-featured-cards' },
+  drawer: { label: 'Menu', area: 'drawer', supportsRollback: true, route: 'content-drawer' },
   globalColors: { label: 'Global colors', area: 'colors', supportsRollback: true, route: 'content-colors' },
   appEntry: { label: 'App entry', area: 'appEntry', supportsRollback: true, route: 'content-app-entry' },
   searchMappings: { label: 'Query mappings', area: 'search', supportsRollback: true, route: 'search-query-mappings' },
   searchSynonyms: { label: 'Synonyms', area: 'search', supportsRollback: true, route: 'search-synonyms' },
   searchSpecialties: { label: 'Specialty mapping', area: 'search', supportsRollback: true, route: 'search-specialties' },
+  searchTop: { label: 'Top and popular searches', area: 'search', supportsRollback: true, route: 'search-top' },
   searchRanking: { label: 'Ranking', area: 'search', supportsRollback: true, route: 'search-ranking' },
   segment: { label: 'Audience segment', area: 'audiences', supportsRollback: false, route: 'audiences' },
   locations: { label: 'Location-aware configuration', area: 'locations', supportsRollback: true, route: 'admin-settings-locations' }

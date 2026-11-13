@@ -1,216 +1,224 @@
 /* Mobile preview – runs inside the sandboxed preview iframe (srcdoc, no same-origin), never in the Admin page.
-   Markup and classes come from designs/guest/src.html (home renderers R.alerts … R.news, lines 2124–2240; drawer
-   lines 2667–2700; sign-in choice lines 1430–1446), fed by the configuration the Admin posts in.
-   Every control is inert: the preview shows the configuration, it does not run the app. */
+   Markup follows the UTSW MyCare Guest Flow 2 design (stakeholder update): home renderers M.tiles … M.announcements,
+   alert banners, the Find Care hero, the floating tab bar, the menu, onboarding and the welcome (sign-in choice) screen.
+   It is fed by the configuration the Admin posts in. Every control is inert: the preview shows the configuration,
+   it does not run the app. The app UI is light only. */
 (function () {
   'use strict';
-  /* Concept → glyph for the fixed chrome; configurable items post glyph names directly (approved icon list) */
+  /* Glyphs the fixed chrome uses (Material Symbols Rounded). Configurable items post glyph names from the approved list. */
   const ICONS = {
-    home: 'home', findCare: 'stethoscope', place: 'location_on', wayfinding: 'directions_walk', signIn: 'login',
-    search: 'search', alert: 'warning', expand: 'expand_more', lock: 'lock', refresh: 'refresh', next: 'chevron_right',
-    prev: 'chevron_left', go: 'arrow_forward', addCal: 'calendar_add_on', close: 'close', external: 'open_in_new',
-    guest: 'explore', nearMe: 'near_me', parking: 'local_parking', indoor: 'map', info: 'info', visits: 'calendar_month', directions: 'directions'
+    home: 'home', findCare: 'stethoscope', search: 'search', wayfinding: 'directions_walk', favorites: 'favorite', signIn: 'login',
+    menu: 'menu', close: 'close', back: 'arrow_back', expand: 'expand_more', next: 'chevron_right', external: 'open_in_new', go: 'arrow_forward',
+    trending: 'trending_up', emergency: 'warning', advisory: 'error', time: 'schedule', place: 'location_on', info: 'info', parking: 'local_parking',
+    indoor: 'directions_walk', guest: 'explore', checked: 'check_circle', lock: 'lock', inbox: 'inbox', visits: 'calendar_month', near: 'near_me',
+    medicines: 'medication', joints: 'directions_run', heart: 'favorite', prevention: 'vaccines', cancer: 'health_and_safety', pregnancy: 'pregnant_woman',
+    article: 'article', newspaper: 'newspaper'
   };
   const APP_ICON = 'data:image/svg+xml;base64,__LOGO_ICON__';
   const LOGO = 'data:image/svg+xml;base64,__LOGO_REVERSED__';
   const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-  const ico = (key, size = 24, cls = '') => {
-    const c = ['ms', size === 24 ? '' : 's' + size, key === 'alert' ? 'f1' : '', cls].filter(Boolean).join(' ');
-    return `<span class="${c}" aria-hidden="true">${ICONS[key] || key}</span>`;
-  };
-  const circle = (key, size = 40, cls = '') => `<span class="dot${size === 48 ? '' : ' d' + size}${cls ? ' ' + cls : ''}" aria-hidden="true">${ico(key, size === 40 ? 20 : size === 56 ? 32 : 24)}</span>`;
-  const row = ({ ic, lead, title, sub, ext, cls = '' }) =>
-    `<li class="${cls}"><button class="row" type="button">${lead || circle(ic)}<span class="txt"><span class="rt">${esc(title)}</span>${sub ? `<span class="rs">${esc(sub)}</span>` : ''}</span>${ico(ext ? 'external' : 'next', 20, 'chev')}</button></li>`;
+  const ico = (key, size = 24, cls = '') => `<span class="${['ms', size === 24 ? '' : 's' + size, cls].filter(Boolean).join(' ')}" aria-hidden="true">${ICONS[key] || key}</span>`;
+  const well = (g, size = 40) => `<span class="well${size === 48 ? ' well-48' : ''}" aria-hidden="true">${ico(g)}</span>`;
   const art = svg => `<svg viewBox="0 0 304 144" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${svg}</svg>`;
+  const row = ({ g, lead, title, sub, ext, cls = '', end }) => `<button class="row${cls ? ' ' + cls : ''}" type="button">${lead || well(g)}<span class="rt"><b>${esc(title)}</b>${sub ? `<span>${esc(sub)}</span>` : ''}</span>${end || ico(ext ? 'external' : 'next', 20)}</button>`;
+  /* MedBlog topic look: [glyph, art class] – from the design */
+  const TOPIC = { 'Medicines': ['medicines', 't-blue'], 'Bones and joints': ['joints', 't-orange'], 'Heart health': ['heart', 't-clay'], 'Prevention': ['prevention', 't-green'], 'Cancer': ['cancer', 't-purple'], 'Pregnancy': ['pregnancy', 't-sky'] };
 
-  const NB = [[/(\d) (a\.m\.|p\.m\.)/g, '$1 $2'], [/\b(Jan|Feb|Aug|Sept|Oct|Nov|Dec)\. (\d)/g, '$1. $2'], [/UT Southwestern/g, 'UT Southwestern']];
+  const NB = [[/(\d) (a\.m\.|p\.m\.|mi\b)/g, '$1 $2'], [/\b(Jan|Feb|Aug|Sept|Oct|Nov|Dec)\. (\d)/g, '$1. $2'], [/UT Southwestern/g, 'UT Southwestern']];
   function nbsp(root) {
     const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
     for (let n = w.nextNode(); n; n = w.nextNode()) { const v = NB.reduce((s, [re, to]) => s.replace(re, to), n.nodeValue); if (v !== n.nodeValue) n.nodeValue = v; }
   }
 
-  let C = null, M = null;
-  const R = {
-    alerts() {
-      const list = (C.alerts || []).slice().sort((a, b) => a.priority - b.priority).slice(0, 2);
-      if (!list.length) return '';
-      return `<section class="alerts" aria-label="Emergency alerts"><div class="alert-wrap all">${list.map((al, i) => `<div class="alert ${i ? 'extra' : 'open'}">
-        <div class="alert-row"><span class="alert-ico">${ico(al.icon === 'warning' ? 'alert' : al.icon)}</span>
-          <div class="alert-txt"><p class="alert-kicker">Alert${list.length > 1 ? `<span class="pri">· Priority ${i + 1} of ${list.length}</span>` : ''}</p><p class="alert-title">${esc(al.title)}</p></div>
-          ${i === 0 ? `<button class="alert-tog" type="button" aria-expanded="true" aria-label="Hide alert details">${ico('expand')}</button>` : ''}</div>
-        ${i === 0 ? `<div class="alert-body"><div><p>${esc(al.message)}</p>${al.window ? `<p class="alert-meta">${esc(al.window)}</p>` : ''}
-          <div class="alert-actions">${al.ctaLabel ? `<button class="alert-btn" type="button">${esc(al.ctaLabel)}</button>` : ''}${al.dismissible ? '<button class="alert-btn" type="button" style="background:transparent;color:#FFFFFF;box-shadow:inset 0 0 0 1.5px #FFFFFF">Dismiss</button>' : ''}</div></div></div>` : ''}
-      </div>`).join('')}</div></section>`;
-    },
-    greeting() {
-      const signed = M.audience === 'authenticated';
-      return `<section class="greet" aria-labelledby="greet-h">
-        <div class="greet-top"><p class="eyebrow">${signed ? 'Welcome back, Jordan' : 'Welcome to UT Southwestern'}</p><span class="upd-chip"><span class="pill">${ico('refresh', 16)}<span class="upd-time">Updated 9:41 a.m.</span></span></span></div>
-        <h1 id="greet-h">How can we help today?</h1>
-        <p class="sub">${signed ? 'Your visits, messages, and care in one place.' : 'Find a doctor, get directions, and check urgent care wait times – no account needed.'}</p>
-      </section>`;
-    },
-    search() {
-      return `<section aria-label="Search">
-        <button class="search-field" type="button">${ico('search')}<span>Search doctors, care, and places</span><span class="go" aria-hidden="true">${ico('go', 20)}</span></button>
-        <div class="ts-row" role="group" aria-label="Top searches"><span class="ts-k" aria-hidden="true">Top</span>${C.top.map(([t]) => `<button class="chip glass" type="button">${esc(t)}</button>`).join('')}</div>
-      </section>`;
-    },
-    signin() {
-      return `<section class="locked" aria-labelledby="locked-h">
-        <div class="lk-hd" aria-hidden="true"><span class="sk w1"></span><span class="sk w2"></span><span class="sk w4"></span></div>
-        <div class="lk-bd" aria-hidden="true"><span class="sk w3"></span><span class="sk w4"></span></div>
-        <div class="locked-body">${circle('lock', 56)}
-          <h2 id="locked-h">Already a patient? Sign in to MyChart</h2>
-          <p>See your appointments, message your care team, get test results, and pay bills.</p>
-          <div class="btns"><button class="btn btn-primary" type="button">Sign in</button><button class="btn btn-secondary" type="button">Create account</button></div>
-        </div></section>`;
-    },
+  let C = null, MSG = null;
+  const guest = () => MSG.audience !== 'authenticated';
+
+  /* ---------- Pinned: alerts, then the Find Care hero ---------- */
+  function alertCard(a, open, stacked) {
+    return `<article class="alert ${a.level === 'advisory' ? 'advisory' : 'emergency'}${open ? ' open' : ''}${stacked ? ' stacked' : ''}">
+      <h2><button class="alert-toggle" type="button" aria-expanded="${open}"><span class="sev-ic">${ico(a.level === 'advisory' ? 'advisory' : 'emergency', 24, 'f')}</span>
+        <span class="alert-txt"><span class="alert-meta"><b>${a.level === 'advisory' ? 'Advisory' : 'Emergency'}</b> · ${esc(a.posted)}</span><span class="alert-title">${esc(a.title)}</span></span>${ico('expand', 20, 'chev')}</button></h2>
+      ${open ? `<div class="alert-body"><p>${esc(a.message)}</p>${a.window ? `<p>${esc(a.window)}</p>` : ''}
+        <div class="row-btns"><button class="btn btn-primary btn-sm" type="button">Read full alert</button>${a.dismissible ? '<button class="btn btn-ghost btn-sm" type="button">Dismiss</button>' : ''}</div></div>` : ''}
+    </article>`;
+  }
+  function alerts() {
+    const list = (C.alerts || []).slice();
+    if (!list.length) return '';
+    const [first, ...rest] = list;
+    return `<section class="alerts" aria-label="Active alerts">${alertCard(first, true, rest.length > 0)}
+      ${rest.length ? `<button class="more-alerts" type="button" aria-expanded="false"><span>${rest.length} more alert${rest.length > 1 ? 's' : ''}</span>${ico('expand', 20)}</button>` : ''}</section>`;
+  }
+  function hero() {
+    return `<section class="hero" aria-labelledby="h-hero"><span class="aurora" aria-hidden="true"><i></i></span>
+      <div class="hero-copy"><h1 class="vh" id="h-hero">UTSW MyCare home</h1>
+        <p class="fc-kick">${ico('findCare', 20)}Find Care</p><p class="sub">Search UTSW MyCare for doctors, locations, and more.</p></div>
+      <button class="search-entry" type="button">${ico('search')}<span>Doctors, locations, and more</span></button>
+      <div class="top-s"><span class="eyebrow" id="top-h">Top searches</span><div class="chips" role="group" aria-labelledby="top-h">${(C.top || []).slice(0, 4).map(t => `<button class="chip on-blue-chip" type="button">${ico('trending', 16)}${esc(Array.isArray(t) ? t[0] : t)}</button>`).join('')}</div></div>
+    </section>`;
+  }
+
+  /* ---------- Modules, in the order the Admin sets ---------- */
+  const M = {
     tiles() {
-      const signed = M.audience === 'authenticated';
-      const tile = t => t.locked && !signed
-        ? `<button class="qa-tile lockd" type="button" aria-label="${esc(t.title)}. Needs MyChart sign-in">${circle(t.icon, 48)}<span class="qa-txt"><span class="qa-lbl">${esc(t.title)}</span></span><span class="qa-lock">${ico('lock', 16)}</span></button>`
-        : `<button class="qa-tile" type="button">${circle(t.icon, 48, 'solid')}<span class="qa-txt"><span class="qa-lbl">${esc(t.title)}</span></span></button>`;
-      const list = C.quickLinks || [];
-      return `<section aria-labelledby="qa-h"><div class="sec-head"><h2 id="qa-h">Quick links</h2></div>
-        ${list.length ? `<div class="qa">${list.map(tile).join('')}</div>` : '<p class="pv-empty">No quick links are on.</p>'}</section>`;
+      const list = (C.quickLinks || []).slice(0, 4);
+      return `<div class="mod-head"><h2 class="sec-h" id="h-tiles">Quick links</h2></div>
+        ${list.length ? `<div class="tiles">${list.map(t => `<button class="tile${t.highlight ? ' pv-hl' : ''}" type="button">${well(t.icon)}<span>${esc(t.title)}</span></button>`).join('')}</div>` : '<p class="pv-empty">No quick links are on.</p>'}`;
+    },
+    mychart() {
+      if (!guest()) return '';
+      return `<div class="mychart"><span class="mc-glow" aria-hidden="true"></span>
+        <div class="mc-txt"><span class="eyebrow">Already a patient?</span><h2 id="h-mychart">Sign in for more</h2></div>
+        <p>Sign in to message your doctor, get your test results, manage your visits, and manage billing.</p>
+        <div class="mc-btns"><button class="mc-b mc-solid" type="button">${ico('signIn', 20)}<span>Sign in</span></button><button class="mc-b mc-line" type="button">Create an account</button></div></div>`;
     },
     featured() {
-      return `<section aria-labelledby="feat-h">
-        <div class="sec-head"><h2 id="feat-h">MedBlog</h2><button class="link" type="button">See all</button></div>
-        <div class="car" role="group" aria-roledescription="carousel" aria-label="Latest MedBlog articles">${C.featured.map(f => `
-          <button class="feat" type="button"><span class="feat-art">${art(f.art)}</span>
-            <span class="feat-body"><span class="kick">${esc(f.kick)}</span><span class="feat-title">${esc(f.title)}</span><span class="feat-meta">${esc(f.meta)}</span></span></button>`).join('')}
-        </div>
-        <div class="car-ctrl"><span class="car-track" aria-hidden="true"><span class="car-thumb" style="width:25%"></span></span>
-          <div class="car-arrows"><button class="icon-btn" type="button" aria-label="Previous article">${ico('prev')}</button><button class="icon-btn" type="button" aria-label="Next article">${ico('next')}</button></div></div>
-      </section>`;
-    },
-    services() {
-      const list = C.resources || [];
-      return `<section aria-labelledby="svc-h"><div class="sec-head"><h2 id="svc-h">UTSW resources</h2></div>
-        ${list.length ? `<ul class="group">${list.map(s => row({ ic: s.icon, title: s.title, sub: s.subtitle, cls: s.highlight ? 'pv-hl' : '' })).join('')}</ul>` : '<p class="pv-empty">No featured cards are on.</p>'}</section>`;
+      return `<div class="mod-head"><h2 class="sec-h" id="h-featured">MedBlog</h2><button class="btn btn-ghost btn-sm" type="button">See all</button></div>
+        <ul class="h-scroll mb-row" aria-labelledby="h-featured">${(C.blog || []).map(b => { const [g, t] = TOPIC[b.cat] || ['article', 't-blue'];
+          return `<li class="mb-item"><button class="card mb-card" type="button"><span class="mb-art ${t}" aria-hidden="true"><i class="r1"></i><i class="r2"></i><span class="mb-ic">${ico(g, 24, 'f')}</span><span class="mb-read">${ico('time', 16)}${esc(b.read)}</span></span>
+            <span class="mb-txt"><span class="mb-cat">${esc(b.cat)}</span><span class="mb-t">${esc(b.t)}</span><span class="mb-d">${esc(b.d)}</span></span></button></li>`; }).join('')}</ul>`;
     },
     campaign() {
       const k = C.campaign;
       if (!k) return '';
-      return `<section class="camp" aria-labelledby="camp-h">
-        ${k.art ? `<div class="camp-img">${art(k.art)}</div>` : ''}
-        <div class="camp-top">
-          <div><p class="camp-tag"><i></i>${esc(k.tag || k.type)}</p><h2 id="camp-h">${esc(k.title || 'Campaign title')}</h2></div>
-          <div class="camp-art" aria-hidden="true"><svg viewBox="0 0 96 96"><g class="rings"><circle cx="48" cy="48" r="47" fill="#336893" opacity=".55"/><circle cx="48" cy="48" r="38" fill="none" stroke="#7BAFD4" stroke-width="1.5" stroke-dasharray="3 5" opacity=".8"/><circle cx="86" cy="22" r="5" fill="#00A9E0"/><circle cx="12" cy="74" r="3" fill="#7BAFD4"/></g></svg>${circle(k.icon || 'vaccines', 56)}</div>
-          ${k.description ? `<p>${esc(k.description)}</p>` : ''}
-        </div>
-        ${k.fact1Label || k.fact2Label ? `<ul class="camp-facts">${[[k.fact1Label, k.fact1Value, 'countdown'], [k.fact2Label, k.fact2Value, 'place']].filter(f => f[0]).map(([kk, v, i]) => `<li>${ico(i === 'countdown' ? 'schedule' : 'location_on', 20)}<span class="k">${esc(kk)}</span><span class="v">${esc(v)}</span></li>`).join('')}</ul>` : ''}
-        <div class="camp-cta">${k.ctaLabel ? `<button class="btn btn-light" type="button"><span class="lbl">${esc(k.ctaLabel)}</span>${ico('go', 20)}</button>` : ''}
-          <button class="camp-cal" type="button" aria-pressed="false" aria-label="Add to calendar">${ico('addCal', 24)}</button></div>
-      </section>`;
+      return `<div class="campaign"><span class="cp-glow" aria-hidden="true"></span><span class="cp-glass" aria-hidden="true"></span>
+        <span class="cp-badge" aria-hidden="true"><i class="cp-ring"></i><span class="cp-core">${ico(k.icon || 'vaccines')}</span></span>
+        ${k.tag ? `<span class="eyebrow">${esc(k.tag)}</span>` : ''}<h2 id="h-campaign">${esc(k.title || 'Campaign title')}</h2>
+        ${k.description ? `<p>${esc(k.description)}</p>` : ''}
+        ${k.ctaLabel ? `<button class="btn btn-white cp-cta" type="button"><span>${esc(k.ctaLabel)}</span>${ico('go', 20)}</button>` : ''}</div>`;
+    },
+    services() {
+      const list = C.resources || [];
+      return `<div class="mod-head"><h2 class="sec-h" id="h-services">Services and resources</h2></div>
+        ${list.length ? `<div class="h-scroll">${list.map((s, i) => `<button class="card svc${s.highlight ? ' pv-hl' : ''}" type="button">
+          <span class="svc-art a${i % 3}" aria-hidden="true"><i class="s1"></i><i class="s2"></i>${ico(s.icon, 40)}</span>
+          <span class="svc-body">${s.category ? `<span class="svc-cat">${esc(s.category)}</span>` : ''}<b>${esc(s.title)}</b>${s.description ? `<span>${esc(s.description)}</span>` : ''}</span></button>`).join('')}</div>` : '<p class="pv-empty">No services or resources are on.</p>'}`;
     },
     news() {
-      return `<section aria-labelledby="ann-h"><div class="sec-head"><h2 id="ann-h">Announcements</h2><button class="link" type="button">See all</button></div>
-        <ul class="group">${C.announcements.map(a => row({ lead: `<span class="datebox" aria-hidden="true"><span class="m">${esc(a.m)}</span><span class="d">${esc(a.d)}</span></span>`, title: a.t, sub: a.s })).join('')}</ul></section>`;
+      return `<div class="mod-head"><h2 class="sec-h" id="h-news">Announcements</h2></div>
+        <div class="card list ann">${(C.announcements || []).map(a => row({ lead: `<span class="ann-date">${esc(a.d)}</span>`, title: a.t, sub: a.s, end: a.isNew ? '<span class="new-pill">New</span>' : ico('next', 20) })).join('')}</div>`;
+    },
+    saved() {
+      const list = C.saved || [];
+      return `<div class="mod-head"><h2 class="sec-h" id="h-saved">Your saved providers</h2><button class="btn btn-ghost btn-sm" type="button">See all</button></div>
+        <div class="card list">${list.map(p => row({ lead: `<span class="avatar ${p.a}" aria-hidden="true">${esc(p.i)}</span>`, title: p.n, sub: p.s })).join('')}</div>
+        <p class="fine">Shows only on devices with saved providers.</p>`;
     },
     visits() {
-      return `<section aria-labelledby="pv-h"><div class="sec-head"><h2 id="pv-h">Your next visits</h2><span class="tag">From MyChart</span></div>
-        <ul class="group">${C.visits.map(v => row({ lead: `<span class="datebox" aria-hidden="true"><span class="m">${esc(v.m)}</span><span class="d">${esc(v.d)}</span></span>`, title: `${v.type} · ${v.t}`, sub: `${v.who} · ${v.where}` })).join('')}</ul></section>`;
+      return `<div class="mod-head"><h2 class="sec-h" id="h-visits">Your next visits</h2><span class="eyebrow">From MyChart</span></div>
+        <div class="card list ann">${(C.visits || []).map(v => row({ lead: `<span class="ann-date">${esc(v.m)} ${esc(v.d)}</span>`, title: `${v.type} · ${v.t}`, sub: `${v.who} · ${v.where}` })).join('')}</div>`;
     },
     near() {
-      return `<section aria-labelledby="pn-h"><div class="sec-head"><h2 id="pn-h">Near Frisco</h2><button class="link" type="button">See all</button></div>
-        <ul class="group">${C.near.map(n => row({ ic: 'location_on', title: n.t, sub: n.s })).join('')}</ul></section>`;
+      return `<div class="mod-head"><h2 class="sec-h" id="h-near">Near you</h2><button class="btn btn-ghost btn-sm" type="button">See all</button></div>
+        <div class="card list">${(C.near || []).map(n => row({ g: 'place', title: n.t, sub: n.s })).join('')}</div>`;
     }
   };
 
-  /* Other screens */
-  const S = {
-    drawer() {
-      const secs = C.drawer.sections;
-      return `<div class="dr-bd pv"></div><aside class="drawer pv" aria-label="More">
-        <div class="dr-hd"><div><h2>More</h2><p>UT Southwestern MyCare</p></div><button class="icon-btn ghost" type="button" aria-label="Close menu">${ico('close')}</button></div>
-        <div class="dr-body">${secs.map((s, i) => `${s.label ? `<p class="ts-label">${esc(s.label)}</p>` : ''}
-          <ul class="group"${i === 0 ? ' style="margin-top:var(--s2)"' : ''}>${s.items.filter(it => it.visible || C.showHidden).map(it => row({ ic: it.icon, title: it.label, sub: it.sub, ext: it.destination && it.destination.type === 'url', cls: it.visible ? '' : 'dr-off' })).join('') || '<li class="pv-empty" style="margin:var(--s3)">No visible items</li>'}</ul>`).join('')}
-          <p class="dr-foot">MyCare 5.0 (sample) · Menu items come from the CMS</p></div></aside>`;
-    },
-    entry() {
-      const e = C.entry;
-      const choice = `<div class="lg-wrap"><div class="lg-top"><svg class="hero-art" viewBox="0 0 288 288" aria-hidden="true" style="right:-120px;top:20%;width:288px;height:288px"><circle cx="144" cy="144" r="140" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="2"/><circle cx="144" cy="144" r="100" fill="none" stroke="rgba(255,255,255,.10)" stroke-width="2"/></svg>
-          <img class="logo" alt="UTSW MyCare" src="${LOGO}"><h2>Care that starts here</h2><p>Find doctors, places, and your way around – then sign in for MyChart.</p></div>
-        <div class="lg-body"><h3>How do you want to start?</h3>
-          <button class="choice primary" type="button"><span class="dot">${ico('signIn')}</span><span class="txt"><b>I’m a patient</b><small>Sign in with MyChart for visits, messages, test results, and bills.</small></span>${ico('next', 24, 'chev')}</button>
-          <button class="choice" type="button"><span class="dot">${ico('guest')}</span><span class="txt"><b>Continue as guest</b><small>Find my Care, locations, and directions. No account needed.</small></span>${ico('next', 24, 'chev')}</button>
-          <p class="lg-links">New to MyChart? <button class="link" type="button">Create an account</button></p></div></div>`;
-      const eula = e.eulaVisible ? `<div class="pv-shade"></div><div class="sheet pv" role="dialog" aria-label="Terms of use"><div class="grab"></div><h2>Before you start</h2><p class="meta">Terms of use, version ${esc(e.eulaVersion)}</p><p>${esc(e.eulaText)}</p><button class="btn btn-primary" type="button">Accept and continue</button></div>` : '';
-      if (!e.loginPromptVisible || e.loginPromptType === 'module') {
-        return `<div class="pv-head"><h1>Home</h1><p>${e.loginPromptVisible ? 'No sign-in choice screen. Guests see the MyChart sign-in prompt on the home screen.' : 'No sign-in prompt at launch. People go straight to the home screen.'}</p></div>
-          ${e.loginPromptVisible ? `<div class="mods" style="padding-top:var(--s6)"><div class="mod">${R.signin()}</div></div>` : ''}${eula}`;
-      }
-      return choice + eula;
-    },
-    push() {
-      const p = C.push;
-      const inbox = p.delivery === 'inbox';
-      if (inbox) return `<div class="pv-head"><h1>Inbox</h1><p>App notifications</p></div><ul class="group" style="margin-top:var(--s4)">${row({ ic: 'inbox', title: p.title || 'Notification title', sub: `${p.body || ''}`.slice(0, 90) })}${row({ ic: 'inbox', title: 'New visitor hours start Nov. 1', sub: 'Two visitors at a time, 8 a.m. to 8 p.m.' })}</ul>`;
-      return `<div class="lock"><p class="lock-time">9:41</p><p class="lock-date">${esc(p.when || 'Thursday, Oct. 30')}</p>
-        <div class="push"><div class="push-top"><img src="${APP_ICON}" alt=""><span>MyCare</span><span class="when">now</span></div>
-          <p class="push-t">${esc(p.title || 'Notification title')}</p><p class="push-b">${esc(p.body || '')}</p>
-          ${p.art ? `<div class="push-img">${art(p.art)}</div>` : ''}</div>
-        <p class="push-note">${p.delivery === 'push+inbox' ? 'Also saved in the app’s Inbox' : 'Push only'}</p></div>`;
-    },
-    location() {
-      const l = C.location;
-      return `<div class="pv-head"><h1>Locations</h1><p>Arriving at ${esc(l.name)}</p></div>
-        <article class="loc-card"><div class="loc-map" aria-hidden="true"><i></i></div><div class="loc-body"><h2>${esc(l.name)}</h2>
-          <p class="loc-row">${ico('location_on', 20)}<span>${esc(l.type)}</span></p>
-          ${l.message ? `<p class="loc-tip">${ico('info', 20)}<span>${esc(l.message)}</span></p>` : ''}
-          ${l.parking ? `<p class="loc-row">${ico('local_parking', 20)}<span>${esc(l.parking)}</span></p>` : ''}
-          ${l.indoor ? `<button class="btn btn-primary" type="button">${ico('directions_walk', 20)}<span class="lbl">Indoor directions</span></button>` : ''}
-        </div></article>`;
-    }
-  };
-
-  const TABS = [['Home', 'home'], ['Find my Care', 'findCare'], ['Locations', 'place'], ['Wayfinding', 'wayfinding'], ['MyChart', 'signIn']];
-  const phone = document.getElementById('phone');
-  function tabs(active) {
-    phone.querySelector('.tabbar').innerHTML = `<span class="tab-ind" aria-hidden="true"></span>` + TABS.map((t, i) =>
-      `<button class="tab" type="button" aria-selected="${i === active}">${ico(t[1])}<span class="tl">${t[0].replace('Find my ', 'Find my ')}</span></button>`).join('');
-    const bar = phone.querySelector('.tabbar'), t = bar.querySelectorAll('.tab')[active], ind = bar.querySelector('.tab-ind');
-    bar.classList.toggle('wrap', bar.scrollWidth > bar.clientWidth + 1);
-    ind.style.width = `${t.offsetWidth}px`; ind.style.transform = `translateX(${t.offsetLeft}px)`;
+  function home() {
+    const mods = MSG.layout.modules.filter(m => m.on).map(m => ({ id: m.id, html: M[m.id] ? M[m.id]() : '' })).filter(m => m.html);
+    return `<div class="v-inner"><div class="top" data-m="alerts">${alerts()}${hero()}</div>
+      ${mods.map(m => `<section class="mod" data-m="${m.id}" aria-labelledby="h-${m.id}">${m.html}</section>`).join('') || '<div class="mod"><p class="pv-empty">No modules are visible on this layout.</p></div>'}</div>`;
   }
-  /* Global colors: only the approved set maps onto app tokens; dark mode keeps its own page colors */
+
+  /* ---------- Other screens ---------- */
+  function menu() {
+    const secs = C.drawer.sections;
+    return `<div class="drawer-layer"><div class="scrim"></div><aside class="drawer" aria-label="Menu">
+      <div class="drawer-head"><h2>Menu</h2><button class="icon-btn" type="button" aria-label="Close menu">${ico('close')}</button></div>
+      <div class="drawer-body"><div class="res-body">${secs.map(s => {
+        const items = s.items.filter(it => it.visible || C.showHidden);
+        if (s.style === 'chips') return `<section class="grp">${s.label ? `<h2 class="lbl-h">${esc(s.label)}</h2>` : ''}<div class="chips">${items.map(it => `<button class="chip${it.visible ? '' : ' off'}" type="button"${it.visible ? '' : ' style="opacity:.45"'}>${esc(it.label)}</button>`).join('') || '<p class="fine">No visible items</p>'}</div></section>`;
+        return `<section class="grp">${s.label ? `<h2 class="lbl-h">${esc(s.label)}</h2>` : ''}<div class="card list">${items.map(it => row({ g: it.icon, title: it.label, sub: it.sub, ext: it.destination && it.destination.type === 'url', cls: it.visible ? '' : 'off' })).join('') || '<p class="fine" style="padding:var(--sp-12) var(--sp-16)">No visible items</p>'}</div></section>`;
+      }).join('')}
+      <p class="fine">UTSW MyCare version 2.0 (sample) · Menu items come from the CMS</p></div></div></aside></div>`;
+  }
+  function onboarding() {
+    return `<div class="ob"><div class="ob-stage" aria-hidden="true"></div>
+      <div class="ob-bar"><img class="logo" alt="UTSW MyCare" src="${LOGO}"><button class="ob-skip" type="button">Skip</button></div>
+      <div class="ob-art"><div class="ob-scene" aria-hidden="true">
+        <div class="sc sc-pill" style="left:24px;top:8px;width:248px">${ico('search', 20)}<span>Knee pain doctor</span></div>
+        <div class="sc sc-card" style="left:12px;top:72px;width:272px;padding:16px;display:flex;flex-direction:column;gap:12px">
+          <span style="display:flex;gap:12px;align-items:center"><span class="avatar a1" style="width:56px;height:56px;font-size:18px">AM</span><span style="display:flex;flex-direction:column;gap:4px"><b style="color:var(--c-blue)">Avery Morgan, M.D.</b><span style="font-size:14px;line-height:20px;color:var(--c-text-2)">Orthopaedic Surgery</span></span></span>
+          <span class="sc-tag">${ico('checked', 16, 'f')}Accepting new patients</span><span class="sc-line" style="width:92%"></span><span class="sc-line" style="width:64%"></span></div>
+        <div class="sc sc-card" style="left:36px;top:236px;width:224px;padding:12px;display:flex;gap:12px;align-items:center;opacity:.9"><span class="avatar a2">RS</span><span style="display:flex;flex-direction:column;gap:4px;min-width:0"><b style="font-size:14px;line-height:20px;color:var(--c-blue)">Rafael Santos, M.D.</b><span class="sc-line" style="width:96px"></span></span></div>
+        <div class="sc sc-heart" style="left:236px;top:52px">${ico('favorites', 24, 'f')}</div></div></div>
+      <div class="ob-copy"><h2>Find the right doctor</h2><p>Search by name, specialty, or condition, and read full profiles to choose the provider who fits your care.</p></div>
+      <div class="ob-foot"><div class="ob-dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i></div><button class="btn btn-primary" type="button"><span>Next</span>${ico('go', 20)}</button></div></div>`;
+  }
+  function welcome() {
+    return `<div class="ob ob-welcome"><div class="ob-stage" aria-hidden="true"></div>
+      <div class="ob-bar" aria-hidden="true"></div>
+      <div class="ob-wel-art" aria-hidden="true"><span class="ob-wel-ring r2"></span><span class="ob-wel-ring"></span><span class="ob-wel-icon"><img src="${APP_ICON}" alt=""></span></div>
+      <div class="ob-wel-body"><h2>Welcome to UTSW MyCare</h2><p>Sign in to MyChart for your health record, or continue as a guest to find care.</p>
+        <div class="ob-choices">
+          <button class="ob-choice primary" type="button"><span class="ob-ic">${ico('signIn')}</span><span class="rt"><b>Sign in as a patient</b><span>Messages, test results, visits, and bills</span></span>${ico('next')}</button>
+          <button class="ob-choice secondary" type="button"><span class="ob-ic">${ico('guest')}</span><span class="rt"><b>Continue as guest</b><span>Find doctors, locations, and directions</span></span>${ico('next')}</button>
+        </div>
+        <button class="ob-wel-link" type="button">New to MyChart? <u>Create an account</u></button></div></div>`;
+  }
+  function entry() {
+    const e = C.entry;
+    const eula = e.eulaVisible ? `<div class="pv-shade"></div><div class="sheet" role="dialog" aria-label="Terms of use"><div class="grab"></div><h2>Before you start</h2><p class="meta">Terms of use, version ${esc(e.eulaVersion)}</p><p>${esc(e.eulaText)}</p><button class="btn btn-primary" type="button">Accept and continue</button></div>` : '';
+    if (C.entryView === 'onboarding' && e.onboardingVisible) return { overlay: onboarding() + eula };
+    if (e.loginPromptVisible && e.loginPromptType === 'choice') return { overlay: welcome() + eula };
+    return { home: true, overlay: eula };
+  }
+  function push() {
+    const p = C.push;
+    if (p.delivery === 'inbox') return { title: 'Inbox', view: `<div class="res-body"><div class="card list">${row({ g: 'inbox', title: p.title || 'Notification title', sub: `${p.body || ''}`.slice(0, 90), end: '<span class="new-pill">New</span>' })}${row({ g: 'inbox', title: 'Saturday hours at Lakeview Primary Care', sub: 'Open 8 a.m. to noon starting Oct. 17.' })}</div></div>` };
+    return { overlay: `<div class="lock"><p class="lock-time">9:41</p><p class="lock-date">${esc(p.when || 'Thursday, Oct. 30')}</p>
+      <div class="push"><div class="push-top"><img src="${APP_ICON}" alt=""><span>UTSW MyCare</span><span class="when">now</span></div>
+        <p class="push-t">${esc(p.title || 'Notification title')}</p><p class="push-b">${esc(p.body || '')}</p>${p.art ? `<div class="push-img">${art(p.art)}</div>` : ''}</div>
+      <p class="push-note">${p.delivery === 'push+inbox' ? 'Also saved in the app’s Inbox' : 'Push only'}</p></div>`, dark: true };
+  }
+  function location() {
+    const l = C.location;
+    return { title: 'Locations', tab: -1, view: `<div class="res-body"><article class="card loc-card"><div class="loc-map" aria-hidden="true"><i></i></div><div class="loc-body"><h2>${esc(l.name)}</h2>
+      <p class="loc-row">${ico('place', 20)}<span>${esc(l.type)}</span></p>
+      ${l.message ? `<p class="loc-tip">${ico('info', 20)}<span>${esc(l.message)}</span></p>` : ''}
+      ${l.parking ? `<p class="loc-row">${ico('parking', 20)}<span>${esc(l.parking)}</span></p>` : ''}
+      ${l.indoor ? `<button class="btn btn-primary" type="button">${ico('indoor', 20)}<span>Indoor directions</span></button>` : ''}</div></article></div>` };
+  }
+
+  /* ---------- Chrome ---------- */
+  const TABS = [['Home', 'home'], ['Find Care', 'findCare'], ['Search', 'search'], ['Wayfinding', 'wayfinding'], ['Favorites', 'favorites']];
+  const phone = document.getElementById('phone');
+  function appbar(title) {
+    const menuBtn = `<button class="icon-btn ab-menu" type="button" aria-label="Menu, 2 new in Inbox">${ico('menu')}<i class="ab-dot" aria-hidden="true"></i></button>`;
+    const bar = document.getElementById('appbar');
+    bar.className = `appbar${title ? '' : ' home'}`;
+    bar.innerHTML = title ? `<h1 class="ttl">${esc(title)}</h1>${menuBtn}`
+      : `<img class="logo" alt="UTSW MyCare" src="${LOGO}"><span class="sp"></span>${guest() ? `<button class="ab-sign" type="button">${ico('signIn', 20)}<span>Sign in</span></button>` : ''}${menuBtn}`;
+  }
+  function tabs(active) {
+    document.getElementById('tabbar').innerHTML = TABS.map(([l, g], i) => `<button class="tab" type="button"${i === active ? ' aria-current="page"' : ''}><span class="pill">${ico(g)}</span><span>${l}</span></button>`).join('');
+  }
+  /* Global colors: only the approved set maps onto app tokens */
   function applyColors(c) {
     const st = phone.style;
-    ['--brand', '--ctl', '--blue', '--blue-80', '--pms542', '--bg'].forEach(k => st.removeProperty(k));
+    ['--c-blue', '--c-mid-blue', '--c-muted-blue', '--c-bg'].forEach(k => st.removeProperty(k));
     if (!c) return;
-    st.setProperty('--brand', c.primary);
-    if (!phone.classList.contains('dark')) { st.setProperty('--ctl', c.primary); st.setProperty('--blue', c.primary); st.setProperty('--bg', c.background); }
-    st.setProperty('--blue-80', c.secondary); st.setProperty('--pms542', c.tertiary);
+    st.setProperty('--c-blue', c.primary); st.setProperty('--c-mid-blue', c.secondary); st.setProperty('--c-muted-blue', c.tertiary); st.setProperty('--c-bg', c.background);
   }
 
   function render(msg) {
-    C = msg.content; M = msg;
-    phone.classList.toggle('dark', msg.theme === 'dark');
-    phone.classList.toggle('rm', matchMedia('(prefers-reduced-motion: reduce)').matches);
+    C = msg.content; MSG = msg;
     applyColors(msg.colors);
     const screen = msg.screen || 'home';
-    document.getElementById('scr-home').hidden = screen !== 'home' && screen !== 'drawer';
-    document.getElementById('scr-alt').hidden = screen === 'home' || screen === 'drawer';
-    document.getElementById('overlay').innerHTML = screen === 'drawer' ? S.drawer() : '';
-    phone.classList.toggle('bar-light', ['home', 'drawer', 'entry', 'push', 'location'].includes(screen));
-    phone.querySelector('.tabbar').hidden = screen === 'entry' || screen === 'push';
-    document.getElementById('pv-signin').hidden = msg.audience === 'authenticated';
-    if (screen === 'home' || screen === 'drawer') {
-      const wrap = (id, i) => { const html = R[id] ? R[id]() : ''; return html ? `<div class="mod" data-m="${id}" style="--i:${i};animation:none">${html}</div>` : ''; };
-      document.getElementById('hero-mods').innerHTML = msg.layout.head.map(wrap).join('');
-      document.getElementById('modules').innerHTML = msg.layout.modules.filter(m => m.on).map((m, i) => wrap(m.id, i)).join('') || `<p class="pv-empty">No modules are visible on this layout.</p>`;
-      tabs(0);
-      if (msg.focus) { const el = phone.querySelector(`[data-m="${msg.focus}"]`); const sc = document.getElementById('scroller'); sc.scrollTop = 0; if (el) sc.scrollTop = Math.max(0, el.getBoundingClientRect().top - sc.getBoundingClientRect().top - 120); }
-      else document.getElementById('scroller').scrollTop = 0;
-    } else {
-      document.getElementById('alt').innerHTML = S[screen]();
-      if (screen === 'location') tabs(2);
-    }
-    const sc = screen === 'home' || screen === 'drawer' ? document.getElementById('scroller') : document.getElementById('alt');
-    sc.setAttribute('aria-label', `Mobile preview: ${msg.label}. Scroll with the arrow keys.`);
+    const view = document.getElementById('view'), overlay = document.getElementById('overlay');
+    let out = { home: true };
+    if (screen === 'drawer') out = { home: true, overlay: menu() };
+    else if (screen === 'entry') out = entry();
+    else if (screen === 'push') out = push();
+    else if (screen === 'location') out = location();
+    phone.classList.toggle('st-dark', !!out.dark);
+    appbar(out.home ? '' : out.title || '');
+    view.innerHTML = out.home ? home() : out.view || '';
+    overlay.innerHTML = out.overlay || '';
+    tabs(out.home ? 0 : out.tab != null ? out.tab : -1);
+    view.scrollTop = 0;
+    if (out.home && msg.focus) { const el = view.querySelector(`[data-m="${msg.focus}"]`); if (el) view.scrollTop = Math.max(0, el.offsetTop - 96); }
+    view.setAttribute('aria-label', `Mobile preview: ${msg.label}. Scroll with the arrow keys.`);
     nbsp(phone);
     phone.querySelectorAll('button').forEach(b => { b.tabIndex = -1; });
   }

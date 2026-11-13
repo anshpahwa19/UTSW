@@ -156,7 +156,7 @@ BUILT_PAGES['admin-settings'] = {
     });
   }
 };
-const AREA_NAMES = { dashboard: 'Dashboard', analytics: 'Analytics', homeLayout: 'Home layout', quickLinks: 'Quick links', featuredCards: 'Featured cards', drawer: 'Drawer', appEntry: 'App entry', campaigns: 'Campaigns', alerts: 'Emergency alerts', colors: 'Global colors', search: 'Search', audiences: 'Audiences', wayfinding: 'Wayfinding', notifications: 'Notifications', users: 'Users', audit: 'Audit and versioning', platform: 'Platform operations', adminSettings: 'Administrative settings', locations: 'Location-aware configuration' };
+const AREA_NAMES = { dashboard: 'Dashboard', analytics: 'Analytics', homeLayout: 'Home layout', quickLinks: 'Quick links', featuredCards: 'Services and resources', drawer: 'Menu', appEntry: 'App entry', campaigns: 'Campaigns', alerts: 'Emergency alerts', colors: 'Global colors', search: 'Search', audiences: 'Audiences', wayfinding: 'Wayfinding', notifications: 'Notifications', users: 'Users', audit: 'Audit and versioning', platform: 'Platform operations', adminSettings: 'Administrative settings', locations: 'Location-aware configuration' };
 
 /* ---- Segment rules: every rule, conflicts, and a tester ---- */
 BUILT_PAGES['audiences-rules'] = {

@@ -12,7 +12,7 @@ let analyticsDays = 30;
 const rangeControl = () => `<div class="range"><span class="pv-k" id="rng-l">Date range</span>${segmented({ id: 'rng', label: 'Date range', options: [['7', 'Last 7 days'], ['30', 'Last 30 days'], ['90', 'Last 90 days']], value: String(analyticsDays) })}<span class="muted range-end">Ending ${fmtDay(ANALYTICS_END)}, 2026</span></div>`;
 const mockNote = `<p class="note-line">${ic('database', 20)}<span>Sample data for the prototype. No analytics source is connected, and metric definitions are pending UTSW confirmation.</span></p>`;
 
-const articleRows = days => STATIC_CONTENT.featured.map((f, i) => ({ t: f.title, kick: f.kick, views: [18420, 15230, 12110, 9870][i] * days / 30, read: [312, 268, 241, 196][i] }));
+const articleRows = days => STATIC_CONTENT.blog.map((f, i) => ({ t: f.t, kick: f.cat, views: [18420, 15230, 12110, 9870, 7640][i] * days / 30, read: [252, 296, 351, 188, 247][i] }));
 function extraFor(cat, days) {
   if (cat === 'search') {
     const z = [...DB.db.zeroResults].filter(x => x.status === 'open').sort((a, b) => b.count - a.count).slice(0, 6);
@@ -73,18 +73,19 @@ Object.keys(ANALYTICS_PAGES).forEach(k => { BUILT_PAGES[k] = analyticsPage(k); }
 /* Home screen overview: how patients use each home module (sample data).
    One measure (share of taps), so one hue; values are printed on every row, the bars only help compare. */
 const HOME_CLICK_SHARE = [
-  { id: 'tiles', label: 'Quick links', icon: 'apps', share: 38.2 },
-  { id: 'search', label: 'Search and top searches', icon: 'search', share: 31.5 },
-  { id: 'campaign', label: 'Campaign banner', icon: 'campaign', share: 12.4 },
-  { id: 'featured', label: 'MedBlog (featured)', icon: 'article', share: 9.8 },
-  { id: 'services', label: 'UTSW resources', icon: 'library_books', share: 6.1 },
-  { id: 'news', label: 'Announcements', icon: 'feed', share: 2.0 }
+  { id: 'tiles', label: 'Quick links', icon: 'apps', share: 34.6 },
+  { id: 'search', label: 'Search and top searches', icon: 'search', share: 30.2 },
+  { id: 'mychart', label: 'MyChart sign-in card', icon: 'login', share: 11.8 },
+  { id: 'featured', label: 'MedBlog', icon: 'newspaper', share: 9.4 },
+  { id: 'campaign', label: 'Campaign banner', icon: 'campaign', share: 7.1 },
+  { id: 'services', label: 'Services and resources', icon: 'library_books', share: 5.0 },
+  { id: 'news', label: 'Announcements', icon: 'feed', share: 1.9 }
 ];
 BUILT_PAGES['analytics-home'] = {
   async render(main) {
     const rows = [...HOME_CLICK_SHARE].sort((a, b) => b.share - a.share);
     const guest = (layoutFor('guest').modules || []).filter(m => m.on !== false).map(m => m.id);
-    const where = r => r.id === 'search' ? 'Top of the screen' : guest.includes(r.id) ? `Position ${guest.indexOf(r.id) + 1} on the guest home` : 'Not on the guest home';
+    const where = r => r.id === 'search' ? 'Pinned below alerts' : guest.includes(r.id) ? `Position ${guest.indexOf(r.id) + 1} on the guest home` : 'Not on the guest home';
     const top = rows[0], top2 = rows[0].share + rows[1].share, low = rows[rows.length - 1], max = top.share;
     const tile = (k, v, sub) => `<div class="metric hs-stat"><p class="metric-l">${k}</p><p class="metric-v">${v}</p><p class="metric-c">${sub}</p></div>`;
     main.innerHTML = `<div class="page">${pageHead({ crumbs: [['Analytics and reporting', null]], title: 'Home screen overview', badges: badge('mock'),

@@ -124,7 +124,7 @@ BUILT_PAGES.dashboard = {
       </div>`;
     countUp(main);
     this.pv = mountPreview($('#db-phone'), { title: 'What patients see on the guest home screen now' });
-    this.pv.render({ screen: 'home', audience: 'guest', theme: effectiveTheme(), layout: layoutFor('guest'), colors: colorsFor('production'), content: appContent({ audience: 'guest' }), label: 'production guest home, live now' });
+    this.pv.render({ screen: 'home', audience: 'guest', layout: layoutFor('guest'), colors: colorsFor('production'), content: appContent({ audience: 'guest' }), label: 'production guest home, live now' });
   },
   leave() { if (this.pv) { this.pv.destroy(); this.pv = null; } }
 };

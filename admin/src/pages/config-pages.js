@@ -160,11 +160,11 @@ defineSingleton({
   preview: (d, src) => ({ screen: 'home', layout: layoutFor('guest'), content: appContent(), colors: d, focus: 'campaign', label: src === 'working' ? 'your colors, not live' : `${src} colors` })
 });
 
-/* ---- Drawer / More options ---- */
-const FIXED_DRAWER = ['inbox', 'lang'];
+/* ---- Menu (Guest Flow 2: opens from the round menu button on the home bar) ---- */
+const FIXED_DRAWER = ['inbox', 'signin', 'privacy'];
 defineSingleton({
-  route: 'content-drawer', id: 'drawer', area: 'drawer', section: 'Content and navigation', title: 'Drawer / More options', noun: 'drawer',
-  lede: 'The menu that opens from the home app bar. Items are grouped in sections. Which items are fixed and whether sections can be reordered is pending confirmation (§10.11).',
+  route: 'content-drawer', id: 'drawer', area: 'drawer', section: 'Content and navigation', title: 'Menu', noun: 'menu',
+  lede: 'The menu that opens from the round button on the home bar (its dot means unread Inbox items). Items are grouped in sections, and “Follow us” shows as chips. Which items are fixed and whether sections can be reordered is pending confirmation (§10.11).',
   formTitle: 'Menu items',
   describe: (a, b) => {
     const out = [], items = d => Object.fromEntries(d.sections.flatMap(s => s.items.map((it, i) => [it.id, { ...it, sec: s.label || 'Top', pos: i + 1 }])));
@@ -175,7 +175,7 @@ defineSingleton({
   },
   renderEditor(host, st, { ro, onChange }) {
     const draw = focusSel => {
-      host.innerHTML = st.working.sections.map((s, si) => `<section class="dr-sec" aria-labelledby="ds-${s.id}"><h3 class="sub-h" id="ds-${s.id}">${esc(s.label || 'Top of the menu')}</h3>
+      host.innerHTML = st.working.sections.map((s, si) => `<section class="dr-sec" aria-labelledby="ds-${s.id}"><h3 class="sub-h" id="ds-${s.id}">${esc(s.label || 'Legal and settings')}${s.style === 'chips' ? ' <span class="muted">(chips)</span>' : ''}</h3>
         <ol class="mod-list">${s.items.map((it, i) => `<li class="mod-row${it.visible ? '' : ' is-off'}" data-s="${si}" data-i="${i}">
           <span class="mod-pos" aria-hidden="true">${i + 1}</span><span class="mod-ic">${ic(it.icon, 20)}</span>
           <span class="mod-txt"><span class="mod-t">${esc(it.label)}<span class="vh">, position ${i + 1} of ${s.items.length}</span></span><span class="mod-d">${esc(destLabel(it.destination))}${FIXED_DRAWER.includes(it.id) ? ' · Fixed by the app' : ''}</span></span>
@@ -186,7 +186,7 @@ defineSingleton({
             <button type="button" class="btn btn-text btn-icon" data-d="edit" aria-label="Edit ${esc(it.label)}">${ic('edit', 20)}</button>
             ${FIXED_DRAWER.includes(it.id) ? '' : `<button type="button" class="btn btn-text btn-icon" data-d="remove" aria-label="Remove ${esc(it.label)}">${ic('remove_circle', 20)}</button>`}</span>`}
         </li>`).join('')}</ol>
-        ${ro ? '' : btn({ label: `Add item to ${s.label || 'the top'}`, icon: 'add', variant: 'tonal', attrs: `data-add="${si}"` })}</section>`).join('');
+        ${ro ? '' : btn({ label: `Add item to ${s.label || 'Legal and settings'}`, icon: 'add', variant: 'tonal', attrs: `data-add="${si}"` })}</section>`).join('');
       if (focusSel) { const el = $(focusSel, host); (el && !el.disabled ? el : $('h3', host)).focus(); }
     };
     const itemSecs = [{ fields: [
@@ -218,10 +218,10 @@ defineSingleton({
 /* ---- App entry ---- */
 defineSingleton({
   route: 'content-app-entry', id: 'app-entry', area: 'appEntry', section: 'Content and navigation', title: 'App entry', noun: 'app entry setting',
-  lede: 'What people see when they first open MyCare: onboarding, the End User License Agreement, and how they are asked to sign in.',
+  lede: 'What people see when they first open MyCare: four onboarding slides (Find the right doctor, Your health in one place, Find a location near you, Get there, step by step), the End User License Agreement, and the welcome screen that asks them to sign in as a patient or continue as a guest.',
   formTitle: 'First launch',
   sections: [
-    { title: 'Onboarding', fields: [{ key: 'onboardingVisible', label: 'Show the four onboarding slides on first launch', type: 'switch' }] },
+    { title: 'Onboarding', fields: [{ key: 'onboardingVisible', label: 'Show the four onboarding slides on first launch', type: 'switch', hint: 'People can swipe, tap Next, or Skip.' }] },
     { title: 'End User License Agreement', note: 'EULA source, versioning and re-acceptance are pending (§10.10). The prototype app has no EULA today.', fields: [
       { key: 'eulaVisible', label: 'Show the EULA before first use', type: 'switch', rerender: true },
       { key: 'eulaVersion', label: 'EULA version', required: true, max: 20, show: d => d.eulaVisible, wide: false },
@@ -229,9 +229,11 @@ defineSingleton({
       { key: 'reacceptOnChange', label: 'Ask everyone to accept again when the version changes', type: 'switch', show: d => d.eulaVisible }] },
     { title: 'Sign-in prompt', fields: [
       { key: 'loginPromptVisible', label: 'Ask people to sign in', type: 'switch', rerender: true },
-      { key: 'loginPromptType', label: 'Prompt type', type: 'radio', show: d => d.loginPromptVisible, options: [['choice', 'Sign-in choice screen at launch'], ['module', 'MyChart sign-in prompt on the home screen']] }] }
+      { key: 'loginPromptType', label: 'Prompt type', type: 'radio', show: d => d.loginPromptVisible, options: [['choice', 'Welcome screen at launch: Sign in as a patient or Continue as guest'], ['module', 'Only the MyChart sign-in card on the guest home screen']] }] }
   ],
-  preview: (d, src) => ({ screen: 'entry', layout: layoutFor('guest'), content: { ...appContent(), entry: d }, label: src === 'working' ? 'your first-launch settings, not live' : `${src} first launch` })
+  previewExtras: () => `<div class="pv-row">${segmented({ id: 'pv-entry', label: 'Preview screen', options: [['onboarding', 'Onboarding'], ['welcome', 'Welcome']], value: 'welcome' })}</div>`,
+  wireExtras: (h, send, st) => { st.entryView = 'welcome'; wireSegmented($('#pv-entry', h), v => { st.entryView = v; send(); }); },
+  preview: (d, src, st) => ({ screen: 'entry', layout: layoutFor('guest'), content: { ...appContent(), entry: d, entryView: st.entryView || 'welcome' }, label: src === 'working' ? 'your first-launch settings, not live' : `${src} first launch` })
 });
 
 /* ---- Search: query mappings, synonyms, specialty mapping ---- */
@@ -259,6 +261,23 @@ function rowsSingleton({ route, id, title, lede, noun, caption, columns, section
 }
 const dupCheck = (key, label) => (v, others) => others.some(r => String(r[key]).trim().toLowerCase() === String(v[key]).trim().toLowerCase()) ? { [key]: `“${v[key]}” already has a ${label}.` } : {};
 const SPECIALTY_LIST = () => ConfigService.peek('search-specialties') ? latestData(ConfigService.peek('search-specialties')).rows.map(r => r.specialty) : [];
+const SEARCH_PLACES = [['home', 'Top searches on the home screen'], ['popular', 'Popular searches on Find Care']];
+rowsSingleton({
+  route: 'search-top', id: 'search-top', title: 'Top and popular searches', noun: 'search term', caption: 'Top and popular searches',
+  lede: 'The chips patients tap instead of typing: four Top searches under the Find Care search on the home screen, and Popular searches on the Find Care screen.',
+  columns: [
+    { key: 'term', label: 'Chip text', sortable: true, render: r => esc(r.term) },
+    { key: 'where', label: 'Shows in', sortable: true, render: r => esc((SEARCH_PLACES.find(x => x[0] === r.where) || [, r.where])[1]) }],
+  sections: [{ fields: [
+    { key: 'term', label: 'Chip text', required: true, max: 32, hint: 'What the chip says and searches for, for example “Knee pain”.' },
+    { key: 'where', label: 'Shows in', type: 'radio', options: SEARCH_PLACES }] }],
+  blank: () => ({ term: '', where: 'home' }),
+  validate: (v, others) => others.some(r => r.where === v.where && r.term.trim().toLowerCase() === v.term.trim().toLowerCase()) ? { term: `“${v.term}” is already in this list.` } : {},
+  searchText: r => r.term, rowTitle: r => `“${r.term}”`,
+  tester: { placeholder: 'for example, knee pain', fn: (d, q) => { const home = d.rows.filter(r => r.where === 'home'), hit = d.rows.filter(r => r.term.toLowerCase().includes(q));
+    const shown = home.slice(0, 4).map(r => r.term);
+    return `${hit.length ? `${badge('live', 'Listed')}<p>“${esc(q)}” is ${hit.map(r => r.where === 'home' ? (shown.includes(r.term) ? 'a top search on the home screen' : 'a top search, but only the first four show') : 'a popular search on Find Care').join(' and ')}.</p>` : `${badge('hidden', 'Not listed')}<p>No chip says “${esc(q)}”.</p>`}<p class="muted">Home shows: ${shown.map(esc).join(', ') || 'none'}.</p>`; } }
+});
 rowsSingleton({
   route: 'search-query-mappings', id: 'search-mappings', title: 'Query mappings', noun: 'mapping', caption: 'Query mappings',
   lede: 'Send a patient phrase straight to a specialty, condition, scope, content or resource. Mapping semantics depend on the search engine, pending confirmation (§10.12).',
@@ -311,8 +330,8 @@ defineSingleton({
     { key: 'distance', label: 'Distance from the patient', type: 'number', min: 0, maxNum: 100, wide: false },
     { key: 'availability', label: 'Availability (accepting new patients, online scheduling)', type: 'number', min: 0, maxNum: 100, wide: false },
     { key: 'language', label: 'Language and accessibility match', type: 'number', min: 0, maxNum: 100, wide: false },
-    { key: 'defaultSort', label: 'Default sort', type: 'select', options: ['Best match', 'Distance', 'Last name A–Z', 'Featured first'] },
-    { key: 'featuredLabelled', label: 'Always label featured providers', type: 'switch', readonly: true, hint: 'Required by the guest design: featured promotion is always labeled and only reorders under “Featured first”.' }] }],
+    { key: 'defaultSort', label: 'Default sort', type: 'select', options: ['Best match', 'Distance', 'Name A–Z', 'Featured'], hint: 'Patients can change the sort: Best match, Distance, Name A–Z, or Featured.' },
+    { key: 'featuredLabelled', label: 'Always label featured providers', type: 'switch', readonly: true, hint: 'Required by the guest design: featured providers are always marked and only move up under the Featured sort.' }] }],
   validate: d => { const sum = ['relevance', 'distance', 'availability', 'language'].reduce((s, k) => s + (+d[k] || 0), 0); return sum !== 100 ? { relevance: `The weights add up to ${sum}. Make them add up to 100.` } : {}; },
   side: d => { const rows = [['Relevance', d.relevance], ['Distance', d.distance], ['Availability', d.availability], ['Language and accessibility', d.language]]; const sum = rows.reduce((s, r) => s + (+r[1] || 0), 0);
     return `<h2 class="side-h">Weight split</h2>${barList(rows.map(([label, value]) => ({ label, value: +value || 0 })), { unit: '%', max: 100 })}<p class="${sum === 100 ? 'muted' : 'err'}">${sum === 100 ? '' : ic('error', 16)}<span>Total: ${sum} of 100</span></p>`; }

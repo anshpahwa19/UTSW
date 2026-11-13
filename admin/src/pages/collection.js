@@ -1,5 +1,5 @@
 /* ---------- Collections: a list page plus an editor (new and :id) for each item type ----------
-   Used by Campaigns, Emergency alerts, Quick links, Featured cards and Audience segments. Each item is a
+   Used by Campaigns, Emergency alerts, Quick links, Services and resources and Audience segments. Each item is a
    config record with its own Draft → Demo → Production lifecycle and history. */
 const fields = sections => sections.flatMap(s => s.fields);
 function lastChange(r) { const e = r.events[r.events.length - 1]; return e ? e.at : ''; }
@@ -209,30 +209,26 @@ const homePreview = (audience = 'guest', type = null) => (data, id, src, focus, 
   label: src === 'working' ? 'your edits, not live' : `${src} version`
 });
 
-/* ---- Campaigns ---- */
+/* ---- Campaigns (Guest Flow 2 campaign card: label, title, description, badge icon, button) ---- */
 defineCollection({
   route: 'home-campaigns', type: 'campaign', area: 'campaigns', section: 'Home Screen', title: 'Campaigns', noun: 'campaign', newLabel: 'New campaign', icon: 'campaign',
-  lede: 'Promotional banners on the home screen. The SOW proposes three to five campaigns for the MVP, pending confirmation. One active campaign shows at a time; emergency alerts are managed separately.',
-  summary: list => { const n = list.length; return n > 5 ? `<p class="note-line">${ic('info', 20)}<span>${n} campaigns – more than the five the SOW proposes.</span></p>` : ''; },
-  defaults: () => ({ title: '', type: 'Seasonal', tag: '', icon: 'vaccines', description: '', image: 'none', imageAlt: '', fact1Label: '', fact1Value: '', fact2Label: '', fact2Value: '', ctaLabel: '', destination: { type: 'screen', value: 'Find my Care' }, audience: 'seg-all', start: nowLocal().slice(0, 11) + '08:00', end: '', timeZone: TZ, enabled: true }),
+  lede: 'Promotional cards in the Campaign banner module. The live campaign shows in the slot the Layout sets; ended campaigns hide themselves. The SOW proposes three to five campaigns for the MVP, pending confirmation.',
+  summary: list => { const n = list.length, live = list.filter(r => windowStatus(latestData(r)) === 'active').length; return [n > 5 ? `<p class="note-line">${ic('info', 20)}<span>${n} campaigns – more than the five the SOW proposes.</span></p>` : '', live > 1 ? `<p class="note-line">${ic('info', 20)}<span>${live} campaigns are live at once. The home screen shows one at a time: the first one live for the patient’s audience.</span></p>` : ''].join(''); },
+  defaults: () => ({ title: '', type: 'Seasonal', tag: '', icon: 'vaccines', description: '', ctaLabel: '', destination: { type: 'screen', value: 'Find Care' }, audience: 'seg-all', start: nowLocal().slice(0, 11) + '08:00', end: '', timeZone: TZ, enabled: true }),
   sections: [
     { title: 'Content', fields: [
-      { key: 'title', label: 'Campaign title', required: true, max: 60 },
+      { key: 'tag', label: 'Label above the title', max: 24, hint: 'Short and in capitals on the card, for example “Flu season”.', wide: false },
       { key: 'type', label: 'Campaign type', type: 'select', options: ['Seasonal', 'Service', 'Awareness', 'Announcement', 'Event'], wide: false },
-      { key: 'tag', label: 'Label above the title', max: 30, hint: 'Short, for example “Flu season”.', wide: false },
-      { key: 'description', label: 'Description', type: 'textarea', max: 160, required: true },
-      { key: 'icon', label: 'Icon', type: 'icon', hint: 'From the approved icon list.' },
-      { key: 'image', label: 'Banner image', type: 'image', hint: 'Sample images only in the prototype. Image upload needs the approved storage.' },
-      { key: 'imageAlt', label: 'Image alternative text', max: 120, required: true, show: d => d.image && d.image !== 'none', hint: 'Describe what the image shows for screen reader users.' },
-      { key: 'fact1Label', label: 'Fact 1 label', max: 16, wide: false }, { key: 'fact1Value', label: 'Fact 1 text', max: 32, wide: false },
-      { key: 'fact2Label', label: 'Fact 2 label', max: 16, wide: false }, { key: 'fact2Value', label: 'Fact 2 text', max: 32, wide: false }] },
+      { key: 'title', label: 'Campaign title', required: true, max: 40, hint: 'Fits on two lines next to the badge.' },
+      { key: 'description', label: 'Description', type: 'textarea', max: 120, required: true, hint: 'One or two sentences. Say when and where.' },
+      { key: 'icon', label: 'Badge icon', type: 'icon', hint: 'Shown in the round glass badge, from the approved icon list.' }] },
     { title: 'Call to action', fields: [
-      { key: 'ctaLabel', label: 'Button label', required: true, max: 24 },
+      { key: 'ctaLabel', label: 'Button label', required: true, max: 28 },
       { key: 'destination', label: 'Destination', type: 'destination', required: true, noNone: true }] },
-    { title: 'Audience and schedule', fields: [...scheduleFields] }
+    { title: 'Audience and schedule', note: 'The card hides itself after the end time, so an ended campaign never needs to be turned off by hand.', fields: [...scheduleFields] }
   ],
-  validate: d => ({ ...windowCheck(d), ...((d.fact1Label && !d.fact1Value) ? { fact1Value: 'Add the text for fact 1, or clear its label.' } : {}), ...((d.fact2Label && !d.fact2Value) ? { fact2Value: 'Add the text for fact 2, or clear its label.' } : {}) }),
-  searchExtra: d => `${d.type} ${d.description}`,
+  validate: d => ({ ...windowCheck(d) }),
+  searchExtra: d => `${d.type} ${d.tag} ${d.description}`,
   columns: [
     { key: 'type', label: 'Type', render: d => esc(d.type) },
     { key: 'audience', label: 'Audience', render: d => esc(segmentName(d.audience)) },
@@ -242,54 +238,58 @@ defineCollection({
   preview: (d, id, src) => homePreview(d && d.audience === 'seg-signedin' ? 'authenticated' : 'guest', 'campaign')(d, id, src, 'campaign')
 });
 
-/* ---- Emergency alerts: styled and worded apart from campaigns ---- */
+/* ---- Emergency alerts (Guest Flow 2): emergency or advisory, pinned above the hero ---- */
+const ALERT_LEVELS = [['emergency', 'Emergency – red banner, can’t be dismissed'], ['advisory', 'Advisory – white banner, patients can dismiss it']];
+const levelBadge = d => d.level === 'advisory' ? badge('demo', 'Advisory') : badge('changes', 'Emergency');
 defineCollection({
   route: 'home-alerts', type: 'alert', area: 'alerts', section: 'Home Screen', title: 'Emergency alerts', noun: 'emergency alert', newLabel: 'New emergency alert', icon: 'warning', cls: 'alert-page',
-  lede: 'Urgent safety and service messages that sit above everything on the home screen. Use them only for emergencies and disruptions – never for promotions.',
-  banner: `<div class="alert-banner" role="note">${ic('warning', 24, 'f1')}<div><p class="ab-t">Emergency alerts reach every patient in the audience as soon as they’re active</p><p>Check the wording on demo first. Two alerts can show at once; priority 1 shows on top.</p></div></div>`,
+  lede: 'Urgent safety and service messages pinned to the top of the home screen while they’re active. Use them only for emergencies and disruptions – never for promotions.',
+  banner: `<div class="alert-banner" role="note">${ic('warning', 24, 'f1')}<div><p class="ab-t">Emergency alerts reach every patient in the audience as soon as they’re active</p><p>Check the wording on demo first. Emergency alerts show before advisories, then the newest first. The first one shows open; the rest fold under “more alerts”.</p></div></div>`,
   formCls: 'alert-form', formTitle: 'Alert details',
   nameIcon: d => d.icon,
-  defaults: () => ({ title: '', type: 'Weather', icon: 'warning', message: '', details: '', ctaLabel: '', destination: { type: 'none', value: '' }, audience: 'seg-all', priority: 1, start: nowLocal(), end: '', timeZone: TZ, duration: 'window', dismissible: false, enabled: true }),
+  defaults: () => ({ level: 'emergency', title: '', type: 'Weather', icon: 'warning', message: '', details: '', where: '', phone: '', audience: 'seg-all', start: nowLocal(), end: '', timeZone: TZ, duration: 'window', dismissible: false, enabled: true }),
   sections: [
     { title: 'Message', fields: [
-      { key: 'title', label: 'Alert title', required: true, max: 80 },
-      { key: 'type', label: 'Alert type', type: 'select', options: ['Weather', 'Facility', 'Safety', 'Service disruption', 'Public health'], wide: false },
-      { key: 'icon', label: 'Alert icon', type: 'alertIcon', wide: false },
-      { key: 'message', label: 'Alert message', type: 'textarea', required: true, max: 200, hint: 'Shown on the banner. Say what is happening and what to do.' },
-      { key: 'details', label: 'Full alert', type: 'textarea', rows: 4, max: 600, hint: 'Shown when patients open the alert. Include a phone number if they need help.' }] },
-    { title: 'Call to action', fields: [
-      { key: 'ctaLabel', label: 'Button label', max: 24, hint: 'Optional, for example “Call us”.' },
-      { key: 'destination', label: 'Button destination', type: 'destination' }] },
+      { key: 'level', label: 'Alert level', type: 'radio', options: ALERT_LEVELS, rerender: true, onSet: d => { d.dismissible = d.level === 'advisory'; } },
+      { key: 'title', label: 'Alert title', required: true, max: 64, hint: 'Shown on the banner. Say what is happening, for example “Garage C entrance closed Oct. 14–16”.' },
+      { key: 'type', label: 'Category', type: 'select', options: ['Weather', 'Parking', 'Facility', 'Safety', 'Service disruption', 'Public health'], wide: false },
+      { key: 'icon', label: 'Category icon', type: 'alertIcon', wide: false, hint: 'Shown in the full alert. The banner uses the level’s icon.' },
+      { key: 'message', label: 'Summary', type: 'textarea', required: true, max: 200, hint: 'Shown when the banner is opened. Say what to do.' },
+      { key: 'details', label: 'Full alert', type: 'textarea', rows: 4, max: 600, hint: 'Shown on “Read full alert”, one point per sentence.' },
+      { key: 'where', label: 'Where it applies', max: 80, hint: 'For example “All outpatient clinics”.' },
+      { key: 'phone', label: 'Phone number for questions', type: 'tel', max: 20, wide: false }] },
     { title: 'Audience and timing', fields: [
-      { key: 'priority', label: 'Priority', type: 'select', options: [[1, 'Priority 1 – shows first'], [2, 'Priority 2'], [3, 'Priority 3']], wide: false },
       { key: 'duration', label: 'Display duration', type: 'select', wide: false, options: [['window', 'For the whole active window'], ['1h', '1 hour after a patient first sees it'], ['4h', '4 hours after first seen'], ['24h', '24 hours after first seen']], hint: 'Meaning pending confirmation (§10.6).' },
       ...scheduleFields,
-      { key: 'dismissible', label: 'Patients can dismiss it', type: 'switch' }] }
+      { key: 'dismissible', label: 'Patients can dismiss it', type: 'switch', show: d => d.level === 'advisory', hint: 'Emergency alerts stay until they end.' }] }
   ],
-  validate: d => ({ ...windowCheck(d), ...(d.ctaLabel && d.destination.type === 'none' ? { destination: 'Choose where the button goes, or clear the button label.' } : {}), ...(!d.ctaLabel && d.destination.type !== 'none' ? { ctaLabel: 'Add a button label for this destination.' } : {}) }),
-  searchExtra: d => `${d.type} ${d.message}`,
+  validate: d => ({ ...windowCheck(d), ...(d.phone && !/^[0-9()+\-. ]{7,20}$/.test(d.phone) ? { phone: 'Enter a phone number, for example 214-555-0100.' } : {}) }),
+  searchExtra: d => `${d.type} ${d.message} ${d.where}`,
   columns: [
-    { key: 'type', label: 'Type', render: d => esc(d.type) },
-    { key: 'priority', label: 'Priority', sortable: true, sortValue: d => +d.priority, render: d => `<span class="ord-chip">P${d.priority}</span>`, cls: 'ord' },
+    { key: 'level', label: 'Level', sortable: true, sortValue: d => d.level === 'advisory' ? 1 : 0, render: levelBadge },
+    { key: 'type', label: 'Category', render: d => esc(d.type) },
     { key: 'window', label: 'Active window', sortable: true, sortValue: d => d.start, render: d => `<div class="cell-stack"><span class="sched">${esc(fmtLocal(d.start, false))} – ${esc(fmtLocal(d.end, false))}</span>${windowBadge(d)}</div>` }
   ],
-  preview: (d, id, src) => homePreview('guest', 'alert')(d, id, src, null)
+  filters: [{ key: 'level', label: 'Level', options: [['emergency', 'Emergency'], ['advisory', 'Advisory']], match: (r, v) => (latestData(r).level || 'emergency') === v }],
+  preview: (d, id, src) => homePreview('guest', 'alert')(d, id, src, 'alerts')
 });
 
-/* ---- Quick links ---- */
+/* ---- Quick links (Guest Flow 2: four MyChart tasks in a 2 × 2 grid) ---- */
+const QL_MAX = 4;
 defineCollection({
   route: 'home-quick-links', type: 'quickLink', area: 'quickLinks', section: 'Home Screen', title: 'Quick links', noun: 'quick link', newLabel: 'New quick link', icon: 'apps',
-  lede: 'Tiles in the Quick links module. MyChart links hand off to MyChart sign-in; the Admin never edits MyChart content.',
+  lede: 'The four tiles in the Quick links module, in a 2 × 2 grid with the icon left of a two-line label. In the guest design all four open MyChart; the Admin never edits MyChart content.',
+  summary: list => { const on = list.filter(r => latestData(r).enabled !== false).length; return on > QL_MAX ? `<p class="note-line">${ic('info', 20)}<span>${on} quick links are on. The home screen shows the first ${QL_MAX} by position.</span></p>` : ''; },
   nameIcon: d => d.icon, defaultSort: { key: 'order', dir: 'asc' },
-  defaults: () => ({ title: '', icon: 'stethoscope', iconAlt: '', destination: { type: 'screen', value: 'Find my Care' }, requiresSignIn: false, order: ConfigService.peekAll('quickLink').length + 1, enabled: true }),
+  defaults: () => ({ title: '', icon: 'chat', iconAlt: '', destination: { type: 'mychart', value: 'Messages' }, requiresSignIn: true, order: Math.min(ConfigService.peekAll('quickLink').length + 1, QL_MAX), enabled: true }),
   sections: [{ title: 'Tile', fields: [
-    { key: 'title', label: 'Title', required: true, max: 28, hint: 'Fits on two lines in a tile.' },
+    { key: 'title', label: 'Title', required: true, max: 26, hint: 'Fits on two lines next to the icon.' },
     { key: 'icon', label: 'Icon', type: 'icon' },
     { key: 'iconAlt', label: 'Icon alternative text', max: 60, hint: 'Leave empty when the title already says it – the icon is then decorative.' },
     { key: 'destination', label: 'Destination', type: 'destination', required: true, noNone: true },
-    { key: 'requiresSignIn', label: 'Needs MyChart sign-in', type: 'switch', hint: 'Guests see a lock and go to MyChart sign-in first.' },
-    { key: 'order', label: 'Position', type: 'number', min: 1, maxNum: 12, wide: false }] }],
-  validate: d => d.destination.type === 'mychart' && !d.requiresSignIn ? { requiresSignIn: 'MyChart destinations need sign-in. Turn on “Needs MyChart sign-in”.' } : {},
+    { key: 'requiresSignIn', label: 'Opens MyChart sign-in first', type: 'switch', hint: 'Guests go to MyChart sign-in, then to the task. Screen readers hear “opens MyChart”.' },
+    { key: 'order', label: 'Position', type: 'number', min: 1, maxNum: QL_MAX, wide: false, hint: 'Reading order: 1 and 2 on top, 3 and 4 below.' }] }],
+  validate: d => d.destination.type === 'mychart' && !d.requiresSignIn ? { requiresSignIn: 'MyChart destinations need sign-in. Turn on “Opens MyChart sign-in first”.' } : {},
   columns: [
     { key: 'destination', label: 'Destination', render: d => esc(destLabel(d.destination)).replace(/\//g, '/<wbr>'), cls: 'dest' },
     { key: 'order', label: 'Position', sortable: true, sortValue: d => d.order, render: d => `<span class="ord-chip">${d.order}</span>`, cls: 'ord' },
@@ -298,23 +298,27 @@ defineCollection({
   preview: (d, id, src) => homePreview('guest', 'quickLink')(d, id, src, 'tiles')
 });
 
-/* ---- Featured cards (UTSW resources rows, §10.4) ---- */
+/* ---- Services and resources cards (type featuredCard; Guest Flow 2) ---- */
+const RESOURCE_CATEGORIES = ['Wayfinding', 'Video visits', 'Resources', 'Billing', 'Care options'];
 defineCollection({
-  route: 'home-featured-cards', type: 'featuredCard', area: 'featuredCards', section: 'Home Screen', title: 'Featured cards', noun: 'featured card', newLabel: 'New featured card', icon: 'library_books',
-  lede: 'Rows in the UTSW resources module. Assumed to be these rows rather than the MedBlog carousel – pending confirmation.',
+  route: 'home-featured-cards', type: 'featuredCard', area: 'featuredCards', section: 'Home Screen', title: 'Services and resources', noun: 'resource card', newLabel: 'New resource card', icon: 'library_books',
+  lede: 'Swipeable cards in the Services and resources module: a Blue art panel with the card’s icon, a category label, a title, and one line of help.',
   nameIcon: d => d.icon, nameSub: d => d.subtitle, defaultSort: { key: 'order', dir: 'asc' },
-  defaults: () => ({ title: '', subtitle: '', icon: 'library_books', iconAlt: '', destination: { type: 'screen', value: 'Find my Care' }, order: ConfigService.peekAll('featuredCard').length + 1, enabled: true }),
+  defaults: () => ({ category: 'Resources', title: '', subtitle: '', icon: 'article', iconAlt: '', destination: { type: 'screen', value: 'Find Care' }, order: ConfigService.peekAll('featuredCard').length + 1, enabled: true }),
   sections: [{ title: 'Card', fields: [
-    { key: 'title', label: 'Title', required: true, max: 40 },
-    { key: 'subtitle', label: 'Subtitle', max: 60 },
-    { key: 'icon', label: 'Icon', type: 'icon' },
+    { key: 'category', label: 'Category label', type: 'select', options: RESOURCE_CATEGORIES, wide: false, hint: 'The small label above the title.' },
+    { key: 'title', label: 'Title', required: true, max: 32 },
+    { key: 'subtitle', label: 'One line of help', max: 64, required: true },
+    { key: 'icon', label: 'Icon', type: 'icon', hint: 'Shown large on the Blue art panel.' },
     { key: 'iconAlt', label: 'Icon alternative text', max: 60, hint: 'Leave empty when the title already says it.' },
     { key: 'destination', label: 'Destination', type: 'destination', required: true, noNone: true },
     { key: 'order', label: 'Position', type: 'number', min: 1, maxNum: 12, wide: false }] }],
   columns: [
+    { key: 'category', label: 'Category', render: d => esc(d.category || '–') },
     { key: 'destination', label: 'Destination', render: d => esc(destLabel(d.destination)).replace(/\//g, '/<wbr>'), cls: 'dest' },
     { key: 'order', label: 'Position', sortable: true, sortValue: d => d.order, render: d => `<span class="ord-chip">${d.order}</span>`, cls: 'ord' },
   ],
+  filters: [{ key: 'category', label: 'Category', options: RESOURCE_CATEGORIES.map(x => [x, x]), match: (r, v) => latestData(r).category === v }],
   preview: (d, id, src) => homePreview('guest', 'featuredCard')(d, id, src, 'services')
 });
 

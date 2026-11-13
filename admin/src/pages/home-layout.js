@@ -1,6 +1,7 @@
 /* ---------- Home Screen → Layout ----------
    Order (drag, keyboard or the move menu) and visibility of the home modules for guests and signed-in patients, a live preview
-   built from the designs/guest modules, and the shared Draft → Demo → Production lifecycle. */
+   built from the Guest Flow 2 modules, and the shared Draft → Demo → Production lifecycle. Alerts and the Find Care hero are
+   pinned above the ordered modules, as in the design's CMS module layout. */
 /* EXTRA_GLYPHS: save rate_review science public vertical_align_top vertical_align_bottom arrow_upward arrow_downward */
 const MOVES = [['top', 'Move to top', 'vertical_align_top'], ['up', 'Move up', 'arrow_upward'], ['down', 'Move down', 'arrow_downward'], ['bottom', 'Move to bottom', 'vertical_align_bottom']];
 const AUDIENCES = [['guest', 'Guest'], ['authenticated', 'Authenticated']];
@@ -111,6 +112,15 @@ BUILT_PAGES['home-layout'] = (() => {
     st.working = clone(base()); update(); $('#ed-h').focus(); announce('Changes discarded');
   }
 
+  /* The Campaign banner row names the live campaign; ended campaigns hide themselves */
+  function moduleDesc(id) {
+    const meta = HOME_MODULES[id];
+    if (id !== 'campaign') return meta.desc;
+    const fits = d => !d.audience || d.audience === 'seg-all' || (st.aud === 'guest' ? d.audience !== 'seg-signedin' : d.audience !== 'seg-guests');
+    const live = ConfigService.peekAll('campaign').map(r => dataAt(r, 'production')).filter(d => d && d.enabled !== false && fits(d) && windowStatus(d) === 'active');
+    return live.length ? `Live: ${live[0].title} · until ${fmtLocal(live[0].end, false)}. Ended campaigns hide automatically.` : 'No campaign is live, so the module hides itself. Ended campaigns hide automatically.';
+  }
+
   function renderEditor(focus) {
     const ro = !may('saveDraft');
     const n = st.working.modules.length;
@@ -120,7 +130,7 @@ BUILT_PAGES['home-layout'] = (() => {
         ${ro ? '' : `<button type="button" class="drag-h" data-act="drag" aria-haspopup="menu" aria-expanded="false" aria-label="Reorder ${esc(meta.label)}, position ${i + 1} of ${n}" aria-describedby="drag-help" title="Drag to reorder">${ic('drag_indicator', 20)}</button>`}
         <span class="mod-pos" aria-hidden="true">${i + 1}</span>
         <span class="mod-ic">${ic(meta.icon, 20)}</span>
-        <span class="mod-txt"><span class="mod-t" id="mt-${m.id}">${esc(meta.label)}<span class="vh">, position ${i + 1} of ${n}</span></span><span class="mod-d">${esc(meta.desc)}${meta.link ? ` <a class="text-link" href="#${meta.link}">Manage</a>` : ''}</span></span>
+        <span class="mod-txt"><span class="mod-t" id="mt-${m.id}">${esc(meta.label)}<span class="vh">, position ${i + 1} of ${n}</span></span><span class="mod-d">${esc(moduleDesc(m.id))}${meta.link ? ` <a class="text-link" href="#${meta.link}">Manage</a>` : ''}</span></span>
         ${m.on ? '' : badge('hidden')}
         ${ro ? '' : `<span class="mod-ctl">
           ${switchBtn({ id: `vis-${m.id}`, checked: m.on, label: `Show ${meta.label} on the home screen`, attrs: 'data-act="vis"' })}
@@ -128,6 +138,9 @@ BUILT_PAGES['home-layout'] = (() => {
       </li>`;
     };
     $('#editor').innerHTML = card({ title: `${st.aud === 'guest' ? 'Guest' : 'Authenticated'} home modules`, titleId: 'ed-h', actions: ro ? badge('fixed', 'View only') : `<span id="lc-badges">${dirty() ? badge('unsaved') : ''}</span>${dirty() ? btn({ label: 'Discard changes', variant: 'text', size: 'sm', attrs: 'data-hl="discard"' }) : ''}${btn({ label: 'Save draft', icon: 'save', variant: 'primary', size: 'sm', attrs: `data-hl="save" ${dirty() ? '' : 'disabled'}` })}`, body: `
+      <h3 class="sub-h" id="pin-h">Pinned to the top</h3>
+      <ul class="pin-list" aria-labelledby="pin-h">${HOME_FIXED.map(f => `<li class="pin-row" data-pin="${f.id}"><span class="mod-pos" aria-hidden="true">–</span><span class="mod-ic">${ic(f.icon, 20)}</span>
+        <span class="mod-txt"><span class="mod-t">${esc(f.label)}</span><span class="mod-d">${esc(f.desc)}${f.link ? ` <a class="text-link" href="#${f.link}">Manage</a>` : ''}</span></span>${badge('fixed', 'Pinned')}</li>`).join('')}</ul>
       <h3 class="sub-h" id="ord-h" tabindex="-1">Modules, in order</h3>
       <p class="hint-line" id="drag-help">${ro ? 'Hidden modules keep their place but patients don’t see them.' : 'Drag a handle to reorder, or focus it and use the arrow keys. Hidden modules keep their place but patients don’t see them.'}</p>
       ${n ? `<ol class="mod-list" aria-labelledby="ord-h">${st.working.modules.map(row).join('')}</ol>

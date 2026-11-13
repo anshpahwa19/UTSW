@@ -30,8 +30,11 @@ function mountPreview(host, { title }) {
 /* ---------- What the app shows: assembles preview content from the config records ----------
    env picks the snapshot of every other record (production by default); overrides replace one record's data. */
 const ENV_PICK = (r, env) => (env === 'draft' ? latestData(r) : env === 'demo' ? dataAt(r, 'demo') || dataAt(r, 'production') : dataAt(r, 'production'));
-const campaignView = d => ({ ...d, art: d.image && d.image !== 'none' ? ART[d.image] : null });
-const alertView = d => ({ title: d.title, message: d.message, icon: d.icon, priority: +d.priority, dismissible: d.dismissible, ctaLabel: d.ctaLabel, window: d.start ? `Active ${fmtLocal(d.start, false)} – ${fmtLocal(d.end, false)}` : '' });
+const campaignView = d => ({ tag: d.tag, title: d.title, description: d.description, icon: d.icon, ctaLabel: d.ctaLabel });
+/* Alerts (Guest Flow 2): emergency before advisory, then newest first */
+const alertView = d => ({ level: d.level === 'advisory' ? 'advisory' : 'emergency', title: d.title, message: d.message, dismissible: d.level === 'advisory' && d.dismissible,
+  posted: d.start ? `Posted ${fmtDay(d.start.slice(0, 10))}` : 'Posted now', window: d.end ? `Ends ${fmtLocal(d.end, false)}` : '', start: d.start || '' });
+const alertOrder = (a, b) => (b.level === 'emergency') - (a.level === 'emergency') || String(b.start).localeCompare(String(a.start));
 function appContent({ env = 'production', overrides = {}, audience = 'guest', allAlerts = false, newItem = null } = {}) {
   const pick = r => overrides[r.id] !== undefined ? overrides[r.id] : ENV_PICK(r, env);
   const of = type => ConfigService.peekAll(type).map(r => ({ r, d: pick(r) })).filter(x => x.d);
@@ -48,42 +51,43 @@ function appContent({ env = 'production', overrides = {}, audience = 'guest', al
   const withNew = (type, list) => [...list, ...add(type).filter(x => x.d.enabled !== false)].sort((a, b) => a.d.order - b.d.order);
   return {
     ...STATIC_CONTENT,
-    quickLinks: withNew('quickLink', ordered('quickLink')).map(x => ({ title: x.d.title || 'New quick link', icon: x.d.icon, locked: x.d.requiresSignIn })),
-    resources: withNew('featuredCard', ordered('featuredCard')).map(x => ({ title: x.d.title || 'New featured card', subtitle: x.d.subtitle, icon: x.d.icon })),
+    top: topSearches(pick, 'home'),
+    quickLinks: withNew('quickLink', ordered('quickLink')).map(x => ({ title: x.d.title || 'New quick link', icon: x.d.icon })),
+    resources: withNew('featuredCard', ordered('featuredCard')).map(x => ({ category: x.d.category, title: x.d.title || 'New card', description: x.d.subtitle, icon: x.d.icon })),
     campaign: camp2 ? campaignView(camp2.d) : null,
-    alerts: [...alerts, ...add('alert')].map(x => alertView(x.d)),
+    alerts: [...alerts, ...add('alert')].map(x => alertView(x.d)).sort(alertOrder),
     drawer: overrides.drawer || pick(drawer),
     entry: overrides['app-entry'] || pick(entry)
   };
 }
+/* Top searches on the home hero (four) or popular searches on Find Care, from Search configuration */
+const topSearches = (pick, where) => { const r = ConfigService.peek('search-top'); const d = r && pick(r); return d ? d.rows.filter(x => x.where === where).map(x => x.term) : []; };
 const layoutFor = (audience, env = 'production') => { const r = ConfigService.peek(`home-layout-${audience}`); return ENV_PICK(r, env) || { head: [], modules: [] }; };
 const colorsFor = env => ENV_PICK(ConfigService.peek('global-colors'), env);
-const effectiveTheme = () => 'light';   /* the Admin is light only; each preview card has its own Light/Dark toggle */
+/* The Admin and the app are light only (Guest Flow 2: the app UI is light only), so the preview has no theme switch */
 
 /* Preview card: source switch (your edits / demo / production), appearance, optional extras; payload(src) builds the message */
 function mountPreviewCard(host, { title, sources, payload, extras = '', onExtras }) {
-  const st = { src: sources()[0][0], theme: effectiveTheme() };
-  host.innerHTML = `<section class="card pv-card" aria-labelledby="${host.id}-h"><div class="card-head"><h2 id="${host.id}-h">Mobile preview</h2><div class="card-actions pv-theme"></div></div><div class="card-body">
+  const st = { src: sources()[0][0] };
+  host.innerHTML = `<section class="card pv-card" aria-labelledby="${host.id}-h"><div class="card-head"><h2 id="${host.id}-h">Mobile preview</h2></div><div class="card-body">
     <div class="pv-top"><div class="pv-ctl"></div>${extras ? `<div class="pv-extras">${extras}</div>` : ''}</div><div class="pv-host"></div>
-    <p class="pv-note">${ic('info', 16)}<span>Sample content drawn with the guest app designs. Not the live app.</span></p></div></section>`;
+    <p class="pv-note">${ic('info', 16)}<span>Sample content drawn with the Guest Flow 2 designs. Not the live app.</span></p></div></section>`;
   const pv = mountPreview($('.pv-host', host), { title });
   if (onExtras) onExtras($('.pv-extras', host), () => send());
   function controls() {
     const opts = sources();
     if (!opts.some(o => o[0] === st.src)) st.src = opts[0][0];
     const cur = opts.find(o => o[0] === st.src);
-    $('.pv-theme', host).innerHTML = segmented({ id: `${host.id}-theme`, label: 'Preview appearance', options: [['light', 'Light'], ['dark', 'Dark']], value: st.theme });
     $('.pv-ctl', host).innerHTML = `${opts.length > 1 ? `<div class="pv-row">${segmented({ id: `${host.id}-src`, label: 'Preview source', options: opts.map(o => [o[0], o[1]]), value: st.src })}</div>` : ''}
       <p class="pv-what">${cur[2]}</p>`;
     if (opts.length > 1) wireSegmented($(`#${host.id}-src`), v => { st.src = v; controls(); $(`#${host.id}-src [aria-checked="true"]`).focus(); });
-    wireSegmented($(`#${host.id}-theme`), v => { st.theme = v; send(); });
     send();
   }
   function send() {
     const p = payload(st.src);
     if (!p) return;
     const f = $('iframe', host); if (f) f.title = `${title}: ${p.label}`;
-    pv.render({ theme: st.theme, audience: 'guest', ...p });
+    pv.render({ audience: 'guest', ...p });
   }
   controls();
   const fit = fitPreview(host);

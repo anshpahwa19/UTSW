@@ -19,14 +19,15 @@ const NAV = [
     { route: 'home-campaigns', label: 'Campaigns', area: 'campaigns', children: [['home-campaigns-new', 'New campaign'], ['home-campaigns-:id', 'Campaign']] },
     { route: 'home-alerts', label: 'Emergency alerts', area: 'alerts', children: [['home-alerts-new', 'New emergency alert'], ['home-alerts-:id', 'Emergency alert']] },
     { route: 'home-quick-links', label: 'Quick links', area: 'quickLinks', children: [['home-quick-links-new', 'New quick link'], ['home-quick-links-:id', 'Quick link']] },
-    { route: 'home-featured-cards', label: 'Featured cards', area: 'featuredCards', children: [['home-featured-cards-new', 'New featured card'], ['home-featured-cards-:id', 'Featured card']] }
+    { route: 'home-featured-cards', label: 'Services and resources', area: 'featuredCards', children: [['home-featured-cards-new', 'New resource card'], ['home-featured-cards-:id', 'Resource card']] }
   ] },
   { id: 'content', label: 'Content and navigation', icon: 'palette', items: [
     { route: 'content-colors', label: 'Global colors', area: 'colors' },
-    { route: 'content-drawer', label: 'Drawer / More options', area: 'drawer' },
+    { route: 'content-drawer', label: 'Menu', area: 'drawer' },
     { route: 'content-app-entry', label: 'App entry', area: 'appEntry' }
   ] },
   { id: 'search', label: 'Search configuration', icon: 'manage_search', items: [
+    { route: 'search-top', label: 'Top and popular searches', area: 'search' },
     { route: 'search-query-mappings', label: 'Query mappings', area: 'search' },
     { route: 'search-synonyms', label: 'Synonyms', area: 'search' },
     { route: 'search-specialties', label: 'Specialty mapping', area: 'search' },

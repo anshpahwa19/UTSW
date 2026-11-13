@@ -1024,3 +1024,10 @@ body:has(:is(.hub-pub, .lc-slim)) #toasts{bottom:calc(var(--s4) + 92px + env(saf
   .metric-row > .metric:has(> :nth-child(3)):not(:has(> :nth-child(4))){grid-row:span 3; grid-template-rows:subgrid; row-gap:var(--s1)}
   .metric-row > .metric > .metric-l{align-self:start}
 }
+/* Pinned modules on the Layout page (alerts and the Find Care hero): fixed, no controls */
+.pin-list{list-style:none; margin:0 0 var(--s2); padding:1px; display:grid; border-radius:var(--r-md); background:var(--bg); box-shadow:inset 0 0 0 1px var(--line)}
+.pin-row{display:grid; grid-template-columns:20px 40px minmax(0,1fr) auto; align-items:start; gap:var(--s2) var(--s3); padding:var(--s4) var(--s4) var(--s4) var(--s2)}
+.pin-row + .pin-row{box-shadow:inset 0 1px 0 var(--line)}
+.pin-row > .mod-pos{line-height:40px; text-align:center}
+.pin-row > .badge{margin-top:var(--s2)}
+@container edit (max-width: 420px){ .pin-row{grid-template-columns:40px minmax(0,1fr)} .pin-row > .mod-pos{display:none} .pin-row > .badge{grid-column:2; justify-self:start; margin-top:0} }
