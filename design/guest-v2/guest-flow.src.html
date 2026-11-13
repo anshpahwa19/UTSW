@@ -324,8 +324,9 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
 .alert-stack.show>div{visibility:visible;transition-delay:0s}
 
 .mod{padding-inline:var(--sp-16);display:flex;flex-direction:column;gap:var(--sp-12)}
-.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--sp-12)}
-.tile{min-height:104px;border:0;background:var(--c-surface);border-radius:var(--r-16);box-shadow:0 0 0 1px var(--c-border);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:var(--sp-8);padding:var(--sp-16) var(--sp-8) var(--sp-12);cursor:pointer;text-align:center;font-size:var(--fs-14);line-height:var(--lh-14);font-weight:600;position:relative;color:var(--c-text)}
+/* Quick links: four MyChart tasks in a 2 × 2 grid, icon left of a two-line label */
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--sp-12)}
+.tile{min-height:72px;border:0;background:var(--c-surface);border-radius:var(--r-16);box-shadow:0 0 0 1px var(--c-border);display:flex;flex-direction:row;align-items:center;justify-content:flex-start;gap:var(--sp-12);padding:var(--sp-12);cursor:pointer;text-align:left;font-size:var(--fs-14);line-height:var(--lh-14);font-weight:600;position:relative;color:var(--c-text)}
 .tile:hover{box-shadow:0 0 0 2px var(--c-blue)}
 
 /* Find a doctor module */

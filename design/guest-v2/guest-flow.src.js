@@ -245,7 +245,7 @@ const store={get(k,d){try{const v=localStorage.getItem("mycare-guest-"+k);return
 const blankFilters=()=>({specs:new Set(),conds:new Set(),langs:new Set(),gender:"any",hosp:new Set(),dist:"any",accepting:false,online:false});
 const osRM=window.matchMedia("(prefers-reduced-motion: reduce)");
 const MODS={
- tiles:{name:"Quick links",meta:"Six tiles · four open MyChart"},
+ tiles:{name:"Quick links",meta:"Four tiles · all open MyChart"},
  finddoc:{name:"Find a doctor near you",meta:"Location shortcut and popular specialties"},
  saved:{name:"Your saved providers",meta:"Shows only when this device has saved providers"},
  featured:{name:"MedBlog",meta:"Carousel · three stories"},
@@ -372,8 +372,8 @@ function renderAlerts(){
 }
 const M={};
 M.tiles=()=>`<div class="mod-head"><h2 class="sec-h" id="h-tiles">Quick links</h2></div>
-  <div class="tiles">${[["find","Find my care","stethoscope"],["locations","Locations","location_on"],["message","Message your doctor","chat",1],["results","Get your test results","labs",1],["visits","Manage Your Visits","calendar_month",1],["billing","Manage Billing","credit_card",1]]
-   .map(([k,l,g,out])=>`<button class="tile press" data-action="tile" data-k="${k}" data-l="${l}"${out?` aria-label="${l}, opens MyChart"`:""}>${well(g,48)}<span>${l}</span></button>`).join("")}</div>`;
+  <div class="tiles">${[["message","Message your doctor","chat",1],["results","Get your test results","labs",1],["visits","Manage Your Visits","calendar_month",1],["billing","Manage Billing","credit_card",1]]
+   .map(([k,l,g,out])=>`<button class="tile press" data-action="tile" data-k="${k}" data-l="${l}"${out?` aria-label="${l}, opens MyChart"`:""}>${well(g,40)}<span>${l}</span></button>`).join("")}</div>`;
 M.finddoc=()=>`<div class="card fd">
    <div class="fd-top">${well("stethoscope",48)}<div class="stack" style="gap:var(--sp-4)"><h2 id="h-finddoc">Find a doctor near you</h2>
    <p>Search ${PROV.length} sample providers by name, specialty, condition, or language.</p></div></div>
@@ -1133,7 +1133,7 @@ $("#jumps").addEventListener("click",e=>{const b=e.target.closest("[data-jump]")
 const REQ=[
  ["Home layout","Guest composition from CMS modules, configured order, visibility rules, expiry","home"],
  ["Emergency alert banner","Banner, details sheet, emergency-first priority, dismiss where allowed","home"],
- ["Search and quick access","Search entry, top searches, Quick links tiles routing to Find my care, Locations, and MyChart","gsearch"],
+ ["Search and quick access","Search entry, top searches, Quick links tiles routing to MyChart tasks","gsearch"],
  ["Featured content and services","MedBlog carousel, flu shot campaign, UTSW resources, announcements","home"],
  ["Provider search","Keyword, plain-language mapping, auto-suggestions, recent and popular searches, spelling","plain"],
  ["Location-based search","Near me with OS prompt, ZIP or city entry, denied and can’t-locate fallbacks","denied"],
@@ -1215,7 +1215,7 @@ function markScroll(root,animate,baseDelay){
   $$(SD_SEL,root).forEach(el=>{
     if(el.classList.contains("sd")||el.closest(".ghost-wrap"))return;
     const tiles=el.querySelector(".tiles");
-    if(tiles){const head=el.querySelector(".mod-head");if(head)items.push([head,0]);$$(".tile",tiles).forEach((t,i)=>items.push([t,(i%3)*.08+Math.floor(i/3)*.04]));}
+    if(tiles){const head=el.querySelector(".mod-head");if(head)items.push([head,0]);$$(".tile",tiles).forEach((t,i)=>items.push([t,(i%2)*.08+Math.floor(i/2)*.04]));}
     else items.push([el,0]);
   });
   items.forEach(([el,d])=>{
