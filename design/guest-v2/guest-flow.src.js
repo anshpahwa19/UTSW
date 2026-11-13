@@ -246,7 +246,6 @@ const blankFilters=()=>({specs:new Set(),conds:new Set(),langs:new Set(),gender:
 const osRM=window.matchMedia("(prefers-reduced-motion: reduce)");
 const MODS={
  tiles:{name:"Quick links",meta:"Four tiles · all open MyChart"},
- finddoc:{name:"Find a doctor near you",meta:"Location shortcut and popular specialties"},
  saved:{name:"Your saved providers",meta:"Shows only when this device has saved providers"},
  featured:{name:"MedBlog",meta:"Carousel · three stories"},
  campaign:{name:"Campaign banner · Flu shots",meta:"Live Oct. 1 – Nov. 30"},
@@ -261,7 +260,7 @@ const S={
   perm:"ask",osAnswer:null,loc:null,data:"live",
   q:"",pq:null,filters:blankFilters(),sort:"relevance",loading:false,
   saved:store.get("saved",[]),recent:store.get("recent",[]),
-  layout:["tiles","mychart","finddoc","saved","featured","campaign","resources","announcements","summer"].map(id=>({id,on:!MODS[id].expired})),
+  layout:["tiles","mychart","saved","featured","campaign","resources","announcements","summer"].map(id=>({id,on:!MODS[id].expired})),
   dismissed:new Set(),draft:null,fcText:"",blogCat:"All",blogMore:false,inboxRead:new Set(INBOX.filter(m=>m.read).map(m=>m.id))
 };
 const rm=()=>S.rm||osRM.matches;
@@ -374,13 +373,6 @@ const M={};
 M.tiles=()=>`<div class="mod-head"><h2 class="sec-h" id="h-tiles">Quick links</h2></div>
   <div class="tiles">${[["message","Message your doctor","chat",1],["results","Get your test results","labs",1],["visits","Manage Your Visits","calendar_month",1],["billing","Manage Billing","credit_card",1]]
    .map(([k,l,g,out])=>`<button class="tile press" data-action="tile" data-k="${k}" data-l="${l}"${out?` aria-label="${l}, opens MyChart"`:""}>${well(g,40)}<span>${l}</span></button>`).join("")}</div>`;
-M.finddoc=()=>`<div class="card fd">
-   <div class="fd-top">${well("stethoscope",48)}<div class="stack" style="gap:var(--sp-4)"><h2 id="h-finddoc">Find a doctor near you</h2>
-   <p>Search ${PROV.length} sample providers by name, specialty, condition, or language.</p></div></div>
-   <button class="btn btn-primary btn-block press" data-action="near-me">${ic("near_me",20)}<span>Doctors near me</span></button>
-   <div class="stack"><span class="eyebrow">Popular specialties</span>
-   <div class="chips">${["Primary care","Cardiology","Pediatrics","Orthopaedics","Dermatology","OB-GYN"].map(c=>`<button class="chip" data-action="run" data-q="${c}">${c}</button>`).join("")}</div></div>
-   <button class="btn btn-ghost btn-inline" data-action="tab" data-tab="find"><span>Browse all specialties</span>${ic("chevron_right",20)}</button></div>`;
 M.saved=()=>{const ps=S.saved.map(id=>PBY[id]).filter(Boolean);
   return `<div class="mod-head"><h2 class="sec-h" id="h-saved">Your saved providers</h2><button class="btn btn-ghost btn-sm" data-action="tab" data-tab="saved">See all</button></div>
   <div class="h-scroll">${ps.map(p=>`<button class="card mini press" data-action="profile" data-id="${p.id}">${avatar(p,56)}<b>${esc(name(p))}</b><span>${esc(p.spec)}</span></button>`).join("")}</div>
