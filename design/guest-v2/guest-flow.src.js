@@ -354,7 +354,7 @@ function renderAppbar(){
   $("#appbar").innerHTML=`${back}<h1 class="ttl${back?" with-back":""}"><span class="t1">${TITLES[t.v]}</span>${t.v==="profile"?`<span class="t2" aria-hidden="true">${esc(name(PBY[t.id]))}</span>`:""}</h1>${menuBtn}`;
 }
 function renderTabbar(){
-  $("#tabbar").innerHTML=TABS.map(([k,l,g])=>`<button class="tab" ${k==="search"?`data-action="open-search" aria-haspopup="dialog"`:`data-action="tab" data-tab="${k}"`}${k==="mychart"?` aria-label="Sign in to MyChart"`:""}${k==="saved"&&S.saved.length?` aria-label="${l}, ${S.saved.length} provider${S.saved.length>1?"s":""}"`:""}><span class="pill">${ict(g)}${k==="saved"&&S.saved.length?`<span class="cnt" aria-hidden="true">${S.saved.length}</span>`:""}</span><span>${l}</span></button>`).join("")+`<span class="tab-ind" id="tab-ind" aria-hidden="true"></span>`;
+  $("#tabbar").innerHTML=TABS.map(([k,l,g])=>`<button class="tab" ${k==="search"?`data-action="open-search" aria-haspopup="dialog"`:`data-action="tab" data-tab="${k}"`}${k==="mychart"?` aria-label="Sign in to MyChart"`:""}${k==="saved"&&S.saved.length?` aria-label="${l}, ${S.saved.length} provider${S.saved.length>1?"s":""}"`:""}><span class="pill">${ict(g)}</span><span>${l}</span></button>`).join("")+`<span class="tab-ind" id="tab-ind" aria-hidden="true"></span>`;
   markTab();
 }
 function markTab(){$$("#tabbar .tab").forEach(b=>b.dataset.tab===S.tab?b.setAttribute("aria-current","page"):b.removeAttribute("aria-current"));placeInd()}
