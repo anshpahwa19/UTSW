@@ -218,6 +218,8 @@
     tabs(out.home ? 0 : out.tab != null ? out.tab : -1);
     view.scrollTop = 0;
     if (out.home && msg.focus) { const el = view.querySelector(`[data-m="${msg.focus}"]`); if (el) view.scrollTop = Math.max(0, el.offsetTop - 96); }
+    /* The card being edited: scroll its swipeable row so it's in view */
+    view.querySelectorAll('.h-scroll').forEach(sc => { const hl = sc.querySelector('.pv-hl'); sc.scrollLeft = hl ? Math.max(0, hl.offsetLeft - 16) : 0; });
     view.setAttribute('aria-label', `Mobile preview: ${msg.label}. Scroll with the arrow keys.`);
     nbsp(phone);
     phone.querySelectorAll('button').forEach(b => { b.tabIndex = -1; });

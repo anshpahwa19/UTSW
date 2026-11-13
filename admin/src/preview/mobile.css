@@ -96,7 +96,9 @@ html:not(.ms-ready) .ms{color:transparent!important}
 .avatar{border-radius:50%; flex:none; display:grid; place-items:center; font-weight:700; color:var(--c-blue); background:var(--c-tint); width:40px; height:40px; font-size:var(--fs-14)}
 .avatar.a1{background:var(--c-pastel)} .avatar.a2{background:var(--c-sand-60)}
 .pv-empty{margin:0; padding:var(--sp-24) var(--sp-16); border-radius:var(--r-16); border:1.5px dashed var(--c-border-strong); color:var(--c-text-2); font-size:var(--fs-14); line-height:var(--lh-14); text-align:center}
-.pv-hl{box-shadow:0 0 0 3px var(--c-cyan)!important}
+.pv-hl{box-shadow:0 0 0 3px var(--c-cyan)!important; position:relative}
+.pv-hl::before{content:"Editing"; position:absolute; z-index:2; top:var(--sp-8); left:var(--sp-8); padding:2px var(--sp-8); border-radius:var(--r-full); background:var(--c-cyan); color:#00243F; font-size:var(--fs-12); line-height:var(--lh-12); font-weight:700}
+.tile.pv-hl::before{top:-10px; left:auto; right:var(--sp-8)}
 
 /* Home: alerts above the Find Care hero, both on Blue */
 .top{display:flex; flex-direction:column}
@@ -144,7 +146,7 @@ html:not(.ms-ready) .ms{color:transparent!important}
 .mod{padding-inline:var(--sp-16); display:flex; flex-direction:column; gap:var(--sp-12)}
 .tiles{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:var(--sp-12)}
 .tile{min-height:72px; border:0; background:var(--c-surface); border-radius:var(--r-16); box-shadow:0 0 0 1px var(--c-border); display:flex; align-items:center; gap:var(--sp-12); padding:var(--sp-12); text-align:left; font-size:var(--fs-14); line-height:var(--lh-14); font-weight:600; color:var(--c-text)}
-.h-scroll{display:flex; gap:var(--sp-12); overflow-x:auto; margin-inline:calc(var(--sp-16) * -1); padding-inline:var(--sp-16); padding-block:var(--sp-4); scrollbar-width:none}
+.h-scroll{position:relative; display:flex; gap:var(--sp-12); overflow-x:auto; margin-inline:calc(var(--sp-16) * -1); padding-inline:var(--sp-16); padding-block:var(--sp-4); scrollbar-width:none}
 .h-scroll::-webkit-scrollbar{display:none}
 .mb-row{align-items:stretch}
 .mb-item{flex:0 0 248px; display:flex}

@@ -48,12 +48,14 @@ function appContent({ env = 'production', overrides = {}, audience = 'guest', al
   /* An item that isn't saved yet has no record, so it joins its list here */
   const add = type => newItem && newItem.type === type ? [{ r: { id: '__new__' }, d: newItem.data }] : [];
   const camp2 = newItem && newItem.type === 'campaign' ? { d: newItem.data } : camp;
+  /* The item open in an editor is outlined in the preview, so it can be found among the others */
+  const editing = x => x.r.id === '__new__' || overrides[x.r.id] !== undefined;
   const withNew = (type, list) => [...list, ...add(type).filter(x => x.d.enabled !== false)].sort((a, b) => a.d.order - b.d.order);
   return {
     ...STATIC_CONTENT,
     top: topSearches(pick, 'home'),
-    quickLinks: withNew('quickLink', ordered('quickLink')).map(x => ({ title: x.d.title || 'New quick link', icon: x.d.icon })),
-    resources: withNew('featuredCard', ordered('featuredCard')).map(x => ({ category: x.d.category, title: x.d.title || 'New card', description: x.d.subtitle, icon: x.d.icon })),
+    quickLinks: withNew('quickLink', ordered('quickLink')).map(x => ({ title: x.d.title || 'New quick link', icon: x.d.icon, highlight: editing(x) })),
+    resources: withNew('featuredCard', ordered('featuredCard')).map(x => ({ category: x.d.category, title: x.d.title || 'New card', description: x.d.subtitle, icon: x.d.icon, highlight: editing(x) })),
     campaign: camp2 ? campaignView(camp2.d) : null,
     alerts: [...alerts, ...add('alert')].map(x => alertView(x.d)).sort(alertOrder),
     drawer: overrides.drawer || pick(drawer),
