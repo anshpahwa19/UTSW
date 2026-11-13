@@ -322,6 +322,25 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
 .alert-stack>div{overflow:hidden;visibility:hidden;transition:visibility 0s linear var(--dur-base);display:flex;flex-direction:column;gap:var(--sp-12)}
 .alert-stack.show{grid-template-rows:1fr}
 .alert-stack.show>div{visibility:visible;transition-delay:0s}
+/* Alert banners, high contrast: emergency is a red gradient (like the Blue hero) with white text; advisories are white with Blue text */
+.alert{box-shadow:0 4px 16px rgba(0,20,40,.18)}
+.alert .sev-ic{width:40px;height:40px;flex:none;border-radius:50%;display:grid;place-items:center}
+.alert.emergency{background:linear-gradient(150deg,#C8104A 0%,#B0003A 45%,#86002C 100%);color:#FFFFFF;box-shadow:0 6px 20px rgba(120,0,40,.32),inset 0 0 0 1px rgba(255,255,255,.14)}
+.emergency .sev-ic{background:#FFFFFF;color:#B0003A}
+.emergency .alert-meta{color:rgba(255,255,255,.88)}
+.emergency .alert-meta b{color:#FFFFFF}
+.emergency .alert-title{color:#FFFFFF;font-weight:700}
+.emergency .chev{color:#FFFFFF}
+.emergency .alert-body p{color:#FFFFFF}
+.emergency .btn-primary{background:#FFFFFF;color:#B0003A;box-shadow:none}
+.emergency .btn-ghost{color:#FFFFFF;background:rgba(255,255,255,.14)}
+.emergency .alert-toggle:focus-visible,.emergency .btn:focus-visible{outline:2px solid #FFFFFF;outline-offset:2px}
+.alert.advisory{background:#FFFFFF;color:var(--c-text);box-shadow:0 4px 16px rgba(0,20,40,.18)}
+.advisory .sev-ic{background:var(--c-tint);color:var(--c-blue)}
+.advisory .alert-meta b{color:var(--c-blue)}
+.advisory .alert-title{color:var(--c-text);font-weight:700}
+.advisory .chev{color:var(--c-blue)}
+.alert.stacked::after{background:rgba(255,255,255,.55)}
 
 .mod{padding-inline:var(--sp-16);display:flex;flex-direction:column;gap:var(--sp-12)}
 /* Quick links: four MyChart tasks in a 2 × 2 grid, icon left of a two-line label */
