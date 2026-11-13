@@ -285,6 +285,8 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
 .top{display:flex;flex-direction:column}
 .hero{background:var(--c-blue);color:var(--c-on-blue);padding:var(--sp-8) var(--sp-16) var(--sp-24);display:flex;flex-direction:column;gap:var(--sp-16);border-radius:0 0 var(--r-24) var(--r-24)}
 .hero h1{font-size:var(--fs-28);line-height:var(--lh-28);font-weight:700;letter-spacing:-.01em;text-wrap:balance}
+.fc-kick{display:inline-flex;align-items:center;gap:var(--sp-8);font-size:var(--fs-20);line-height:var(--lh-20);font-weight:700;color:#FFFFFF;margin-bottom:var(--sp-4)}
+.fc-kick .ic{color:var(--c-cyan)}
 .hero .sub{color:var(--c-on-blue);font-size:var(--fs-16);line-height:var(--lh-16);font-weight:500;max-width:32em}
 .hero .top-s{display:flex;flex-direction:column;gap:var(--sp-8)}
 .hero .top-s .eyebrow{color:var(--c-on-blue-2)}
@@ -418,6 +420,12 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
 .svc-cat{align-self:flex-start;font-size:var(--fs-12);line-height:var(--lh-12);font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--c-blue);background:var(--c-tint);border-radius:var(--r-full);padding:2px var(--sp-8);margin-bottom:var(--sp-4)}
 .svc-body b{font-size:var(--fs-16);line-height:var(--lh-16);font-weight:700;color:var(--c-text)}
 .svc-body>span:last-child{font-size:var(--fs-14);line-height:var(--lh-14);color:var(--c-text-2)}
+/* Wayfinding tab */
+.wf-go{display:flex;align-items:center;gap:var(--sp-12);padding:var(--sp-16);border:0;text-align:left;cursor:pointer;width:100%;background:var(--c-blue);color:#FFFFFF}
+.wf-go-ic{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.16);flex:none}
+.wf-go .rt b{color:#FFFFFF}.wf-go .rt span{color:var(--c-on-blue-2)}
+.wf-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--sp-8)}
+.wf-dest{display:flex;flex-direction:column;align-items:center;gap:var(--sp-8);padding:var(--sp-12) var(--sp-4);border:0;cursor:pointer;font:inherit;font-size:var(--fs-14);line-height:var(--lh-14);font-weight:600;color:var(--c-text);text-align:center}
 .mini{flex:0 0 144px;scroll-snap-align:start;padding:var(--sp-16) var(--sp-12);display:flex;flex-direction:column;align-items:center;gap:var(--sp-8);text-align:center;border:0;cursor:pointer;color:var(--c-text);min-width:0}
 .mini b{font-size:var(--fs-14);line-height:var(--lh-14);font-weight:600}
 .mini b+span{margin-top:calc(var(--sp-4) * -1)}
@@ -717,11 +725,11 @@ mark{background:var(--c-pastel);color:inherit;border-radius:2px}
 
 /* ---------- Tab bar ---------- */
 /* Floating tab bar: a glass pill above the home indicator; content scrolls underneath */
-.tabbar{position:absolute;left:var(--sp-12);right:var(--sp-12);bottom:28px;z-index:3;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));padding:var(--sp-4);border-radius:var(--r-full);
+.tabbar{position:absolute;left:var(--sp-12);right:var(--sp-12);bottom:28px;z-index:3;display:flex;padding:var(--sp-4);border-radius:var(--r-full);
   background:color-mix(in srgb,var(--c-surface) 94%,transparent);-webkit-backdrop-filter:blur(20px) saturate(1.5);backdrop-filter:blur(20px) saturate(1.5);
   box-shadow:0 0 0 1px color-mix(in srgb,var(--c-border) 80%,transparent),0 12px 32px rgba(0,30,60,.16),0 2px 6px rgba(0,30,60,.06)}
 .view::after{content:"";display:block;height:calc(var(--tabbar-h) - var(--sp-24))}
-.tab{min-width:0;min-height:64px;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:var(--fs-12);line-height:var(--lh-12);font-weight:500;color:var(--c-text-2);cursor:pointer;padding:var(--sp-4) var(--sp-4);border-radius:var(--r-full);position:relative}
+.tab{flex:1 1 0;min-width:max-content;min-height:64px;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:var(--fs-12);line-height:var(--lh-12);font-weight:500;color:var(--c-text-2);cursor:pointer;padding:var(--sp-4) var(--sp-4);border-radius:var(--r-full);position:relative}
 .tab>span:last-child{white-space:nowrap;letter-spacing:-.01em}
 .tab[aria-current="page"]{font-weight:600}
 .tab .pill{width:32px;height:28px;border-radius:var(--r-full);display:grid;place-items:center;transition:background var(--dur-base) var(--ease-out);position:relative}

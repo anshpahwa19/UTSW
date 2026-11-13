@@ -137,7 +137,8 @@
       "20"
     ],
     "apartment": [
-      "20"
+      "20",
+      "24"
     ],
     "schedule": [
       "20",
@@ -443,6 +444,22 @@
     ],
     "pregnant_woman": [
       "24f"
+    ],
+    "directions_walk": [
+      "24",
+      "24f"
+    ],
+    "door_front": [
+      "24"
+    ],
+    "local_pharmacy": [
+      "24"
+    ],
+    "restaurant": [
+      "24"
+    ],
+    "wc": [
+      "24"
     ]
   }
 }
