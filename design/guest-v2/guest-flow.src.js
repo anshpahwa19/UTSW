@@ -327,18 +327,12 @@ function announceResults(){
 }
 
 /* ---------- Navigation ---------- */
-/* One motion rule, by what was tapped: a card grows into its page and shrinks back into it; a row, arrow, or "See all" slides in from the right and back out;
-   tabs cross-fade; sheets rise from the bottom; menu and search open from the control that opened them. */
-const CARD_SEL=".pc-main,.mini,.mb-card,.svc,.blog-lead,.tile";
-let navFrom=null;
-function rectIn(el){const r=el.getBoundingClientRect(),V=views.getBoundingClientRect();return {t:r.top-V.top,r:V.right-r.right,b:V.bottom-r.bottom,l:r.left-V.left}}
+/* One transition everywhere (pages, tabs, search, menu, sheets): fade in while growing from the middle; close in reverse. Nothing slides in from a side. */
 function push(entry){const st=S.stacks[S.tab];st[st.length-1].scroll=view.scrollTop;
-  const card=navFrom&&view.contains(navFrom)&&navFrom.getBoundingClientRect().height?navFrom:null;navFrom=null;
-  if(card){entry.from="card";entry.key=card.dataset.id||card.dataset.v||"";st.push(entry);render("expand",{scroll:0,rect:rectIn(card)})}
-  else{st.push(entry);render("push",{scroll:0})}
+  st.push(entry);render("push",{scroll:0});
   focusTitle()}
 function pop(){const st=S.stacks[S.tab];if(st.length<2)return;const gone=st.pop();
-  render(gone.from==="card"?"collapse":"pop",{scroll:st[st.length-1].scroll||0,key:gone.key});focusTitle()}
+  render("pop",{scroll:st[st.length-1].scroll||0});focusTitle()}
 function switchTab(t,reset){
   if(t===S.tab&&!reset){if(S.stacks[t].length>1){S.stacks[t].splice(1);render("pop",{scroll:0})}return}
   const st=S.stacks[S.tab];st[st.length-1].scroll=view.scrollTop;
@@ -692,8 +686,8 @@ function render(anim,opts={}){
     if(opts.scroll!=null)view.scrollTop=opts.scroll;
   });
   animateAppbar(anim);
-  markScroll(view,!opts.instant&&anim!=="pop"&&anim!=="collapse",anim?(anim==="fade"?120:200):0);onScroll();
-  if(t.v==="profile"&&(anim==="push"||anim==="expand"))stagger($$(".p-id .stack>*,.p-hero .tags,.p-acts>*",view),220,50,12);
+  markScroll(view,!opts.instant&&anim!=="pop",anim?(anim==="fade"?120:200):0);onScroll();
+  if(t.v==="profile"&&anim==="push")stagger($$(".p-id .stack>*,.p-hero .tags,.p-acts>*",view),220,50,12);
   if(t.v==="home"&&!S.heroDone){S.heroDone=true;heroIntro()}
 }
 function rerenderKeep(animate){const y=view.scrollTop;render(null,{instant:!animate,scroll:y});onScroll()}
@@ -920,8 +914,7 @@ function openSearch(q){
   $("#q").value=q||"";renderSearch(q||"");
   const src=lastFocus&&lastFocus.closest&&lastFocus.closest(".search-entry");searchSrc=src&&src.getBoundingClientRect().height?src:null;
   if(canMove()){
-    if(searchSrc)s.animate([{clipPath:srcInset(searchSrc,s)},{clipPath:"inset(0px 0px 0px 0px round 0px)"}],{duration:520,easing:EASE_IOS});
-    else s.animate([{opacity:0,transform:"translate3d(0,24px,0)"},{opacity:1,transform:"none"}],{duration:420,easing:EASE_IOS});
+    s.animate(ZOOM_IN_KF,{duration:ZOOM_IN,easing:EASE_IOS});
     stagger($$("#search-body .lbl-h,#search-body .chip,#search-body .card,#search-body .btn"),160,30,12);
   }
   setTimeout(()=>$("#q").focus(),rm()?0:80);
@@ -930,9 +923,7 @@ function closeSearch(cb){
   const s=$("#search");if(s.hidden){cb&&cb();return}
   const done=()=>{s.hidden=true;$("#q").value="";$("#q-clear").hidden=true;setInert(false);if(!cb&&lastFocus&&document.contains(lastFocus))lastFocus.focus();cb&&cb()};
   if(!canMove())return done();
-  const back=!cb&&searchSrc&&document.contains(searchSrc)&&searchSrc.getBoundingClientRect().height;
-  const a=back?s.animate([{clipPath:"inset(0px 0px 0px 0px round 0px)"},{clipPath:srcInset(searchSrc,s)}],{duration:420,easing:EASE_IOS})
-             :s.animate([{opacity:1},{opacity:0}],{duration:220,easing:"ease-out"});
+  const a=s.animate(ZOOM_OUT_KF,{duration:ZOOM_OUT+40,easing:"ease-in"});
   a.onfinish=done;
 }
 /* Search screen: Saved providers and Search history share one card behind a two-way toggle (both on this device) */
@@ -1007,10 +998,9 @@ screen.addEventListener("click",e=>{
   const el=e.target.closest("[data-action]");if(!el||!screen.contains(el))return;
   if(el.closest("#drawer")&&el.dataset.action!=="close-drawer")closeDrawer(true);
   const act=el.dataset.action,id=el.dataset.id;
-  navFrom=el.closest(CARD_SEL);
   switch(act){
    case "back":{const t0=top();let f=null;
-     if(t0.v==="profile"&&t0.from!=="card"){const av=$(".p-id .avatar",view),pid=$(".p-id",view);if(av&&pid&&parseFloat(getComputedStyle(pid).opacity)>.6)f=prepFlight(av)}
+     if(false){const av=$(".p-id .avatar",view),pid=$(".p-id",view);if(av&&pid&&parseFloat(getComputedStyle(pid).opacity)>.6)f=prepFlight(av)}
      pop();if(f)launchFlight(f,findAvatar(t0.id));break}
    case "tab":{const go=()=>switchTab(el.dataset.tab,el.closest(".sheet,.state")!=null);if(!$("#layer").hidden)closeSheet(go);else go();break}
    case "toggle-alert":{const art=el.closest(".alert");const open=!art.classList.contains("open");art.classList.toggle("open",open);el.setAttribute("aria-expanded",String(open));break}
@@ -1199,6 +1189,7 @@ const EASE_IOS="cubic-bezier(0.32,0.72,0,1)";
 const views=$("#views");
 
 /* Screen transitions: snapshot the outgoing screen, build the new one, then move both */
+const ZOOM_IN=420,ZOOM_OUT=200,ZOOM_IN_KF=[{opacity:0,transform:"scale(.94)"},{opacity:1,transform:"scale(1)"}],ZOOM_OUT_KF=[{opacity:1,transform:"scale(1)"},{opacity:0,transform:"scale(.94)"}];
 function screenTransition(kind,opts,build){
   $$(".ghost-wrap",views).forEach(g=>g.remove());view.getAnimations().forEach(a=>a.cancel());view.classList.remove("lift");
   if(!kind||!canMove()){build();return}
@@ -1206,41 +1197,18 @@ function screenTransition(kind,opts,build){
   wrap.className="ghost-wrap";wrap.setAttribute("aria-hidden","true");wrap.inert=true;dim.className="ghost-dim";
   g.removeAttribute("id");g.removeAttribute("tabindex");g.removeAttribute("aria-label");$$("[id]",g).forEach(e=>e.removeAttribute("id"));
   wrap.append(g,dim);
-  if(kind==="push"||kind==="expand")views.insertBefore(wrap,view);else{wrap.classList.add("top");views.appendChild(wrap)}
+  if(kind==="push")views.insertBefore(wrap,view);else{wrap.classList.add("top");views.appendChild(wrap)}
   g.scrollTop=y;
   build();
-  const D=480,o={duration:D,easing:EASE_IOS,fill:"forwards"};let a;
-  if(kind==="push"){
-    view.classList.add("lift");
-    view.animate([{transform:"translate3d(100%,0,0)"},{transform:"translate3d(0,0,0)"}],{duration:D,easing:EASE_IOS});
-    wrap.animate([{transform:"translate3d(0,0,0)"},{transform:"translate3d(-30%,0,0)"}],o);
-    a=dim.animate([{opacity:0},{opacity:1}],o);
-  }else if(kind==="expand"){
-    /* Card to page: the new page opens out of the tapped card's rectangle */
-    const r=opts.rect,ins=`inset(${r.t}px ${r.r}px ${r.b}px ${r.l}px round 16px)`;view.classList.add("lift");
-    view.animate([{clipPath:ins},{clipPath:"inset(0px 0px 0px 0px round 0px)"}],{duration:D,easing:EASE_IOS});
-    view.animate([{opacity:.4},{opacity:1}],{duration:D*.5,easing:"ease-out"});
-    wrap.animate([{transform:"scale(1)"},{transform:"scale(.96)"}],o);
-    a=dim.animate([{opacity:0},{opacity:1}],o);
-  }else if(kind==="collapse"){
-    /* Page to card: the page shrinks back into the card it came from (or toward the middle if that card is off screen) */
-    const c=opts.key?[...$$(CARD_SEL,view)].find(e=>(e.dataset.id||e.dataset.v||"")===opts.key&&e.getBoundingClientRect().height):null;
-    const V=views.getBoundingClientRect(),cr=c&&c.getBoundingClientRect(),r=cr&&cr.bottom>V.top&&cr.top<V.bottom?rectIn(c):{t:V.height*.3,r:32,b:V.height*.3,l:32};
-    view.animate([{transform:"scale(.96)",filter:"brightness(.86)"},{transform:"scale(1)",filter:"brightness(1)"}],{duration:D,easing:EASE_IOS});
-    a=wrap.animate([{clipPath:"inset(0px 0px 0px 0px round 0px)",opacity:1},{clipPath:`inset(${r.t}px ${r.r}px ${r.b}px ${r.l}px round 16px)`,opacity:.2}],o);
-  }else if(kind==="pop"){
-    view.animate([{transform:"translate3d(-30%,0,0)",filter:"brightness(.86)"},{transform:"translate3d(0,0,0)",filter:"brightness(1)"}],{duration:D,easing:EASE_IOS});
-    a=wrap.animate([{transform:"translate3d(0,0,0)"},{transform:"translate3d(100%,0,0)"}],o);
-  }else{
-    wrap.classList.remove("top");wrap.style.zIndex="3";
-    a=wrap.animate([{opacity:1},{opacity:0}],{duration:200,easing:"ease-out",fill:"forwards"});
-    view.animate([{opacity:0,transform:"scale(.985)"},{opacity:1,transform:"scale(1)"}],{duration:420,delay:60,easing:EASE_IOS,fill:"backwards"});
-  }
+  /* The app's single transition: what leaves fades out; what arrives fades in while growing from the middle (scale .94 to 1) */
+  wrap.classList.remove("top");wrap.style.zIndex="3";
+  const a=wrap.animate([{opacity:1},{opacity:0}],{duration:ZOOM_OUT,easing:"ease-out",fill:"forwards"});
+  view.animate(ZOOM_IN_KF,{duration:ZOOM_IN,easing:EASE_IOS,fill:"backwards"});
   a.onfinish=()=>{wrap.remove();view.classList.remove("lift")};
 }
 function animateAppbar(kind){
   if(!kind||!canMove())return;const t=$("#appbar .ttl"),b=$('#appbar [data-action="back"]');
-  const dx=kind==="push"?48:kind==="pop"?-32:0;
+  const dx=0;
   if(t)t.animate([{opacity:0,transform:`translate3d(${dx}px,0,0)`},{opacity:1,transform:"none"}],{duration:420,easing:EASE_IOS});
   if(b&&kind==="push")b.animate([{opacity:0},{opacity:1}],{duration:300,easing:"ease-out"});
 }
@@ -1370,7 +1338,7 @@ function flipCards(before){
 }
 function collapseOut(el,done){
   const h=el.offsetHeight;el.style.overflow="hidden";
-  el.animate([{opacity:1,transform:"none"},{opacity:0,transform:"translate3d(40px,0,0)"}],{duration:240,easing:"cubic-bezier(0.4,0,1,1)",fill:"forwards"}).onfinish=()=>
+  el.animate(ZOOM_OUT_KF,{duration:240,easing:"ease-in",fill:"forwards"}).onfinish=()=>
     el.animate([{height:h+"px",marginTop:"0px",opacity:0},{height:"0px",marginTop:"-12px",opacity:0}],{duration:320,easing:EASE_IOS,fill:"forwards"}).onfinish=done;
 }
 function rollNumber(el,from,to){
@@ -1486,7 +1454,7 @@ function obWelcome(instant){
     </div></div>`);W=$("#ob-welcome");}
   $$(".ob-bar,.ob-track,.ob-foot",O).forEach(e=>{if(!e.closest("#ob-welcome"))e.setAttribute("inert","")});
   if(canMove()&&!instant){
-    W.animate([{opacity:0,transform:"translate3d(0,48px,0)"},{opacity:1,transform:"none"}],{duration:560,easing:EASE_IOS});
+    W.animate(ZOOM_IN_KF,{duration:ZOOM_IN,easing:EASE_IOS});
     $(".ob-wel-icon",W).animate([{opacity:0,transform:"scale(.6) rotate(-8deg)"},{opacity:1,transform:"none"}],{duration:760,delay:120,easing:EASE_IOS,fill:"backwards"});
     $$(".ob-wel-ring",W).forEach((r,i)=>r.animate([{opacity:0,transform:"scale(.5)"},{opacity:i?.6:1,transform:"none"}],{duration:900,delay:200+i*120,easing:EASE_IOS,fill:"backwards"}));
     stagger($$(".ob-wel-body>*,.ob-choice",W),260,70,8);
