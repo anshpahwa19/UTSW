@@ -347,8 +347,7 @@ function renderTabbar(){
 function markTab(){$$("#tabbar .tab").forEach(b=>b.dataset.tab===S.tab?b.setAttribute("aria-current","page"):b.removeAttribute("aria-current"));placeInd()}
 function placeInd(){const ind=$("#tab-ind"),cur=$('#tabbar .tab[aria-current="page"]');if(!ind)return;ind.classList.toggle("none",!cur);if(!cur)return;
 
-  const d=Math.min(cur.offsetWidth+4,cur.offsetHeight+8);ind.style.width=ind.style.height=d+"px";
-  ind.style.transform=`translate(${cur.offsetLeft+(cur.offsetWidth-d)/2}px,${cur.offsetTop+(cur.offsetHeight-d)/2}px)`;if(!ind.classList.contains("ready"))requestAnimationFrame(()=>requestAnimationFrame(()=>ind.classList.add("ready")))}
+  ind.style.width=cur.offsetWidth+"px";ind.style.height=cur.offsetHeight+"px";ind.style.transform=`translate(${cur.offsetLeft}px,${cur.offsetTop}px)`;if(!ind.classList.contains("ready"))requestAnimationFrame(()=>requestAnimationFrame(()=>ind.classList.add("ready")))}
 
 /* ---------- Home ---------- */
 function activeAlerts(){return ALERTS.slice(0,S.alerts).filter(a=>!S.dismissed.has(a.id)).sort((a,b)=>(b.level==="emergency")-(a.level==="emergency"))}
