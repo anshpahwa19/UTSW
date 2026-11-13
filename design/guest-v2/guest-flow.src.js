@@ -327,8 +327,18 @@ function announceResults(){
 }
 
 /* ---------- Navigation ---------- */
-function push(entry){const st=S.stacks[S.tab];st[st.length-1].scroll=view.scrollTop;st.push(entry);render("push",{scroll:0});focusTitle()}
-function pop(){const st=S.stacks[S.tab];if(st.length<2)return;st.pop();render("pop",{scroll:st[st.length-1].scroll||0});focusTitle()}
+/* One motion rule, by what was tapped: a card grows into its page and shrinks back into it; a row, arrow, or "See all" slides in from the right and back out;
+   tabs cross-fade; sheets rise from the bottom; menu and search open from the control that opened them. */
+const CARD_SEL=".pc-main,.mini,.mb-card,.svc,.blog-lead,.tile";
+let navFrom=null;
+function rectIn(el){const r=el.getBoundingClientRect(),V=views.getBoundingClientRect();return {t:r.top-V.top,r:V.right-r.right,b:V.bottom-r.bottom,l:r.left-V.left}}
+function push(entry){const st=S.stacks[S.tab];st[st.length-1].scroll=view.scrollTop;
+  const card=navFrom&&view.contains(navFrom)&&navFrom.getBoundingClientRect().height?navFrom:null;navFrom=null;
+  if(card){entry.from="card";entry.key=card.dataset.id||card.dataset.v||"";st.push(entry);render("expand",{scroll:0,rect:rectIn(card)})}
+  else{st.push(entry);render("push",{scroll:0})}
+  focusTitle()}
+function pop(){const st=S.stacks[S.tab];if(st.length<2)return;const gone=st.pop();
+  render(gone.from==="card"?"collapse":"pop",{scroll:st[st.length-1].scroll||0,key:gone.key});focusTitle()}
 function switchTab(t,reset){
   if(t===S.tab&&!reset){if(S.stacks[t].length>1){S.stacks[t].splice(1);render("pop",{scroll:0})}return}
   const st=S.stacks[S.tab];st[st.length-1].scroll=view.scrollTop;
@@ -673,7 +683,7 @@ function viewMedblog(){
 /* ---------- Render ---------- */
 function render(anim,opts={}){
   const t=top();
-  screenTransition(anim,()=>{
+  screenTransition(anim,opts,()=>{
     renderAppbar();
     view.setAttribute("aria-label",t.v==="home"?"Home":TITLES[t.v]);
     view.innerHTML=t.v==="home"?viewHome():t.v==="find"?viewFind():t.v==="results"?viewResults():t.v==="profile"?viewProfile(t.id):t.v==="saved"?viewSaved():t.v==="locations"?viewLocations():t.v==="medblog"?viewMedblog():t.v==="inbox"?viewInbox():t.v==="mychart"?viewMyChart():viewMenu();
@@ -682,8 +692,8 @@ function render(anim,opts={}){
     if(opts.scroll!=null)view.scrollTop=opts.scroll;
   });
   animateAppbar(anim);
-  markScroll(view,!opts.instant&&anim!=="pop",anim?(anim==="fade"?120:200):0);onScroll();
-  if(t.v==="profile"&&anim==="push")stagger($$(".p-id .stack>*,.p-hero .tags,.p-acts>*",view),220,50,12);
+  markScroll(view,!opts.instant&&anim!=="pop"&&anim!=="collapse",anim?(anim==="fade"?120:200):0);onScroll();
+  if(t.v==="profile"&&(anim==="push"||anim==="expand"))stagger($$(".p-id .stack>*,.p-hero .tags,.p-acts>*",view),220,50,12);
   if(t.v==="home"&&!S.heroDone){S.heroDone=true;heroIntro()}
 }
 function rerenderKeep(animate){const y=view.scrollTop;render(null,{instant:!animate,scroll:y});onScroll()}
@@ -997,9 +1007,10 @@ screen.addEventListener("click",e=>{
   const el=e.target.closest("[data-action]");if(!el||!screen.contains(el))return;
   if(el.closest("#drawer")&&el.dataset.action!=="close-drawer")closeDrawer(true);
   const act=el.dataset.action,id=el.dataset.id;
+  navFrom=el.closest(CARD_SEL);
   switch(act){
    case "back":{const t0=top();let f=null;
-     if(t0.v==="profile"){const av=$(".p-id .avatar",view),pid=$(".p-id",view);if(av&&pid&&parseFloat(getComputedStyle(pid).opacity)>.6)f=prepFlight(av)}
+     if(t0.v==="profile"&&t0.from!=="card"){const av=$(".p-id .avatar",view),pid=$(".p-id",view);if(av&&pid&&parseFloat(getComputedStyle(pid).opacity)>.6)f=prepFlight(av)}
      pop();if(f)launchFlight(f,findAvatar(t0.id));break}
    case "tab":{const go=()=>switchTab(el.dataset.tab,el.closest(".sheet,.state")!=null);if(!$("#layer").hidden)closeSheet(go);else go();break}
    case "toggle-alert":{const art=el.closest(".alert");const open=!art.classList.contains("open");art.classList.toggle("open",open);el.setAttribute("aria-expanded",String(open));break}
@@ -1041,7 +1052,7 @@ screen.addEventListener("click",e=>{
    case "clear-filters":S.filters=blankFilters();render();load();$('[data-action="filters"]').focus();break;
    case "widen":S.filters.dist="50";render();load();break;
    case "retry":if(S.data==="error"||S.data==="offline"){S.data="live";syncControls()}load();break;
-   case "profile":{const f=prepFlight(el.querySelector(".avatar"));push({v:"profile",id});if(f)launchFlight(f,$(".p-id .avatar",view));break}
+   case "profile":push({v:"profile",id});break;
    case "push":push({v:el.dataset.v});break;
    case "blog-cat":S.blogCat=el.dataset.c;rerenderKeep(true);{const c=$(`[data-action="blog-cat"][data-c="${el.dataset.c}"]`);if(c){c.focus({preventScroll:true});c.scrollIntoView({inline:"center",block:"nearest",behavior:rm()?"auto":"smooth"})}}sayPolite(`${BLOG.filter(b=>S.blogCat==="All"||b.cat===S.blogCat).length} stories`);break;
    case "blog-more":{const n=$$(".blog-row").length;S.blogMore=true;rerenderKeep(true);$$(".blog-row")[n]?.focus();break}
@@ -1188,14 +1199,14 @@ const EASE_IOS="cubic-bezier(0.32,0.72,0,1)";
 const views=$("#views");
 
 /* Screen transitions: snapshot the outgoing screen, build the new one, then move both */
-function screenTransition(kind,build){
+function screenTransition(kind,opts,build){
   $$(".ghost-wrap",views).forEach(g=>g.remove());view.getAnimations().forEach(a=>a.cancel());view.classList.remove("lift");
   if(!kind||!canMove()){build();return}
   const y=view.scrollTop,wrap=document.createElement("div"),g=view.cloneNode(true),dim=document.createElement("div");
   wrap.className="ghost-wrap";wrap.setAttribute("aria-hidden","true");wrap.inert=true;dim.className="ghost-dim";
   g.removeAttribute("id");g.removeAttribute("tabindex");g.removeAttribute("aria-label");$$("[id]",g).forEach(e=>e.removeAttribute("id"));
   wrap.append(g,dim);
-  if(kind==="push")views.insertBefore(wrap,view);else{wrap.classList.add("top");views.appendChild(wrap)}
+  if(kind==="push"||kind==="expand")views.insertBefore(wrap,view);else{wrap.classList.add("top");views.appendChild(wrap)}
   g.scrollTop=y;
   build();
   const D=480,o={duration:D,easing:EASE_IOS,fill:"forwards"};let a;
@@ -1204,6 +1215,19 @@ function screenTransition(kind,build){
     view.animate([{transform:"translate3d(100%,0,0)"},{transform:"translate3d(0,0,0)"}],{duration:D,easing:EASE_IOS});
     wrap.animate([{transform:"translate3d(0,0,0)"},{transform:"translate3d(-30%,0,0)"}],o);
     a=dim.animate([{opacity:0},{opacity:1}],o);
+  }else if(kind==="expand"){
+    /* Card to page: the new page opens out of the tapped card's rectangle */
+    const r=opts.rect,ins=`inset(${r.t}px ${r.r}px ${r.b}px ${r.l}px round 16px)`;view.classList.add("lift");
+    view.animate([{clipPath:ins},{clipPath:"inset(0px 0px 0px 0px round 0px)"}],{duration:D,easing:EASE_IOS});
+    view.animate([{opacity:.4},{opacity:1}],{duration:D*.5,easing:"ease-out"});
+    wrap.animate([{transform:"scale(1)"},{transform:"scale(.96)"}],o);
+    a=dim.animate([{opacity:0},{opacity:1}],o);
+  }else if(kind==="collapse"){
+    /* Page to card: the page shrinks back into the card it came from (or toward the middle if that card is off screen) */
+    const c=opts.key?[...$$(CARD_SEL,view)].find(e=>(e.dataset.id||e.dataset.v||"")===opts.key&&e.getBoundingClientRect().height):null;
+    const V=views.getBoundingClientRect(),cr=c&&c.getBoundingClientRect(),r=cr&&cr.bottom>V.top&&cr.top<V.bottom?rectIn(c):{t:V.height*.3,r:32,b:V.height*.3,l:32};
+    view.animate([{transform:"scale(.96)",filter:"brightness(.86)"},{transform:"scale(1)",filter:"brightness(1)"}],{duration:D,easing:EASE_IOS});
+    a=wrap.animate([{clipPath:"inset(0px 0px 0px 0px round 0px)",opacity:1},{clipPath:`inset(${r.t}px ${r.r}px ${r.b}px ${r.l}px round 16px)`,opacity:.2}],o);
   }else if(kind==="pop"){
     view.animate([{transform:"translate3d(-30%,0,0)",filter:"brightness(.86)"},{transform:"translate3d(0,0,0)",filter:"brightness(1)"}],{duration:D,easing:EASE_IOS});
     a=wrap.animate([{transform:"translate3d(0,0,0)"},{transform:"translate3d(100%,0,0)"}],o);
