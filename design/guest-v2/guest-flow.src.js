@@ -255,7 +255,6 @@ const blankFilters=()=>({specs:new Set(),conds:new Set(),langs:new Set(),gender:
 const osRM=window.matchMedia("(prefers-reduced-motion: reduce)");
 const MODS={
  tiles:{name:"Quick links",meta:"Four tiles · all open MyChart"},
- saved:{name:"Your saved providers",meta:"Shows only when this device has saved providers"},
  featured:{name:"MedBlog",meta:"Carousel · three stories"},
  campaign:{name:"Campaign banner · Flu shots",meta:"Live Oct. 1 – Nov. 30"},
  resources:{name:"Services and resources",meta:"Wayfinding, video visits, and resources"},
@@ -269,7 +268,7 @@ const S={
   perm:"ask",osAnswer:null,loc:null,data:"live",
   q:"",pq:null,filters:blankFilters(),sort:"relevance",loading:false,
   saved:store.get("saved",[]),recent:store.get("recent",[]),
-  layout:["tiles","mychart","saved","featured","campaign","resources","announcements","summer"].map(id=>({id,on:!MODS[id].expired})),
+  layout:["tiles","mychart","featured","campaign","resources","announcements","summer"].map(id=>({id,on:!MODS[id].expired})),
   dismissed:new Set(),draft:null,fcText:"",blogCat:"All",blogMore:false,inboxRead:new Set(INBOX.filter(m=>m.read).map(m=>m.id))
 };
 const rm=()=>S.rm||osRM.matches;
@@ -388,10 +387,6 @@ const M={};
 M.tiles=()=>`<div class="mod-head"><h2 class="sec-h" id="h-tiles">Quick links</h2></div>
   <div class="tiles">${[["message","Message your doctor","chat",1],["results","Get your test results","labs",1],["visits","Manage Your Visits","calendar_month",1],["billing","Manage Billing","credit_card",1]]
    .map(([k,l,g,out])=>`<button class="tile press" data-action="tile" data-k="${k}" data-l="${l}"${out?` aria-label="${l}, opens MyChart"`:""}>${well(g,40)}<span>${l}</span></button>`).join("")}</div>`;
-M.saved=()=>{const ps=S.saved.map(id=>PBY[id]).filter(Boolean);
-  return `<div class="mod-head"><h2 class="sec-h" id="h-saved">Your saved providers</h2><button class="btn btn-ghost btn-sm" data-action="tab" data-tab="saved">See all</button></div>
-  <div class="h-scroll">${ps.map(p=>`<button class="card mini press" data-action="profile" data-id="${p.id}">${avatar(p,56)}<b>${esc(name(p))}</b><span>${esc(p.spec)}</span></button>`).join("")}</div>
-  <p class="fine">Saved on this device only.</p>`};
 M.featured=()=>`<div class="mod-head"><h2 class="sec-h" id="h-featured">MedBlog</h2><button class="btn btn-ghost btn-sm" data-action="push" data-v="medblog" aria-label="See all MedBlog stories">See all</button></div>
   <ul class="h-scroll mb-row" id="car-scroll" aria-labelledby="h-featured">${SLIDES.map(b=>{const [g,t]=TOPIC[b.cat]||["article","t-blue"];
     return `<li class="mb-item"><button class="card mb-card press" data-action="toast" data-kind="go" data-msg="Opens: ${esc(b.t)}">
@@ -413,7 +408,7 @@ M.mychart=()=>`<div class="mychart"><span class="mc-glow" aria-hidden="true"></s
 M.announcements=()=>`<div class="mod-head"><h2 class="sec-h" id="h-announcements">Announcements</h2></div>
   <div class="card list">${ANN.map(a=>`<button class="row" data-action="toast" data-kind="go" data-msg="Opens: ${esc(a.t)}"><span class="ann-date">${a.d}</span><span class="rt"><b>${esc(a.t)}</b><span>${esc(a.s)}</span></span>${a.isNew?`<span class="new-pill">New</span>`:ic("chevron_right",20)}</button>`).join("")}</div>`;
 M.summer=()=>"";
-function visibleModules(){return S.layout.filter(m=>m.on&&!MODS[m.id].expired&&(m.id!=="saved"||S.saved.length))}
+function visibleModules(){return S.layout.filter(m=>m.on&&!MODS[m.id].expired)}
 function viewHome(){
   return `<div class="ptr" id="ptr" aria-hidden="true"></div><div class="v-inner"><div class="top">${renderAlerts()}
     <section class="hero on-blue" aria-labelledby="h-hero"><span class="aurora" aria-hidden="true"><i></i></span>
