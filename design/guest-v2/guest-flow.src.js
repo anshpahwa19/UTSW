@@ -925,9 +925,24 @@ function closeSearch(cb){
              :s.animate([{opacity:1},{opacity:0}],{duration:220,easing:"ease-out"});
   a.onfinish=done;
 }
+/* Search screen: Saved providers and Search history share one card behind a two-way toggle (both on this device) */
+function yoursHTML(){
+  const t=S.yours||"saved",ps=S.saved.map(id=>PBY[id]).filter(Boolean),chev=ic("chevron_right",20);
+  const tab=(k,l,n)=>`<button class="yt-btn" role="tab" id="yt-${k}" aria-controls="yt-panel" aria-selected="${t===k}" tabindex="${t===k?0:-1}" data-action="yours" data-k="${k}">${l}${n?` <span class="yt-n">${n}</span>`:""}</button>`;
+  const body=t==="saved"
+    ?(ps.length?ps.map(p=>`<button class="row" data-action="gs-profile" data-id="${p.id}">${avatar(p,40)}<span class="rt"><b>${esc(name(p))}</b><span>${esc(p.spec)} · ${esc(LOCS[p.locs[0]].n)}</span></span>${chev}</button>`).join("")
+      :`<button class="row" data-action="search-saved">${well("favorite")}<span class="rt"><b>No saved providers yet</b><span>Tap the heart on a provider to save them</span></span>${chev}</button>`)
+    :(S.recent.length?S.recent.map(r=>`<button class="row" data-action="search-all" data-q="${esc(r)}">${well("history")}<span class="rt"><b>${esc(r)}</b></span>${chev}</button>`).join("")
+      :`<div class="row" style="cursor:default">${well("history")}<span class="rt"><b>No searches yet</b><span>Your recent searches show here</span></span></div>`);
+  return `<section class="res-group yours" aria-label="Saved providers and search history">
+    <div class="yt-bar"><div class="yt" role="tablist" aria-label="Show">${tab("saved","Saved providers",ps.length)}${tab("history","Search history",S.recent.length)}</div></div>
+    <div class="card list" role="tabpanel" id="yt-panel" aria-labelledby="yt-${t}">${body}</div>
+    <div class="grp-h"><p class="fine">On this device</p>${t==="history"&&S.recent.length?`<button class="btn btn-ghost btn-sm" data-action="clear-history">Clear</button>`:""}</div></section>`;
+}
+function renderYours(focusTab){const y=$("#search-body .yours");if(!y)return;y.outerHTML=yoursHTML();if(focusTab)$(`#yt-${S.yours}`)?.focus()}
 function renderSearch(q){
   const b=$("#search-body");q=q.trim();$("#q-clear").hidden=!q;
-  if(!q){b.innerHTML=`<section class="res-group" aria-labelledby="gtop-h"><h2 class="lbl-h" id="gtop-h">Top searches</h2><div class="chips">${GS_TOP.map(t=>`<button class="chip" data-action="search-term" data-q="${t}">${ic("trending_up",16)}${t}</button>`).join("")}</div></section>
+  if(!q){b.innerHTML=yoursHTML()+`<section class="res-group" aria-labelledby="gtop-h"><h2 class="lbl-h" id="gtop-h">Top searches</h2><div class="chips">${GS_TOP.map(t=>`<button class="chip" data-action="search-term" data-q="${t}">${ic("trending_up",16)}${t}</button>`).join("")}</div></section>
      <section class="res-group" aria-labelledby="by-h"><h2 class="lbl-h" id="by-h">Search for</h2><div class="card list">${Object.values(KIND).map(([l,g,d])=>`<div class="row" style="cursor:default">${well(g)}<span class="rt"><b>${l}</b><span>${d}</span></span></div>`).join("")}</div></section>`;return}
   const pq=parse(q);const saveP=S.pq;S.pq=pq;const provs=results(blankFilters());S.pq=saveP;
   const words=q.toLowerCase().split(/\s+/);
@@ -942,6 +957,7 @@ function renderSearch(q){
   sayPolite(groups.length?"Results updated":"No results");
 }
 $("#q").addEventListener("input",e=>renderSearch(e.target.value));
+$("#search-body").addEventListener("keydown",e=>{const t=e.target.closest(".yt-btn");if(!t||!["ArrowLeft","ArrowRight"].includes(e.key))return;e.preventDefault();S.yours=S.yours==="history"?"saved":"history";renderYours(true)});
 $("#q").addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.value.trim()){const v=e.target.value.trim();closeSearch(()=>runSearch(v))}});
 
 /* ---------- Events ---------- */
@@ -990,6 +1006,9 @@ screen.addEventListener("click",e=>{
    case "search-term":if($("#search").hidden)openSearch(el.dataset.q);else{$("#q").value=el.dataset.q;renderSearch(el.dataset.q);$("#q").focus()}break;
    case "search-pick":closeSearch();toast("Opens: "+el.dataset.msg,"go");break;
    case "search-all":closeSearch(()=>runSearch(el.dataset.q));break;
+   case "yours":S.yours=el.dataset.k;renderYours(true);break;
+   case "search-saved":closeSearch(()=>switchTab("saved",true));break;
+   case "clear-history":S.recent=[];store.set("recent",[]);renderYours(false);$("#yt-history")?.focus();sayPolite("Search history cleared");break;
    case "gs-profile":closeSearch(()=>push({v:"profile",id}));break;
    case "tile":{const k=el.dataset.k;if(k==="find")switchTab("find",true);else if(k==="locations")switchTab("locations",true);else toast(`Opens MyChart: ${el.dataset.l}. Sign-in is part of MyChart, not this guest prototype.`,"out");break}
    case "near-me":S.fcText="";runSearch("",{});if(!S.loc)setTimeout(useMyLocation,rm()?0:350);break;
